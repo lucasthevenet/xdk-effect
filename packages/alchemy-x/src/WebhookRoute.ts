@@ -2,6 +2,7 @@ import * as Config from "effect/Config";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import * as Redacted from "effect/Redacted";
+import * as Result from "effect/Result";
 import * as Schema from "effect/Schema";
 import * as Stream from "effect/Stream";
 import * as HttpRouter from "effect/unstable/http/HttpRouter";
@@ -21,14 +22,16 @@ import {
 import {
   AccountActivitySubscription,
   currentUserId,
+  type AccountActivitySubscriptionProps,
 } from "./AccountActivitySubscription.ts";
 import {
   ActivitySubscription,
   normalizeActivityEventType,
+  type ActivitySubscriptionProps,
 } from "./ActivitySubscription.ts";
 import { XAppCredentials } from "./Credentials.ts";
 import { normalizeWebhookUrl, stableId, stableJson } from "./internal.ts";
-import { Webhook } from "./Webhook.ts";
+import { Webhook, type WebhookProps } from "./Webhook.ts";
 
 export interface WebhookRouteActivity {
   /** Stable logical key. Required only when two entries share event/filter. */
@@ -60,79 +63,70 @@ export interface WebhookRouteOptions {
   readonly maxBodyBytes?: number;
 }
 
+interface WebhookPropsBuilder {
+  url: WebhookProps["url"];
+  revalidateInvalid?: boolean;
+  adoptExisting?: boolean;
+}
+
+interface ActivitySubscriptionPropsBuilder {
+  eventType: ActivitySubscriptionProps["eventType"];
+  filter: ActivitySubscriptionProps["filter"];
+  webhookId: ActivitySubscriptionProps["webhookId"];
+  tag?: string;
+  auth?: XAuthKind;
+}
+
+interface AccountActivitySubscriptionPropsBuilder {
+  webhookId: AccountActivitySubscriptionProps["webhookId"];
+  userId: AccountActivitySubscriptionProps["userId"];
+  adoptExisting?: boolean;
+}
+
 export type WebhookHandler<E = unknown, R = never> = (
   delivery: XWebhookDelivery,
   request: HttpServerRequest.HttpServerRequest,
 ) => Effect.Effect<unknown, E, R>;
 
-const isActivityDelivery = (payload: Record<string, unknown>): boolean => {
-  const data = payload.data;
-  return (
-    data !== null &&
-    typeof data === "object" &&
-    typeof (data as Record<string, unknown>).event_type === "string"
-  );
-};
+const XWebhookDeliveryMarker = Schema.Union([
+  Schema.Struct({
+    data: Schema.Struct({ event_type: Schema.String }),
+  }),
+  Schema.Struct({
+    data: Schema.Struct({ id: Schema.String }),
+    matching_rules: Schema.Array(
+      Schema.Struct({
+        id: Schema.String,
+        tag: Schema.optionalKey(Schema.String),
+      }),
+    ),
+  }),
+  Schema.Struct({ for_user_id: Schema.String }),
+  Schema.Struct({
+    replay_job_status: Schema.Struct({
+      webhook_id: Schema.String,
+      job_state: Schema.String,
+      job_id: Schema.String,
+    }),
+  }),
+  Schema.Struct({
+    user_event: Schema.Struct({
+      revoke: Schema.Struct({
+        source: Schema.Struct({ user_id: Schema.String }),
+      }),
+    }),
+  }),
+]);
 
-const isFilteredStreamDelivery = (
-  payload: Record<string, unknown>,
-): boolean => {
-  const data = payload.data;
-  const rules = payload.matching_rules;
-  return (
-    data !== null &&
-    typeof data === "object" &&
-    typeof (data as Record<string, unknown>).id === "string" &&
-    Array.isArray(rules) &&
-    rules.every(
-      (rule) =>
-        rule !== null &&
-        typeof rule === "object" &&
-        typeof (rule as Record<string, unknown>).id === "string" &&
-        ((rule as Record<string, unknown>).tag === undefined ||
-          typeof (rule as Record<string, unknown>).tag === "string"),
-    )
-  );
-};
-
-const isAccountActivityDelivery = (
-  payload: Record<string, unknown>,
-): boolean => {
-  if (typeof payload.for_user_id === "string") return true;
-  const replay = payload.replay_job_status;
-  if (
-    replay !== null &&
-    typeof replay === "object" &&
-    typeof (replay as Record<string, unknown>).webhook_id === "string" &&
-    typeof (replay as Record<string, unknown>).job_state === "string" &&
-    typeof (replay as Record<string, unknown>).job_id === "string"
-  ) {
-    return true;
-  }
-  const userEvent = payload.user_event;
-  if (userEvent === null || typeof userEvent !== "object") return false;
-  const revoke = (userEvent as Record<string, unknown>).revoke;
-  if (revoke === null || typeof revoke !== "object") return false;
-  const source = (revoke as Record<string, unknown>).source;
-  return (
-    source !== null &&
-    typeof source === "object" &&
-    typeof (source as Record<string, unknown>).user_id === "string"
-  );
-};
+const hasXWebhookDeliveryMarker = Schema.is(XWebhookDeliveryMarker);
 
 /** A forward-compatible object boundary with a required X delivery marker. */
-export const XWebhookPayload = Schema.Record(
-  Schema.String,
-  Schema.Unknown,
-).check(
-  Schema.makeFilter((payload) =>
-    isAccountActivityDelivery(payload) ||
-    isActivityDelivery(payload) ||
-    isFilteredStreamDelivery(payload)
-      ? undefined
-      : "Expected an Account Activity, X Activity, or Filtered Stream delivery marker",
-  ),
+export const XWebhookPayload = Schema.declare<XWebhookDelivery>(
+  hasXWebhookDeliveryMarker,
+  {
+    description:
+      "An Account Activity, X Activity, replay job, or Filtered Stream delivery",
+  },
 );
 
 export class XWebhookBodyTooLarge extends Schema.TaggedError<XWebhookBodyTooLarge>()(
@@ -145,6 +139,24 @@ export class XWebhookBodyTooLarge extends Schema.TaggedError<XWebhookBodyTooLarg
 ) {}
 
 const DEFAULT_MAX_BODY_BYTES = 5 * 1024 * 1024;
+
+interface WebhookErrorResponse {
+  readonly ok?: false;
+  readonly error: string;
+}
+
+interface WebhookSuccessResponse {
+  readonly ok: true;
+}
+
+interface WebhookCrcResponse {
+  readonly response_token: `sha256=${string}`;
+}
+
+type WebhookResponse =
+  | WebhookErrorResponse
+  | WebhookSuccessResponse
+  | WebhookCrcResponse;
 
 const bodyLimit = (input: number): number => {
   if (!Number.isSafeInteger(input) || input <= 0) {
@@ -169,9 +181,13 @@ const readBody = (
       }),
     );
   }
+  interface BodyAccumulator {
+    readonly chunks: Uint8Array[];
+    bytes: number;
+  }
   return Stream.runFoldEffect(
     request.stream,
-    () => ({ chunks: [] as Uint8Array[], bytes: 0 }),
+    (): BodyAccumulator => ({ chunks: [], bytes: 0 }),
     (state, chunk) => {
       const bytes = state.bytes + chunk.byteLength;
       if (bytes > maximumBytes) {
@@ -200,7 +216,7 @@ const readBody = (
   );
 };
 
-const response = (status: number, body: Record<string, unknown>) =>
+const response = (status: number, body: WebhookResponse) =>
   HttpServerResponse.jsonUnsafe(body, {
     status,
     headers: { "cache-control": "no-store" },
@@ -225,13 +241,13 @@ export const makeWebhookHandler = <E, R, SecretE = never, SecretR = never>(
       const secret = yield* runtimeConsumerSecret(consumerSecret).pipe(
         Effect.result,
       );
-      if (secret._tag === "Failure") {
+      if (Result.isFailure(secret)) {
         return response(500, { ok: false, error: "secret_unavailable" });
       }
       const rawResult = yield* readBody(request, maximumBytes).pipe(
         Effect.result,
       );
-      if (rawResult._tag === "Failure") {
+      if (Result.isFailure(rawResult)) {
         if (rawResult.failure instanceof XWebhookBodyTooLarge) {
           return response(413, { ok: false, error: "body_too_large" });
         }
@@ -250,32 +266,34 @@ export const makeWebhookHandler = <E, R, SecretE = never, SecretR = never>(
             ? cause
             : new Error("Could not verify X webhook signature", { cause }),
       }).pipe(Effect.result);
-      if (verified._tag === "Failure" || !verified.success) {
+      if (Result.isFailure(verified) || !verified.success) {
         return response(401, { ok: false, error: "invalid_signature" });
       }
 
-      const decodedJson = yield* Effect.try({
-        try: () =>
-          JSON.parse(
-            new TextDecoder("utf-8", { fatal: true }).decode(rawBody),
-          ) as unknown,
+      const decodedText = yield* Effect.try({
+        try: () => new TextDecoder("utf-8", { fatal: true }).decode(rawBody),
         catch: (cause) => cause,
       }).pipe(Effect.result);
-      if (decodedJson._tag === "Failure") {
+      if (Result.isFailure(decodedText)) {
+        return response(400, { ok: false, error: "invalid_json" });
+      }
+      const decodedJson = yield* Schema.decodeUnknownEffect(
+        Schema.fromJsonString(Schema.Unknown),
+      )(decodedText.success).pipe(Effect.result);
+      if (Result.isFailure(decodedJson)) {
         return response(400, { ok: false, error: "invalid_json" });
       }
       const payload = yield* Schema.decodeUnknownEffect(XWebhookPayload)(
         decodedJson.success,
       ).pipe(Effect.result);
-      if (payload._tag === "Failure") {
+      if (Result.isFailure(payload)) {
         return response(400, { ok: false, error: "invalid_payload" });
       }
 
-      const handled = yield* handler(
-        payload.success as XWebhookDelivery,
-        request,
-      ).pipe(Effect.result);
-      if (handled._tag === "Failure") {
+      const handled = yield* handler(payload.success, request).pipe(
+        Effect.result,
+      );
+      if (Result.isFailure(handled)) {
         return response(500, { ok: false, error: "handler_failed" });
       }
       return response(200, { ok: true });
@@ -292,9 +310,13 @@ export const resolveOrigin = (
   Effect.gen(function* () {
     let current: unknown = input;
     for (let depth = 0; depth < 8; depth++) {
-      if (typeof current === "string") return current;
-      if (Config.isConfig(current) || Effect.isEffect(current)) {
-        current = yield* current as Effect.Effect<unknown, unknown, unknown>;
+      if (Schema.is(Schema.String)(current)) return current;
+      if (Config.isConfig(current)) {
+        current = yield* current;
+        continue;
+      }
+      if (Effect.isEffect(current)) {
+        current = yield* current;
         continue;
       }
       break;
@@ -323,14 +345,17 @@ const callbackUrlInput = (
 
 const resolveConsumerSecret = (input: WebhookRouteOptions["consumerSecret"]) =>
   Effect.gen(function* () {
-    if (typeof input === "string") return Redacted.make(input);
+    if (Schema.is(Schema.String)(input)) return Redacted.make(input);
     if (Redacted.isRedacted(input)) return input;
     if (input && Config.isConfig(input)) return yield* input;
     const credentials = yield* XAppCredentials;
     return credentials.consumerSecret;
   });
 
-const routePath = (input?: string): string => {
+const isPathInput = (path: string): path is HttpRouter.PathInput =>
+  path === "*" || path.startsWith("/");
+
+const routePath = (input?: string): HttpRouter.PathInput => {
   const path = input?.startsWith("/") ? input : `/${input ?? "api/x/webhook"}`;
   if (
     path.startsWith("//") ||
@@ -346,6 +371,9 @@ const routePath = (input?: string): string => {
   const canonical = new URL(path, "https://alchemy.invalid").pathname;
   if (canonical !== path) {
     throw new TypeError("X webhook path must not contain dot segments");
+  }
+  if (!isPathInput(path)) {
+    throw new TypeError("X webhook path must begin with a slash");
   }
   return path;
 };
@@ -432,16 +460,17 @@ export const WebhookRoute = <E, R>(
         `ALCHEMY_X_${stableId(name).toUpperCase()}_CONSUMER_SECRET`,
       );
 
-      if (!globalThis.__ALCHEMY_RUNTIME__) {
-        const webhook = yield* Webhook(`${name}Webhook`, {
+      if (!globalThis["__ALCHEMY_RUNTIME__"]) {
+        const webhookProps: WebhookPropsBuilder = {
           url: callbackUrlInput(options.origin, path),
-          ...(options.revalidateInvalid !== undefined
-            ? { revalidateInvalid: options.revalidateInvalid }
-            : {}),
-          ...(options.adoptExisting !== undefined
-            ? { adoptExisting: options.adoptExisting }
-            : {}),
-        });
+        };
+        if (options.revalidateInvalid !== undefined) {
+          webhookProps.revalidateInvalid = options.revalidateInvalid;
+        }
+        if (options.adoptExisting !== undefined) {
+          webhookProps.adoptExisting = options.adoptExisting;
+        }
+        const webhook = yield* Webhook(`${name}Webhook`, webhookProps);
 
         const activityIds = new Set<string>();
         for (const subscription of options.activity ?? []) {
@@ -461,39 +490,41 @@ export const WebhookRoute = <E, R>(
             );
           }
           activityIds.add(key);
-          yield* ActivitySubscription(`${name}Activity${key}`, {
+          const activityProps: ActivitySubscriptionPropsBuilder = {
             eventType: subscription.eventType,
             filter: subscription.filter,
             webhookId: webhook.webhookId,
-            ...(subscription.tag !== undefined
-              ? { tag: subscription.tag }
-              : {}),
-            ...(subscription.auth !== undefined
-              ? { auth: subscription.auth }
-              : {}),
-          });
+          };
+          if (subscription.tag !== undefined) {
+            activityProps.tag = subscription.tag;
+          }
+          if (subscription.auth !== undefined) {
+            activityProps.auth = subscription.auth;
+          }
+          yield* ActivitySubscription(`${name}Activity${key}`, activityProps);
         }
         if (options.accountActivity) {
           const userId = yield* currentUserId;
-          yield* AccountActivitySubscription(`${name}AccountActivity`, {
-            webhookId: webhook.webhookId,
-            userId,
-            ...(options.adoptExisting !== undefined
-              ? { adoptExisting: options.adoptExisting }
-              : {}),
-          });
+          const accountActivityProps: AccountActivitySubscriptionPropsBuilder =
+            {
+              webhookId: webhook.webhookId,
+              userId,
+            };
+          if (options.adoptExisting !== undefined) {
+            accountActivityProps.adoptExisting = options.adoptExisting;
+          }
+          yield* AccountActivitySubscription(
+            `${name}AccountActivity`,
+            accountActivityProps,
+          );
         }
       }
 
       const router = yield* HttpRouter.HttpRouter;
-      yield* router.add(
-        "GET",
-        path as HttpRouter.PathInput,
-        makeCrcHandler(consumerSecret),
-      );
+      yield* router.add("GET", path, makeCrcHandler(consumerSecret));
       yield* router.add(
         "POST",
-        path as HttpRouter.PathInput,
+        path,
         makeWebhookHandler(
           handler,
           consumerSecret,

@@ -146,6 +146,18 @@ describe("X API client", () => {
     ).rejects.toBeInstanceOf(XDecodeError);
   });
 
+  test("rejects hostile object hooks without coercing parsed fields", async () => {
+    const client = createXClient({
+      userAccessToken: "user-token",
+      runtime: {
+        fetch: async () =>
+          Response.json({ data: { id: { toString: "not-callable" } } }),
+      },
+    });
+
+    await expect(client.users.getMe()).rejects.toBeInstanceOf(XDecodeError);
+  });
+
   test("does not retry a 429 before x-rate-limit-reset", async () => {
     const now = 1_700_000_000_000;
     const delays: number[] = [];

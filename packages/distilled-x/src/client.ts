@@ -16,6 +16,8 @@ import type {
   XActivitySubscription,
   XActivitySubscriptionInput,
   XEnvelope,
+  XJsonObject,
+  XJsonValue,
   XProblem,
   XRateLimit,
   XResult,
@@ -58,6 +60,97 @@ export interface XClientConfig {
   };
 }
 
+interface MutableRateLimit {
+  limit?: number;
+  remaining?: number;
+  resetAt?: Date;
+}
+type XResponseBody = XJsonValue | undefined;
+type XHttpMethod = "DELETE" | "GET" | "POST" | "PUT";
+
+const isJsonObject = (value: XJsonValue | undefined): value is XJsonObject =>
+  value !== undefined &&
+  value !== null &&
+  !Array.isArray(value) &&
+  Object(value) === value;
+
+const isString = (value: XJsonValue | undefined): value is string =>
+  typeof value === "string";
+
+const isNumber = (value: XJsonValue | undefined): value is number =>
+  value !== undefined && Number.isFinite(value);
+
+const isBoolean = (value: XJsonValue | undefined): value is boolean =>
+  value === true || value === false;
+
+const isOptionalString = (value: XJsonValue | undefined): boolean =>
+  value === undefined || isString(value);
+
+const parseJson = (text: string): XJsonValue => JSON.parse(text);
+
+const addQuery = (url: URL, query: XRequestOptions["query"]): void => {
+  for (const [key, value] of Object.entries(query ?? {})) {
+    if (value === undefined) continue;
+    url.searchParams.set(
+      key,
+      Array.isArray(value) ? value.join(",") : String(value),
+    );
+  }
+};
+
+const canRetryMethod = (
+  method: XHttpMethod,
+  retryNonIdempotent: boolean | undefined,
+): boolean =>
+  method === "GET" ||
+  method === "PUT" ||
+  method === "DELETE" ||
+  retryNonIdempotent === true;
+
+const requestInit = (
+  method: XHttpMethod,
+  headers: Headers,
+  body: string | undefined,
+  signal: AbortSignal | undefined,
+): RequestInit => {
+  const init: RequestInit = { method, headers };
+  if (body !== undefined) init.body = body;
+  if (signal !== undefined) init.signal = signal;
+  return init;
+};
+
+const decodeResponseBody = async (
+  response: Response,
+): Promise<XResponseBody> => {
+  const text = await response.text();
+  if (text.length === 0) return undefined;
+  try {
+    return parseJson(text);
+  } catch (cause) {
+    if (response.ok) {
+      throw new XDecodeError(
+        "X returned a malformed JSON response",
+        response.status,
+        text,
+        { cause },
+      );
+    }
+    return text;
+  }
+};
+
+const canRetryResponse = (
+  response: Response,
+  retryableMethod: boolean,
+  attempt: number,
+  maxAttempts: number,
+): boolean =>
+  retryableMethod &&
+  attempt < maxAttempts &&
+  (response.status === 408 ||
+    response.status === 429 ||
+    response.status >= 500);
+
 const numberHeader = (headers: Headers, name: string): number | undefined => {
   const value = headers.get(name);
   if (value === null) return undefined;
@@ -72,28 +165,50 @@ const rateLimitOf = (headers: Headers): XRateLimit | undefined => {
   if (limit === undefined && remaining === undefined && reset === undefined) {
     return undefined;
   }
-  return {
-    ...(limit !== undefined ? { limit } : {}),
-    ...(remaining !== undefined ? { remaining } : {}),
-    ...(reset !== undefined ? { resetAt: new Date(reset * 1000) } : {}),
-  };
+  const rateLimit: MutableRateLimit = {};
+  if (limit !== undefined) rateLimit.limit = limit;
+  if (remaining !== undefined) rateLimit.remaining = remaining;
+  if (reset !== undefined) rateLimit.resetAt = new Date(reset * 1000);
+  return rateLimit;
 };
 
-const problemsOf = (body: unknown): readonly XProblem[] => {
-  if (body === null || typeof body !== "object") return [];
-  const value = body as Record<string, unknown>;
-  if (Array.isArray(value.errors)) {
-    return value.errors.filter(
-      (problem): problem is XProblem =>
-        problem !== null && typeof problem === "object",
-    );
-  }
+const decodeProblem = (value: XJsonValue): XProblem | undefined => {
+  if (!isJsonObject(value)) return undefined;
   if (
-    typeof value.detail === "string" ||
-    typeof value.title === "string" ||
-    typeof value.message === "string"
+    !isOptionalString(value.type) ||
+    !isOptionalString(value.title) ||
+    !isOptionalString(value.detail) ||
+    !isOptionalString(value.message) ||
+    !isOptionalString(value.parameter) ||
+    !isOptionalString(value.value) ||
+    !isOptionalString(value.resource_id) ||
+    !isOptionalString(value.resource_type) ||
+    (value.status !== undefined && !isNumber(value.status)) ||
+    (value.code !== undefined && !isNumber(value.code))
   ) {
-    return [value as XProblem];
+    return undefined;
+  }
+  // SAFETY: Every declared XProblem field has been validated; extension fields
+  // remain JSON values, matching XProblem's JSON extension contract.
+  return value as XProblem;
+};
+
+const problemsOf = (body: XResponseBody): readonly XProblem[] => {
+  if (!isJsonObject(body)) return [];
+  if (Array.isArray(body.errors)) {
+    return body.errors.flatMap((candidate) => {
+      const problem = decodeProblem(candidate);
+      return problem === undefined ? [] : [problem];
+    });
+  }
+  const problem = decodeProblem(body);
+  if (
+    problem !== undefined &&
+    (problem.detail !== undefined ||
+      problem.title !== undefined ||
+      problem.message !== undefined)
+  ) {
+    return [problem];
   }
   return [];
 };
@@ -108,106 +223,134 @@ const errorMessage = (
   );
 };
 
-const normalizeSubscription = (
-  envelope: unknown,
-): XActivitySubscription | undefined => {
-  if (envelope === null || typeof envelope !== "object") return undefined;
-  const value = envelope as Record<string, unknown>;
-  const data =
-    value.data !== null && typeof value.data === "object"
-      ? (value.data as Record<string, unknown>)
-      : value;
-  const candidate =
-    data.subscription !== null && typeof data.subscription === "object"
-      ? (data.subscription as Record<string, unknown>)
-      : data;
-  const filter = candidate.filter as Record<string, unknown> | undefined;
-  const qualifiers = filter?.qualifiers;
+const isActivityFilter = (
+  candidate: XJsonValue | undefined,
+): candidate is XJsonObject => {
+  if (!isJsonObject(candidate)) return false;
   const filterKeys = new Set(["user_id", "keyword", "direction", "qualifiers"]);
+  if (!Object.keys(candidate).every((key) => filterKeys.has(key))) return false;
+  if (!isOptionalString(candidate.user_id)) return false;
+  if (!isOptionalString(candidate.keyword)) return false;
   if (
-    typeof candidate.subscription_id !== "string" ||
-    typeof candidate.event_type !== "string" ||
-    filter === null ||
-    typeof filter !== "object" ||
-    Array.isArray(filter) ||
-    !Object.keys(filter).every((key) => filterKeys.has(key)) ||
-    (filter.user_id !== undefined && typeof filter.user_id !== "string") ||
-    (filter.keyword !== undefined && typeof filter.keyword !== "string") ||
-    (filter.direction !== undefined &&
-      filter.direction !== "inbound" &&
-      filter.direction !== "outbound") ||
-    (qualifiers !== undefined &&
-      (qualifiers === null ||
-        typeof qualifiers !== "object" ||
-        Array.isArray(qualifiers) ||
-        !Object.values(qualifiers).every(
-          (value) => typeof value === "string",
-        ))) ||
-    (candidate.tag !== undefined && typeof candidate.tag !== "string") ||
-    (candidate.webhook_id !== undefined &&
-      typeof candidate.webhook_id !== "string") ||
-    (candidate.created_at !== undefined &&
-      typeof candidate.created_at !== "string") ||
-    (candidate.updated_at !== undefined &&
-      typeof candidate.updated_at !== "string")
+    candidate.direction !== undefined &&
+    candidate.direction !== "inbound" &&
+    candidate.direction !== "outbound"
   ) {
+    return false;
+  }
+  if (candidate.qualifiers === undefined) return true;
+  if (!isJsonObject(candidate.qualifiers)) return false;
+  return Object.values(candidate.qualifiers).every(isString);
+};
+
+const unwrapSubscription = (envelope: XJsonValue): XJsonObject | undefined => {
+  if (!isJsonObject(envelope)) return undefined;
+  const data = isJsonObject(envelope.data) ? envelope.data : envelope;
+  return isJsonObject(data.subscription) ? data.subscription : data;
+};
+
+const normalizeParsedSubscription = (
+  envelope: XJsonValue,
+): XActivitySubscription | undefined => {
+  const candidate = unwrapSubscription(envelope);
+  if (candidate === undefined) return undefined;
+  if (!isString(candidate.subscription_id)) return undefined;
+  if (!isString(candidate.event_type)) return undefined;
+  if (!isActivityFilter(candidate.filter)) return undefined;
+  if (!isOptionalString(candidate.tag)) return undefined;
+  if (!isOptionalString(candidate.webhook_id)) return undefined;
+  if (!isOptionalString(candidate.created_at)) return undefined;
+  if (!isOptionalString(candidate.updated_at)) return undefined;
+  // SAFETY: Required subscription fields, every optional declared field, and
+  // the nested filter contract have been validated above.
+  return candidate as XActivitySubscription;
+};
+
+const normalizeSubscription = <Payload>(
+  envelope: Payload,
+): XActivitySubscription | undefined => {
+  try {
+    const encoded = JSON.stringify(envelope);
+    if (encoded === undefined) return undefined;
+    return normalizeParsedSubscription(parseJson(encoded));
+  } catch {
     return undefined;
   }
-  return candidate as unknown as XActivitySubscription;
 };
 
 const recordOf = (
-  value: unknown,
+  value: XJsonValue,
   status: number,
   message: string,
-): Record<string, unknown> => {
-  if (value === null || typeof value !== "object" || Array.isArray(value)) {
+): XJsonObject => {
+  if (!isJsonObject(value)) {
     throw new XDecodeError(message, status, JSON.stringify(value));
   }
-  return value as Record<string, unknown>;
+  return value;
+};
+
+const decodeEnvelopeProblems = (
+  value: XJsonValue | undefined,
+  status: number,
+  message: string,
+): readonly XProblem[] | undefined => {
+  if (value === undefined) return undefined;
+  if (!Array.isArray(value)) {
+    throw new XDecodeError(message, status, JSON.stringify(value));
+  }
+  const problems = value.map(decodeProblem);
+  if (problems.some((problem) => problem === undefined)) {
+    throw new XDecodeError(message, status, JSON.stringify(value));
+  }
+  // SAFETY: The undefined check above proves every mapped entry decoded.
+  return problems as readonly XProblem[];
+};
+
+const isOptionalCount = (value: XJsonValue | undefined): boolean =>
+  value === undefined ||
+  (isNumber(value) && Number.isInteger(value) && value >= 0);
+
+const decodeEnvelopeMeta = (
+  value: XJsonValue | undefined,
+  status: number,
+  message: string,
+): XEnvelope<never>["meta"] => {
+  if (value === undefined) return undefined;
+  if (
+    !isJsonObject(value) ||
+    !isOptionalString(value.next_token) ||
+    !isOptionalString(value.previous_token) ||
+    !isOptionalCount(value.result_count) ||
+    !isOptionalCount(value.total_subscriptions)
+  ) {
+    throw new XDecodeError(message, status, JSON.stringify(value));
+  }
+  return value;
 };
 
 const mapEnvelopeData = <T>(
-  result: XResult<unknown>,
+  result: XResult<XResponseBody>,
   message: string,
-  decode: (value: unknown, status: number) => T,
+  decode: (value: XJsonValue, status: number) => T,
 ): XResult<XEnvelope<T>> => {
+  if (result.value === undefined) {
+    throw new XDecodeError(message, result.status, "");
+  }
   const envelope = recordOf(result.value, result.status, message);
-  if (
-    (envelope.errors !== undefined &&
-      (!Array.isArray(envelope.errors) ||
-        !envelope.errors.every(
-          (error) => error !== null && typeof error === "object",
-        ))) ||
-    (envelope.meta !== undefined &&
-      (envelope.meta === null ||
-        typeof envelope.meta !== "object" ||
-        Array.isArray(envelope.meta)))
-  ) {
-    throw new XDecodeError(message, result.status, JSON.stringify(envelope));
-  }
-  if (envelope.meta !== undefined) {
-    const meta = envelope.meta as Record<string, unknown>;
-    if (
-      (meta.next_token !== undefined && typeof meta.next_token !== "string") ||
-      (meta.previous_token !== undefined &&
-        typeof meta.previous_token !== "string") ||
-      [meta.result_count, meta.total_subscriptions].some(
-        (count) =>
-          count !== undefined &&
-          (typeof count !== "number" || !Number.isInteger(count) || count < 0),
-      )
-    ) {
-      throw new XDecodeError(message, result.status, JSON.stringify(envelope));
-    }
-  }
+  decodeEnvelopeProblems(envelope.errors, result.status, message);
+  decodeEnvelopeMeta(envelope.meta, result.status, message);
   if (!("data" in envelope) || envelope.data === undefined) {
+    // SAFETY: Envelope errors and metadata were decoded above; absent data is
+    // allowed by XEnvelope for delete confirmations and partial responses.
     return { ...result, value: envelope as XEnvelope<T> };
   }
   const data = decode(envelope.data, result.status);
+  // SAFETY: The source envelope was parsed JSON, envelope metadata was
+  // validated, and `data` was decoded by the endpoint-specific decoder.
+  const value = { ...envelope, data } as XEnvelope<T>;
   return {
     ...result,
-    value: { ...envelope, data } as XEnvelope<T>,
+    value,
   };
 };
 
@@ -232,13 +375,13 @@ const requireEnvelopeData = <T>(
   return result.value.data;
 };
 
-const decodeWebhook = (value: unknown, status: number): XWebhook => {
+const decodeWebhook = (value: XJsonValue, status: number): XWebhook => {
   const webhook = recordOf(value, status, "X returned a malformed webhook");
   if (
-    typeof webhook.id !== "string" ||
-    typeof webhook.url !== "string" ||
-    typeof webhook.valid !== "boolean" ||
-    typeof webhook.created_at !== "string"
+    !isString(webhook.id) ||
+    !isString(webhook.url) ||
+    !isBoolean(webhook.valid) ||
+    !isString(webhook.created_at)
   ) {
     throw new XDecodeError(
       "X returned an incomplete webhook",
@@ -246,11 +389,13 @@ const decodeWebhook = (value: unknown, status: number): XWebhook => {
       JSON.stringify(value),
     );
   }
-  return webhook as unknown as XWebhook;
+  // SAFETY: Every declared XWebhook field is validated above; any additional
+  // properties are parsed JSON and therefore valid unknown extension fields.
+  return webhook as XWebhook;
 };
 
 const decodeWebhookList = (
-  value: unknown,
+  value: XJsonValue,
   status: number,
 ): readonly XWebhook[] => {
   if (!Array.isArray(value)) {
@@ -265,24 +410,25 @@ const decodeWebhookList = (
 
 const decodeConfirmation =
   <Key extends "deleted" | "subscribed">(key: Key, label: string) =>
-  (value: unknown, status: number): Readonly<Record<Key, boolean>> => {
+  (value: XJsonValue, status: number): Readonly<Record<Key, boolean>> => {
     const confirmation = recordOf(
       value,
       status,
       `X returned a malformed ${label} confirmation`,
     );
-    if (typeof confirmation[key] !== "boolean") {
+    if (!isBoolean(confirmation[key])) {
       throw new XDecodeError(
         `X did not include the ${label} confirmation`,
         status,
         JSON.stringify(value),
       );
     }
+    // SAFETY: The requested confirmation key was decoded as a boolean.
     return confirmation as Readonly<Record<Key, boolean>>;
   };
 
 const decodeWebhookValidation = (
-  value: unknown,
+  value: XJsonValue,
   status: number,
 ): XWebhookValidation => {
   const confirmation = recordOf(
@@ -290,10 +436,7 @@ const decodeWebhookValidation = (
     status,
     "X returned a malformed webhook validation confirmation",
   );
-  if (
-    typeof confirmation.valid !== "boolean" &&
-    typeof confirmation.attempted !== "boolean"
-  ) {
+  if (!isBoolean(confirmation.valid) && !isBoolean(confirmation.attempted)) {
     throw new XDecodeError(
       "X did not include the webhook validation confirmation",
       status,
@@ -301,10 +444,8 @@ const decodeWebhookValidation = (
     );
   }
   if (
-    (confirmation.valid !== undefined &&
-      typeof confirmation.valid !== "boolean") ||
-    (confirmation.attempted !== undefined &&
-      typeof confirmation.attempted !== "boolean")
+    (confirmation.valid !== undefined && !isBoolean(confirmation.valid)) ||
+    (confirmation.attempted !== undefined && !isBoolean(confirmation.attempted))
   ) {
     throw new XDecodeError(
       "X returned an invalid webhook validation confirmation",
@@ -312,11 +453,13 @@ const decodeWebhookValidation = (
       JSON.stringify(value),
     );
   }
+  // SAFETY: At least one validation flag exists and both flags, when present,
+  // have been decoded as booleans.
   return confirmation as XWebhookValidation;
 };
 
 const decodeActivitySubscriptionList = (
-  value: unknown,
+  value: XJsonValue,
   status: number,
 ): readonly XActivitySubscription[] => {
   if (!Array.isArray(value)) {
@@ -327,7 +470,7 @@ const decodeActivitySubscriptionList = (
     );
   }
   return value.map((entry) => {
-    const subscription = normalizeSubscription(entry);
+    const subscription = normalizeParsedSubscription(entry);
     if (!subscription) {
       throw new XDecodeError(
         "X returned an incomplete activity subscription",
@@ -339,29 +482,30 @@ const decodeActivitySubscriptionList = (
   });
 };
 
-const decodeUser = (value: unknown, status: number): XUser => {
+const decodeUser = (value: XJsonValue, status: number): XUser => {
   const user = recordOf(value, status, "X returned a malformed user");
-  if (typeof user.id !== "string") {
+  if (!isString(user.id)) {
     throw new XDecodeError(
       "X returned an incomplete user",
       status,
       JSON.stringify(value),
     );
   }
-  return user as unknown as XUser;
+  // SAFETY: XUser requires only a string id; extension fields are valid JSON.
+  return user as XUser;
 };
 
 const decodeAccountActivityStatus = (
-  value: unknown,
+  value: XJsonValue,
   status: number,
 ): XAccountActivitySubscriptionStatus =>
-  decodeConfirmation("subscribed", "subscription")(
-    value,
-    status,
-  ) as XAccountActivitySubscriptionStatus;
+  decodeConfirmation("subscribed", "subscription")(value, status);
+
+const isAccountSubscription = (value: XJsonValue): boolean =>
+  isJsonObject(value) && isString(value.user_id);
 
 const decodeAccountActivitySubscriptions = (
-  value: unknown,
+  value: XJsonValue,
   status: number,
 ): XAccountActivitySubscriptions => {
   const subscriptions = recordOf(
@@ -371,19 +515,14 @@ const decodeAccountActivitySubscriptions = (
   );
   if (
     (subscriptions.application_id !== undefined &&
-      typeof subscriptions.application_id !== "string") ||
+      !isString(subscriptions.application_id)) ||
     (subscriptions.webhook_id !== undefined &&
-      typeof subscriptions.webhook_id !== "string") ||
+      !isString(subscriptions.webhook_id)) ||
     (subscriptions.webhook_url !== undefined &&
-      typeof subscriptions.webhook_url !== "string") ||
+      !isString(subscriptions.webhook_url)) ||
     (subscriptions.subscriptions !== undefined &&
       (!Array.isArray(subscriptions.subscriptions) ||
-        !subscriptions.subscriptions.every(
-          (entry) =>
-            entry !== null &&
-            typeof entry === "object" &&
-            typeof (entry as Record<string, unknown>).user_id === "string",
-        )))
+        !subscriptions.subscriptions.every(isAccountSubscription)))
   ) {
     throw new XDecodeError(
       "X returned an incomplete Account Activity subscription list",
@@ -391,7 +530,9 @@ const decodeAccountActivitySubscriptions = (
       JSON.stringify(value),
     );
   }
-  return subscriptions as unknown as XAccountActivitySubscriptions;
+  // SAFETY: All declared optional fields and every nested user id were
+  // validated above; remaining properties are JSON extension fields.
+  return subscriptions as XAccountActivitySubscriptions;
 };
 
 export const createXClient = (config: XClientConfig) => {
@@ -414,7 +555,7 @@ export const createXClient = (config: XClientConfig) => {
   };
 
   const request = async <T>(
-    method: "GET" | "POST" | "PUT" | "DELETE",
+    method: XHttpMethod,
     path: `/${string}`,
     options: XRequestOptions = {},
   ): Promise<XResult<T>> => {
@@ -422,40 +563,27 @@ export const createXClient = (config: XClientConfig) => {
     if (url.origin !== base.origin) {
       throw new TypeError("X request paths must stay on the configured origin");
     }
-    for (const [key, value] of Object.entries(options.query ?? {})) {
-      if (value === undefined) continue;
-      url.searchParams.set(
-        key,
-        Array.isArray(value) ? value.join(",") : String(value),
-      );
-    }
-    const retryableMethod =
-      method === "GET" ||
-      method === "PUT" ||
-      method === "DELETE" ||
-      options.retryNonIdempotent === true;
+    addQuery(url, options.query);
+    const retryableMethod = canRetryMethod(method, options.retryNonIdempotent);
 
-    for (let attempt = 1; ; attempt++) {
+    const fetchAttempt = async (
+      attempt: number,
+    ): Promise<Response | undefined> => {
       const headers = new Headers(options.headers);
       headers.set("Accept", "application/json");
       headers.set(
         "Authorization",
         `Bearer ${await authToken(options.auth ?? "user")}`,
       );
-      let body: BodyInit | undefined;
-      if (options.json !== undefined) {
-        headers.set("Content-Type", "application/json");
-        body = JSON.stringify(options.json);
-      }
+      const body =
+        options.json === undefined ? undefined : JSON.stringify(options.json);
+      if (body !== undefined) headers.set("Content-Type", "application/json");
 
-      let response: Response;
       try {
-        response = await platform.fetch(url, {
-          method,
-          headers,
-          ...(body !== undefined ? { body } : {}),
-          ...(options.signal ? { signal: options.signal } : {}),
-        });
+        return await platform.fetch(
+          url,
+          requestInit(method, headers, body, options.signal),
+        );
       } catch (cause) {
         if (options.signal?.aborted) throw cause;
         if (retryableMethod && attempt < maxAttempts) {
@@ -464,7 +592,7 @@ export const createXClient = (config: XClientConfig) => {
             baseDelayMs * 2 ** (attempt - 1) * (0.5 + platform.random()),
           );
           await platform.sleep(delay, options.signal);
-          continue;
+          return undefined;
         }
         throw new XTransportError(
           "The X API request could not be completed",
@@ -473,33 +601,15 @@ export const createXClient = (config: XClientConfig) => {
           { cause },
         );
       }
+    };
 
+    for (let attempt = 1; ; attempt++) {
+      const response = await fetchAttempt(attempt);
+      if (response === undefined) continue;
       const rateLimit = rateLimitOf(response.headers);
-      const text = await response.text();
-      let decoded: unknown = undefined;
-      if (text.length > 0) {
-        try {
-          decoded = JSON.parse(text) as unknown;
-        } catch (cause) {
-          if (response.ok) {
-            throw new XDecodeError(
-              "X returned a malformed JSON response",
-              response.status,
-              text,
-              { cause },
-            );
-          }
-          decoded = text;
-        }
-      }
+      const decoded = await decodeResponseBody(response);
 
-      const shouldRetry =
-        retryableMethod &&
-        attempt < maxAttempts &&
-        (response.status === 408 ||
-          response.status === 429 ||
-          response.status >= 500);
-      if (shouldRetry) {
+      if (canRetryResponse(response, retryableMethod, attempt, maxAttempts)) {
         const resetDelay = rateLimit?.resetAt
           ? rateLimit.resetAt.getTime() - platform.now()
           : undefined;
@@ -527,18 +637,22 @@ export const createXClient = (config: XClientConfig) => {
         );
       }
 
-      return {
-        value: decoded as T,
+      // SAFETY: `request<T>` is the intentionally untyped low-level escape
+      // hatch. Typed endpoints immediately decode this parsed JSON value.
+      const value = decoded as T;
+      const result: XResult<T> = {
+        value,
         status: response.status,
         headers: response.headers,
-        ...(rateLimit ? { rateLimit } : {}),
       };
+      if (rateLimit === undefined) return result;
+      return { ...result, rateLimit };
     }
   };
 
   const listWebhooks = async (options: XRequestOptions = {}) =>
     mapEnvelopeData(
-      await request<unknown>("GET", "/2/webhooks", {
+      await request<XResponseBody>("GET", "/2/webhooks", {
         ...options,
         auth: "app",
       }),
@@ -552,7 +666,7 @@ export const createXClient = (config: XClientConfig) => {
     users: {
       async getMe(options: XRequestOptions = {}) {
         return mapEnvelopeData(
-          await request<unknown>("GET", "/2/users/me", {
+          await request<XResponseBody>("GET", "/2/users/me", {
             ...options,
             auth: "user",
           }),
@@ -570,7 +684,7 @@ export const createXClient = (config: XClientConfig) => {
         options: XRequestOptions = {},
       ) {
         return mapEnvelopeData(
-          await request<unknown>("POST", "/2/webhooks", {
+          await request<XResponseBody>("POST", "/2/webhooks", {
             ...options,
             auth: "app",
             json: input,
@@ -582,7 +696,7 @@ export const createXClient = (config: XClientConfig) => {
 
       async validate(webhookId: string, options: XRequestOptions = {}) {
         return mapEnvelopeData(
-          await request<unknown>(
+          await request<XResponseBody>(
             "PUT",
             `/2/webhooks/${encodeURIComponent(webhookId)}`,
             { ...options, auth: "app" },
@@ -594,7 +708,7 @@ export const createXClient = (config: XClientConfig) => {
 
       async delete(webhookId: string, options: XRequestOptions = {}) {
         return mapEnvelopeData(
-          await request<unknown>(
+          await request<XResponseBody>(
             "DELETE",
             `/2/webhooks/${encodeURIComponent(webhookId)}`,
             { ...options, auth: "app" },
@@ -674,15 +788,23 @@ export const createXClient = (config: XClientConfig) => {
           readonly signal?: AbortSignal;
         } = {},
       ) {
+        const listOptions: XRequestOptions = {
+          auth: input.auth ?? "app",
+          query: {
+            max_results: input.maxResults,
+            pagination_token: input.paginationToken,
+          },
+        };
+        const options =
+          input.signal === undefined
+            ? listOptions
+            : { ...listOptions, signal: input.signal };
         return mapEnvelopeData(
-          await request<unknown>("GET", "/2/activity/subscriptions", {
-            auth: input.auth ?? "app",
-            query: {
-              max_results: input.maxResults,
-              pagination_token: input.paginationToken,
-            },
-            ...(input.signal ? { signal: input.signal } : {}),
-          }),
+          await request<XResponseBody>(
+            "GET",
+            "/2/activity/subscriptions",
+            options,
+          ),
           "X returned a malformed activity subscription envelope",
           decodeActivitySubscriptionList,
         );
@@ -698,10 +820,11 @@ export const createXClient = (config: XClientConfig) => {
         const seen = new Set<string>();
         let paginationToken: string | undefined;
         do {
-          const page = await this.listSubscriptions({
-            ...input,
-            ...(paginationToken ? { paginationToken } : {}),
-          });
+          const pageInput =
+            paginationToken === undefined
+              ? input
+              : { ...input, paginationToken };
+          const page = await this.listSubscriptions(pageInput);
           yield page;
           paginationToken = page.value.meta?.next_token;
           if (paginationToken && seen.has(paginationToken)) {
@@ -743,7 +866,7 @@ export const createXClient = (config: XClientConfig) => {
         options: XRequestOptions = {},
       ) {
         return mapEnvelopeData(
-          await request<unknown>(
+          await request<XResponseBody>(
             "DELETE",
             `/2/activity/subscriptions/${encodeURIComponent(subscriptionId)}`,
             { ...options, auth: "app" },
@@ -762,7 +885,7 @@ export const createXClient = (config: XClientConfig) => {
         options: XRequestOptions = {},
       ) {
         return mapEnvelopeData(
-          await request<unknown>(
+          await request<XResponseBody>(
             "GET",
             `/2/account_activity/webhooks/${encodeURIComponent(webhookId)}/subscriptions/all`,
             { ...options, auth: "user" },
@@ -777,7 +900,7 @@ export const createXClient = (config: XClientConfig) => {
         options: XRequestOptions = {},
       ) {
         return mapEnvelopeData(
-          await request<unknown>(
+          await request<XResponseBody>(
             "POST",
             `/2/account_activity/webhooks/${encodeURIComponent(webhookId)}/subscriptions/all`,
             { ...options, auth: "user", json: {} },
@@ -792,7 +915,7 @@ export const createXClient = (config: XClientConfig) => {
         options: XRequestOptions = {},
       ) {
         return mapEnvelopeData(
-          await request<unknown>(
+          await request<XResponseBody>(
             "GET",
             `/2/account_activity/webhooks/${encodeURIComponent(webhookId)}/subscriptions/all/list`,
             { ...options, auth: "app" },
@@ -808,7 +931,7 @@ export const createXClient = (config: XClientConfig) => {
         options: XRequestOptions = {},
       ) {
         return mapEnvelopeData(
-          await request<unknown>(
+          await request<XResponseBody>(
             "DELETE",
             `/2/account_activity/webhooks/${encodeURIComponent(webhookId)}/subscriptions/${encodeURIComponent(userId)}/all`,
             { ...options, auth: "app" },

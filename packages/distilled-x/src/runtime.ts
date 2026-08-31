@@ -14,8 +14,13 @@ export interface XRuntime {
 }
 
 export type XRuntimeOptions = Partial<XRuntime>;
+type AbortReason = AbortSignal["reason"];
 
-const abortError = (signal: AbortSignal): unknown =>
+const isTokenFactory = (
+  provider: TokenProvider,
+): provider is Exclude<TokenProvider, string> => Object(provider) === provider;
+
+const abortError = (signal: AbortSignal): AbortReason =>
   signal.reason ?? new DOMException("The operation was aborted", "AbortError");
 
 const sleep = (milliseconds: number, signal?: AbortSignal): Promise<void> => {
@@ -60,7 +65,7 @@ export const runtime = (options: XRuntimeOptions = {}): XRuntime => {
 };
 
 export const resolveToken = async (provider: TokenProvider): Promise<string> =>
-  typeof provider === "function" ? await provider() : provider;
+  isTokenFactory(provider) ? await provider() : provider;
 
 export const utf8 = (value: string): Uint8Array<ArrayBuffer> =>
   new TextEncoder().encode(value);

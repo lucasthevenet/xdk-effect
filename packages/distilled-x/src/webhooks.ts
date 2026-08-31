@@ -62,10 +62,13 @@ export const verifyWebhookRequest = async (
   request: Request,
   consumerSecret: string,
   options?: XRuntimeOptions,
-): Promise<boolean> =>
-  verifyWebhookSignature({
+): Promise<boolean> => {
+  const input = {
     rawBody: new Uint8Array(await request.clone().arrayBuffer()),
     signature: request.headers.get(X_WEBHOOK_SIGNATURE_HEADER),
     consumerSecret,
-    ...(options ? { runtime: options } : {}),
-  });
+  };
+  return options
+    ? verifyWebhookSignature({ ...input, runtime: options })
+    : verifyWebhookSignature(input);
+};

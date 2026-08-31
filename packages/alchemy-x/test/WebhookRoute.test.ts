@@ -26,15 +26,14 @@ const post = async (
   handler: Parameters<typeof makeWebhookHandler>[0] = () => Effect.void,
   suppliedSignature?: string,
 ) => {
+  const headers = new Headers({ "content-type": "application/json" });
+  if (suppliedSignature) {
+    headers.set(X_WEBHOOK_SIGNATURE_HEADER, suppliedSignature);
+  }
   const request = HttpServerRequest.fromWeb(
     new Request("https://events.example.com/api/x/webhook", {
       method: "POST",
-      headers: {
-        "content-type": "application/json",
-        ...(suppliedSignature
-          ? { [X_WEBHOOK_SIGNATURE_HEADER]: suppliedSignature }
-          : {}),
-      },
+      headers,
       body,
     }),
   );
@@ -47,6 +46,8 @@ const post = async (
 describe("X webhook receiver", () => {
   test("resolves nested plan-time origins", async () => {
     const origin = await Effect.runPromise(
+      // SAFETY: Nested Effects are an intentional runtime fixture for the
+      // recursive resolver even though WebhookRoute's public input is flatter.
       resolveOrigin(
         Effect.succeed(Effect.succeed("https://events.example.com")) as never,
       ),
@@ -217,7 +218,11 @@ describe("X webhook receiver", () => {
           Type: "Test.Runtime",
           id: "runtime",
           env: {},
-          get: <A>() => Effect.succeed(Redacted.make(secretValue) as A),
+          get: <A>() => {
+            // SAFETY: RuntimeOnly binds exactly one Redacted<string> secret;
+            // the generic RuntimeContext API cannot encode that fixture key.
+            return Effect.succeed(Redacted.make(secretValue) as A);
+          },
           set: (key: string) =>
             Effect.sync(() => {
               bindings.push(key);

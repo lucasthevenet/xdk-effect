@@ -25,8 +25,15 @@ export const callX = <A>(thunk: () => Promise<A>) =>
         : new Error("X API request failed", { cause }),
   });
 
-const encodedBody = (value: unknown): string =>
+const encodedBody = (value: XEnvelope<unknown>): string =>
   JSON.stringify(value) ?? String(value);
+
+const XErrorsEnvelopeSchema = Schema.Struct({
+  errors: Schema.optional(
+    Schema.Array(Schema.Record(Schema.String, Schema.Json)),
+  ),
+});
+const isXErrorsEnvelope = Schema.is(XErrorsEnvelopeSchema);
 
 /**
  * Lifecycle observations must be authoritative. X can return a successful
@@ -37,14 +44,9 @@ const assertXAuthoritativeSync = <T extends XEnvelope<unknown>>(
   result: XResult<T>,
   operation: string,
 ): void => {
-  const errors = result.value.errors as unknown;
   if (
-    errors !== undefined &&
-    (!Array.isArray(errors) ||
-      errors.length > 0 ||
-      !errors.every(
-        (problem) => problem !== null && typeof problem === "object",
-      ))
+    !isXErrorsEnvelope(result.value) ||
+    (result.value.errors !== undefined && result.value.errors.length > 0)
   ) {
     throw new XDecodeError(
       `X returned partial errors while ${operation}`,
@@ -124,36 +126,29 @@ export const stableId = (value: string): string => {
   return hash.toString(36);
 };
 
+const isJsonObject = (value: Schema.Json): value is Schema.JsonObject =>
+  value !== null && typeof value === "object" && !Array.isArray(value);
+
 const canonicalJsonValue = (
-  value: unknown,
-  ancestors: ReadonlySet<object>,
-): unknown => {
+  value: Schema.Json,
+  ancestors: ReadonlySet<Schema.JsonArray | Schema.JsonObject>,
+): Schema.Json => {
   if (Array.isArray(value)) {
     if (ancestors.has(value)) {
       throw new TypeError("Cannot canonicalize a cyclic JSON value");
     }
     const nested = new Set(ancestors).add(value);
-    return value.map((entry) =>
-      entry === undefined ||
-      typeof entry === "function" ||
-      typeof entry === "symbol"
-        ? null
-        : canonicalJsonValue(entry, nested),
-    );
+    return value.map((entry) => canonicalJsonValue(entry, nested));
   }
-  if (value !== null && typeof value === "object") {
+  if (isJsonObject(value)) {
     if (ancestors.has(value)) {
       throw new TypeError("Cannot canonicalize a cyclic JSON value");
     }
     const nested = new Set(ancestors).add(value);
-    const result: Record<string, unknown> = {};
-    for (const key of Object.keys(value).sort()) {
-      const entry = (value as Record<string, unknown>)[key];
-      if (
-        entry !== undefined &&
-        typeof entry !== "function" &&
-        typeof entry !== "symbol"
-      ) {
+    const result: Record<string, Schema.Json> = {};
+    for (const key of Object.keys(value).toSorted()) {
+      const entry = value[key];
+      if (entry !== undefined) {
         result[key] = canonicalJsonValue(entry, nested);
       }
     }
@@ -163,7 +158,7 @@ const canonicalJsonValue = (
 };
 
 /** JSON encoding whose object-key order is stable across equivalent inputs. */
-export const stableJson = (value: unknown): string => {
+export const stableJson = (value: Schema.Json): string => {
   const encoded = JSON.stringify(canonicalJsonValue(value, new Set()));
   if (encoded === undefined) {
     throw new TypeError("Value cannot be represented as JSON");
@@ -173,12 +168,10 @@ export const stableJson = (value: unknown): string => {
 
 export const ignoreXNotFound = <A, E, R>(
   effect: Effect.Effect<A, E, R>,
-): Effect.Effect<A | undefined, Exclude<E, XApiError>, R> =>
+): Effect.Effect<A | undefined, E, R> =>
   effect.pipe(
     Effect.catch((cause) =>
-      isXStatus(cause, 404)
-        ? Effect.succeed(undefined)
-        : Effect.fail(cause as Exclude<E, XApiError>),
+      isXStatus(cause, 404) ? Effect.succeed(undefined) : Effect.fail(cause),
     ),
   );
 

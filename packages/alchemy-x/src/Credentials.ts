@@ -71,10 +71,46 @@ export type XClientOptions = Omit<
   "appBearerToken" | "userAccessToken"
 >;
 
+interface XCredentialsServiceBuilder {
+  client: XClient;
+  appBearerToken: Redacted.Redacted<string>;
+  userAccessToken: Redacted.Redacted<string>;
+  consumerSecret: Redacted.Redacted<string>;
+  userId?: string;
+  clientId?: string;
+  oauthScopes?: readonly string[];
+  source: XCredentialsSource;
+}
+
+interface XCredentialsInputBuilder {
+  appBearerToken: string | Redacted.Redacted<string>;
+  userAccessToken: string | Redacted.Redacted<string>;
+  consumerSecret: string | Redacted.Redacted<string>;
+  userId?: string;
+  clientId?: string;
+  oauthScopes?: readonly string[];
+  source?: XCredentialsSource;
+}
+
+interface XAppCredentialsServiceBuilder {
+  client: XClient;
+  appBearerToken: Redacted.Redacted<string>;
+  consumerSecret: Redacted.Redacted<string>;
+  clientId?: string;
+  source: XCredentialsSource;
+}
+
+interface XAppCredentialsInputBuilder {
+  appBearerToken: string | Redacted.Redacted<string>;
+  consumerSecret: string | Redacted.Redacted<string>;
+  clientId?: string;
+  source?: XCredentialsSource;
+}
+
 const toRedacted = (
   value: string | Redacted.Redacted<string>,
 ): Redacted.Redacted<string> =>
-  typeof value === "string" ? Redacted.make(value) : value;
+  Redacted.isRedacted(value) ? value : Redacted.make(value);
 
 /** Create a distilled-x client without exposing Redacted token values. */
 export const createXClient = (
@@ -108,42 +144,38 @@ const make = (
   const appBearerToken = toRedacted(input.appBearerToken);
   const userAccessToken = toRedacted(input.userAccessToken);
   const consumerSecret = toRedacted(input.consumerSecret);
-  return {
+  const credentials: XCredentialsServiceBuilder = {
     client: createXClient({ appBearerToken, userAccessToken }, options),
     appBearerToken,
     userAccessToken,
     consumerSecret,
-    ...(input.userId !== undefined ? { userId: input.userId } : {}),
-    ...(input.clientId !== undefined ? { clientId: input.clientId } : {}),
-    ...(input.oauthScopes !== undefined
-      ? { oauthScopes: input.oauthScopes }
-      : {}),
     source: input.source ?? { type: "credentials" },
   };
+  if (input.userId !== undefined) credentials.userId = input.userId;
+  if (input.clientId !== undefined) credentials.clientId = input.clientId;
+  if (input.oauthScopes !== undefined) {
+    credentials.oauthScopes = input.oauthScopes;
+  }
+  return credentials;
 };
 
 const fromResolved = (
   credentials: XResolvedCredentials,
   options?: XClientOptions,
-): XCredentialsService =>
-  make(
-    {
-      appBearerToken: credentials.appBearerToken,
-      userAccessToken: credentials.userAccessToken,
-      consumerSecret: credentials.consumerSecret,
-      ...(credentials.userId !== undefined
-        ? { userId: credentials.userId }
-        : {}),
-      ...(credentials.clientId !== undefined
-        ? { clientId: credentials.clientId }
-        : {}),
-      ...(credentials.oauthScopes !== undefined
-        ? { oauthScopes: credentials.oauthScopes }
-        : {}),
-      source: credentials.source,
-    },
-    options,
-  );
+): XCredentialsService => {
+  const input: XCredentialsInputBuilder = {
+    appBearerToken: credentials.appBearerToken,
+    userAccessToken: credentials.userAccessToken,
+    consumerSecret: credentials.consumerSecret,
+    source: credentials.source,
+  };
+  if (credentials.userId !== undefined) input.userId = credentials.userId;
+  if (credentials.clientId !== undefined) input.clientId = credentials.clientId;
+  if (credentials.oauthScopes !== undefined) {
+    input.oauthScopes = credentials.oauthScopes;
+  }
+  return make(input, options);
+};
 
 const makeApp = (
   input: XAppCredentialsInput,
@@ -151,30 +183,28 @@ const makeApp = (
 ): XAppCredentialsService => {
   const appBearerToken = toRedacted(input.appBearerToken);
   const consumerSecret = toRedacted(input.consumerSecret);
-  return {
+  const credentials: XAppCredentialsServiceBuilder = {
     client: createAppClient({ appBearerToken }, options),
     appBearerToken,
     consumerSecret,
-    ...(input.clientId !== undefined ? { clientId: input.clientId } : {}),
     source: input.source ?? { type: "credentials" },
   };
+  if (input.clientId !== undefined) credentials.clientId = input.clientId;
+  return credentials;
 };
 
 const fromResolvedApp = (
   credentials: XResolvedAppCredentials,
   options?: XClientOptions,
-): XAppCredentialsService =>
-  makeApp(
-    {
-      appBearerToken: credentials.appBearerToken,
-      consumerSecret: credentials.consumerSecret,
-      ...(credentials.clientId !== undefined
-        ? { clientId: credentials.clientId }
-        : {}),
-      source: credentials.source,
-    },
-    options,
-  );
+): XAppCredentialsService => {
+  const input: XAppCredentialsInputBuilder = {
+    appBearerToken: credentials.appBearerToken,
+    consumerSecret: credentials.consumerSecret,
+    source: credentials.source,
+  };
+  if (credentials.clientId !== undefined) input.clientId = credentials.clientId;
+  return makeApp(input, options);
+};
 
 /**
  * Provided tag. Its value intentionally remains lazy so registering provider
@@ -263,14 +293,12 @@ export const fromAuthProvider = (
       );
       const userCredentials = yield* Effect.cached(
         config.pipe(
-          Effect.flatMap((value) =>
-            auth.read(profileName, value as XAuthConfig),
-          ),
+          Effect.flatMap((value) => auth.read(profileName, value)),
           Effect.map((credentials) => fromResolved(credentials, options)),
           Effect.mapError(
             (cause) =>
               new AuthError({
-                message: `Failed to resolve X credentials for profile '${profileName}': ${(cause as { message?: string }).message ?? String(cause)}`,
+                message: `Failed to resolve X credentials for profile '${profileName}': ${cause instanceof Error ? cause.message : String(cause)}`,
                 cause,
               }),
           ),

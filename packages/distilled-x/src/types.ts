@@ -1,10 +1,20 @@
+export type XJsonPrimitive = boolean | number | string | null;
+
+export interface XJsonObject {
+  readonly [key: string]: XJsonValue;
+}
+
+export interface XJsonArray extends ReadonlyArray<XJsonValue> {}
+
+export type XJsonValue = XJsonArray | XJsonObject | XJsonPrimitive;
+
 export interface XRateLimit {
   readonly limit?: number;
   readonly remaining?: number;
   readonly resetAt?: Date;
 }
 
-export interface XProblem {
+export interface XProblem extends XJsonObject {
   readonly type?: string;
   readonly title?: string;
   readonly detail?: string;
@@ -15,21 +25,22 @@ export interface XProblem {
   readonly value?: string;
   readonly resource_id?: string;
   readonly resource_type?: string;
-  readonly [key: string]: unknown;
+}
+
+export interface XEnvelopeMeta extends XJsonObject {
+  readonly result_count?: number;
+  readonly next_token?: string;
+  readonly previous_token?: string;
+  readonly total_subscriptions?: number;
 }
 
 export interface XEnvelope<T> {
   readonly data?: T;
   readonly errors?: readonly XProblem[];
-  readonly meta?: {
-    readonly result_count?: number;
-    readonly next_token?: string;
-    readonly previous_token?: string;
-    readonly total_subscriptions?: number;
-    readonly [key: string]: unknown;
-  };
-  readonly includes?: unknown;
-  readonly [key: string]: unknown;
+  readonly meta?: XEnvelopeMeta;
+  readonly includes?: XJsonValue;
+  /** Forward-compatible fields returned by newer X API revisions. */
+  readonly [key: string]: T | XJsonValue | undefined;
 }
 
 export interface XResult<T> {
@@ -39,24 +50,23 @@ export interface XResult<T> {
   readonly rateLimit?: XRateLimit;
 }
 
-export interface XWebhook {
+export interface XWebhook extends XJsonObject {
   readonly id: string;
   readonly url: string;
   readonly valid: boolean;
   readonly created_at: string;
-  readonly [key: string]: unknown;
 }
 
 export type XWebhookValidation =
   | {
       readonly valid: boolean;
       readonly attempted?: boolean;
-      readonly [key: string]: unknown;
+      readonly [key: string]: XJsonValue;
     }
   | {
       readonly attempted: boolean;
       readonly valid?: boolean;
-      readonly [key: string]: unknown;
+      readonly [key: string]: XJsonValue;
     };
 
 export type KnownXActivityEventType =
@@ -107,7 +117,7 @@ export type XActivityEventType =
   | KnownXActivityEventType
   | (string & Record<never, never>);
 
-export interface XActivityFilter {
+export interface XActivityFilter extends XJsonObject {
   readonly user_id?: string;
   readonly keyword?: string;
   readonly direction?: "inbound" | "outbound";
@@ -121,7 +131,7 @@ export interface XActivitySubscriptionInput {
   readonly webhook_id?: string;
 }
 
-export interface XActivitySubscription {
+export interface XActivitySubscription extends XJsonObject {
   readonly subscription_id: string;
   readonly event_type: XActivityEventType;
   readonly filter: XActivityFilter;
@@ -129,85 +139,83 @@ export interface XActivitySubscription {
   readonly webhook_id?: string;
   readonly created_at?: string;
   readonly updated_at?: string;
-  readonly [key: string]: unknown;
 }
 
-export interface XUser {
+export interface XUser extends XJsonObject {
   readonly id: string;
   readonly name?: string;
   readonly username?: string;
-  readonly [key: string]: unknown;
 }
 
-export interface XAccountActivityDelivery {
+export interface XAccountActivityDelivery extends XJsonObject {
   /** Most deliveries include this; OAuth revoke user_event payloads may not. */
   readonly for_user_id?: string;
-  readonly tweet_create_events?: readonly unknown[];
-  readonly tweet_delete_events?: readonly unknown[];
-  readonly favorite_events?: readonly unknown[];
-  readonly follow_events?: readonly unknown[];
-  readonly block_events?: readonly unknown[];
-  readonly mute_events?: readonly unknown[];
-  readonly user_event?: unknown;
-  readonly direct_message_events?: readonly unknown[];
-  readonly direct_message_indicate_typing_events?: readonly unknown[];
-  readonly direct_message_mark_read_events?: readonly unknown[];
-  readonly [key: string]: unknown;
+  readonly tweet_create_events?: XJsonArray;
+  readonly tweet_delete_events?: XJsonArray;
+  readonly favorite_events?: XJsonArray;
+  readonly follow_events?: XJsonArray;
+  readonly block_events?: XJsonArray;
+  readonly mute_events?: XJsonArray;
+  readonly user_event?: XJsonValue;
+  readonly direct_message_events?: XJsonArray;
+  readonly direct_message_indicate_typing_events?: XJsonArray;
+  readonly direct_message_mark_read_events?: XJsonArray;
 }
 
-export interface XAccountActivitySubscriptions {
+export interface XAccountActivitySubscriptionEntry extends XJsonObject {
+  readonly user_id: string;
+}
+
+export interface XAccountActivitySubscriptions extends XJsonObject {
   readonly application_id?: string;
   readonly webhook_id?: string;
   readonly webhook_url?: string;
-  readonly subscriptions?: readonly {
-    readonly user_id: string;
-  }[];
-  readonly [key: string]: unknown;
+  readonly subscriptions?: readonly XAccountActivitySubscriptionEntry[];
 }
 
-export interface XAccountActivitySubscriptionStatus {
+export interface XAccountActivitySubscriptionStatus extends XJsonObject {
   readonly subscribed: boolean;
-  readonly [key: string]: unknown;
 }
 
-export interface XActivityDelivery {
-  readonly data: {
-    readonly event_type: XActivityEventType;
-    readonly event_uuid?: string;
-    readonly filter?: XActivityFilter;
-    readonly includes?: unknown;
-    readonly payload?: unknown;
-    readonly tag?: string;
-    readonly [key: string]: unknown;
-  };
+export interface XActivityDeliveryData extends XJsonObject {
+  readonly event_type: XActivityEventType;
+  readonly event_uuid?: string;
+  readonly filter?: XActivityFilter;
+  readonly includes?: XJsonValue;
+  readonly payload?: XJsonValue;
+  readonly tag?: string;
+}
+
+export interface XActivityDelivery extends XJsonObject {
+  readonly data: XActivityDeliveryData;
   readonly errors?: readonly XProblem[];
-  readonly [key: string]: unknown;
 }
 
-export interface XReplayJobDelivery {
-  readonly replay_job_status: {
-    readonly webhook_id: string;
-    readonly job_state: string;
-    readonly job_state_description?: string;
-    readonly job_id: string;
-    readonly [key: string]: unknown;
-  };
-  readonly [key: string]: unknown;
+export interface XReplayJobStatus extends XJsonObject {
+  readonly webhook_id: string;
+  readonly job_state: string;
+  readonly job_state_description?: string;
+  readonly job_id: string;
 }
 
-export interface XFilteredStreamDelivery {
-  readonly data: {
-    readonly id: string;
-    readonly text?: string;
-    readonly [key: string]: unknown;
-  };
-  readonly matching_rules: readonly {
-    readonly id: string;
-    readonly tag?: string;
-    readonly [key: string]: unknown;
-  }[];
-  readonly includes?: unknown;
-  readonly [key: string]: unknown;
+export interface XReplayJobDelivery extends XJsonObject {
+  readonly replay_job_status: XReplayJobStatus;
+}
+
+export interface XFilteredStreamData extends XJsonObject {
+  readonly id: string;
+  readonly text?: string;
+}
+
+export interface XFilteredStreamMatchingRule extends XJsonObject {
+  readonly id: string;
+  readonly tag?: string;
+}
+
+export interface XFilteredStreamDelivery extends XJsonObject {
+  readonly data: XFilteredStreamData;
+  readonly matching_rules: readonly XFilteredStreamMatchingRule[];
+  readonly includes?: XJsonValue;
 }
 
 export type XWebhookDelivery =

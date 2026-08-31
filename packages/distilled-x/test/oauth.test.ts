@@ -7,10 +7,10 @@ import {
 
 const zeroCrypto: Pick<Crypto, "getRandomValues" | "subtle"> = {
   subtle: globalThis.crypto.subtle,
-  getRandomValues: ((array: ArrayBufferView) => {
+  getRandomValues<T extends ArrayBufferView>(array: T): T {
     new Uint8Array(array.buffer, array.byteOffset, array.byteLength).fill(0);
     return array;
-  }) as Crypto["getRandomValues"],
+  },
 };
 
 describe("OAuth 2.0 PKCE", () => {

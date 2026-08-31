@@ -46,10 +46,9 @@ import { repairStoredCredentialPermissionsWith } from "./CredentialFiles.ts";
 const OAUTH_CALLBACK_TIMEOUT_MS = 5 * 60_000;
 
 const authError = (message: string, cause?: unknown): AuthError =>
-  new AuthError({
-    message,
-    ...(cause !== undefined ? { cause } : {}),
-  });
+  cause === undefined
+    ? new AuthError({ message })
+    : new AuthError({ message, cause });
 
 const mapAuthError =
   (message: string) =>
@@ -69,6 +68,8 @@ type XOAuthLoopbackModule = typeof import("./OAuthLoopback.ts");
 
 // Keep the Node-only listener behind an opaque package self-import. Worker
 // bundlers cannot accidentally pull `node:http` into the receiver graph.
+// SAFETY: the package export resolves this specifier to the OAuthLoopback
+// module on Node/Bun and rejects it under the Worker condition.
 const loadOAuthLoopback = (specifier: string) =>
   import(specifier) as Promise<XOAuthLoopbackModule>;
 
@@ -121,33 +122,48 @@ const oauthClientFor = (app: {
   readonly clientSecret?: string | Redacted.Redacted<string>;
 }): OAuth2Client => {
   const clientSecret = app.clientSecret;
+  if (clientSecret === undefined) {
+    return createOAuth2Client({ clientId: app.clientId });
+  }
+  const secretValue = Redacted.isRedacted(clientSecret)
+    ? Redacted.value(clientSecret)
+    : clientSecret;
   return createOAuth2Client({
     clientId: app.clientId,
-    ...(clientSecret !== undefined
-      ? {
-          clientSecret: () =>
-            typeof clientSecret === "string"
-              ? clientSecret
-              : Redacted.value(clientSecret),
-        }
-      : {}),
+    clientSecret: () => secretValue,
   });
 };
+
+interface XResolvedCredentialsBuilder extends XResolvedCredentials {
+  userId?: string;
+}
+
+interface XStoredOAuthAppBuilder extends XStoredOAuthApp {
+  clientSecret?: string;
+}
+
+interface XStoredOAuthTokensBuilder extends XStoredOAuthTokens {
+  refreshToken?: string;
+  userId?: string;
+}
 
 const credentialsFromStored = (
   app: XStoredOAuthApp,
   tokens: XStoredOAuthTokens,
-): XResolvedCredentials => ({
-  type: "oauth2",
-  appBearerToken: Redacted.make(app.appBearerToken),
-  userAccessToken: Redacted.make(tokens.accessToken),
-  consumerSecret: Redacted.make(app.consumerSecret),
-  clientId: app.clientId,
-  ...(tokens.userId !== undefined ? { userId: tokens.userId } : {}),
-  accessTokenExpiresAt: tokens.expiresAt,
-  oauthScopes: tokens.scopes,
-  source: { type: "oauth", details: X_OAUTH_TOKENS_STORE_KEY },
-});
+): XResolvedCredentials => {
+  const credentials: XResolvedCredentialsBuilder = {
+    type: "oauth2",
+    appBearerToken: Redacted.make(app.appBearerToken),
+    userAccessToken: Redacted.make(tokens.accessToken),
+    consumerSecret: Redacted.make(app.consumerSecret),
+    clientId: app.clientId,
+    accessTokenExpiresAt: tokens.expiresAt,
+    oauthScopes: tokens.scopes,
+    source: { type: "oauth", details: X_OAUTH_TOKENS_STORE_KEY },
+  };
+  if (tokens.userId !== undefined) credentials.userId = tokens.userId;
+  return credentials;
+};
 
 const assertCallbackMatchesRedirect = (
   callback: URL,
@@ -243,15 +259,16 @@ const promptOAuthApp = (): Effect.Effect<XStoredOAuthApp, AuthError> =>
       );
     }
 
-    return {
-      type: "x-oauth-app" as const,
+    const app: XStoredOAuthAppBuilder = {
+      type: "x-oauth-app",
       clientId,
-      ...(clientSecret !== undefined ? { clientSecret } : {}),
       appBearerToken,
       consumerSecret,
       redirectUri,
       scopes,
-    } satisfies XStoredOAuthApp;
+    };
+    if (clientSecret !== undefined) app.clientSecret = clientSecret;
+    return app;
   });
 
 /** Build the registration layer for X's Alchemy AuthProvider. */
@@ -344,8 +361,8 @@ export const makeXAuth = () =>
           () => oauth.refreshToken({ refreshToken: tokens.refreshToken! }),
         );
         const now = yield* Clock.currentTimeMillis;
-        const fresh = {
-          type: "x-oauth-tokens" as const,
+        const fresh: XStoredOAuthTokensBuilder = {
+          type: "x-oauth-tokens",
           accessToken: refreshed.access_token,
           refreshToken: refreshed.refresh_token ?? tokens.refreshToken,
           expiresAt: now + refreshed.expires_in * 1_000,
@@ -353,8 +370,8 @@ export const makeXAuth = () =>
             refreshed.scope !== undefined
               ? parseScopes(refreshed.scope)
               : tokens.scopes,
-          ...(tokens.userId !== undefined ? { userId: tokens.userId } : {}),
-        } satisfies XStoredOAuthTokens;
+        };
+        if (tokens.userId !== undefined) fresh.userId = tokens.userId;
         // X may rotate refresh tokens. Persist before returning the access
         // token so no later consumer can observe an uncommitted rotation.
         yield* writeTokens(profileName, fresh);
@@ -479,17 +496,17 @@ export const makeXAuth = () =>
             );
         const now = yield* Clock.currentTimeMillis;
         const userId = yield* discoverUserId(app, token.access_token);
-        const tokens = {
-          type: "x-oauth-tokens" as const,
+        const tokens: XStoredOAuthTokensBuilder = {
+          type: "x-oauth-tokens",
           accessToken: token.access_token,
-          ...(token.refresh_token !== undefined
-            ? { refreshToken: token.refresh_token }
-            : {}),
           expiresAt: now + token.expires_in * 1_000,
           scopes:
             token.scope !== undefined ? parseScopes(token.scope) : app.scopes,
-          ...(userId !== undefined ? { userId } : {}),
-        } satisfies XStoredOAuthTokens;
+        };
+        if (token.refresh_token !== undefined) {
+          tokens.refreshToken = token.refresh_token;
+        }
+        if (userId !== undefined) tokens.userId = userId;
         yield* writeTokens(profileName, tokens);
         yield* Clank.success("X: OAuth credentials saved.");
         return tokens;

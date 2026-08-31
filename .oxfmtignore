@@ -4,4 +4,4 @@ dist
 coverage
 bun.lock
 docs/research
-
+tools/oxlint/anti-slop

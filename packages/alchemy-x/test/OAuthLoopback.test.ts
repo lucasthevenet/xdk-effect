@@ -2,13 +2,18 @@ import { describe, expect, test } from "bun:test";
 import net from "node:net";
 import { startXOAuthLoopback } from "../src/OAuthLoopback.ts";
 
+const isTcpAddress = (
+  address: ReturnType<net.Server["address"]>,
+): address is Exclude<ReturnType<net.Server["address"]>, string | null> =>
+  address !== null && Object(address) === address;
+
 const availablePort = (): Promise<number> =>
   new Promise((resolve, reject) => {
     const server = net.createServer();
     server.once("error", reject);
     server.listen(0, "127.0.0.1", () => {
       const address = server.address();
-      if (address === null || typeof address === "string") {
+      if (!isTcpAddress(address)) {
         server.close();
         reject(new Error("Could not reserve an ephemeral TCP port"));
         return;

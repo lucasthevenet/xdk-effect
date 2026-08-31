@@ -1,6 +1,7 @@
 import * as Clock from "effect/Clock";
 import * as Effect from "effect/Effect";
 import * as Redacted from "effect/Redacted";
+import * as Schema from "effect/Schema";
 import { AuthError } from "alchemy/Auth/AuthProvider";
 import { getEnv, getEnvRedactedRequired } from "alchemy/Auth/Env";
 
@@ -77,51 +78,51 @@ export interface XResolvedAppCredentials {
   };
 }
 
-export const isStoredOAuthApp = (value: unknown): value is XStoredOAuthApp => {
-  if (value === null || typeof value !== "object") return false;
-  const app = value as Record<string, unknown>;
-  return (
-    app.type === "x-oauth-app" &&
-    typeof app.clientId === "string" &&
-    app.clientId.length > 0 &&
-    (app.clientSecret === undefined || typeof app.clientSecret === "string") &&
-    typeof app.appBearerToken === "string" &&
-    app.appBearerToken.length > 0 &&
-    typeof app.consumerSecret === "string" &&
-    app.consumerSecret.length > 0 &&
-    typeof app.redirectUri === "string" &&
-    Array.isArray(app.scopes) &&
-    app.scopes.length > 0 &&
-    app.scopes.every((scope) => typeof scope === "string" && scope.length > 0)
-  );
-};
+interface XResolvedAppCredentialsBuilder {
+  appBearerToken: Redacted.Redacted<string>;
+  consumerSecret: Redacted.Redacted<string>;
+  clientId?: string;
+  source: XResolvedAppCredentials["source"];
+}
 
-export const isStoredOAuthTokens = (
-  value: unknown,
-): value is XStoredOAuthTokens => {
-  if (value === null || typeof value !== "object") return false;
-  const tokens = value as Record<string, unknown>;
-  return (
-    tokens.type === "x-oauth-tokens" &&
-    typeof tokens.accessToken === "string" &&
-    tokens.accessToken.length > 0 &&
-    (tokens.refreshToken === undefined ||
-      typeof tokens.refreshToken === "string") &&
-    typeof tokens.expiresAt === "number" &&
-    Number.isFinite(tokens.expiresAt) &&
-    Array.isArray(tokens.scopes) &&
-    tokens.scopes.every(
-      (scope) => typeof scope === "string" && scope.length > 0,
-    ) &&
-    (tokens.userId === undefined || typeof tokens.userId === "string")
-  );
-};
+interface XResolvedCredentialsBuilder {
+  type: "oauth2";
+  appBearerToken: Redacted.Redacted<string>;
+  userAccessToken: Redacted.Redacted<string>;
+  consumerSecret: Redacted.Redacted<string>;
+  clientId?: string;
+  accessTokenExpiresAt?: number;
+  oauthScopes?: readonly string[];
+  source: XResolvedCredentials["source"];
+}
+
+const StoredOAuthAppSchema = Schema.Struct({
+  type: Schema.Literal("x-oauth-app"),
+  clientId: Schema.NonEmptyString,
+  clientSecret: Schema.optionalKey(Schema.String),
+  appBearerToken: Schema.NonEmptyString,
+  consumerSecret: Schema.NonEmptyString,
+  redirectUri: Schema.String,
+  scopes: Schema.NonEmptyArray(Schema.NonEmptyString),
+});
+
+const StoredOAuthTokensSchema = Schema.Struct({
+  type: Schema.Literal("x-oauth-tokens"),
+  accessToken: Schema.NonEmptyString,
+  refreshToken: Schema.optionalKey(Schema.String),
+  expiresAt: Schema.Finite,
+  scopes: Schema.Array(Schema.NonEmptyString),
+  userId: Schema.optionalKey(Schema.String),
+});
+
+export const isStoredOAuthApp = Schema.is(StoredOAuthAppSchema);
+
+export const isStoredOAuthTokens = Schema.is(StoredOAuthTokensSchema);
 
 const authError = (message: string, cause?: unknown): AuthError =>
-  new AuthError({
-    message,
-    ...(cause !== undefined ? { cause } : {}),
-  });
+  cause === undefined
+    ? new AuthError({ message })
+    : new AuthError({ message, cause });
 
 export const parseXOAuthScopes = (input: string): readonly string[] => [
   ...new Set(
@@ -166,15 +167,16 @@ export const readEnvAppCredentials = (): Effect.Effect<
     const consumerSecret = yield* getEnvRedactedRequired("X_API_SECRET");
     const clientIdValue = yield* getEnv("X_CLIENT_ID");
     const clientId = clientIdValue?.trim() || undefined;
-    return {
+    const credentials: XResolvedAppCredentialsBuilder = {
       appBearerToken,
       consumerSecret,
-      ...(clientId !== undefined ? { clientId } : {}),
       source: {
-        type: "env" as const,
+        type: "env",
         details: "X_BEARER_TOKEN/X_API_SECRET",
       },
-    } satisfies XResolvedAppCredentials;
+    };
+    if (clientId !== undefined) credentials.clientId = clientId;
+    return credentials satisfies XResolvedAppCredentials;
   });
 
 /** Resolve the documented X environment-variable credential set. */
@@ -206,16 +208,19 @@ export const readEnvCredentials = (): Effect.Effect<
       }
     }
 
-    return {
-      type: "oauth2" as const,
+    const credentials: XResolvedCredentialsBuilder = {
+      type: "oauth2",
       appBearerToken: app.appBearerToken,
       userAccessToken,
       consumerSecret: app.consumerSecret,
-      ...(app.clientId !== undefined ? { clientId: app.clientId } : {}),
-      ...(accessTokenExpiresAt !== undefined ? { accessTokenExpiresAt } : {}),
-      ...(oauthScopes !== undefined && oauthScopes.length > 0
-        ? { oauthScopes }
-        : {}),
-      source: { type: "env" as const, details },
-    } satisfies XResolvedCredentials;
+      source: { type: "env", details },
+    };
+    if (app.clientId !== undefined) credentials.clientId = app.clientId;
+    if (accessTokenExpiresAt !== undefined) {
+      credentials.accessTokenExpiresAt = accessTokenExpiresAt;
+    }
+    if (oauthScopes !== undefined && oauthScopes.length > 0) {
+      credentials.oauthScopes = oauthScopes;
+    }
+    return credentials satisfies XResolvedCredentials;
   });

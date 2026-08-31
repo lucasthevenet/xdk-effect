@@ -24,12 +24,10 @@ import { makeXAuth } from "../src/AuthProvider.ts";
 
 const deferred = <A>() => {
   let resolve!: (value: A | PromiseLike<A>) => void;
-  let reject!: (reason?: unknown) => void;
-  const promise = new Promise<A>((resolvePromise, rejectPromise) => {
+  const promise = new Promise<A>((resolvePromise) => {
     resolve = resolvePromise;
-    reject = rejectPromise;
   });
-  return { promise, resolve, reject };
+  return { promise, resolve };
 };
 
 type FileOperation =
@@ -76,8 +74,11 @@ describe("X AuthProvider stored OAuth", () => {
       [X_OAUTH_TOKENS_STORE_KEY, tokens],
     ]);
     const store = {
-      read: <T>(_profile: string, key: string) =>
-        Effect.succeed(stored.get(key) as T | undefined),
+      read: <T>(_profile: string, key: string) => {
+        // SAFETY: The in-memory store is populated under the exact credential
+        // keys with their corresponding X stored credential domain values.
+        return Effect.succeed(stored.get(key) as T | undefined);
+      },
       write: <T>(_profile: string, key: string, value: T) =>
         Effect.sync(() => {
           stored.set(key, value);
@@ -120,6 +121,8 @@ describe("X AuthProvider stored OAuth", () => {
       writeFileString: (path, data, options) => {
         operations.push({ type: "writeFileString", path, data, options });
         if (path === tokenFile) {
+          // SAFETY: AuthProvider serializes XStoredOAuthTokens to this exact
+          // credential path; capturing that value is the assertion under test.
           writeEntered.resolve(JSON.parse(data) as XStoredOAuthTokens);
           return Effect.promise(() => releaseWrite.promise);
         }
@@ -162,6 +165,8 @@ describe("X AuthProvider stored OAuth", () => {
         Effect.scoped(
           Effect.gen(function* () {
             yield* Layer.build(makeXAuth());
+            // SAFETY: makeXAuth registers this exact provider name and config /
+            // credential pair in the otherwise heterogeneous registry.
             const provider = registry[X_AUTH_PROVIDER_NAME] as AuthProvider<
               XAuthConfig,
               XResolvedCredentials
@@ -270,8 +275,11 @@ describe("X AuthProvider stored OAuth", () => {
       ],
     ]);
     const store = {
-      read: <T>(_profile: string, key: string) =>
-        Effect.succeed(stored.get(key) as T | undefined),
+      read: <T>(_profile: string, key: string) => {
+        // SAFETY: The in-memory store is populated under the exact credential
+        // keys with their corresponding X stored credential domain values.
+        return Effect.succeed(stored.get(key) as T | undefined);
+      },
       write: () => Effect.void,
       delete: (_profile: string, key: string) =>
         Effect.sync(() => {
@@ -318,6 +326,8 @@ describe("X AuthProvider stored OAuth", () => {
         Effect.scoped(
           Effect.gen(function* () {
             yield* Layer.build(makeXAuth());
+            // SAFETY: makeXAuth registers this exact provider name and config /
+            // credential pair in the otherwise heterogeneous registry.
             const provider = registry[X_AUTH_PROVIDER_NAME] as AuthProvider<
               XAuthConfig,
               XResolvedCredentials

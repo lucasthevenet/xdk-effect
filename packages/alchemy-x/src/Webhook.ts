@@ -62,6 +62,17 @@ const toAttributes = (webhook: XWebhook): WebhookAttributes => ({
   createdAt: webhook.created_at,
 });
 
+const isResolvedStringInput = (
+  value: Input<string> | undefined,
+): value is string => typeof value === "string";
+
+const refuseAdoption = (webhook: XWebhook, message: string) =>
+  new XAdoptionRequired({
+    resourceType: "X.Webhook",
+    remoteId: webhook.id,
+    message,
+  });
+
 const deleteWebhookRegistration = Effect.fn(function* (webhookId: string) {
   const { client } = yield* XAppCredentials;
   const deleted = yield* ignoreXNotFound(
@@ -84,38 +95,41 @@ const deleteWebhookRegistration = Effect.fn(function* (webhookId: string) {
 
 export const WebhookProvider = () =>
   Provider.succeed(Webhook, {
-    diff: Effect.fn(function* ({ olds, news, output }) {
-      if (!isResolved(news)) return;
-      // A failed first create can persist unresolved upstream props as
-      // `undefined`. Let Alchemy resume creation instead of trying to compare
-      // an URL that never reached the provider.
-      const currentUrl = output?.url ?? olds.url;
-      if (typeof currentUrl !== "string") return;
-      if (
-        normalizeWebhookUrl(news.url as string) !==
-        normalizeWebhookUrl(currentUrl)
-      ) {
-        // Reconcile performs the target collision check and then the
-        // one-webhook tier's delete/create sequence as one provider action.
-        // Letting the engine delete first would leave a TOCTOU gap between
-        // this plan and apply where a foreign target could appear.
-        return { action: "update" } as const;
-      }
-      return undefined;
-    }),
+    diff: Effect.fn(({ olds, news, output }) =>
+      Effect.sync(() => {
+        if (!isResolved(news)) return;
+        if (!isResolvedStringInput(news.url)) return;
+        // A failed first create can persist unresolved upstream props as
+        // `undefined`. Let Alchemy resume creation instead of trying to compare
+        // an URL that never reached the provider.
+        const currentUrl = output?.url ?? olds.url;
+        if (!isResolvedStringInput(currentUrl)) return;
+        if (normalizeWebhookUrl(news.url) !== normalizeWebhookUrl(currentUrl)) {
+          // Reconcile performs the target collision check and then the
+          // one-webhook tier's delete/create sequence as one provider action.
+          // Letting the engine delete first would leave a TOCTOU gap between
+          // this plan and apply where a foreign target could appear.
+          return { action: "update" } as const;
+        }
+        return undefined;
+      }),
+    ),
 
     read: Effect.fn(function* ({ olds, output }) {
-      if (!output && typeof olds.url !== "string") return undefined;
-      const { client } = yield* XAppCredentials;
-      const listed = yield* callX(() => client.webhooks.list());
-      const webhooks = yield* requireXData(listed, "reading X webhooks");
       if (!output) {
-        const url = normalizeWebhookUrl(olds.url as string);
+        if (!isResolvedStringInput(olds.url)) return undefined;
+        const { client } = yield* XAppCredentials;
+        const listed = yield* callX(() => client.webhooks.list());
+        const webhooks = yield* requireXData(listed, "reading X webhooks");
+        const url = normalizeWebhookUrl(olds.url);
         const existing = webhooks.find(
           (candidate) => normalizeWebhookUrl(candidate.url) === url,
         );
         return existing ? Unowned(toAttributes(existing)) : undefined;
       }
+      const { client } = yield* XAppCredentials;
+      const listed = yield* callX(() => client.webhooks.list());
+      const webhooks = yield* requireXData(listed, "reading X webhooks");
       const webhook = webhooks.find(
         (candidate) => candidate.id === output.webhookId,
       );
@@ -124,6 +138,7 @@ export const WebhookProvider = () =>
 
     reconcile: Effect.fn(function* ({ news, output }) {
       const { client } = yield* XAppCredentials;
+      // SAFETY: Alchemy invokes reconcile only after resolving every Input.
       const url = normalizeWebhookUrl(news.url as string);
       const listed = yield* callX(() => client.webhooks.list());
       const webhooks = yield* requireXData(listed, "reconciling X webhooks");
@@ -134,13 +149,6 @@ export const WebhookProvider = () =>
       const owned = output
         ? webhooks.find((candidate) => candidate.id === output.webhookId)
         : undefined;
-
-      const refuseAdoption = (webhook: XWebhook, message: string) =>
-        new XAdoptionRequired({
-          resourceType: "X.Webhook",
-          remoteId: webhook.id,
-          message,
-        });
 
       const requireValid = Effect.fn(function* (webhook: XWebhook) {
         if (webhook.valid || news.revalidateInvalid === false) return webhook;
@@ -208,6 +216,69 @@ export const WebhookProvider = () =>
         return yield* Effect.fail(created.failure);
       });
 
+      const reconcileOwned = Effect.fn(function* (ownedWebhook: XWebhook) {
+        if (normalizeWebhookUrl(ownedWebhook.url) !== url) {
+          if (exact && exact.id !== ownedWebhook.id) {
+            if (!mayAdopt) {
+              return yield* refuseAdoption(
+                exact,
+                `X webhook ${exact.id} already owns the replacement URL. The current webhook ${ownedWebhook.id} was left intact; set adoptExisting: true to take over the target.`,
+              );
+            }
+            yield* deleteWebhookRegistration(ownedWebhook.id);
+            return toAttributes(yield* requireValid(exact));
+          }
+          // Output-valued URLs can resolve only during apply, after planning
+          // chose an update. Perform the same deliberate delete-first
+          // replacement here after the target-collision preflight.
+          yield* deleteWebhookRegistration(ownedWebhook.id);
+          return toAttributes(yield* createOwned);
+        }
+        if (ownedWebhook.valid || news.revalidateInvalid === false) {
+          return toAttributes(ownedWebhook);
+        }
+
+        const validated = yield* callX(() =>
+          client.webhooks.validate(ownedWebhook.id),
+        ).pipe(Effect.result);
+        if (validated._tag === "Failure") {
+          if (!isXStatus(validated.failure, 404)) {
+            return yield* Effect.fail(validated.failure);
+          }
+          const afterDelete = yield* callX(() => client.webhooks.list());
+          const replacement = (yield* requireXData(
+            afterDelete,
+            "checking an X webhook revalidation race",
+          )).find((candidate) => normalizeWebhookUrl(candidate.url) === url);
+          if (replacement) {
+            if (mayAdopt) return toAttributes(yield* requireValid(replacement));
+            return yield* refuseAdoption(
+              replacement,
+              `X webhook ${ownedWebhook.id} disappeared during revalidation and ${replacement.id} replaced it. Refusing to mutate or adopt the replacement.`,
+            );
+          }
+          return toAttributes(yield* createOwned);
+        }
+
+        const refreshed = yield* callX(() => client.webhooks.list());
+        const webhook = (yield* requireXData(
+          refreshed,
+          "confirming the reconciled X webhook",
+        )).find((candidate) => candidate.id === ownedWebhook.id);
+        if (!webhook?.valid) {
+          return yield* Effect.fail(
+            new XDecodeError(
+              webhook
+                ? "X webhook remained invalid after revalidation"
+                : "X did not expose the revalidated webhook",
+              refreshed.status,
+              JSON.stringify(refreshed.value),
+            ),
+          );
+        }
+        return toAttributes(webhook);
+      });
+
       if (!output && exact) {
         if (mayAdopt) return toAttributes(yield* requireValid(exact));
         return yield* new XAdoptionRequired({
@@ -226,67 +297,7 @@ export const WebhookProvider = () =>
         );
       }
       if (!owned) return toAttributes(yield* createOwned);
-
-      if (normalizeWebhookUrl(owned.url) !== url) {
-        if (exact && exact.id !== owned.id) {
-          if (!mayAdopt) {
-            return yield* refuseAdoption(
-              exact,
-              `X webhook ${exact.id} already owns the replacement URL. The current webhook ${owned.id} was left intact; set adoptExisting: true to take over the target.`,
-            );
-          }
-          yield* deleteWebhookRegistration(owned.id);
-          return toAttributes(yield* requireValid(exact));
-        }
-        // Output-valued URLs can resolve only during apply, after planning
-        // chose an update. Perform the same deliberate delete-first
-        // replacement here after the target-collision preflight.
-        yield* deleteWebhookRegistration(owned.id);
-        return toAttributes(yield* createOwned);
-      }
-      if (owned.valid || news.revalidateInvalid === false) {
-        return toAttributes(owned);
-      }
-
-      const validated = yield* callX(() =>
-        client.webhooks.validate(owned.id),
-      ).pipe(Effect.result);
-      if (validated._tag === "Failure") {
-        if (!isXStatus(validated.failure, 404)) {
-          return yield* Effect.fail(validated.failure);
-        }
-        const afterDelete = yield* callX(() => client.webhooks.list());
-        const replacement = (yield* requireXData(
-          afterDelete,
-          "checking an X webhook revalidation race",
-        )).find((candidate) => normalizeWebhookUrl(candidate.url) === url);
-        if (replacement) {
-          if (mayAdopt) return toAttributes(yield* requireValid(replacement));
-          return yield* refuseAdoption(
-            replacement,
-            `X webhook ${owned.id} disappeared during revalidation and ${replacement.id} replaced it. Refusing to mutate or adopt the replacement.`,
-          );
-        }
-        return toAttributes(yield* createOwned);
-      }
-
-      const refreshed = yield* callX(() => client.webhooks.list());
-      const webhook = (yield* requireXData(
-        refreshed,
-        "confirming the reconciled X webhook",
-      )).find((candidate) => candidate.id === owned.id);
-      if (!webhook?.valid) {
-        return yield* Effect.fail(
-          new XDecodeError(
-            webhook
-              ? "X webhook remained invalid after revalidation"
-              : "X did not expose the revalidated webhook",
-            refreshed.status,
-            JSON.stringify(refreshed.value),
-          ),
-        );
-      }
-      return toAttributes(webhook);
+      return yield* reconcileOwned(owned);
     }),
 
     list: Effect.fn(function* () {

@@ -34,6 +34,8 @@ describe("X credential resolution", () => {
       redirectUri: "http://127.0.0.1:9976/auth/callback",
       scopes: ["tweet.read", "offline.access"],
     } satisfies XStoredOAuthApp;
+    // SAFETY: This local fake implements every AuthProvider operation used by
+    // fromAuthProvider; `read` intentionally fails to prove app-only isolation.
     const auth = {
       kind: "AuthProvider",
       name: X_AUTH_PROVIDER_NAME,
@@ -55,13 +57,18 @@ describe("X credential resolution", () => {
       setProfile: () => Effect.void,
       deleteProfile: () => Effect.succeed(false),
       loadOrConfigure: <Config extends { method: string }>() =>
+        // SAFETY: This test only requests XAuthConfig, whose discriminant is
+        // exactly the OAuth method returned by the profile fake.
         Effect.succeed({ method: "oauth" } as Config),
     } satisfies ProfileService;
     const store = {
-      read: <T>(_profile: string, key: string) =>
-        Effect.succeed(
+      read: <T>(_profile: string, key: string) => {
+        // SAFETY: The fake store contains the XStoredOAuthApp under its exact
+        // credential key and returns undefined for every other requested type.
+        return Effect.succeed(
           (key === X_OAUTH_APP_STORE_KEY ? app : undefined) as T | undefined,
-        ),
+        );
+      },
       write: () => Effect.void,
       delete: () => Effect.void,
       deleteProfile: () => Effect.void,

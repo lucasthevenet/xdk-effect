@@ -7,6 +7,8 @@ const packages = ["packages/distilled-x", "packages/alchemy-x"];
 
 for (const packageDirectory of packages) {
   const manifestPath = path.join(root, packageDirectory, "package.json");
+  // SAFETY: Each path is a workspace-owned package manifest whose name and
+  // scripts fields are the only values consumed by this release assertion.
   const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as {
     readonly name: string;
     readonly scripts?: Record<string, string>;
@@ -34,6 +36,8 @@ for (const packageDirectory of packages) {
     if (exitCode !== 0) {
       throw new Error(`${manifest.name} pack failed:\n${stderr || stdout}`);
     }
+    // SAFETY: `npm pack --dry-run --json` guarantees an array of pack results;
+    // this script only reads the documented file path entries from that output.
     const result = JSON.parse(stdout) as readonly {
       readonly files: readonly { readonly path: string }[];
     }[];

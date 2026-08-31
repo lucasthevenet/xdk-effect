@@ -114,28 +114,34 @@ const deleteAccountActivitySubscription = Effect.fn(function* (
   }
 });
 
+const isResolvedStringInput = (
+  value: Input<string> | undefined,
+): value is string => typeof value === "string";
+
 export const AccountActivitySubscriptionProvider = () =>
   Provider.succeed(AccountActivitySubscription, {
-    diff: Effect.fn(function* ({ olds, news, output }) {
-      if (!isResolved(news)) return;
-      const currentWebhookId = output?.webhookId ?? olds.webhookId;
-      const currentUserId = output?.userId ?? olds.userId;
-      if (
-        typeof currentWebhookId === "string" &&
-        typeof currentUserId === "string" &&
-        (currentWebhookId !== news.webhookId || currentUserId !== news.userId)
-      ) {
-        // Account Activity supports independent semantic slots, so preserve
-        // the old subscription until the new identity/slot is confirmed.
-        return { action: "replace" } as const;
-      }
-      return undefined;
-    }),
+    diff: Effect.fn(({ olds, news, output }) =>
+      Effect.sync(() => {
+        if (!isResolved(news)) return;
+        const currentWebhookId = output?.webhookId ?? olds.webhookId;
+        const priorUserId = output?.userId ?? olds.userId;
+        if (
+          isResolvedStringInput(currentWebhookId) &&
+          isResolvedStringInput(priorUserId) &&
+          (currentWebhookId !== news.webhookId || priorUserId !== news.userId)
+        ) {
+          // Account Activity supports independent semantic slots, so preserve
+          // the old subscription until the new identity/slot is confirmed.
+          return { action: "replace" } as const;
+        }
+        return undefined;
+      }),
+    ),
 
     read: Effect.fn(function* ({ olds, output }) {
       const webhookId = output?.webhookId ?? olds.webhookId;
       const userId = output?.userId ?? olds.userId;
-      if (typeof webhookId !== "string" || typeof userId !== "string") {
+      if (!isResolvedStringInput(webhookId) || !isResolvedStringInput(userId)) {
         return undefined;
       }
       const users = yield* subscribedUsers(webhookId);
@@ -147,6 +153,7 @@ export const AccountActivitySubscriptionProvider = () =>
     reconcile: Effect.fn(function* ({ news, output }) {
       const { client } = yield* XCredentials;
       const userId = yield* currentUserId;
+      // SAFETY: Alchemy calls reconcile only after resolving every Input prop.
       const desiredUserId = news.userId as string;
       if (desiredUserId !== userId) {
         return yield* new XIdentityMismatch({
@@ -157,6 +164,7 @@ export const AccountActivitySubscriptionProvider = () =>
             "Update the declared user ID or restore the intended OAuth profile.",
         });
       }
+      // SAFETY: the same reconcile boundary guarantees a concrete webhook ID.
       const webhookId = news.webhookId as string;
       const users = yield* subscribedUsers(webhookId);
       const alreadySubscribed = users.some((entry) => entry.user_id === userId);

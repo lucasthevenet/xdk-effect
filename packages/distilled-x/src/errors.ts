@@ -1,4 +1,4 @@
-import type { XProblem, XRateLimit } from "./types.ts";
+import type { XJsonValue, XProblem, XRateLimit } from "./types.ts";
 
 export class XTransportError extends Error {
   override readonly name = "XTransportError";
@@ -35,7 +35,7 @@ export class XApiError extends Error {
     readonly method: string,
     readonly url: string,
     readonly problems: readonly XProblem[],
-    readonly body: unknown,
+    readonly body: XJsonValue | undefined,
     readonly rateLimit?: XRateLimit,
   ) {
     super(message);
@@ -53,7 +53,7 @@ export class XOAuthError extends Error {
     readonly error: string,
     readonly errorDescription: string,
     readonly status?: number,
-    readonly body?: unknown,
+    readonly body?: XJsonValue,
   ) {
     super(errorDescription);
   }

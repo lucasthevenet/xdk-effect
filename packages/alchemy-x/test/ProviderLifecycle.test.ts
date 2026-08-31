@@ -2,7 +2,7 @@ import { afterEach, describe, expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import { Unowned } from "alchemy/AdoptPolicy";
-import { XDecodeError } from "distilled-x";
+import { XDecodeError, type XActivitySubscriptionInput } from "distilled-x";
 import {
   AccountActivitySubscription,
   AccountActivitySubscriptionProvider,
@@ -22,6 +22,8 @@ afterEach(() => {
   server = undefined;
 });
 
+// SAFETY: Provider unit tests do not exercise the opaque Alchemy session; an
+// uninhabited placeholder satisfies the lifecycle harness without fabricating it.
 const lifecycle = {
   id: "Resource",
   fqn: "Resource",
@@ -56,6 +58,8 @@ describe("Alchemy X provider ownership and reconciliation", () => {
       Effect.all([
         Effect.gen(function* () {
           const provider = yield* Webhook.Provider;
+          // SAFETY: The missing URL recreates a persisted create whose upstream
+          // Output was unresolved, which cannot be expressed by WebhookProps.
           return yield* provider.read!({
             ...lifecycle,
             olds: { url: undefined as never },
@@ -66,6 +70,8 @@ describe("Alchemy X provider ownership and reconciliation", () => {
         ),
         Effect.gen(function* () {
           const provider = yield* AccountActivitySubscription.Provider;
+          // SAFETY: Both identities are deliberately absent to model an
+          // interrupted deployment before its upstream Outputs resolved.
           return yield* provider.read!({
             ...lifecycle,
             olds: {
@@ -362,13 +368,15 @@ describe("Alchemy X provider ownership and reconciliation", () => {
 
   test("creates public Activity with app auth and an ownership tag", async () => {
     let authorization: string | null = null;
-    let requestBody: Record<string, unknown> | undefined;
+    let requestBody: XActivitySubscriptionInput | undefined;
     server = Bun.serve({
       port: 0,
       fetch: async (request) => {
         if (request.method === "GET") return Response.json({ data: [] });
         authorization = request.headers.get("authorization");
-        requestBody = (await request.json()) as Record<string, unknown>;
+        // SAFETY: The provider under test is invoked with a complete
+        // XActivitySubscriptionInput below; this captures its JSON serialization.
+        requestBody = (await request.json()) as XActivitySubscriptionInput;
         return Response.json({
           data: {
             subscription: {
@@ -406,6 +414,55 @@ describe("Alchemy X provider ownership and reconciliation", () => {
     expect(authorization).toBe("Bearer app-token");
     expect(requestBody?.tag).toMatch(/^alchemy:/);
     expect(output.subscriptionId).toBe("20");
+  });
+
+  test("rejects a malformed errors field on Activity create", async () => {
+    let requestBody: XActivitySubscriptionInput | undefined;
+    server = Bun.serve({
+      port: 0,
+      fetch: async (request) => {
+        if (request.method === "GET") return Response.json({ data: [] });
+        // SAFETY: The provider sends XActivitySubscriptionInput JSON; the
+        // captured value is echoed only to make the nominal data authoritative.
+        requestBody = (await request.json()) as XActivitySubscriptionInput;
+        return Response.json({
+          data: {
+            subscription: {
+              subscription_id: "20",
+              event_type: requestBody.event_type,
+              filter: requestBody.filter,
+              webhook_id: requestBody.webhook_id,
+              tag: requestBody.tag,
+            },
+          },
+          errors: {},
+        });
+      },
+    });
+
+    const error = await Effect.runPromise(
+      Effect.gen(function* () {
+        const provider = yield* ActivitySubscription.Provider;
+        return yield* provider
+          .reconcile({
+            ...lifecycle,
+            news: {
+              eventType: "post.create",
+              filter: { user_id: "42" },
+              webhookId: "10",
+            },
+            olds: undefined,
+            output: undefined,
+          })
+          .pipe(Effect.flip);
+      }).pipe(
+        Effect.provide(
+          Layer.mergeAll(ActivitySubscriptionProvider(), credentials()),
+        ),
+      ),
+    );
+
+    expect(error).toBeInstanceOf(XDecodeError);
   });
 
   test("rejects an Activity delete without deleted: true confirmation", async () => {

@@ -43,6 +43,13 @@ export interface ActivitySubscriptionAttributes {
   readonly updatedAt?: string;
 }
 
+interface ActivitySubscriptionAttributesBuilder extends ActivitySubscriptionAttributes {
+  webhookId?: string;
+  tag?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface ActivitySubscription extends Resource<
   "X.ActivitySubscription",
   ActivitySubscriptionProps,
@@ -58,21 +65,24 @@ export const ActivitySubscription = Resource<ActivitySubscription>(
 
 const toAttributes = (
   subscription: ApiSubscription,
-): ActivitySubscriptionAttributes => ({
-  subscriptionId: subscription.subscription_id,
-  eventType: subscription.event_type,
-  filter: subscription.filter,
-  ...(subscription.webhook_id !== undefined
-    ? { webhookId: subscription.webhook_id }
-    : {}),
-  ...(subscription.tag !== undefined ? { tag: subscription.tag } : {}),
-  ...(subscription.created_at !== undefined
-    ? { createdAt: subscription.created_at }
-    : {}),
-  ...(subscription.updated_at !== undefined
-    ? { updatedAt: subscription.updated_at }
-    : {}),
-});
+): ActivitySubscriptionAttributes => {
+  const attributes: ActivitySubscriptionAttributesBuilder = {
+    subscriptionId: subscription.subscription_id,
+    eventType: subscription.event_type,
+    filter: subscription.filter,
+  };
+  if (subscription.webhook_id !== undefined) {
+    attributes.webhookId = subscription.webhook_id;
+  }
+  if (subscription.tag !== undefined) attributes.tag = subscription.tag;
+  if (subscription.created_at !== undefined) {
+    attributes.createdAt = subscription.created_at;
+  }
+  if (subscription.updated_at !== undefined) {
+    attributes.updatedAt = subscription.updated_at;
+  }
+  return attributes;
+};
 
 const ownershipTag = (
   instanceId: string,
@@ -194,21 +204,25 @@ const deleteActivitySubscription = Effect.fn(function* (
 
 export const ActivitySubscriptionProvider = () =>
   Provider.succeed(ActivitySubscription, {
-    diff: Effect.fn(function* ({ olds, news }) {
-      if (!isResolved(news)) return;
-      if (
-        normalizeActivityEventType(olds.eventType) !==
-          normalizeActivityEventType(news.eventType) ||
-        !deepEqual(olds.filter, news.filter)
-      ) {
-        return { action: "replace" } as const;
-      }
-      return undefined;
-    }),
+    diff: Effect.fn(({ olds, news }) =>
+      Effect.sync(() => {
+        if (!isResolved(news)) return;
+        if (
+          normalizeActivityEventType(olds.eventType) !==
+            normalizeActivityEventType(news.eventType) ||
+          !deepEqual(olds.filter, news.filter)
+        ) {
+          return { action: "replace" } as const;
+        }
+        return undefined;
+      }),
+    ),
 
     read: Effect.fn(function* ({ fqn, instanceId, olds, output }) {
       const subscriptions = yield* listAll();
       if (!output) {
+        // SAFETY: Alchemy invokes recovery reads only after this upstream
+        // webhook Input has resolved; unresolved first creates return earlier.
         const desired = {
           eventType: normalizeActivityEventType(olds.eventType),
           filter: olds.filter,
@@ -244,6 +258,7 @@ export const ActivitySubscriptionProvider = () =>
     reconcile: Effect.fn(function* ({ fqn, instanceId, news, output }) {
       const appCredentials = yield* XAppCredentials;
       const tag = ownershipTag(instanceId, fqn, news.tag);
+      // SAFETY: reconcile runs only with fully resolved resource inputs.
       const webhookId = news.webhookId as string;
       const desired = {
         eventType: normalizeActivityEventType(news.eventType),
@@ -327,7 +342,7 @@ export const ActivitySubscriptionProvider = () =>
       ) {
         const matches = (yield* listAll())
           .filter((candidate) => sameSubscription(candidate, desired))
-          .sort((left, right) =>
+          .toSorted((left, right) =>
             left.subscription_id.localeCompare(right.subscription_id),
           );
         const winner = matches[0] ?? fallback;

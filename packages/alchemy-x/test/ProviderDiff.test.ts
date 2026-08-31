@@ -61,6 +61,8 @@ describe("Alchemy X provider diffs", () => {
       Effect.all([
         Effect.gen(function* () {
           const provider = yield* Webhook.Provider;
+          // SAFETY: This fixture intentionally recreates an interrupted plan in
+          // which a required upstream Output had not resolved into stored props.
           return yield* provider.diff!({
             ...input,
             olds: { url: undefined as never },
@@ -69,6 +71,8 @@ describe("Alchemy X provider diffs", () => {
         }).pipe(Effect.provide(WebhookProvider())),
         Effect.gen(function* () {
           const provider = yield* AccountActivitySubscription.Provider;
+          // SAFETY: Both required identities are deliberately absent to model
+          // the same unresolved-Output retry state accepted by the provider.
           return yield* provider.diff!({
             ...input,
             olds: { webhookId: undefined as never, userId: undefined as never },

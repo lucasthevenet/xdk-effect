@@ -8,6 +8,7 @@ import {
   type XRuntimeOptions,
   utf8,
 } from "./runtime.ts";
+import type { XJsonObject, XJsonValue } from "./types.ts";
 
 export const X_OAUTH_AUTHORIZE_URL = "https://x.com/i/oauth2/authorize";
 export const X_OAUTH_TOKEN_URL = "https://api.x.com/2/oauth2/token";
@@ -28,6 +29,10 @@ export interface OAuth2AuthorizationRequest {
   readonly codeChallenge: string;
 }
 
+export interface OAuth2AuthorizationCallback {
+  readonly code: string;
+}
+
 export interface OAuth2ClientConfig {
   readonly clientId: string;
   readonly clientSecret?: TokenProvider;
@@ -42,46 +47,77 @@ const randomBytes = (
   crypto: Pick<Crypto, "getRandomValues">,
 ): Uint8Array => crypto.getRandomValues(new Uint8Array(count));
 
-const parseJson = async (response: Response): Promise<unknown> => {
+const isJsonObject = (value: XJsonValue): value is XJsonObject =>
+  Object.prototype.toString.call(value) === "[object Object]";
+
+const isJsonString = (value: XJsonValue | undefined): value is string =>
+  Object.prototype.toString.call(value) === "[object String]";
+
+const isJsonNumber = (value: XJsonValue | undefined): value is number =>
+  Object.prototype.toString.call(value) === "[object Number]" &&
+  Number.isFinite(Number(value));
+
+const isSafeErrorField = (
+  value: XJsonValue | undefined,
+): value is boolean | number | string =>
+  Object.prototype.toString.call(value) === "[object Boolean]" ||
+  isJsonNumber(value) ||
+  isJsonString(value);
+
+const parseJson = async (
+  response: Response,
+): Promise<XJsonValue | undefined> => {
   const text = await response.text();
   if (!text) return undefined;
   try {
-    return JSON.parse(text) as unknown;
+    // SAFETY: JSON.parse only returns values admitted by the recursive JSON
+    // contract when parsing succeeds; functions, symbols, and undefined cannot
+    // be represented by JSON text.
+    return JSON.parse(text) as XJsonValue;
   } catch {
     return text;
   }
 };
 
 const oauthError = (
-  body: unknown,
+  body: XJsonValue | undefined,
   status: number,
   fallback: string,
 ): XOAuthError => {
-  const value =
-    body !== null && typeof body === "object"
-      ? (body as Record<string, unknown>)
-      : undefined;
-  const error = typeof value?.error === "string" ? value.error : "oauth_error";
-  const description =
-    typeof value?.error_description === "string"
-      ? value.error_description
-      : typeof value?.detail === "string"
-        ? value.detail
-        : fallback;
-  const safeBody = value
-    ? Object.fromEntries(
-        ["error", "error_description", "detail", "title", "type", "status"]
-          .filter((key) =>
-            ["string", "number", "boolean"].includes(typeof value[key]),
-          )
-          .map((key) => [key, value[key]]),
-      )
-    : undefined;
-  return new XOAuthError(error, description, status, safeBody);
+  const value = body !== undefined && isJsonObject(body) ? body : undefined;
+  const error = isJsonString(value?.error) ? value.error : "oauth_error";
+  const description = isJsonString(value?.error_description)
+    ? value.error_description
+    : isJsonString(value?.detail)
+      ? value.detail
+      : fallback;
+  const safeBody: Record<string, boolean | number | string> = {};
+  if (value) {
+    for (const key of [
+      "error",
+      "error_description",
+      "detail",
+      "title",
+      "type",
+      "status",
+    ]) {
+      const field = value[key];
+      if (isSafeErrorField(field)) safeBody[key] = field;
+    }
+  }
+  return new XOAuthError(
+    error,
+    description,
+    status,
+    value ? safeBody : undefined,
+  );
 };
 
-const decodeToken = (body: unknown, status: number): OAuth2Token => {
-  if (body === null || typeof body !== "object") {
+const decodeToken = (
+  body: XJsonValue | undefined,
+  status: number,
+): OAuth2Token => {
+  if (body === undefined || !isJsonObject(body)) {
     throw new XOAuthError(
       "invalid_response",
       "X returned a malformed OAuth token response",
@@ -89,23 +125,30 @@ const decodeToken = (body: unknown, status: number): OAuth2Token => {
       undefined,
     );
   }
-  const value = body as Record<string, unknown>;
   if (
-    typeof value.access_token !== "string" ||
-    typeof value.token_type !== "string" ||
-    typeof value.expires_in !== "number"
+    !isJsonString(body.access_token) ||
+    !isJsonString(body.token_type) ||
+    !isJsonNumber(body.expires_in)
   ) {
     throw oauthError(body, status, "X returned an incomplete OAuth token");
   }
-  return {
-    access_token: value.access_token,
-    token_type: value.token_type,
-    expires_in: value.expires_in,
-    ...(typeof value.scope === "string" ? { scope: value.scope } : {}),
-    ...(typeof value.refresh_token === "string"
-      ? { refresh_token: value.refresh_token }
-      : {}),
+  const token: OAuth2Token = {
+    access_token: body.access_token,
+    token_type: body.token_type,
+    expires_in: body.expires_in,
   };
+  const scope = isJsonString(body.scope) ? body.scope : undefined;
+  const refreshToken = isJsonString(body.refresh_token)
+    ? body.refresh_token
+    : undefined;
+  if (scope !== undefined && refreshToken !== undefined) {
+    return { ...token, scope, refresh_token: refreshToken };
+  }
+  if (scope !== undefined) return { ...token, scope };
+  if (refreshToken !== undefined) {
+    return { ...token, refresh_token: refreshToken };
+  }
+  return token;
 };
 
 export const createOAuth2Client = (config: OAuth2ClientConfig) => {
@@ -194,7 +237,7 @@ export const createOAuth2Client = (config: OAuth2ClientConfig) => {
     parseAuthorizationCallback(
       callback: string | URL,
       expectedState: string,
-    ): { code: string } {
+    ): OAuth2AuthorizationCallback {
       const url = callback instanceof URL ? callback : new URL(callback);
       const state = url.searchParams.get("state");
       if (state !== expectedState) throw new XOAuthStateError();
@@ -255,10 +298,11 @@ export const createOAuth2Client = (config: OAuth2ClientConfig) => {
       const response = await platform.fetch(revokeUrl, {
         method: "POST",
         headers,
-        body: new URLSearchParams({
-          token: input.token,
-          ...(!confidential ? { client_id: config.clientId } : {}),
-        }).toString(),
+        body: (() => {
+          const form = new URLSearchParams({ token: input.token });
+          if (!confidential) form.set("client_id", config.clientId);
+          return form.toString();
+        })(),
       });
       const body = await parseJson(response);
       if (!response.ok) {
