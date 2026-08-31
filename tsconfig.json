@@ -1,0 +1,8 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/distilled-x" },
+    { "path": "./packages/alchemy-x" },
+    { "path": "./examples/cloudflare-worker" }
+  ]
+}

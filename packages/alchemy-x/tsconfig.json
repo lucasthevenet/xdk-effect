@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "noEmit": false,
+    "rootDir": "src",
+    "outDir": "lib",
+    "tsBuildInfoFile": "../../.alchemy-x.tsbuildinfo"
+  },
+  "references": [{ "path": "../distilled-x" }],
+  "include": ["src/**/*.ts"]
+}

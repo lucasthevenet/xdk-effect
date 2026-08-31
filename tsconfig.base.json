@@ -1,0 +1,29 @@
+{
+  "exclude": ["node_modules", "lib", "dist", "coverage"],
+  "compilerOptions": {
+    "types": ["bun", "node"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "target": "ESNext",
+    "moduleDetection": "force",
+    "allowJs": false,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
+    "customConditions": ["bun", "worker"],
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "verbatimModuleSyntax": true,
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "noErrorTruncation": true
+  }
+}

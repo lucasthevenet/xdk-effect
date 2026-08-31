@@ -1,0 +1,47 @@
+{
+  "name": "alchemy-x-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*",
+      "examples/*"
+    ],
+    "catalogs": {
+      "build": {
+        "typescript": "^7.0.2"
+      },
+      "tooling": {
+        "@types/bun": "1.3.14",
+        "@types/node": "^26.2.0",
+        "oxfmt": "^0.27.0",
+        "oxlint": "^1.45.0"
+      },
+      "effect": {
+        "effect": "4.0.0-rc.112"
+      }
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc -b --pretty false",
+    "format": "oxfmt '.' --ignore-path .oxfmtignore",
+    "format:check": "oxfmt '.' --check --ignore-path .oxfmtignore",
+    "lint": "oxlint",
+    "pack:check": "bun run build && bun scripts/check-packs.ts",
+    "test": "bun test",
+    "test:live": "X_LIVE=1 bun --env-file=.env test ./packages/alchemy-x/test/live",
+    "worker:check": "bun scripts/check-worker-bundle.ts",
+    "check": "bun run format:check && bun run lint && bun run typecheck && bun test && bun run worker:check"
+  },
+  "devDependencies": {
+    "@types/bun": "catalog:tooling",
+    "@types/node": "catalog:tooling",
+    "effect": "catalog:effect",
+    "oxfmt": "catalog:tooling",
+    "oxlint": "catalog:tooling",
+    "typescript": "catalog:build"
+  },
+  "packageManager": "bun@1.3.14"
+}

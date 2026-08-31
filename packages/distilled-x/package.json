@@ -1,0 +1,54 @@
+{
+  "name": "distilled-x",
+  "version": "0.1.0",
+  "description": "Portable client for X OAuth, webhooks, and activity subscriptions.",
+  "keywords": [
+    "api",
+    "effect",
+    "oauth",
+    "sdk",
+    "twitter",
+    "webhook",
+    "x"
+  ],
+  "homepage": "https://github.com/lucasthevenet/alchemy-x#readme",
+  "bugs": "https://github.com/lucasthevenet/alchemy-x/issues",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucasthevenet/alchemy-x.git",
+    "directory": "packages/distilled-x"
+  },
+  "files": [
+    "lib",
+    "!lib/.tsbuildinfo",
+    "src",
+    "README.md"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "bun": "./src/index.ts",
+      "worker": "./src/index.ts",
+      "default": "./lib/index.js"
+    },
+    "./*": {
+      "types": "./lib/*.d.ts",
+      "bun": "./src/*.ts",
+      "worker": "./src/*.ts",
+      "default": "./lib/*.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "prepack": "bun run build",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "bun test"
+  }
+}
