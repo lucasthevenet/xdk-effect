@@ -2,12 +2,9 @@ import * as Alchemy from "alchemy";
 import * as Cloudflare from "alchemy/Cloudflare";
 import * as X from "alchemy-x";
 import * as XCloudflare from "alchemy-x/Cloudflare";
-import * as Config from "effect/Config";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import * as HttpServerResponse from "effect/unstable/http/HttpServerResponse";
-
-const PublicHost = Config.string("X_WEBHOOK_PUBLIC_HOST");
 
 export default Alchemy.Stack(
   "XExample",
@@ -18,7 +15,7 @@ export default Alchemy.Stack(
   Effect.gen(function* () {
     const worker = yield* Cloudflare.Worker(
       "XWebhookWorker",
-      { main: import.meta.url, domain: PublicHost },
+      { main: import.meta.url },
       Effect.gen(function* () {
         yield* X.consumeEvents(
           {

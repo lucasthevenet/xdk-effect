@@ -3,10 +3,9 @@
 This stack lets one Cloudflare Worker consume verified X events and automatically
 manages the remote webhook plus an Account Activity subscription.
 
-Set the public host, authenticate both providers, then deploy:
+Authenticate both providers, then deploy:
 
 ```sh
-export X_WEBHOOK_PUBLIC_HOST=x-events.example.com
 bunx alchemy login
 bunx alchemy deploy
 ```

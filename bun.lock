@@ -25,6 +25,7 @@
         "effect": "catalog:effect",
       },
       "devDependencies": {
+        "@effect/platform-bun": "4.0.0-rc.112",
         "@types/bun": "catalog:tooling",
         "typescript": "catalog:build",
       },
@@ -154,6 +155,8 @@
     "@distilled.cloud/planetscale": ["@distilled.cloud/planetscale@1.0.0-rc.8", "", { "dependencies": { "@distilled.cloud/core": "1.0.0-rc.8" }, "peerDependencies": { "effect": ">=4.0.0-rc.112 || >=4.0.0" } }, "sha512-D0mnkT2Gnk/SKWoz05rkf7+sngH8+5m5ugjQ1GycsFMfTxUVSIVUIHX9yrO5vFrTsMlNsmrMR+7a9R3ZMGCWkA=="],
 
     "@distilled.cloud/railway": ["@distilled.cloud/railway@1.0.0-rc.8", "", { "dependencies": { "@distilled.cloud/core": "1.0.0-rc.8" }, "peerDependencies": { "effect": ">=4.0.0-rc.112 || >=4.0.0" } }, "sha512-VW2YdbblVHhYww5JVtOjFlv3jBFl7xlt6/xTfkNxxgXgzJ5GYVlD3gPgBIpGy9Pcnv9rVRA6CL7QZeYeu47c9Q=="],
+
+    "@effect/platform-bun": ["@effect/platform-bun@4.0.0-rc.112", "", { "dependencies": { "@effect/platform-node-shared": "^4.0.0-rc.112" }, "peerDependencies": { "effect": "^4.0.0-rc.112" } }, "sha512-Y5n2HhV/vsbrJls9ukX42RL7zqXQxISHegWFsP9njsCyDmGTnq7QYSO82rglwrLPwtTrv5dkSRTuGw4+oXxgMg=="],
 
     "@effect/platform-node": ["@effect/platform-node@4.0.0-rc.112", "", { "dependencies": { "@effect/platform-node-shared": "^4.0.0-rc.112", "mime": "^4.1.0", "undici": "^8.10.0" }, "peerDependencies": { "effect": "^4.0.0-rc.112", "redis": ">=5.0.0 <7.0.0" } }, "sha512-/BMAcdNGQQskLmI0Zoa95KfTZkr9HV9N4NSxaSrusG6GeW6Ulp9KvZ+Rlaiw8lnOt43CXjFLdfll5/k5rxL4hQ=="],
 
