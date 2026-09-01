@@ -95,6 +95,7 @@ import * as Cloudflare from "alchemy/Cloudflare";
 import * as X from "alchemy-x";
 import * as XCloudflare from "alchemy-x/Cloudflare";
 import * as Effect from "effect/Effect";
+import * as HttpServerResponse from "effect/unstable/http/HttpServerResponse";
 
 const worker = yield* Cloudflare.Worker(
   "XEvents",
@@ -120,7 +121,9 @@ const worker = yield* Cloudflare.Worker(
         }),
     );
 
-    return {};
+    return {
+      fetch: Effect.succeed(HttpServerResponse.text("Alchemy X worker")),
+    };
   }).pipe(Effect.provide(XCloudflare.EventSourceLive)),
 );
 ```
@@ -148,10 +151,12 @@ an adapter-level Alchemy rename alias; without one, remove and deploy the old
 source before recreating it in a second deploy. See the complete
 [`examples/cloudflare-worker`](./examples/cloudflare-worker) integration.
 
-With Alchemy `2.0.0-beta.75`, `EventSourceLive` must be the dedicated Worker's
-only fetch listener. Return `{}` from Worker initialization; do not also return
-a normal `fetch` handler from that Worker. Requests outside the configured event
-path receive `404`.
+`EventSourceLive` can coexist with the Worker's returned `fetch` handler. It
+claims the configured X event path and excludes that path from Alchemy's default
+`Worker.serve` listener, while requests on other paths (and requests whose path
+cannot be parsed by the event source) fall through to the returned handler.
+Fetch listeners registered directly with `Worker.listen` are not filtered by
+this exclusion; guard the X event path yourself if you add one.
 
 When migrating from `X.WebhookRoute(name, options, handler)` or its old
 `X.events` alias, set `name` to that same logical name and keep the previous

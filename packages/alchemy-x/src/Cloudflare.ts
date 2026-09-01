@@ -56,11 +56,67 @@ type CloudflareFetchRequest = Extract<
 
 type PortableRequest = CloudflareFetchRequest & Request;
 
+type WorkerListener<A = unknown, R = never> = (
+  event: Cloudflare.WorkerEvent,
+) => Effect.Effect<A, never, R> | void;
+
+type WorkerRoutingContext = Pick<
+  Effect.Success<typeof Cloudflare.Worker>,
+  "listen" | "serve"
+>;
+
 // SAFETY: Cloudflare fetch events carry the runtime's WHATWG Request. The
 // package's external worker declarations omit browser-only metadata fields,
 // but the runtime object implements the standard Request used by the receiver.
 const toStandardRequest = (input: CloudflareFetchRequest): Request =>
   input as PortableRequest;
+
+const requestPath = (request: { readonly url: string }): string | undefined => {
+  try {
+    return new URL(request.url).pathname;
+  } catch {
+    return undefined;
+  }
+};
+
+/**
+ * Keep the Worker's default fetch handler from also claiming event-source
+ * paths. Alchemy 2.0.0-beta.75 runs overlapping listeners concurrently and
+ * discards both response values, so the exclusion has to happen before the
+ * default listener returns an Effect.
+ */
+const excludeClaimedPathsFromDefaultFetch = (
+  runtime: WorkerRoutingContext,
+  paths: ReadonlySet<string>,
+): void => {
+  const serve = runtime.serve.bind(runtime);
+
+  runtime.serve = (handler, options) => {
+    const previousListen = runtime.listen;
+    const filter =
+      <A, R>(listener: WorkerListener<A, R>): WorkerListener<A, R> =>
+      (event) => {
+        if (
+          Cloudflare.isWorkerEvent(event) &&
+          event.type === "fetch" &&
+          paths.has(requestPath(event.input) ?? "")
+        ) {
+          return undefined;
+        }
+        return listener(event);
+      };
+
+    // SAFETY: `serve` registers a concrete Worker listener; this wrapper keeps
+    // both overloads while adding only a path predicate to that listener.
+    runtime.listen = (<A, R>(listener: WorkerListener<A, R>) =>
+      previousListen(filter(listener))) as typeof runtime.listen;
+    try {
+      return serve(handler, options);
+    } finally {
+      runtime.listen = previousListen;
+    }
+  };
+};
 
 const activityLogicalId = (
   activity: NonNullable<EventSourceOptions["activity"]>[number],
@@ -74,8 +130,6 @@ const activityLogicalId = (
         ]),
   );
 
-const notFound = (): Response => new Response("Not Found", { status: 404 });
-
 /**
  * X event source for Cloudflare Workers.
  *
@@ -83,9 +137,9 @@ const notFound = (): Response => new Response("Not Found", { status: 404 });
  * the Worker URL becomes reachable. Runtime initialization claims the exact
  * event path and delegates CRC and signed deliveries to the shared receiver.
  *
- * This adapter must be the Worker's only fetch listener with Alchemy beta.75.
- * That runtime combines simultaneous fetch responses by discarding both, so a
- * second Worker `fetch` handler is unsupported. Unmatched paths receive 404.
+ * The Worker's normal fetch handler continues to own every unclaimed path.
+ * Alchemy beta.75 discards simultaneous listener responses, so the adapter
+ * excludes this source's path from the listener registered by Worker.serve.
  * Set a stable EventSource `name` before the first persistent deployment;
  * unnamed resource identities follow the Worker's logical namespace.
  */
@@ -99,7 +153,9 @@ export const EventSourceLive = Layer.effect(
     const createActivitySubscription = yield* ActivitySubscription;
     const createAccountActivitySubscription =
       yield* AccountActivitySubscription;
+    const paths = new Set<string>();
     let registered = false;
+    excludeClaimedPathsFromDefaultFetch(worker, paths);
 
     // SAFETY: Resource constructors are satisfied by X.providers() during
     // planning. Worker.listen deliberately retains the handler environment R
@@ -118,6 +174,7 @@ export const EventSourceLive = Layer.effect(
       registered = true;
 
       const path = EventReceiver.eventSourcePath(options.path);
+      paths.add(path);
       const consumerSecret = yield* Output.named(
         Output.fromEffect(
           XAppCredentials.pipe(
@@ -194,15 +251,8 @@ export const EventSourceLive = Layer.effect(
       yield* worker.listen((event) => {
         if (!Cloudflare.isWorkerEvent(event) || event.type !== "fetch") return;
 
-        const request = toStandardRequest(event.input);
-        let pathname: string;
-        try {
-          pathname = new URL(request.url).pathname;
-        } catch {
-          return Effect.succeed(notFound());
-        }
-        if (pathname !== path) return Effect.succeed(notFound());
-        return receive(request);
+        if (requestPath(event.input) !== path) return;
+        return receive(toStandardRequest(event.input));
       });
     }) as EventSourceService;
   }),

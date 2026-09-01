@@ -141,6 +141,7 @@ import * as X from "alchemy-x";
 import * as XCloudflare from "alchemy-x/Cloudflare";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
+import * as HttpServerResponse from "effect/unstable/http/HttpServerResponse";
 
 export default Alchemy.Stack(
   "XApp",
@@ -180,7 +181,9 @@ export default Alchemy.Stack(
             }),
         );
 
-        return {};
+        return {
+          fetch: Effect.succeed(HttpServerResponse.text("Alchemy X worker")),
+        };
       }).pipe(Effect.provide(XCloudflare.EventSourceLive)),
     );
 
@@ -213,17 +216,20 @@ old FQN is pending deletion; choose a stable name up front. Changing an existing
 identity requires an adapter-level Alchemy rename alias; without one, remove
 and deploy the old source before recreating it in a second deploy.
 
-With Alchemy `2.0.0-beta.75`, `EventSourceLive` must be the dedicated Worker's
-only fetch listener. Return `{}` from Worker initialization as above; a normal
-`fetch` handler cannot currently coexist in that Worker; requests outside the
-configured event path receive `404`. The adapter binds the consumer secret
-without exposing it to application code, answers CRC, and checks the raw-body
-signature before parsing. The Worker URL `Output` also makes host deployment a
-prerequisite of X registration, which matters because X performs CRC
-immediately. X requires a public HTTPS webhook URL without an explicit port,
-limits it to 200 characters, and expects a successful response within ten
-seconds. See X's [webhook introduction](https://docs.x.com/x-api/webhooks/introduction)
-and [webhook quickstart](https://docs.x.com/x-api/webhooks/quickstart).
+`EventSourceLive` can coexist with the Worker's returned `fetch` handler. It
+claims the configured X event path and excludes that path from Alchemy's default
+`Worker.serve` listener. Requests on other paths, including requests whose path
+cannot be parsed by the event source, continue to the returned handler. This
+exclusion does not apply to additional fetch listeners registered directly with
+`Worker.listen`; those listeners must guard the X event path themselves. The
+adapter binds the consumer secret without exposing it to application code,
+answers CRC, and checks the raw-body signature before parsing. The Worker URL
+`Output` also makes host deployment a prerequisite of X registration, which
+matters because X performs CRC immediately. X requires a public HTTPS webhook
+URL without an explicit port, limits it to 200 characters, and expects a
+successful response within ten seconds. See X's
+[webhook introduction](https://docs.x.com/x-api/webhooks/introduction) and
+[webhook quickstart](https://docs.x.com/x-api/webhooks/quickstart).
 
 To migrate an existing `WebhookRoute` declaration (including the old `events`
 alias), pass its first argument as `name` and retain its effective canonical

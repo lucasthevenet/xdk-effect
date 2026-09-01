@@ -25,7 +25,7 @@ type ListenerResult =
 type CapturedListener = (event: Cloudflare.WorkerEvent) => ListenerResult;
 
 const makeHarness = () => {
-  let capturedListener: CapturedListener | undefined;
+  const capturedListeners: CapturedListener[] = [];
   let secretReads = 0;
   const bindings: string[] = [];
   const worker = {
@@ -46,21 +46,26 @@ const makeHarness = () => {
       }),
     listen: (listener: CapturedListener) =>
       Effect.sync(() => {
-        capturedListener = listener;
+        capturedListeners.push(listener);
       }),
+    serve(handler: CapturedListener) {
+      return this.listen(handler);
+    },
   };
 
   return {
     bindings,
     worker,
     listener: (): CapturedListener => {
-      if (capturedListener === undefined) {
+      const listener = capturedListeners[0];
+      if (listener === undefined) {
         throw new Error(
           "The X event source did not register a Worker listener",
         );
       }
-      return capturedListener;
+      return listener;
     },
+    listeners: (): readonly CapturedListener[] => capturedListeners,
     secretReads: () => secretReads,
   };
 };
@@ -138,6 +143,16 @@ const invoke = async (
   return Effect.isEffect(result) ? Effect.runPromise(result) : result;
 };
 
+const runnableEffects = (
+  listeners: readonly CapturedListener[],
+  event: Cloudflare.WorkerEvent,
+): Effect.Effect<Response | undefined>[] =>
+  listeners.flatMap((listener) => {
+    const result = listener(event);
+    if (result === undefined) return [];
+    return [Effect.isEffect(result) ? result : Effect.succeed(result)];
+  });
+
 const register = (
   harness: Harness,
   options: EventSourceOptions = {},
@@ -208,7 +223,44 @@ describe("Cloudflare X event source", () => {
   });
 
   test.serial(
-    "returns 404 for unclaimed and malformed fetch URLs",
+    "claims its path without also running the Worker's default fetch",
+    async () => {
+      const harness = makeHarness();
+      let defaultFetches = 0;
+      await runAtRuntime(register(harness, { path: "/api/x/webhook" }));
+      await Effect.runPromise(
+        harness.worker.serve(() =>
+          Effect.sync(() => {
+            defaultFetches++;
+            return new Response("default");
+          }),
+        ),
+      );
+
+      const claimed = runnableEffects(
+        harness.listeners(),
+        fetchEvent(
+          new Request(`${workerOrigin}/api/x/webhook?crc_token=challenge`),
+        ),
+      );
+      expect(claimed).toHaveLength(1);
+      const claimedResponse = await Effect.runPromise(claimed[0]!);
+      expect(claimedResponse?.status).toBe(200);
+      expect(defaultFetches).toBe(0);
+
+      const unclaimed = runnableEffects(
+        harness.listeners(),
+        fetchEvent(new Request(`${workerOrigin}/health`)),
+      );
+      expect(unclaimed).toHaveLength(1);
+      const unclaimedResponse = await Effect.runPromise(unclaimed[0]!);
+      expect(await unclaimedResponse?.text()).toBe("default");
+      expect(defaultFetches).toBe(1);
+    },
+  );
+
+  test.serial(
+    "falls through for unclaimed and malformed fetch URLs",
     async () => {
       const harness = makeHarness();
       await runAtRuntime(register(harness));
@@ -222,8 +274,8 @@ describe("Cloudflare X event source", () => {
         invalidUrlFetchEvent(),
       );
 
-      expect(unmatched?.status).toBe(404);
-      expect(malformed?.status).toBe(404);
+      expect(unmatched).toBeUndefined();
+      expect(malformed).toBeUndefined();
       expect(harness.secretReads()).toBe(0);
     },
   );

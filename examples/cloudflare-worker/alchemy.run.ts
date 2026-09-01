@@ -5,6 +5,7 @@ import * as XCloudflare from "alchemy-x/Cloudflare";
 import * as Config from "effect/Config";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
+import * as HttpServerResponse from "effect/unstable/http/HttpServerResponse";
 
 const PublicHost = Config.string("X_WEBHOOK_PUBLIC_HOST");
 
@@ -32,7 +33,9 @@ export default Alchemy.Stack(
             }),
         );
 
-        return {};
+        return {
+          fetch: Effect.succeed(HttpServerResponse.text("Alchemy X worker")),
+        };
       }).pipe(Effect.provide(XCloudflare.EventSourceLive)),
     );
 

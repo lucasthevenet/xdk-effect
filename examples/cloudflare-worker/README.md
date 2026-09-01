@@ -16,10 +16,12 @@ callback from the Worker's URL, binds the API/consumer secret without exposing
 it to application code, handles CRC, verifies each raw request body before JSON
 decoding, and provisions the requested subscription. The handler receives a
 discriminated `{ kind, delivery }` event (`activity`, `account_activity`,
-`filtered_stream`, or `replay_job`). With Alchemy `2.0.0-beta.75`, this must be
-a dedicated event Worker: `EventSourceLive` is its only fetch listener, and
-Worker initialization returns `{}` rather than a normal `fetch` handler.
-Requests outside `/api/x/webhook` receive `404`.
+`filtered_stream`, or `replay_job`). `EventSourceLive` claims
+`/api/x/webhook` while the Worker's returned `fetch` Effect handles all other
+requests, including paths the event source cannot parse. The exclusion applies
+to Alchemy's default `Worker.serve` listener; additional fetch listeners
+registered directly with `Worker.listen` must guard the X event path
+themselves.
 The example retains its former `AccountEvents` logical name and explicit
 `/api/x/webhook` path so upgrading from `WebhookRoute` preserves its managed
 resource identities and callback URL.
