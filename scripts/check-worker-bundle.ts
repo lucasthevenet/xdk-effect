@@ -7,12 +7,23 @@ const nodeOnlyMarkers = [
   "http_default.createServer",
   "createServer",
 ];
+const workerExternals = [
+  "alchemy",
+  "alchemy/*",
+  "effect",
+  "effect/*",
+  "distilled-x",
+];
+const workerCwd = path.join(root, "examples/cloudflare-worker");
 
 const result = await Bun.build({
-  entrypoints: [path.join(root, "packages/alchemy-x/src/index.ts")],
+  entrypoints: [
+    path.join(root, "packages/alchemy-x/src/index.ts"),
+    path.join(root, "packages/alchemy-x/src/Cloudflare.ts"),
+  ],
   target: "browser",
   format: "esm",
-  external: ["alchemy", "alchemy/*", "effect", "effect/*", "distilled-x"],
+  external: workerExternals,
 });
 
 if (!result.success) {
@@ -30,6 +41,28 @@ for (const nodeOnlyMarker of nodeOnlyMarkers) {
   }
 }
 
+const eventSourceResult = await Bun.build({
+  entrypoints: [path.join(workerCwd, "alchemy.run.ts")],
+  target: "browser",
+  format: "esm",
+  conditions: ["worker"],
+  external: workerExternals,
+});
+if (!eventSourceResult.success) {
+  throw new AggregateError(
+    eventSourceResult.logs,
+    "Could not resolve the Cloudflare event-source export for a Worker",
+  );
+}
+const eventSourceBundle = (
+  await Promise.all(eventSourceResult.outputs.map((output) => output.text()))
+).join("\n");
+if (!eventSourceBundle.includes("X.EventSource")) {
+  throw new Error(
+    "Cloudflare event-source export was not retained in the Worker bundle",
+  );
+}
+
 // Exercise the same resolver and conditions that Alchemy uses for a
 // Cloudflare Worker. This deliberately retains the internal Node-only import:
 // package resolution must reject it instead of falling through to a Node
@@ -45,7 +78,17 @@ const [{ rolldown }, { default: cloudflareRolldown }] = await Promise.all([
     Bun.resolveSync("@alchemy.run/cloudflare-runtime/rolldown", fromAlchemy)
   ),
 ]);
-const virtualEntry = "virtual:alchemy-x-worker-export-check";
+const virtualModule = (id: string, source: string) => ({
+  name: `${id}-entry`,
+  resolveId(candidate: string) {
+    return candidate === id ? `\0${id}` : undefined;
+  },
+  load(candidate: string) {
+    return candidate === `\0${id}` ? source : undefined;
+  },
+});
+
+const blockedEntry = "virtual:alchemy-x-worker-export-check";
 
 let resolverFailure: unknown;
 let workerBuild:
@@ -53,28 +96,21 @@ let workerBuild:
   | undefined;
 try {
   workerBuild = await rolldown({
-    input: virtualEntry,
-    cwd: path.join(root, "examples/cloudflare-worker"),
+    input: blockedEntry,
+    cwd: workerCwd,
     plugins: [
       cloudflareRolldown({
         compatibilityDate: "2026-08-31",
         compatibilityFlags: [],
       }),
-      {
-        name: "alchemy-x-worker-export-check-entry",
-        resolveId(id: string) {
-          return id === virtualEntry ? `\0${virtualEntry}` : undefined;
-        },
-        load(id: string) {
-          return id === `\0${virtualEntry}`
-            ? [
-                'import { startXOAuthLoopback } from "alchemy-x/internal/oauth-loopback";',
-                "console.log(startXOAuthLoopback);",
-                "export default {};",
-              ].join("\n")
-            : undefined;
-        },
-      },
+      virtualModule(
+        blockedEntry,
+        [
+          'import { startXOAuthLoopback } from "alchemy-x/internal/oauth-loopback";',
+          "console.log(startXOAuthLoopback);",
+          "export default {};",
+        ].join("\n"),
+      ),
     ],
   });
 

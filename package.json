@@ -24,7 +24,7 @@
   },
   "type": "module",
   "scripts": {
-    "build": "tsc -b",
+    "build": "rm -rf packages/distilled-x/lib packages/alchemy-x/lib && tsc -b --force",
     "typecheck": "tsc -b --pretty false",
     "format": "oxfmt '.' --ignore-path .oxfmtignore",
     "format:check": "oxfmt '.' --check --ignore-path .oxfmtignore",

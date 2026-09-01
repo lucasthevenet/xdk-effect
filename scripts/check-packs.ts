@@ -42,14 +42,34 @@ for (const packageDirectory of packages) {
       readonly files: readonly { readonly path: string }[];
     }[];
     const files = new Set(result[0]?.files.map((file) => file.path) ?? []);
-    for (const required of [
+    const requiredFiles = [
       "package.json",
       "README.md",
       "lib/index.js",
       "lib/index.d.ts",
-    ]) {
+      ...(manifest.name === "alchemy-x"
+        ? [
+            "lib/Cloudflare.js",
+            "lib/Cloudflare.d.ts",
+            "lib/EventSource.js",
+            "lib/EventSource.d.ts",
+            "src/Cloudflare.ts",
+            "src/EventSource.ts",
+          ]
+        : []),
+    ];
+    for (const required of requiredFiles) {
       if (!files.has(required)) {
         throw new Error(`${manifest.name} tarball is missing ${required}`);
+      }
+    }
+    for (const removed of [
+      "lib/WebhookRoute.d.ts",
+      "lib/WebhookRoute.js",
+      "src/WebhookRoute.ts",
+    ]) {
+      if (files.has(removed)) {
+        throw new Error(`${manifest.name} tarball still contains ${removed}`);
       }
     }
     const buildState = [...files].find((file) => file.endsWith(".tsbuildinfo"));

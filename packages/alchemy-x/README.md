@@ -1,6 +1,6 @@
 # `alchemy-x`
 
-Alchemy v2 providers for X OAuth 2.0, project webhooks, granular X Activity subscriptions, full Account Activity subscriptions, and verified Effect HTTP webhook routes.
+Alchemy v2 providers for X OAuth 2.0, project webhooks, granular X Activity subscriptions, full Account Activity subscriptions, and verified host-adapted event consumption.
 
 ## Install
 
@@ -10,6 +10,9 @@ bun add alchemy-x alchemy effect
 
 `alchemy` and `effect` are peer dependencies. `distilled-x`, the portable API and cryptography layer, is installed by `alchemy-x`.
 
+When using `alchemy-x/Cloudflare` with the current Alchemy beta, also install
+the deployment runtime with `bun add @effect/platform-node`.
+
 ## Primary API
 
 | Export | Purpose |
@@ -18,14 +21,17 @@ bun add alchemy-x alchemy effect
 | `Webhook` | Manage an app-scoped X webhook registration |
 | `ActivitySubscription` | Manage a granular X Activity event/filter subscription |
 | `AccountActivitySubscription` | Manage the authenticated user's full Account Activity subscription |
-| `WebhookRoute`, `events` | Mount a verified Effect HTTP receiver and automatically declare its remote X resources |
+| `consumeEvents`, `EventSource` | Consume verified X events and automatically declare the selected remote resources |
 | `XAuth`, `makeXAuth` | Default or custom X Auth Provider registration Layer |
 | `XCredentials`, `XCredentialsContext` | Flattened credential Effect accessor and its provided Context tag |
 | `fromCredentials`, `fromEnv`, `fromAuthProvider` | Programmatic credential Layers |
 | `createXClient` | Create a client from literal or `Redacted` app/user tokens |
 | `Api` | The complete portable `distilled-x` API namespace |
 
-The package also exports `X_OAUTH_DEFAULT_REDIRECT_URI`, `X_OAUTH_DEFAULT_SCOPES`, `X_AUTH_PROVIDER_NAME`, and the related auth and credential types.
+The `alchemy-x/Cloudflare` entrypoint exports `EventSourceLive`, the production
+Cloudflare Worker adapter for `consumeEvents`. The root package also exports
+`X_OAUTH_DEFAULT_REDIRECT_URI`, `X_OAUTH_DEFAULT_SCOPES`,
+`X_AUTH_PROVIDER_NAME`, and the related auth and credential types.
 
 ## Register the providers
 
@@ -114,63 +120,135 @@ Choose the environment method when credentials are supplied by the process. `CI=
 
 The three required values support already-issued credentials. Rotate them in the external secret manager before expiry, or use the stored OAuth method for safely persisted refresh-token rotation. The callback URI is prompted and stored by interactive OAuth—there is intentionally no redirect-URI environment variable for the environment method.
 
-## Automatic webhook route
+## Automatic event consumption
 
-`WebhookRoute` (alias: `events`) is an Effect `Layer`. When built inside an Effect HTTP application it does both halves of webhook integration:
+`consumeEvents` is the high-level interface for a Worker that receives X
+events. Its host adapter owns both halves of the integration:
 
-- At deploy time, it declares and reconciles the X webhook plus any requested X Activity or Account Activity subscriptions.
-- At runtime, it mounts a CRC `GET` route and a delivery `POST` route. The POST handler verifies `x-twitter-webhooks-signature` over the untouched raw body before decoding JSON or invoking application code.
+- At deploy time, it derives the callback from the Worker URL and reconciles the
+  X webhook plus any requested X Activity or Account Activity subscriptions.
+- At runtime, it binds the API/consumer secret, handles CRC, enforces the body
+  limit, and verifies `x-twitter-webhooks-signature` over the untouched raw body
+  before decoding or invoking application code.
 
-The verified receiver accepts X Activity, Account Activity (including OAuth revoke and replay-status control events), and Filtered Stream webhook envelopes. This package does not yet provision Filtered Stream rules or linkages; those can use the same registered webhook independently.
+Provide the Cloudflare adapter once on the Worker's initialization Effect. No
+`HttpRouter`, public origin, or secret plumbing is required.
 
 ```ts
+import * as Alchemy from "alchemy";
+import * as Cloudflare from "alchemy/Cloudflare";
 import * as X from "alchemy-x";
+import * as XCloudflare from "alchemy-x/Cloudflare";
 import * as Effect from "effect/Effect";
+import * as Layer from "effect/Layer";
 
-const XRoutes = X.WebhookRoute(
-  "XEvents",
+export default Alchemy.Stack(
+  "XApp",
   {
-    origin: "https://x-events.example.com",
-    path: "/api/x/webhook",
-    accountActivity: true,
-    activity: [
-      {
-        name: "mentions",
-        eventType: "post.mention.create",
-        filter: { user_id: "123456789" },
-        auth: "user",
-      },
-      {
-        name: "profile-bio",
-        eventType: "profile.update.bio",
-        filter: { user_id: "123456789" },
-        auth: "app",
-      },
-    ],
+    providers: Layer.mergeAll(Cloudflare.providers(), X.providers()),
+    state: Cloudflare.state(),
   },
-  (delivery, request) =>
-    Effect.logInfo("Verified X delivery", { delivery, url: request.url }),
-);
+  Effect.gen(function* () {
+    const worker = yield* Cloudflare.Worker(
+      "XEvents",
+      { main: import.meta.url },
+      Effect.gen(function* () {
+        yield* X.consumeEvents(
+          {
+            name: "XEvents",
+            path: "/api/x/webhook",
+            accountActivity: true,
+            activity: [
+              {
+                name: "mentions",
+                eventType: "post.mention.create",
+                filter: { user_id: "123456789" },
+                auth: "user",
+              },
+              {
+                name: "profile-bio",
+                eventType: "profile.update.bio",
+                filter: { user_id: "123456789" },
+                auth: "app",
+              },
+            ],
+          },
+          (event) =>
+            Effect.logInfo("Verified X event", {
+              kind: event.kind,
+              delivery: event.delivery,
+            }),
+        );
 
-// `X.events(...)` is the same function.
+        return {};
+      }).pipe(Effect.provide(XCloudflare.EventSourceLive)),
+    );
+
+    return { url: worker.url };
+  }),
+);
 ```
 
-Provide `XRoutes` to the Effect HTTP program that supplies `HttpRouter`. A complete Cloudflare Worker integration—including construction of the router Layer and `fetch` handler—is in [`examples/cloudflare-worker`](../../examples/cloudflare-worker).
+The handler receives a discriminated `{ kind, delivery }` event. The current
+kinds are `activity`, `account_activity`, `filtered_stream`, and `replay_job`.
+Account Activity is deliberately opt-in: `X.consumeEvents(handler)` mounts the
+verified receiver and manages its webhook, but does not subscribe the OAuth
+user. Set `accountActivity: true` explicitly when the full account feed is
+required.
 
-### `WebhookRoute` options
+### `consumeEvents` options
 
 | Option | Description |
 | --- | --- |
-| `origin` | Public HTTPS deployment origin. Accepts an Alchemy `Input`, `Config`, or Effect-valued input; use the host's URL `Output` for same-stack deployments. |
-| `path` | Canonical receiver path; defaults to `/api/x/webhook`. Dot segments, duplicate slashes, queries, and fragments are rejected. |
-| `consumerSecret` | Optional literal, `Redacted`, or `Config<Redacted>` API secret. Defaults to the secret resolved by `X.providers()`. |
-| `revalidateInvalid` | Existing invalid registrations are revalidated by default; set `false` to keep one without re-running CRC. |
-| `adoptExisting` | Persistent opt-in for an exact unowned webhook or Account Activity slot discovered during reconcile; it does not replace Alchemy's normal cold-resource adoption gate. |
-| `activity` | Granular `{ name?, eventType, filter, tag?, auth? }` subscriptions. `name` stabilizes identity and is required for duplicate event/filter entries. |
-| `accountActivity` | Add full Account Activity for the authenticated OAuth user. |
+| `name` | Stable logical name for the managed webhook and subscriptions. Recommended for persistent deployments; keep it immutable. Set it to the prior `WebhookRoute`/`events` name when migrating. |
+| `path` | Canonical path claimed by the host adapter; defaults to `/__alchemy/x/events`. Dot segments, duplicate slashes, queries, and fragments are rejected. |
+| `activity` | One or more granular `{ name?, eventType, filter, tag?, auth? }` subscriptions. `name` stabilizes identity and is required for duplicate event/filter entries. |
+| `accountActivity` | Add full Account Activity for the authenticated OAuth user. It is not enabled by the handler-only overload. |
 | `maxBodyBytes` | Maximum signed delivery size; defaults to 5 MiB. Oversized bodies receive `413`. |
 
-X performs a CRC request immediately when a webhook is registered. The receiver must therefore be publicly reachable before reconciliation. If the same Alchemy stack deploys the receiver, pass its URL `Output` as `origin`; that dependency makes the remote X registration wait for the host deployment. A literal or `Config` origin is appropriate only when that endpoint is already live. X requires a public HTTPS webhook URL without an explicit port, limits the URL to 200 characters, and expects a successful response within ten seconds. The CRC and signature rules are defined in X's [webhook introduction](https://docs.x.com/x-api/webhooks/introduction) and [webhook quickstart](https://docs.x.com/x-api/webhooks/quickstart).
+Without `name`, the Cloudflare adapter namespaces remote resource state under
+the Worker. Renaming that Worker then changes the resource FQNs. Because X
+exposes an app-wide webhook singleton, do not adopt the replacement while the
+old FQN is pending deletion; choose a stable name up front. Changing an existing
+identity requires an adapter-level Alchemy rename alias; without one, remove
+and deploy the old source before recreating it in a second deploy.
+
+With Alchemy `2.0.0-beta.75`, `EventSourceLive` must be the dedicated Worker's
+only fetch listener. Return `{}` from Worker initialization as above; a normal
+`fetch` handler cannot currently coexist in that Worker; requests outside the
+configured event path receive `404`. The adapter binds the consumer secret
+without exposing it to application code, answers CRC, and checks the raw-body
+signature before parsing. The Worker URL `Output` also makes host deployment a
+prerequisite of X registration, which matters because X performs CRC
+immediately. X requires a public HTTPS webhook URL without an explicit port,
+limits it to 200 characters, and expects a successful response within ten
+seconds. See X's [webhook introduction](https://docs.x.com/x-api/webhooks/introduction)
+and [webhook quickstart](https://docs.x.com/x-api/webhooks/quickstart).
+
+To migrate an existing `WebhookRoute` declaration (including the old `events`
+alias), pass its first argument as `name` and retain its effective canonical
+path:
+
+```ts
+yield* X.consumeEvents(
+  {
+    name: "AccountEvents",
+    path: "/api/x/webhook",
+    accountActivity: true,
+  },
+  handler,
+);
+```
+
+If the old declaration omitted `path`, `/api/x/webhook` was its default; the
+new default is `/__alchemy/x/events`. If the old declaration used a relative
+path such as `api/x/webhook`, add its normalized leading slash. Preserving both
+`name` and the canonical `path` keeps the existing Alchemy resource identities
+instead of planning replacement resources. Keep the Worker on the same public
+host to preserve the webhook URL.
+
+A complete integration is in
+[`examples/cloudflare-worker`](../../examples/cloudflare-worker).
 
 ## Direct resources
 

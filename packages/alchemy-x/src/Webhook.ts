@@ -48,8 +48,9 @@ export interface Webhook extends Resource<
  * A project-wide X webhook registration.
  *
  * X immediately performs a CRC request when this resource is created, so the
- * receiving route must already be publicly reachable. Most applications use
- * {@link WebhookRoute}, which mounts the receiver and registers this resource.
+ * receiver must already be publicly reachable. Most applications use
+ * {@link import("./EventSource.ts").consumeEvents}, whose host adapter mounts
+ * the receiver and registers this resource.
  *
  * @resource
  */
