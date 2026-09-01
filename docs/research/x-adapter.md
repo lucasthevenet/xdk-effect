@@ -2,6 +2,12 @@
 
 Research date: 2026-08-31. Sources are first-party Alchemy and X documentation/source.
 
+> **Current implementation status:** `alchemy-x` currently provides only an
+> environment-backed Auth Provider for externally issued credentials. The
+> interactive PKCE, local callback, stored-credential, and token-refresh design
+> discussed below is historical research for a possible future implementation,
+> not behavior exposed by the package today.
+
 ## Executive findings
 
 The adapter needs **two independent authentication planes**, not one:

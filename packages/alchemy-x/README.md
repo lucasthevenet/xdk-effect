@@ -1,6 +1,6 @@
 # `alchemy-x`
 
-Alchemy v2 providers for X OAuth 2.0, project webhooks, granular X Activity subscriptions, full Account Activity subscriptions, and verified host-adapted event consumption.
+Alchemy v2 providers for environment-backed X credentials, project webhooks, granular X Activity subscriptions, full Account Activity subscriptions, and verified host-adapted event consumption.
 
 ## Install
 
@@ -17,21 +17,20 @@ the deployment runtime with `bun add @effect/platform-node`.
 
 | Export | Purpose |
 | --- | --- |
-| `providers()`, `Providers` | Register the X resource collection, credentials bridge, and Auth Provider |
+| `providers()`, `Providers` | Register the X resource collection, credentials bridge, and environment-only Auth Provider |
 | `Webhook` | Manage an app-scoped X webhook registration |
 | `ActivitySubscription` | Manage a granular X Activity event/filter subscription |
 | `AccountActivitySubscription` | Manage the authenticated user's full Account Activity subscription |
 | `consumeEvents`, `EventSource` | Consume verified X events and automatically declare the selected remote resources |
-| `XAuth`, `makeXAuth` | Default or custom X Auth Provider registration Layer |
+| `XAuth`, `makeXAuth` | Default or custom environment-only X Auth Provider registration Layer |
 | `XCredentials`, `XCredentialsContext` | Flattened credential Effect accessor and its provided Context tag |
-| `fromCredentials`, `fromEnv`, `fromAuthProvider` | Programmatic credential Layers |
+| `fromCredentials`, `fromEnv`, `fromAuthProvider` | Programmatic credential Layers; the Auth Provider path reads the environment |
 | `createXClient` | Create a client from literal or `Redacted` app/user tokens |
 | `Api` | The complete portable `distilled-x` API namespace |
 
 The `alchemy-x/Cloudflare` entrypoint exports `EventSourceLive`, the production
 Cloudflare Worker adapter for `consumeEvents`. The root package also exports
-`X_OAUTH_DEFAULT_REDIRECT_URI`, `X_OAUTH_DEFAULT_SCOPES`,
-`X_AUTH_PROVIDER_NAME`, and the related auth and credential types.
+`X_AUTH_PROVIDER_NAME` and the related auth and credential types.
 
 ## Register the providers
 
@@ -56,7 +55,7 @@ export default Alchemy.Stack(
 );
 ```
 
-Providers are Effect Layers in Alchemy; see [Alchemy's provider guide](https://alchemy.run/infrastructure-as-code/provider/). `X.providers()` supplies all X resource implementations, the credentials service, and the Auth Provider that `alchemy login` discovers.
+Providers are Effect Layers in Alchemy; see [Alchemy's provider guide](https://alchemy.run/infrastructure-as-code/provider/). `X.providers()` supplies all X resource implementations, the credentials service, and an environment-only X Auth Provider.
 
 ## Authentication
 
@@ -67,47 +66,19 @@ The adapter deliberately keeps these credentials separate:
 | App-only Bearer token | List, create, validate, and delete X webhooks; app-context subscription operations |
 | API secret / consumer secret | Answer webhook CRC requests and verify delivery signatures |
 | OAuth 2.0 user access token | `GET /2/users/me`, full Account Activity enrollment, and private X Activity events |
-| OAuth 2.0 client and refresh token | Interactive PKCE login and unattended user-token renewal |
 
 ### Configure the X app
 
 1. Create an X developer app and enable OAuth 2.0 in its authentication settings.
 2. Generate an app-only Bearer token and record the API key's secret. The API secret is the webhook HMAC key; it is distinct from an OAuth 2.0 Client Secret.
-3. For interactive local login, add this exact callback URL to the app:
+3. Obtain a user access token from X or your external authorization service with the scopes required by the resources you declare. Account Activity currently requires `tweet.read`, `users.read`, `dm.read`, and `dm.write`; private X Activity event types may require additional scopes such as `mute.read` or `block.read`.
 
-   ```text
-   http://127.0.0.1:9976/auth/callback
-   ```
+See [X app configuration](https://docs.x.com/fundamentals/developer-apps) and
+[X Activity event authentication](https://docs.x.com/x-api/activity/introduction).
 
-4. Record the OAuth 2.0 Client ID. A confidential Web App or Automated App/Bot also has a Client Secret; a public Native App does not.
+### Environment authentication
 
-X callback URLs must match exactly, including any trailing slash. X permits `http://127.0.0.1` for local development and explicitly rejects `localhost`; X generally requires HTTPS for production OAuth callbacks. This adapter's interactive provider is deliberately loopback-only and accepts an `http://127.0.0.1` URI with an explicit port and no query or fragment. See [X app configuration](https://docs.x.com/fundamentals/developer-apps).
-
-### Interactive login
-
-Once the stack includes `X.providers()`, run:
-
-```sh
-bunx alchemy login --configure
-```
-
-Select OAuth and follow the prompts for the app credentials and registered callback. The provider opens X's Authorization Code + PKCE flow, validates callback state, exchanges the short-lived code, and stores secrets in Alchemy's per-profile credential store. The profile itself stores only `{ method: "oauth" }`; app settings use the `x-oauth-app` credential entry, while access/refresh tokens, expiry, granted scopes, and the discovered user ID use `x-oauth-tokens`. Credential resolution refreshes a stored token within 60 seconds of expiry. Use `bunx alchemy login --configure` again to force a new browser authorization; plain `bunx alchemy login` discovers and displays the configured provider. Alchemy profiles and storage behavior are described in the [Auth Provider guide](https://alchemy.run/environments/auth-providers/).
-
-The adapter creates/chmods the per-profile credential directory to `0700` and both X credential files to `0600`, including when repairing files written by an earlier version. These files are permission-protected JSON and are not encrypted at rest.
-
-The default Account Activity scope set is:
-
-```text
-tweet.read users.read dm.read dm.write offline.access
-```
-
-`offline.access` is important for an unattended deploy: X access tokens otherwise expire after two hours and X does not issue a refresh token without that scope. Private X Activity event types may require additional scopes such as `mute.read` or `block.read`; request the minimum scopes for the configured events. See [X OAuth 2.0 scopes and refresh](https://docs.x.com/fundamentals/authentication/oauth-2-0/authorization-code) and [X Activity event authentication](https://docs.x.com/x-api/activity/introduction).
-
-For the stored OAuth method, when X returns a replacement refresh token, the provider persists the replacement together with the new access token before returning credentials. Alchemy serializes Auth Provider reads under a cross-process lock, preventing concurrent deploys from racing a rotating refresh session. The environment method cannot persist a replacement refresh token into process environment variables, so it deliberately never attempts refresh. Prefer stored OAuth when automatic rotation is required.
-
-### Environment authentication and CI
-
-Choose the environment method when credentials are supplied by the process. `CI=true` selects this method non-interactively.
+Supply credentials to the process before running Alchemy:
 
 | Variable | Required | Meaning |
 | --- | --- | --- |
@@ -118,7 +89,12 @@ Choose the environment method when credentials are supplied by the process. `CI=
 | `X_ACCESS_TOKEN_EXPIRES_AT` | Optional | ISO date, Unix seconds, or Unix milliseconds; resolution fails within 60 seconds of expiry |
 | `X_OAUTH_SCOPES` | Optional | Space- or comma-separated scopes associated with the user token |
 
-The three required values support already-issued credentials. Rotate them in the external secret manager before expiry, or use the stored OAuth method for safely persisted refresh-token rotation. The callback URI is prompted and stored by interactive OAuth—there is intentionally no redirect-URI environment variable for the environment method.
+The X Auth Provider registered by `X.providers()` is environment-only. It reads
+these values but does not open an authorization page, issue tokens, persist
+credentials, or rotate an access token. `X_CLIENT_ID`,
+`X_ACCESS_TOKEN_EXPIRES_AT`, and `X_OAUTH_SCOPES` are metadata only;
+`X_OAUTH_SCOPES` does not grant scopes to the token. Rotate the three required
+values in an external secret manager before the user access token expires.
 
 ## Automatic event consumption
 
@@ -195,9 +171,9 @@ export default Alchemy.Stack(
 The handler receives a discriminated `{ kind, delivery }` event. The current
 kinds are `activity`, `account_activity`, `filtered_stream`, and `replay_job`.
 Account Activity is deliberately opt-in: `X.consumeEvents(handler)` mounts the
-verified receiver and manages its webhook, but does not subscribe the OAuth
-user. Set `accountActivity: true` explicitly when the full account feed is
-required.
+verified receiver and manages its webhook, but does not subscribe the user
+associated with `X_ACCESS_TOKEN`. Set `accountActivity: true` explicitly when
+the full account feed is required.
 
 ### `consumeEvents` options
 
@@ -206,7 +182,7 @@ required.
 | `name` | Stable logical name for the managed webhook and subscriptions. Recommended for persistent deployments; keep it immutable. Set it to the prior `WebhookRoute`/`events` name when migrating. |
 | `path` | Canonical path claimed by the host adapter; defaults to `/__alchemy/x/events`. Dot segments, duplicate slashes, queries, and fragments are rejected. |
 | `activity` | One or more granular `{ name?, eventType, filter, tag?, auth? }` subscriptions. `name` stabilizes identity and is required for duplicate event/filter entries. |
-| `accountActivity` | Add full Account Activity for the authenticated OAuth user. It is not enabled by the handler-only overload. |
+| `accountActivity` | Add full Account Activity for the user associated with `X_ACCESS_TOKEN`. It is not enabled by the handler-only overload. |
 | `maxBodyBytes` | Maximum signed delivery size; defaults to 5 MiB. Oversized bodies receive `413`. |
 
 Without `name`, the Cloudflare adapter namespaces remote resource state under
@@ -295,7 +271,7 @@ Use `ActivitySubscription` when you want one granular event/filter pair. X Activ
 
 Use `AccountActivitySubscription` when you need the authenticated account's complete supported activity feed. X documents Account Activity as available only on Pay Per Use and Enterprise. Pay Per Use currently permits three unique user subscriptions and one webhook; the `/all` product cannot be narrowed to selected event types. See the [Account Activity overview](https://docs.x.com/x-api/account-activity/introduction).
 
-There is a first-party contract mismatch to be aware of: the current Account Activity quickstart says user enrollment uses OAuth 1.0a, while the current X [OpenAPI document](https://api.x.com/2/openapi.json) also lists OAuth 2.0 user authentication for the operation. This package implements OAuth 2.0 PKCE. Run the gated live test against the actual X account and entitlement before depending on full Account Activity in production.
+There is a first-party contract mismatch to be aware of: the current Account Activity quickstart says user enrollment uses OAuth 1.0a, while the current X [OpenAPI document](https://api.x.com/2/openapi.json) also lists OAuth 2.0 user authentication for the operation. This package accepts an externally issued OAuth 2.0 user access token. Run the gated live test against the actual X account and entitlement before depending on full Account Activity in production.
 
 ## Direct API access
 
@@ -328,4 +304,4 @@ bun run test:live
 
 Supply the environment credentials above and use an app with the relevant [X product access](https://docs.x.com/x-api/account-activity/quickstart). Never run the live test against a production webhook without reviewing the delete-first replacement caveat.
 
-The default live command performs read-only identity/webhook checks. To run the paid OAuth 2.0 Account Activity create/check/delete proof, also set `X_LIVE_MUTATE=1` and `X_LIVE_WEBHOOK_ID` to a non-production webhook with no existing subscription for the test user.
+The default live command performs read-only identity/webhook checks. To use the supplied OAuth 2.0 access token for the paid Account Activity create/check/delete proof, also set `X_LIVE_MUTATE=1` and `X_LIVE_WEBHOOK_ID` to a non-production webhook with no existing subscription for the test user.

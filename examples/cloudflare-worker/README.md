@@ -3,12 +3,19 @@
 This stack lets one Cloudflare Worker consume verified X events and automatically
 manages the remote webhook plus an Account Activity subscription.
 
-Authenticate both providers, then deploy:
+Supply the X credentials, authenticate Cloudflare, then deploy:
 
 ```sh
+export X_BEARER_TOKEN=...
+export X_API_SECRET=...
+export X_ACCESS_TOKEN=...
 bunx alchemy login
 bunx alchemy deploy
 ```
+
+The X Auth Provider only reads these environment variables. Obtain and rotate
+the OAuth 2.0 user access token through X or an external authorization service;
+the adapter does not issue, persist, or rotate it.
 
 `XCloudflare.EventSourceLive` owns the host integration: it derives the public
 callback from the Worker's URL, binds the API/consumer secret without exposing

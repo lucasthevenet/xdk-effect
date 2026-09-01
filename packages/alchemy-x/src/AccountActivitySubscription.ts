@@ -161,7 +161,7 @@ export const AccountActivitySubscriptionProvider = () =>
           actualUserId: userId,
           message:
             `This resource targets X user ${desiredUserId}, but the current OAuth token belongs to ${userId}. ` +
-            "Update the declared user ID or restore the intended OAuth profile.",
+            "Update the declared user ID or restore the intended X_ACCESS_TOKEN.",
         });
       }
       // SAFETY: the same reconcile boundary guarantees a concrete webhook ID.

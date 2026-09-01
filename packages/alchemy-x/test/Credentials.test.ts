@@ -1,87 +1,48 @@
 import { describe, expect, test } from "bun:test";
 import * as ConfigProvider from "effect/ConfigProvider";
 import * as Effect from "effect/Effect";
-import * as FileSystem from "effect/FileSystem";
 import * as Layer from "effect/Layer";
+import * as Redacted from "effect/Redacted";
 import {
   AuthError,
   AuthProviders,
   type AuthProvider,
 } from "alchemy/Auth/AuthProvider";
 import {
-  CredentialsStore,
-  type CredentialsStoreService,
-} from "alchemy/Auth/Credentials";
-import { AlchemyProfile, type ProfileService } from "alchemy/Auth/Profile";
-import {
+  readEnvCredentials,
   X_AUTH_PROVIDER_NAME,
-  X_OAUTH_APP_STORE_KEY,
   type XAuthConfig,
   type XResolvedCredentials,
-  type XStoredOAuthApp,
 } from "../src/AuthEnvironment.ts";
-import { fromAuthProvider, XAppCredentials } from "../src/Credentials.ts";
+import {
+  fromAuthProvider,
+  XAppCredentials,
+  XCredentials,
+} from "../src/Credentials.ts";
 
 describe("X credential resolution", () => {
-  test("app-only API calls do not read or refresh user OAuth", async () => {
+  test("app-only API calls need no profile or user access token", async () => {
     let userReads = 0;
     let authorization: string | null = null;
-    const app = {
-      type: "x-oauth-app",
-      clientId: "client-id",
-      appBearerToken: "app-bearer-token",
-      consumerSecret: "consumer-secret",
-      redirectUri: "http://127.0.0.1:9976/auth/callback",
-      scopes: ["tweet.read", "offline.access"],
-    } satisfies XStoredOAuthApp;
     // SAFETY: This local fake implements every AuthProvider operation used by
-    // fromAuthProvider; `read` intentionally fails to prove app-only isolation.
+    // fromAuthProvider; read intentionally fails to prove app-only isolation.
     const auth = {
       kind: "AuthProvider",
       name: X_AUTH_PROVIDER_NAME,
-      configure: () => Effect.succeed({ method: "oauth" as const }),
+      configure: () => Effect.succeed({ method: "env" as const }),
       login: () => Effect.void,
       logout: () => Effect.void,
       prettyPrint: () => Effect.void,
       read: () => {
-        userReads += 1;
+        userReads++;
         return Effect.fail(
-          new AuthError({ message: "expired user refresh token" }),
+          new AuthError({ message: "X_ACCESS_TOKEN was not supplied" }),
         );
       },
     } as AuthProvider<XAuthConfig, XResolvedCredentials>;
-    const profile = {
-      readConfig: Effect.succeed({ version: 0 as const, profiles: {} }),
-      writeConfig: () => Effect.void,
-      getProfile: () => Effect.succeed(undefined),
-      setProfile: () => Effect.void,
-      deleteProfile: () => Effect.succeed(false),
-      loadOrConfigure: <Config extends { method: string }>() =>
-        // SAFETY: This test only requests XAuthConfig, whose discriminant is
-        // exactly the OAuth method returned by the profile fake.
-        Effect.succeed({ method: "oauth" } as Config),
-    } satisfies ProfileService;
-    const store = {
-      read: <T>(_profile: string, key: string) => {
-        // SAFETY: The fake store contains the XStoredOAuthApp under its exact
-        // credential key and returns undefined for every other requested type.
-        return Effect.succeed(
-          (key === X_OAUTH_APP_STORE_KEY ? app : undefined) as T | undefined,
-        );
-      },
-      write: () => Effect.void,
-      delete: () => Effect.void,
-      deleteProfile: () => Effect.void,
-    } satisfies CredentialsStoreService;
-    const dependencies = Layer.mergeAll(
-      Layer.succeed(AuthProviders, { [X_AUTH_PROVIDER_NAME]: auth }),
-      Layer.succeed(AlchemyProfile, profile),
-      Layer.succeed(CredentialsStore, store),
-      Layer.succeed(
-        FileSystem.FileSystem,
-        FileSystem.makeNoop({ exists: () => Effect.succeed(false) }),
-      ),
-    );
+    const dependencies = Layer.succeed(AuthProviders, {
+      [X_AUTH_PROVIDER_NAME]: auth,
+    });
     const credentials = fromAuthProvider({
       runtime: {
         fetch: async (_input, init) => {
@@ -99,7 +60,10 @@ describe("X credential resolution", () => {
         Effect.provide(credentials),
         Effect.provideService(
           ConfigProvider.ConfigProvider,
-          ConfigProvider.fromEnvRecord({}),
+          ConfigProvider.fromEnvRecord({
+            X_BEARER_TOKEN: "app-bearer-token",
+            X_API_SECRET: "consumer-secret",
+          }),
         ),
       ),
     );
@@ -107,5 +71,39 @@ describe("X credential resolution", () => {
     expect(listed.value.data).toEqual([]);
     expect(authorization).toBe("Bearer app-bearer-token");
     expect(userReads).toBe(0);
+  });
+
+  test("resolves user environment credentials without a profile", async () => {
+    const auth = {
+      kind: "AuthProvider",
+      name: X_AUTH_PROVIDER_NAME,
+      configure: () => Effect.succeed({ method: "env" as const }),
+      login: () => Effect.void,
+      logout: () => Effect.void,
+      prettyPrint: () => Effect.void,
+      read: () => readEnvCredentials(),
+    } satisfies AuthProvider<XAuthConfig, XResolvedCredentials>;
+    const credentials = fromAuthProvider().pipe(
+      Layer.provide(
+        Layer.succeed(AuthProviders, { [X_AUTH_PROVIDER_NAME]: auth }),
+      ),
+    );
+
+    const resolved = await Effect.runPromise(
+      XCredentials.pipe(
+        Effect.provide(credentials),
+        Effect.provideService(
+          ConfigProvider.ConfigProvider,
+          ConfigProvider.fromEnvRecord({
+            X_BEARER_TOKEN: "app-bearer-token",
+            X_API_SECRET: "consumer-secret",
+            X_ACCESS_TOKEN: "user-access-token",
+          }),
+        ),
+      ),
+    );
+
+    expect(Redacted.value(resolved.userAccessToken)).toBe("user-access-token");
+    expect(resolved.source.type).toBe("env");
   });
 });

@@ -64,8 +64,14 @@ for (const packageDirectory of packages) {
       }
     }
     for (const removed of [
+      "lib/CredentialFiles.d.ts",
+      "lib/CredentialFiles.js",
+      "lib/OAuthLoopback.d.ts",
+      "lib/OAuthLoopback.js",
       "lib/WebhookRoute.d.ts",
       "lib/WebhookRoute.js",
+      "src/CredentialFiles.ts",
+      "src/OAuthLoopback.ts",
       "src/WebhookRoute.ts",
     ]) {
       if (files.has(removed)) {

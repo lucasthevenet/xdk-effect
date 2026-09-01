@@ -1,11 +1,10 @@
 {
   "name": "alchemy-x",
   "version": "0.1.0",
-  "description": "Alchemy V2 provider for X OAuth, webhooks, and activity subscriptions.",
+  "description": "Alchemy V2 provider for X webhooks and activity subscriptions.",
   "keywords": [
     "alchemy",
     "effect",
-    "oauth",
     "twitter",
     "webhook",
     "x"
@@ -36,13 +35,6 @@
     },
     "./internal": null,
     "./internal/*": null,
-    "./internal/oauth-loopback": {
-      "types": "./lib/OAuthLoopback.d.ts",
-      "worker": null,
-      "bun": "./src/OAuthLoopback.ts",
-      "node": "./lib/OAuthLoopback.js"
-    },
-    "./OAuthLoopback": null,
     "./WebhookRoute": null,
     "./*": {
       "types": "./lib/*.d.ts",

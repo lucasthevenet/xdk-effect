@@ -288,7 +288,7 @@ export const ActivitySubscriptionProvider = () =>
           return yield* new XOAuthScopeMissing({
             eventType: news.eventType,
             requiredScope,
-            message: `X Activity event ${news.eventType} needs OAuth scope ${requiredScope}. Re-run alchemy login --configure and authorize that scope.`,
+            message: `X Activity event ${news.eventType} needs OAuth scope ${requiredScope}. Issue an access token with that scope, update X_ACCESS_TOKEN, and include it in X_OAUTH_SCOPES.`,
           });
         }
         const client = userCredentials?.client ?? appCredentials.client;

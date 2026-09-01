@@ -1,7 +1,5 @@
-import * as Config from "effect/Config";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
-import * as FileSystem from "effect/FileSystem";
 import * as Layer from "effect/Layer";
 import * as Redacted from "effect/Redacted";
 import {
@@ -9,24 +7,20 @@ import {
   AuthProviders,
   getAuthProvider,
 } from "alchemy/Auth/AuthProvider";
-import { CredentialsStore } from "alchemy/Auth/Credentials";
-import { ALCHEMY_PROFILE, AlchemyProfile } from "alchemy/Auth/Profile";
+import { ALCHEMY_PROFILE } from "alchemy/Auth/Profile";
 import {
   createXClient as createDistilledXClient,
   type XClient,
   type XClientConfig,
 } from "distilled-x";
 import {
-  isStoredOAuthApp,
   readEnvAppCredentials,
   X_AUTH_PROVIDER_NAME,
-  X_OAUTH_APP_STORE_KEY,
   type XAuthConfig,
   type XResolvedAppCredentials,
   type XResolvedCredentials,
   readEnvCredentials,
 } from "./AuthEnvironment.ts";
-import { repairStoredCredentialPermissionsWith } from "./CredentialFiles.ts";
 
 export type XCredentialsSource =
   | XResolvedCredentials["source"]
@@ -222,7 +216,7 @@ export const XCredentials: Effect.Effect<
   XCredentialsContext
 > = Effect.flatten(XCredentialsContext);
 
-/** App-only credentials remain available when the user OAuth session is stale. */
+/** App-only credentials remain available when the user access token is stale. */
 export class XAppCredentialsContext extends Context.Service<
   XAppCredentialsContext,
   Effect.Effect<XAppCredentialsService>
@@ -269,31 +263,22 @@ export const fromEnv = (options?: XClientOptions) =>
     ),
   );
 
-/** Resolve credentials through the configured Alchemy profile lazily. */
+/** Resolve environment credentials through the registered AuthProvider lazily. */
 export const fromAuthProvider = (
   options?: XClientOptions,
 ): Layer.Layer<
   XCredentialsContext | XAppCredentialsContext,
   never,
-  AlchemyProfile | AuthProviders | CredentialsStore | FileSystem.FileSystem
+  AuthProviders
 > =>
   Layer.unwrap(
     Effect.gen(function* () {
-      const profile = yield* AlchemyProfile;
       const auth = yield* getAuthProvider<XAuthConfig, XResolvedCredentials>(
         X_AUTH_PROVIDER_NAME,
       );
-      const store = yield* CredentialsStore;
-      const fs = yield* FileSystem.FileSystem;
       const profileName = yield* ALCHEMY_PROFILE;
-      const ci = yield* Config.boolean("CI").pipe(Config.withDefault(false));
-
-      const config = yield* Effect.cached(
-        profile.loadOrConfigure(auth, profileName, { ci }),
-      );
       const userCredentials = yield* Effect.cached(
-        config.pipe(
-          Effect.flatMap((value) => auth.read(profileName, value)),
+        Effect.suspend(() => auth.read(profileName, { method: "env" })).pipe(
           Effect.map((credentials) => fromResolved(credentials, options)),
           Effect.mapError(
             (cause) =>
@@ -306,37 +291,7 @@ export const fromAuthProvider = (
         ),
       );
       const appCredentials = yield* Effect.cached(
-        config.pipe(
-          Effect.flatMap((value) =>
-            value.method === "env"
-              ? readEnvAppCredentials()
-              : repairStoredCredentialPermissionsWith(fs, profileName, [
-                  X_OAUTH_APP_STORE_KEY,
-                ]).pipe(
-                  Effect.flatMap(() =>
-                    store.read<unknown>(profileName, X_OAUTH_APP_STORE_KEY),
-                  ),
-                  Effect.flatMap((stored) =>
-                    isStoredOAuthApp(stored)
-                      ? Effect.succeed(stored)
-                      : Effect.fail(
-                          new AuthError({
-                            message:
-                              "X OAuth app settings not found. Run: alchemy login --configure",
-                          }),
-                        ),
-                  ),
-                  Effect.map((stored) => ({
-                    appBearerToken: Redacted.make(stored.appBearerToken),
-                    consumerSecret: Redacted.make(stored.consumerSecret),
-                    clientId: stored.clientId,
-                    source: {
-                      type: "oauth" as const,
-                      details: X_OAUTH_APP_STORE_KEY,
-                    },
-                  })),
-                ),
-          ),
+        readEnvAppCredentials().pipe(
           Effect.map((credentials) => fromResolvedApp(credentials, options)),
           Effect.mapError((cause) =>
             cause instanceof AuthError
