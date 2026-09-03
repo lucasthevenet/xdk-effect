@@ -1,9 +1,10 @@
 import * as Hmac from "effect-xdk/Hmac";
 import * as BrowserCrypto from "@effect/platform-browser/BrowserCrypto";
 import { describe, expect, test } from "bun:test";
+import { createHmac } from "node:crypto";
 import type { ResourceLike } from "alchemy";
 import * as Cloudflare from "alchemy/Cloudflare";
-import { RuntimeContext } from "alchemy/RuntimeContext";
+import { packEnvValue, RuntimeContext } from "alchemy/RuntimeContext";
 import { Stack } from "alchemy/Stack";
 import * as Effect from "effect/Effect";
 import * as Redacted from "effect/Redacted";
@@ -18,6 +19,9 @@ import { EventSourceLive } from "alchemy-x/Cloudflare";
 import { fromCredentials } from "../src/Credentials.ts";
 import * as HttpClient from "effect/unstable/http/HttpClient";
 import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
+import * as HttpServerResponse from "effect/unstable/http/HttpServerResponse";
+// Exercise the pinned Alchemy dispatch implementation, not a listener mock.
+import { makeWorkerRuntimeContext } from "../node_modules/alchemy/src/Cloudflare/Workers/WorkerRuntimeContext.ts";
 
 const secret = Redacted.make("x-api-consumer-secret");
 const workerOrigin = "https://events.example.com";
@@ -210,6 +214,114 @@ const registerAtPlan = (
   );
 
 describe("Cloudflare X event source", () => {
+  test.serial(
+    "returns Responses through Alchemy's real dispatcher",
+    async () => {
+      const runtime = makeWorkerRuntimeContext("RuntimeWorker");
+      // Platform copies the runtime's methods onto the resource instance, but
+      // registers the returned fetch handler through the original runtime.
+      const worker = Object.assign(
+        { LogicalId: "RuntimeWorker", url: workerOrigin },
+        runtime,
+      );
+      let defaultFetches = 0;
+      const deliveries: XEvent[] = [];
+      const implementation = {
+        fetch: Effect.sync(() => {
+          defaultFetches++;
+          return HttpServerResponse.text("default");
+        }),
+        greet: () => Effect.succeed("hello"),
+      };
+
+      await runAtRuntime(
+        Effect.gen(function* () {
+          yield* consumeEvents({ path: "/api/x/webhook" }, (event) =>
+            Effect.sync(() => {
+              deliveries.push(event);
+            }),
+          ).pipe(Effect.provide(X.Cloudflare.EventSourceLive));
+          const listen = runtime.listen;
+          // oxlint-disable-next-line anti-slop/no-shape-in-symbol-names -- Alchemy calls the exported handler/RPC object "shape".
+          yield* runtime.serve(implementation.fetch, { shape: implementation });
+          expect(runtime.listen).toBe(listen);
+          // oxlint-disable-next-line anti-slop/no-shape-in-symbol-names -- Alchemy's runtime exposes that object through shape().
+          expect(runtime.shape()).toBe(implementation);
+          const exports = yield* runtime.exports;
+          const dispatch = Effect.fn(function* (request: Request) {
+            const [effect, services] = exports.default.fetch(request, {}, {});
+            const response = yield* effect.pipe(Effect.provide(services));
+            expect(response).toBeInstanceOf(Response);
+            if (!(response instanceof Response)) {
+              throw new Error("Alchemy discarded the fetch response");
+            }
+            return response;
+          });
+
+          const crc = yield* dispatch(
+            new Request(`${workerOrigin}/api/x/webhook?crc_token=challenge`),
+          );
+          expect(crc.status).toBe(200);
+          expect(yield* Effect.promise(() => crc.json())).toEqual({
+            response_token:
+              "sha256=irqx1dRy5JW4DFxmzGWVFxG6lpxvhlzN6u8gBADXKl0=",
+          });
+
+          const body = JSON.stringify({
+            for_user_id: "42",
+            tweet_create_events: [],
+          });
+          const signature = createHmac("sha256", Redacted.value(secret))
+            .update(body)
+            .digest("base64");
+          const delivery = yield* dispatch(
+            new Request(`${workerOrigin}/api/x/webhook`, {
+              method: "POST",
+              headers: {
+                "x-twitter-webhooks-signature": `sha256=${signature}`,
+              },
+              body,
+            }),
+          );
+          expect(delivery.status).toBe(200);
+          expect(yield* Effect.promise(() => delivery.json())).toEqual({
+            ok: true,
+          });
+          expect(deliveries).toHaveLength(1);
+
+          const unsigned = yield* dispatch(
+            new Request(`${workerOrigin}/api/x/webhook`, {
+              method: "POST",
+              body,
+            }),
+          );
+          expect(unsigned.status).toBe(401);
+          expect(deliveries).toHaveLength(1);
+          expect(defaultFetches).toBe(0);
+
+          for (const path of ["/", "/health", "/api/x/webhook/other"]) {
+            const response = yield* dispatch(
+              new Request(`${workerOrigin}${path}`),
+            );
+            expect(response.status).toBe(200);
+            expect(yield* Effect.promise(() => response.text())).toBe(
+              "default",
+            );
+          }
+          expect(defaultFetches).toBe(3);
+        }).pipe(
+          // SAFETY: Platform constructs this separate resource/runtime instance;
+          // only its identity and real runtime methods are needed by the adapter.
+          Effect.provideService(Cloudflare.Worker.Self, worker as never),
+          Effect.provideService(RuntimeContext, runtime),
+          Effect.provideService(Cloudflare.WorkerEnvironment, {
+            ALCHEMY_X_WEBHOOK_SECRET_RuntimeWorker: packEnvValue(secret),
+          }),
+        ),
+      );
+    },
+  );
+
   test("exports the Cloudflare module from the package root", () => {
     expect(X.Cloudflare.EventSourceLive).toBe(EventSourceLive);
   });

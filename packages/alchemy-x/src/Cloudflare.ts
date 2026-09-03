@@ -3,7 +3,11 @@ import * as Cloudflare from "alchemy/Cloudflare";
 import type { InputProps } from "alchemy/Input";
 import * as Namespace from "alchemy/Namespace";
 import * as Output from "alchemy/Output";
-import { sanitizeKey } from "alchemy/RuntimeContext";
+import {
+  CurrentRuntimeContext,
+  sanitizeKey,
+  type BaseRuntimeContext,
+} from "alchemy/RuntimeContext";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import {
@@ -66,6 +70,13 @@ type WorkerRoutingContext = Pick<
   "listen" | "serve"
 >;
 
+const isWorkerRoutingContext = (
+  runtime: BaseRuntimeContext,
+): runtime is BaseRuntimeContext & WorkerRoutingContext =>
+  typeof runtime.serve === "function" &&
+  "listen" in runtime &&
+  typeof runtime.listen === "function";
+
 // SAFETY: Cloudflare fetch events carry the runtime's WHATWG Request. The
 // package's external worker declarations omit browser-only metadata fields,
 // but the runtime object implements the standard Request used by the receiver.
@@ -82,7 +93,7 @@ const requestPath = (request: { readonly url: string }): string | undefined => {
 
 /**
  * Keep the Worker's default fetch handler from also claiming event-source
- * paths. Alchemy 2.0.0-beta.75 runs overlapping listeners concurrently and
+ * paths. Alchemy runs overlapping listeners concurrently and
  * discards both response values, so the exclusion has to happen before the
  * default listener returns an Effect.
  */
@@ -139,7 +150,7 @@ const activityLogicalId = (
  * event path and delegates CRC and signed deliveries to the shared receiver.
  *
  * The Worker's normal fetch handler continues to own every unclaimed path.
- * Alchemy beta.75 discards simultaneous listener responses, so the adapter
+ * Alchemy discards simultaneous listener responses, so the adapter
  * excludes this source's path from the listener registered by Worker.serve.
  * Set a stable EventSource `name` before the first persistent deployment;
  * unnamed resource identities follow the Worker's logical namespace.
@@ -148,6 +159,14 @@ export const EventSourceLive = Layer.effect(
   EventSource,
   Effect.gen(function* () {
     const worker = yield* Cloudflare.Worker;
+    const runtime = yield* CurrentRuntimeContext;
+    if (!runtime || !isWorkerRoutingContext(runtime)) {
+      return yield* Effect.die(
+        new TypeError(
+          "X.Cloudflare.EventSourceLive requires a Worker runtime with listen and serve",
+        ),
+      );
+    }
     // Yielding the resource classes erases their provider requirements here;
     // the stack satisfies those requirements through X.providers() at plan time.
     const createWebhook = yield* Webhook;
@@ -156,7 +175,9 @@ export const EventSourceLive = Layer.effect(
       yield* AccountActivitySubscription;
     const paths = new Set<string>();
     let registered = false;
-    excludeClaimedPathsFromDefaultFetch(worker, paths);
+    // Platform copies runtime methods onto the Worker instance but invokes
+    // serve on the original runtime. Wrap that object, not its resource copy.
+    excludeClaimedPathsFromDefaultFetch(runtime, paths);
 
     // SAFETY: Resource constructors are satisfied by X.providers() during
     // planning. Worker.listen deliberately retains the handler environment R
