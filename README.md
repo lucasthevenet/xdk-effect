@@ -19,7 +19,7 @@ const client = X.Client({
   },
 });
 
-const me = await Effect.runPromise(client.Api.users.getUsersMe({}));
+const me = await Effect.runPromise(client.users.getUsersMe({}));
 console.log(me.data);
 ```
 

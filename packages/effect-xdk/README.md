@@ -24,7 +24,7 @@ const client = X.Client({
 });
 
 const program = Effect.gen(function* () {
-  const me = yield* client.Api.users.getUsersMe({
+  const me = yield* client.users.getUsersMe({
     user_fields: ["id", "username"],
   });
   return me.data;
@@ -35,7 +35,7 @@ console.log(await Effect.runPromise(program));
 
 The constructor configures credentials, HTTP transport, and crypto. It performs no network requests, requires no disposal, and returns methods that produce lazy Effects. Reuse a client across operations.
 
-Groups and method names follow the OpenAPI specification: `client.Api.posts.createPosts({ text: "Hello" })`, `client.Api.webhooks.getWebhooks({})`, and so on. Request fields combine path, query, and body parameters in one object. Dotted query names use underscores: `user_fields` sends `user.fields`.
+Groups and method names follow the OpenAPI specification: `client.posts.createPosts({ text: "Hello" })`, `client.webhooks.getWebhooks({})`, and so on. Request fields combine path, query, and body parameters in one object. Dotted query names use underscores: `user_fields` sends `user.fields`.
 
 Responses retain X's envelope: read `data` for results and inspect `errors` for partial failures. Types and schemas are available from service modules such as `effect-xdk/users`.
 
@@ -65,7 +65,7 @@ OAuth authorization helpers are exported from `effect-xdk/OAuth`, including `cre
 Methods preserve typed errors and Effect cancellation. Handle failures with `Effect.catchTag`, and set time limits with `Effect.timeout`.
 
 ```ts
-const me = client.Api.users.getUsersMe({}).pipe(
+const me = client.users.getUsersMe({}).pipe(
   Effect.timeout("10 seconds"),
   X.Retry.none,
 );
@@ -78,7 +78,7 @@ Non-POST operations retry transient failures with a capped policy and rate-limit
 ```ts
 import * as Stream from "effect/Stream";
 
-const firstTen = client.Api.stream.streamPostsSample({}).pipe(
+const firstTen = client.stream.streamPostsSample({}).pipe(
   Stream.unwrap,
   Stream.take(10),
   Stream.runCollect,
@@ -119,7 +119,7 @@ Invalid signatures receive 401, malformed JSON/CRC requests 400, unsupported met
 The helper does not start a server or register a webhook. After mounting a publicly reachable endpoint, register it with:
 
 ```ts
-const registered = yield* client.Api.webhooks.createWebhooks({
+const registered = yield* client.webhooks.createWebhooks({
   url: "https://example.com/webhook",
 });
 ```

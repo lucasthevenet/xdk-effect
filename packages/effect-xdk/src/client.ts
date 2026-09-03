@@ -49,9 +49,7 @@ export interface BindOperation {
   ): (input: I) => Effect.Effect<O, E>;
 }
 
-export interface Client {
-  readonly Api: Api;
-}
+export type Client = Api;
 
 /** Configure a client without performing network I/O. Methods return lazy Effects. */
 export const Client = (config: ClientConfig): Client => {
@@ -95,5 +93,5 @@ export const Client = (config: ClientConfig): Client => {
           : Context.add(services, HttpClient.HttpClient, http);
       return Effect.provide(operation(input), configured);
     });
-  return { Api: makeApi(bind) };
+  return makeApi(bind);
 };

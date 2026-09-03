@@ -17,10 +17,14 @@ const oauth1 = {
 
 test("constructor binds all generated operations without exposing schemas", () => {
   const client = X.Client({ accessToken: "token" });
+  expect(client).not.toHaveProperty("Api");
+  expect(Object.keys(client).toSorted()).toEqual(
+    Object.keys(X.Services).toSorted(),
+  );
   let count = 0;
   for (const [name, group] of Object.entries(X.Services)) {
-    // SAFETY: Api and Services share the same generated group names.
-    const bound = client.Api[name as keyof typeof client.Api];
+    // SAFETY: Client and Services share the same generated group names.
+    const bound = client[name as keyof typeof client];
     const operations = Object.keys(group)
       .filter((key) => /^[a-z]/u.test(key))
       .toSorted();
@@ -46,7 +50,7 @@ test("constructor and method calls are lazy, return Effects, and sign user reads
     httpClient,
   });
   const effect: Effect.Effect<X.Services.users.GetUsersMeResponse, X.XOpError> =
-    client.Api.users.getUsersMe({});
+    client.users.getUsersMe({});
   expect(Effect.isEffect(effect)).toBe(true);
   expect(calls).toBe(0);
   expect(await Effect.runPromise(effect)).toEqual(me);
@@ -67,9 +71,9 @@ test("separate clients keep bearer credentials isolated on a shared transport", 
   await Effect.runPromise(
     Effect.all(
       [
-        first.Api.users.getUsersMe({}),
-        second.Api.users.getUsersMe({}),
-        first.Api.users.getUsersMe({}),
+        first.users.getUsersMe({}),
+        second.users.getUsersMe({}),
+        first.users.getUsersMe({}),
       ],
       { concurrency: "unbounded" },
     ),
@@ -102,8 +106,8 @@ test("OAuth1 app-token exchange is reused across client operations", async () =>
   const client = X.Client({ oauth1, httpClient });
   await Effect.runPromise(
     Effect.gen(function* () {
-      yield* client.Api.webhooks.getWebhooks({});
-      yield* client.Api.webhooks.getWebhooks({});
+      yield* client.webhooks.getWebhooks({});
+      yield* client.webhooks.getWebhooks({});
     }),
   );
   expect(exchanges).toBe(1);
@@ -130,7 +134,7 @@ test("concurrent first calls share the default transport and derived app token",
   const client = X.Client({ oauth1 });
   await Effect.runPromise(
     Effect.all(
-      Array.from({ length: 5 }, () => client.Api.webhooks.getWebhooks({})),
+      Array.from({ length: 5 }, () => client.webhooks.getWebhooks({})),
       { concurrency: "unbounded" },
     ).pipe(Effect.provideService(FetchHttpClient.Fetch, fetcher)),
   );
@@ -153,7 +157,7 @@ test("typed errors and per-call auth selection remain composable", async () => {
     httpClient,
   });
   const error = await Effect.runPromise(
-    client.Api.posts
+    client.posts
       .getPostsById({ id: "1" })
       .pipe(X.withAuth("user"), Effect.flip),
   );
@@ -185,7 +189,7 @@ test("returned streams remain usable after the operation's context is provided",
   );
   const client = X.Client({ bearerToken: "app", httpClient });
   const events = await Effect.runPromise(
-    client.Api.stream
+    client.stream
       .streamPostsSample({})
       .pipe(Stream.unwrap, Stream.take(1), Stream.runCollect),
   );
@@ -207,9 +211,7 @@ test("interrupting a bound operation cancels its transport", async () => {
   const client = X.Client({ accessToken: "user", httpClient });
   await Effect.runPromise(
     Effect.gen(function* () {
-      const fiber = yield* client.Api.users
-        .getUsersMe({})
-        .pipe(Effect.forkChild);
+      const fiber = yield* client.users.getUsersMe({}).pipe(Effect.forkChild);
       yield* Effect.yieldNow;
       yield* Fiber.interrupt(fiber);
     }),

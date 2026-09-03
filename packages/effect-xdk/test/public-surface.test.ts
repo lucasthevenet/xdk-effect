@@ -12,7 +12,7 @@ test("the package exposes only Effect-native SDK operations and async helpers", 
     expect(manifest.exports[path]).toBeNull();
   }
   expect(
-    Effect.isEffect(X.Client({ accessToken: "test" }).Api.users.getUsersMe({})),
+    Effect.isEffect(X.Client({ accessToken: "test" }).users.getUsersMe({})),
   ).toBe(true);
   expect(manifest.exports["./Client"].types).toBe("./lib/client.d.ts");
   expect(Effect.isEffect(X.Services.users.getUsersMe({}))).toBe(true);
