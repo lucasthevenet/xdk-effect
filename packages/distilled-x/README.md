@@ -1,6 +1,6 @@
 # `distilled-x`
 
-Portable TypeScript primitives for the X API: app- and user-context requests, OAuth 2.0 Authorization Code + PKCE, webhook lifecycle calls, X Activity subscriptions, Account Activity subscriptions, CRC responses, and delivery-signature verification.
+Portable TypeScript primitives for the X API: OAuth1-signed requests with automatic app-token exchange, explicit app/user Bearer requests, OAuth 2.0 Authorization Code + PKCE, webhook lifecycle calls, X Activity subscriptions, Account Activity subscriptions, CRC responses, and delivery-signature verification.
 
 The package has no runtime dependencies. It uses the standard Fetch and Web Crypto APIs, so it works in Bun, modern Node.js, browsers, and worker runtimes that provide both APIs.
 
@@ -11,6 +11,42 @@ bun add distilled-x
 ```
 
 ## Client
+
+### OAuth1 credentials with automatic app authentication
+
+```ts
+import { createXClient } from "distilled-x";
+
+const x = createXClient({
+  apiKey: () => process.env.X_API_KEY!,
+  apiSecret: () => process.env.X_API_SECRET!,
+  accessToken: () => process.env.X_ACCESS_TOKEN!,
+  accessTokenSecret: () => process.env.X_ACCESS_TOKEN_SECRET!,
+});
+
+const me = await x.users.getMe(); // OAuth 1.0a HMAC-SHA1
+const webhooks = await x.webhooks.list(); // internally obtained app Bearer
+```
+
+Each credential accepts a string or a lazy sync/async function. User requests
+are signed with a fresh cryptographic nonce and timestamp on every attempt.
+Query parameters enter the OAuth1 signature; JSON bodies do not.
+
+For app operations, the client exchanges the API key and secret at
+`POST /oauth2/token` (not `/2/oauth2/token`) using client credentials. The
+resulting app-only token is cached per client; concurrent requests share an
+exchange. A changed API key/secret starts a new exchange, failures are not
+cached, and a 401 invalidates the matching derived token. Idempotent requests
+can retry within their attempt budget; POSTs are not automatically replayed.
+Cancellation stops the caller's wait without cancelling an exchange shared by
+another caller. [X app-only authentication](https://docs.x.com/fundamentals/authentication/oauth-2-0/application-only)
+
+This is the credential mode used by `alchemy-x`. It does not enable OAuth2 user
+authorization or bypass endpoint permissions/product access. Keep the API
+secret and access token secret on a trusted server, never in public browser
+code.
+
+### Explicit Bearer tokens
 
 ```ts
 import { createXClient } from "distilled-x";
@@ -40,7 +76,7 @@ Each API response is an `XResult<T>` containing the decoded `value`, HTTP `statu
 | `accountActivity` | check, create, list, and delete full-account subscriptions |
 | `request()` | Typed escape hatch for another `/2/...` endpoint |
 
-App-only operations use `appBearerToken`; user-context operations use `userAccessToken`. X documents these as separate authentication modes in its [webhook](https://docs.x.com/x-api/webhooks/introduction) and [Account Activity](https://docs.x.com/x-api/account-activity/introduction) references.
+In explicit Bearer mode, app-only operations use `appBearerToken`; user-context operations use `userAccessToken`. Supply either or both, depending on the operations you need. No app-token exchange is performed in this mode. OAuth2 helpers below remain available independently. X documents these as separate authentication modes in its [webhook](https://docs.x.com/x-api/webhooks/introduction) and [Account Activity](https://docs.x.com/x-api/account-activity/introduction) references.
 
 The client retries idempotent `GET`, `PUT`, and `DELETE` requests on transient transport errors, `408`, `429`, and `5xx` responses. A `POST` is retried only when the caller explicitly passes `retryNonIdempotent: true`.
 

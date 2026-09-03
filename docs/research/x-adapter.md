@@ -2,11 +2,14 @@
 
 Research date: 2026-08-31. Sources are first-party Alchemy and X documentation/source.
 
-> **Current implementation status:** `alchemy-x` currently provides only an
-> environment-backed Auth Provider for externally issued credentials. The
-> interactive PKCE, local callback, stored-credential, and token-refresh design
-> discussed below is historical research for a possible future implementation,
-> not behavior exposed by the package today.
+> **Current implementation status (2026-09-02):** `alchemy-x` accepts one
+> OAuth1 credential set (API key/secret and access token/secret), either stored
+> in an Alchemy profile or loaded from environment variables. `distilled-x`
+> signs user requests and lazily obtains/caches app-only tokens using the API
+> key/secret. No separate Bearer configuration or browser authorization is
+> needed in Alchemy. `distilled-x` also retains explicit Bearer authentication
+> and all OAuth2/PKCE helpers. The interactive Alchemy OAuth2 design below is
+> historical research, not the current provider contract.
 
 ## Executive findings
 

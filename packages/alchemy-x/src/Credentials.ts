@@ -1,3 +1,4 @@
+import * as Config from "effect/Config";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
@@ -7,279 +8,126 @@ import {
   AuthProviders,
   getAuthProvider,
 } from "alchemy/Auth/AuthProvider";
-import { ALCHEMY_PROFILE } from "alchemy/Auth/Profile";
+import { ALCHEMY_PROFILE, AlchemyProfile } from "alchemy/Auth/Profile";
 import {
   createXClient as createDistilledXClient,
   type XClient,
-  type XClientConfig,
+  type XClientOptions,
 } from "distilled-x";
 import {
-  readEnvAppCredentials,
+  readEnvCredentials,
   X_AUTH_PROVIDER_NAME,
   type XAuthConfig,
-  type XResolvedAppCredentials,
   type XResolvedCredentials,
-  readEnvCredentials,
 } from "./AuthEnvironment.ts";
 
 export type XCredentialsSource =
   | XResolvedCredentials["source"]
   | { readonly type: "credentials"; readonly details?: string };
 
-export interface XCredentialsService {
-  readonly client: XClient;
-  readonly appBearerToken: Redacted.Redacted<string>;
-  readonly userAccessToken: Redacted.Redacted<string>;
-  readonly consumerSecret: Redacted.Redacted<string>;
-  readonly userId?: string;
-  readonly clientId?: string;
-  readonly oauthScopes?: readonly string[];
-  readonly source: XCredentialsSource;
-}
-
-export interface XAppCredentialsService {
-  readonly client: XClient;
-  readonly appBearerToken: Redacted.Redacted<string>;
-  readonly consumerSecret: Redacted.Redacted<string>;
-  readonly clientId?: string;
-  readonly source: XCredentialsSource;
-}
-
 export interface XCredentialsInput {
-  readonly appBearerToken: string | Redacted.Redacted<string>;
-  readonly userAccessToken: string | Redacted.Redacted<string>;
-  readonly consumerSecret: string | Redacted.Redacted<string>;
-  readonly userId?: string;
-  readonly clientId?: string;
-  readonly oauthScopes?: readonly string[];
+  readonly apiKey: string | Redacted.Redacted<string>;
+  readonly apiSecret: string | Redacted.Redacted<string>;
+  readonly accessToken: string | Redacted.Redacted<string>;
+  readonly accessTokenSecret: string | Redacted.Redacted<string>;
   readonly source?: XCredentialsSource;
 }
 
-export type XAppCredentialsInput = Pick<
-  XCredentialsInput,
-  "appBearerToken" | "consumerSecret" | "clientId" | "source"
->;
-
-export type XClientOptions = Omit<
-  XClientConfig,
-  "appBearerToken" | "userAccessToken"
->;
-
-interface XCredentialsServiceBuilder {
-  client: XClient;
-  appBearerToken: Redacted.Redacted<string>;
-  userAccessToken: Redacted.Redacted<string>;
-  consumerSecret: Redacted.Redacted<string>;
-  userId?: string;
-  clientId?: string;
-  oauthScopes?: readonly string[];
-  source: XCredentialsSource;
+export interface XCredentialsService {
+  readonly client: XClient;
+  readonly apiKey: Redacted.Redacted<string>;
+  readonly apiSecret: Redacted.Redacted<string>;
+  readonly accessToken: Redacted.Redacted<string>;
+  readonly accessTokenSecret: Redacted.Redacted<string>;
+  readonly source: XCredentialsSource;
 }
 
-interface XCredentialsInputBuilder {
-  appBearerToken: string | Redacted.Redacted<string>;
-  userAccessToken: string | Redacted.Redacted<string>;
-  consumerSecret: string | Redacted.Redacted<string>;
-  userId?: string;
-  clientId?: string;
-  oauthScopes?: readonly string[];
-  source?: XCredentialsSource;
-}
-
-interface XAppCredentialsServiceBuilder {
-  client: XClient;
-  appBearerToken: Redacted.Redacted<string>;
-  consumerSecret: Redacted.Redacted<string>;
-  clientId?: string;
-  source: XCredentialsSource;
-}
-
-interface XAppCredentialsInputBuilder {
-  appBearerToken: string | Redacted.Redacted<string>;
-  consumerSecret: string | Redacted.Redacted<string>;
-  clientId?: string;
-  source?: XCredentialsSource;
-}
+export type { XClientOptions } from "distilled-x";
 
 const toRedacted = (
   value: string | Redacted.Redacted<string>,
 ): Redacted.Redacted<string> =>
   Redacted.isRedacted(value) ? value : Redacted.make(value);
 
-/** Create a distilled-x client without exposing Redacted token values. */
+/** Both request authentication modes are handled internally by distilled-x. */
 export const createXClient = (
-  credentials: Pick<XCredentialsInput, "appBearerToken" | "userAccessToken">,
+  credentials: XCredentialsInput,
   options: XClientOptions = {},
 ): XClient => {
-  const appBearerToken = toRedacted(credentials.appBearerToken);
-  const userAccessToken = toRedacted(credentials.userAccessToken);
+  const apiKey = toRedacted(credentials.apiKey);
+  const apiSecret = toRedacted(credentials.apiSecret);
+  const accessToken = toRedacted(credentials.accessToken);
+  const accessTokenSecret = toRedacted(credentials.accessTokenSecret);
   return createDistilledXClient({
     ...options,
-    appBearerToken: () => Redacted.value(appBearerToken),
-    userAccessToken: () => Redacted.value(userAccessToken),
-  });
-};
-
-const createAppClient = (
-  credentials: Pick<XAppCredentialsInput, "appBearerToken">,
-  options: XClientOptions = {},
-): XClient => {
-  const appBearerToken = toRedacted(credentials.appBearerToken);
-  return createDistilledXClient({
-    ...options,
-    appBearerToken: () => Redacted.value(appBearerToken),
+    apiKey: () => Redacted.value(apiKey),
+    apiSecret: () => Redacted.value(apiSecret),
+    accessToken: () => Redacted.value(accessToken),
+    accessTokenSecret: () => Redacted.value(accessTokenSecret),
   });
 };
 
 const make = (
   input: XCredentialsInput,
   options?: XClientOptions,
-): XCredentialsService => {
-  const appBearerToken = toRedacted(input.appBearerToken);
-  const userAccessToken = toRedacted(input.userAccessToken);
-  const consumerSecret = toRedacted(input.consumerSecret);
-  const credentials: XCredentialsServiceBuilder = {
-    client: createXClient({ appBearerToken, userAccessToken }, options),
-    appBearerToken,
-    userAccessToken,
-    consumerSecret,
-    source: input.source ?? { type: "credentials" },
-  };
-  if (input.userId !== undefined) credentials.userId = input.userId;
-  if (input.clientId !== undefined) credentials.clientId = input.clientId;
-  if (input.oauthScopes !== undefined) {
-    credentials.oauthScopes = input.oauthScopes;
-  }
-  return credentials;
-};
+): XCredentialsService => ({
+  client: createXClient(input, options),
+  apiKey: toRedacted(input.apiKey),
+  apiSecret: toRedacted(input.apiSecret),
+  accessToken: toRedacted(input.accessToken),
+  accessTokenSecret: toRedacted(input.accessTokenSecret),
+  source: input.source ?? { type: "credentials" },
+});
 
-const fromResolved = (
-  credentials: XResolvedCredentials,
-  options?: XClientOptions,
-): XCredentialsService => {
-  const input: XCredentialsInputBuilder = {
-    appBearerToken: credentials.appBearerToken,
-    userAccessToken: credentials.userAccessToken,
-    consumerSecret: credentials.consumerSecret,
-    source: credentials.source,
-  };
-  if (credentials.userId !== undefined) input.userId = credentials.userId;
-  if (credentials.clientId !== undefined) input.clientId = credentials.clientId;
-  if (credentials.oauthScopes !== undefined) {
-    input.oauthScopes = credentials.oauthScopes;
-  }
-  return make(input, options);
-};
-
-const makeApp = (
-  input: XAppCredentialsInput,
-  options?: XClientOptions,
-): XAppCredentialsService => {
-  const appBearerToken = toRedacted(input.appBearerToken);
-  const consumerSecret = toRedacted(input.consumerSecret);
-  const credentials: XAppCredentialsServiceBuilder = {
-    client: createAppClient({ appBearerToken }, options),
-    appBearerToken,
-    consumerSecret,
-    source: input.source ?? { type: "credentials" },
-  };
-  if (input.clientId !== undefined) credentials.clientId = input.clientId;
-  return credentials;
-};
-
-const fromResolvedApp = (
-  credentials: XResolvedAppCredentials,
-  options?: XClientOptions,
-): XAppCredentialsService => {
-  const input: XAppCredentialsInputBuilder = {
-    appBearerToken: credentials.appBearerToken,
-    consumerSecret: credentials.consumerSecret,
-    source: credentials.source,
-  };
-  if (credentials.clientId !== undefined) input.clientId = credentials.clientId;
-  return makeApp(input, options);
-};
-
-/**
- * Provided tag. Its value intentionally remains lazy so registering provider
- * layers for `alchemy login` never tries to resolve credentials early.
- */
+/** Lazy so registering provider layers for `alchemy login` never reads credentials. */
 export class XCredentialsContext extends Context.Service<
   XCredentialsContext,
   Effect.Effect<XCredentialsService>
 >()("X::Credentials") {}
 
-/** Flattened accessor used by resources: `const { client } = yield* XCredentials`. */
 export const XCredentials: Effect.Effect<
   XCredentialsService,
   never,
   XCredentialsContext
 > = Effect.flatten(XCredentialsContext);
 
-/** App-only credentials remain available when the user access token is stale. */
-export class XAppCredentialsContext extends Context.Service<
-  XAppCredentialsContext,
-  Effect.Effect<XAppCredentialsService>
->()("X::AppCredentials") {}
-
-export const XAppCredentials: Effect.Effect<
-  XAppCredentialsService,
-  never,
-  XAppCredentialsContext
-> = Effect.flatten(XAppCredentialsContext);
-
-/** Provide literal credentials, primarily for tests and explicit integrations. */
 export const fromCredentials = (
   credentials: XCredentialsInput,
   options?: XClientOptions,
 ) =>
-  Layer.mergeAll(
-    Layer.succeed(
-      XCredentialsContext,
-      Effect.succeed(make(credentials, options)),
-    ),
-    Layer.succeed(
-      XAppCredentialsContext,
-      Effect.succeed(makeApp(credentials, options)),
-    ),
+  Layer.succeed(
+    XCredentialsContext,
+    Effect.succeed(make(credentials, options)),
   );
 
-/** Resolve the documented X_* environment variables lazily. */
+/** Cache the client as well as credentials so resources share its app token. */
 export const fromEnv = (options?: XClientOptions) =>
-  Layer.mergeAll(
-    Layer.succeed(
-      XCredentialsContext,
+  Layer.effect(
+    XCredentialsContext,
+    Effect.cached(
       readEnvCredentials().pipe(
-        Effect.map((credentials) => fromResolved(credentials, options)),
-        Effect.orDie,
-      ),
-    ),
-    Layer.succeed(
-      XAppCredentialsContext,
-      readEnvAppCredentials().pipe(
-        Effect.map((credentials) => fromResolvedApp(credentials, options)),
+        Effect.map((credentials) => make(credentials, options)),
         Effect.orDie,
       ),
     ),
   );
 
-/** Resolve environment credentials through the registered AuthProvider lazily. */
 export const fromAuthProvider = (
   options?: XClientOptions,
-): Layer.Layer<
-  XCredentialsContext | XAppCredentialsContext,
-  never,
-  AuthProviders
-> =>
-  Layer.unwrap(
+): Layer.Layer<XCredentialsContext, never, AuthProviders | AlchemyProfile> =>
+  Layer.effect(
+    XCredentialsContext,
     Effect.gen(function* () {
+      const profile = yield* AlchemyProfile;
       const auth = yield* getAuthProvider<XAuthConfig, XResolvedCredentials>(
         X_AUTH_PROVIDER_NAME,
       );
       const profileName = yield* ALCHEMY_PROFILE;
-      const userCredentials = yield* Effect.cached(
-        Effect.suspend(() => auth.read(profileName, { method: "env" })).pipe(
-          Effect.map((credentials) => fromResolved(credentials, options)),
+      const ci = yield* Config.boolean("CI").pipe(Config.withDefault(false));
+      return yield* Effect.cached(
+        profile.loadOrConfigure(auth, profileName, { ci }).pipe(
+          Effect.flatMap((selected) => auth.read(profileName, selected)),
+          Effect.map((credentials) => make(credentials, options)),
           Effect.mapError(
             (cause) =>
               new AuthError({
@@ -289,25 +137,6 @@ export const fromAuthProvider = (
           ),
           Effect.orDie,
         ),
-      );
-      const appCredentials = yield* Effect.cached(
-        readEnvAppCredentials().pipe(
-          Effect.map((credentials) => fromResolvedApp(credentials, options)),
-          Effect.mapError((cause) =>
-            cause instanceof AuthError
-              ? cause
-              : new AuthError({
-                  message: `Failed to resolve X app credentials for profile '${profileName}'`,
-                  cause,
-                }),
-          ),
-          Effect.orDie,
-        ),
-      );
-
-      return Layer.mergeAll(
-        Layer.succeed(XCredentialsContext, userCredentials),
-        Layer.succeed(XAppCredentialsContext, appCredentials),
       );
     }).pipe(Effect.orDie),
   );

@@ -4,7 +4,7 @@ import { isResolved, type Input, Resource } from "alchemy";
 import { Unowned } from "alchemy/AdoptPolicy";
 import * as Provider from "alchemy/Provider";
 import { XDecodeError } from "distilled-x";
-import { XAppCredentials, XCredentials } from "./Credentials.ts";
+import { XCredentials } from "./Credentials.ts";
 import {
   callX,
   ignoreXNotFound,
@@ -69,7 +69,7 @@ export const currentUserId = Effect.gen(function* () {
 });
 
 const subscribedUsers = Effect.fn(function* (webhookId: string) {
-  const { client } = yield* XAppCredentials;
+  const { client } = yield* XCredentials;
   const response = yield* callX(() =>
     client.accountActivity.listSubscriptions(webhookId),
   );
@@ -93,7 +93,7 @@ const deleteAccountActivitySubscription = Effect.fn(function* (
   webhookId: string,
   userId: string,
 ) {
-  const { client } = yield* XAppCredentials;
+  const { client } = yield* XCredentials;
   const deleted = yield* ignoreXNotFound(
     callX(() => client.accountActivity.deleteSubscription(webhookId, userId)),
   );

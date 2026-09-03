@@ -2,16 +2,13 @@ import { describe, expect, test } from "bun:test";
 import * as ConfigProvider from "effect/ConfigProvider";
 import * as Effect from "effect/Effect";
 import * as Redacted from "effect/Redacted";
-import {
-  parseXOAuthScopes,
-  readEnvCredentials,
-  X_TOKEN_REFRESH_WINDOW_MS,
-} from "../src/AuthEnvironment.ts";
+import { readEnvCredentials } from "../src/AuthEnvironment.ts";
 
 const requiredEnvironment = {
-  X_BEARER_TOKEN: "app-bearer-token",
-  X_API_SECRET: "consumer-secret",
+  X_API_KEY: "api-key",
+  X_API_SECRET: "api-secret",
   X_ACCESS_TOKEN: "user-access-token",
+  X_ACCESS_TOKEN_SECRET: "user-token-secret",
 };
 
 const readWithEnvironment = (environment: Record<string, string>) =>
@@ -25,91 +22,51 @@ const readWithEnvironment = (environment: Record<string, string>) =>
   );
 
 describe("X authentication environment", () => {
-  test("normalizes and deduplicates OAuth scopes", () => {
-    expect(
-      parseXOAuthScopes("tweet.read, users.read  tweet.read\n offline.access"),
-    ).toEqual(["tweet.read", "users.read", "offline.access"]);
-    expect(parseXOAuthScopes(" , \n ")).toEqual([]);
-  });
-
-  test("resolves required secrets and normalized optional settings", async () => {
-    const credentials = await readWithEnvironment({
-      ...requiredEnvironment,
-      X_CLIENT_ID: "  client-id  ",
-      X_OAUTH_SCOPES: "tweet.read, users.read tweet.read",
-      X_ACCESS_TOKEN_EXPIRES_AT: "2000000000",
-    });
-
-    expect(Redacted.value(credentials.appBearerToken)).toBe(
-      requiredEnvironment.X_BEARER_TOKEN,
+  test("resolves just the four OAuth1 credentials, redacted", async () => {
+    const credentials = await readWithEnvironment(requiredEnvironment);
+    expect(credentials.type).toBe("oauth1");
+    expect(Redacted.value(credentials.apiKey)).toBe(
+      requiredEnvironment.X_API_KEY,
     );
-    expect(Redacted.value(credentials.consumerSecret)).toBe(
+    expect(Redacted.value(credentials.apiSecret)).toBe(
       requiredEnvironment.X_API_SECRET,
     );
-    expect(Redacted.value(credentials.userAccessToken)).toBe(
+    expect(Redacted.value(credentials.accessToken)).toBe(
       requiredEnvironment.X_ACCESS_TOKEN,
     );
-    expect(credentials.clientId).toBe("client-id");
-    expect(credentials.oauthScopes).toEqual(["tweet.read", "users.read"]);
-    expect(credentials.accessTokenExpiresAt).toBe(2_000_000_000_000);
-    expect(credentials.source).toEqual({
-      type: "env",
-      details: "X_BEARER_TOKEN/X_API_SECRET/X_ACCESS_TOKEN",
-    });
-  });
-
-  test("accepts Unix milliseconds and ISO expiration dates", async () => {
-    const milliseconds = Date.now() + 10 * X_TOKEN_REFRESH_WINDOW_MS;
-    expect(
-      (
-        await readWithEnvironment({
-          ...requiredEnvironment,
-          X_ACCESS_TOKEN_EXPIRES_AT: String(milliseconds),
-        })
-      ).accessTokenExpiresAt,
-    ).toBe(milliseconds);
-
-    const iso = new Date(
-      Date.now() + 20 * X_TOKEN_REFRESH_WINDOW_MS,
-    ).toISOString();
-    expect(
-      (
-        await readWithEnvironment({
-          ...requiredEnvironment,
-          X_ACCESS_TOKEN_EXPIRES_AT: iso,
-        })
-      ).accessTokenExpiresAt,
-    ).toBe(Date.parse(iso));
-  });
-
-  test("rejects missing required credentials", async () => {
-    await expect(
-      readWithEnvironment({
-        X_BEARER_TOKEN: requiredEnvironment.X_BEARER_TOKEN,
-        X_API_SECRET: requiredEnvironment.X_API_SECRET,
-      }),
-    ).rejects.toThrow("Missing required env: X_ACCESS_TOKEN");
-  });
-
-  test("rejects malformed expiration values", async () => {
-    await expect(
-      readWithEnvironment({
-        ...requiredEnvironment,
-        X_ACCESS_TOKEN_EXPIRES_AT: "not-an-expiration",
-      }),
-    ).rejects.toThrow(
-      "X_ACCESS_TOKEN_EXPIRES_AT must be an ISO date, Unix seconds, or Unix milliseconds",
+    expect(Redacted.value(credentials.accessTokenSecret)).toBe(
+      requiredEnvironment.X_ACCESS_TOKEN_SECRET,
     );
+    expect(credentials.source.type).toBe("env");
+    const serialized = JSON.stringify(credentials);
+    for (const value of Object.values(requiredEnvironment))
+      expect(serialized).not.toContain(value);
   });
 
-  test("rejects expired and near-expiry environment tokens", async () => {
-    await expect(
-      readWithEnvironment({
+  for (const name of Object.keys(requiredEnvironment)) {
+    test(`rejects a missing or empty ${name}`, async () => {
+      const environment = Object.fromEntries(
+        Object.entries(requiredEnvironment).filter(([key]) => key !== name),
+      );
+      await expect(readWithEnvironment(environment)).rejects.toThrow(
+        `Missing required env: ${name}`,
+      );
+      environment[name] = "";
+      await expect(readWithEnvironment(environment)).rejects.toThrow(
+        `Missing required env: ${name}`,
+      );
+    });
+  }
+
+  test("legacy OAuth2 settings do not change OAuth1 resolution", async () => {
+    expect(
+      await readWithEnvironment({
         ...requiredEnvironment,
-        X_ACCESS_TOKEN_EXPIRES_AT: String(
-          Date.now() + X_TOKEN_REFRESH_WINDOW_MS / 2,
-        ),
+        X_BEARER_TOKEN: "unused",
+        X_CLIENT_ID: "unused",
+        X_OAUTH_SCOPES: "unused",
+        X_ACCESS_TOKEN_EXPIRES_AT: "expired",
       }),
-    ).rejects.toThrow("expired or expires within 60 seconds");
+    ).toEqual(await readWithEnvironment(requiredEnvironment));
   });
 });

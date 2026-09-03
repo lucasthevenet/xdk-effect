@@ -56,7 +56,14 @@ for (const packageDirectory of packages) {
             "src/Cloudflare.ts",
             "src/EventSource.ts",
           ]
-        : []),
+        : [
+            "lib/auth.js",
+            "lib/auth.d.ts",
+            "lib/oauth.js",
+            "lib/oauth.d.ts",
+            "src/auth.ts",
+            "src/oauth.ts",
+          ]),
     ];
     for (const required of requiredFiles) {
       if (!files.has(required)) {

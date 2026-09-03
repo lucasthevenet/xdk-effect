@@ -3,7 +3,7 @@ import { isResolved, type Input, Resource } from "alchemy";
 import { Unowned } from "alchemy/AdoptPolicy";
 import * as Provider from "alchemy/Provider";
 import { XDecodeError, type XWebhook } from "distilled-x";
-import { XAppCredentials } from "./Credentials.ts";
+import { XCredentials } from "./Credentials.ts";
 import {
   callX,
   ignoreXNotFound,
@@ -75,7 +75,7 @@ const refuseAdoption = (webhook: XWebhook, message: string) =>
   });
 
 const deleteWebhookRegistration = Effect.fn(function* (webhookId: string) {
-  const { client } = yield* XAppCredentials;
+  const { client } = yield* XCredentials;
   const deleted = yield* ignoreXNotFound(
     callX(() => client.webhooks.delete(webhookId)),
   );
@@ -119,7 +119,7 @@ export const WebhookProvider = () =>
     read: Effect.fn(function* ({ olds, output }) {
       if (!output) {
         if (!isResolvedStringInput(olds.url)) return undefined;
-        const { client } = yield* XAppCredentials;
+        const { client } = yield* XCredentials;
         const listed = yield* callX(() => client.webhooks.list());
         const webhooks = yield* requireXData(listed, "reading X webhooks");
         const url = normalizeWebhookUrl(olds.url);
@@ -128,7 +128,7 @@ export const WebhookProvider = () =>
         );
         return existing ? Unowned(toAttributes(existing)) : undefined;
       }
-      const { client } = yield* XAppCredentials;
+      const { client } = yield* XCredentials;
       const listed = yield* callX(() => client.webhooks.list());
       const webhooks = yield* requireXData(listed, "reading X webhooks");
       const webhook = webhooks.find(
@@ -138,7 +138,7 @@ export const WebhookProvider = () =>
     }),
 
     reconcile: Effect.fn(function* ({ news, output }) {
-      const { client } = yield* XAppCredentials;
+      const { client } = yield* XCredentials;
       // SAFETY: Alchemy invokes reconcile only after resolving every Input.
       const url = normalizeWebhookUrl(news.url as string);
       const listed = yield* callX(() => client.webhooks.list());
@@ -302,7 +302,7 @@ export const WebhookProvider = () =>
     }),
 
     list: Effect.fn(function* () {
-      const { client } = yield* XAppCredentials;
+      const { client } = yield* XCredentials;
       const listed = yield* callX(() => client.webhooks.list());
       return (yield* requireXData(listed, "listing X webhooks")).map(
         toAttributes,

@@ -16,8 +16,10 @@ const required = (name: string): string => {
 
 const client = () =>
   createXClient({
-    appBearerToken: required("X_BEARER_TOKEN"),
-    userAccessToken: required("X_ACCESS_TOKEN"),
+    apiKey: required("X_API_KEY"),
+    apiSecret: required("X_API_SECRET"),
+    accessToken: required("X_ACCESS_TOKEN"),
+    accessTokenSecret: required("X_ACCESS_TOKEN_SECRET"),
   });
 
 liveTest("reads the OAuth user and app webhooks", async () => {
@@ -32,7 +34,7 @@ liveTest("reads the OAuth user and app webhooks", async () => {
 });
 
 mutationTest(
-  "creates and removes Account Activity with OAuth 2.0 user context",
+  "creates and removes Account Activity with OAuth 1.0a user context",
   async () => {
     const x = client();
     const webhookId = required("X_LIVE_WEBHOOK_ID");

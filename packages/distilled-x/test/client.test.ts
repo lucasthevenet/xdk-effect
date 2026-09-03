@@ -1,12 +1,36 @@
 import { describe, expect, test } from "bun:test";
-import { XApiError, XDecodeError, createXClient } from "../src/index.ts";
+import {
+  XApiError,
+  XDecodeError,
+  createXClient as createClient,
+  type XClientConfig,
+} from "../src/index.ts";
+
+const createXClient = (
+  options: Omit<
+    XClientConfig,
+    "apiKey" | "apiSecret" | "accessToken" | "accessTokenSecret"
+  >,
+) =>
+  createClient({
+    ...options,
+    apiKey: "api-key",
+    apiSecret: "api-secret",
+    accessToken: "user-token",
+    accessTokenSecret: "token-secret",
+    runtime: {
+      ...options.runtime,
+      fetch: async (input, init) =>
+        new URL(input.toString()).pathname === "/oauth2/token"
+          ? Response.json({ token_type: "bearer", access_token: "app-token" })
+          : options.runtime!.fetch!(input, init),
+    },
+  });
 
 describe("X API client", () => {
   test("uses user context for /users/me and app context for webhooks", async () => {
     const requests: Request[] = [];
     const client = createXClient({
-      appBearerToken: async () => "app-token",
-      userAccessToken: async () => "user-token",
       runtime: {
         fetch: async (input, init) => {
           const request = new Request(input, init);
@@ -25,12 +49,14 @@ describe("X API client", () => {
 
     expect(
       requests.map((request) => request.headers.get("authorization")),
-    ).toEqual(["Bearer user-token", "Bearer app-token"]);
+    ).toEqual([
+      expect.stringContaining('oauth_token="user-token"'),
+      "Bearer app-token",
+    ]);
   });
 
   test("surfaces X problem details and rate-limit metadata on errors", async () => {
     const client = createXClient({
-      userAccessToken: "user-token",
       retry: { maxAttempts: 1 },
       runtime: {
         fetch: async () =>
@@ -75,7 +101,6 @@ describe("X API client", () => {
 
   test("returns partial-success errors alongside data", async () => {
     const client = createXClient({
-      userAccessToken: "user-token",
       runtime: {
         fetch: async () =>
           Response.json({
@@ -107,8 +132,6 @@ describe("X API client", () => {
 
   test("rejects malformed typed endpoint envelopes", async () => {
     const client = createXClient({
-      appBearerToken: "app-token",
-      userAccessToken: "user-token",
       runtime: {
         fetch: async (input) => {
           const path = new URL(input.toString()).pathname;
@@ -148,7 +171,6 @@ describe("X API client", () => {
 
   test("rejects hostile object hooks without coercing parsed fields", async () => {
     const client = createXClient({
-      userAccessToken: "user-token",
       runtime: {
         fetch: async () =>
           Response.json({ data: { id: { toString: "not-callable" } } }),
@@ -163,7 +185,6 @@ describe("X API client", () => {
     const delays: number[] = [];
     let attempts = 0;
     const client = createXClient({
-      userAccessToken: "user-token",
       retry: { maxAttempts: 2, baseDelayMs: 10, maxDelayMs: 1_000 },
       runtime: {
         now: () => now,
@@ -199,7 +220,6 @@ describe("X API client", () => {
   test("does not retry a webhook-creation POST without explicit opt-in", async () => {
     let attempts = 0;
     const client = createXClient({
-      appBearerToken: "app-token",
       retry: { maxAttempts: 3 },
       runtime: {
         fetch: async () => {
@@ -228,7 +248,6 @@ describe("X API client", () => {
       created_at: "2026-08-31T00:00:00.000Z",
     };
     const client = createXClient({
-      appBearerToken: "app-token",
       runtime: {
         fetch: async (input, init) => {
           requests.push(new Request(input, init));
@@ -255,7 +274,6 @@ describe("X API client", () => {
       created_at: "2026-08-31T00:00:00.000Z",
     };
     const client = createXClient({
-      appBearerToken: "app-token",
       runtime: {
         fetch: async (input, init) => {
           const request = new Request(input, init);
@@ -298,7 +316,6 @@ describe("X API client", () => {
       created_at: "2026-08-31T00:00:00.000Z",
     };
     const client = createXClient({
-      appBearerToken: "app-token",
       runtime: {
         fetch: async (input, init) => {
           const request = new Request(input, init);
@@ -328,8 +345,6 @@ describe("X API client", () => {
   test("uses app context by default for public Activity API subscriptions", async () => {
     const requests: Request[] = [];
     const client = createXClient({
-      appBearerToken: "app-token",
-      userAccessToken: "user-token",
       runtime: {
         fetch: async (input, init) => {
           const request = new Request(input, init);
@@ -390,8 +405,6 @@ describe("X API client", () => {
       subscriptions: [{ user_id: "42" }],
     };
     const client = createXClient({
-      appBearerToken: "app-token",
-      userAccessToken: "user-token",
       runtime: {
         fetch: async (input, init) => {
           const request = new Request(input, init);
@@ -410,7 +423,10 @@ describe("X API client", () => {
     expect(await requests[0]?.text()).toBe("{}");
     expect(
       requests.map((request) => request.headers.get("authorization")),
-    ).toEqual(["Bearer user-token", "Bearer app-token"]);
+    ).toEqual([
+      expect.stringContaining('oauth_token="user-token"'),
+      "Bearer app-token",
+    ]);
     expect(listed.value.data).toEqual(subscriptions);
     expect(listed.value.data?.subscriptions).toEqual([{ user_id: "42" }]);
   });

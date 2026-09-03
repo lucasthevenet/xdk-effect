@@ -35,12 +35,20 @@ const lifecycle = {
 const credentials = () =>
   Credentials.fromCredentials(
     {
-      appBearerToken: "app-token",
-      userAccessToken: "user-token",
-      consumerSecret: "consumer-secret",
-      userId: "42",
+      apiKey: "api-key",
+      apiSecret: "api-secret",
+      accessToken: "user-token",
+      accessTokenSecret: "token-secret",
     },
-    { apiOrigin: server!.url.origin },
+    {
+      apiOrigin: server!.url.origin,
+      runtime: {
+        fetch: async (input, init) =>
+          new URL(input.toString()).pathname === "/oauth2/token"
+            ? Response.json({ token_type: "bearer", access_token: "app-token" })
+            : fetch(input, init),
+      },
+    },
   );
 
 describe("Alchemy X provider ownership and reconciliation", () => {

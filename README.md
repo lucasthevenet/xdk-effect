@@ -1,13 +1,13 @@
 # `alchemy-x`
 
-An X adapter for [Alchemy](https://alchemy.run/): environment-backed X credentials, declarative webhook and activity-subscription resources, automatic X webhook registration, and a portable lower-level X client.
+An X adapter for [Alchemy](https://alchemy.run/): stored or environment-backed X credentials, declarative webhook and activity-subscription resources, automatic X webhook registration, and a portable lower-level X client.
 
 ## Packages
 
 | Package | Use it for |
 | --- | --- |
-| [`alchemy-x`](./packages/alchemy-x/README.md) | Alchemy providers, environment authentication, resources, and host-adapted X event consumption |
-| [`distilled-x`](./packages/distilled-x/README.md) | Direct X API, OAuth 2.0 PKCE, CRC, and signature-verification primitives |
+| [`alchemy-x`](./packages/alchemy-x/README.md) | Alchemy providers, stored/environment authentication, resources, and host-adapted X event consumption |
+| [`distilled-x`](./packages/distilled-x/README.md) | Direct X API, OAuth1 signing, app-token exchange, OAuth2/PKCE, and webhook cryptography |
 
 ## Install
 
@@ -53,29 +53,53 @@ export default Alchemy.Stack(
 );
 ```
 
-`X.providers()` includes the `Webhook`, `ActivitySubscription`, and `AccountActivitySubscription` lifecycle providers, the X credential bridge, and an environment-only X Auth Provider. This follows Alchemy's [provider Layer](https://alchemy.run/infrastructure-as-code/provider/) and [Auth Provider](https://alchemy.run/environments/auth-providers/) conventions.
+`X.providers()` includes the `Webhook`, `ActivitySubscription`, and
+`AccountActivitySubscription` lifecycle providers, the X credential bridge,
+and an X Auth Provider with stored and environment-variable methods. This
+follows Alchemy's [provider Layer](https://alchemy.run/infrastructure-as-code/provider/)
+and [Auth Provider](https://alchemy.run/environments/auth-providers/)
+conventions.
 
 ## Authenticate
 
-Create an app in the X Developer Console. The adapter needs three independent
-credentials: an app-only Bearer token for webhook management, the API/consumer
-secret for CRC and delivery signatures, and an externally issued OAuth 2.0
-user access token for user-context operations. Supply them through the process
-environment:
+Create an app in the X Developer Console and generate the OAuth 1.0a access
+token and secret for the account that owns it. Alchemy accepts one credential
+set: API key, API secret, access token, and access token secret.
+
+For local use, run:
 
 ```sh
-X_BEARER_TOKEN=...
-X_API_SECRET=...
-X_ACCESS_TOKEN=...
+bunx alchemy login
 ```
 
-The X Auth Provider is environment-only: it does not open an authorization
-page, issue tokens, store credentials, or rotate an access token. Optional
-metadata includes `X_CLIENT_ID`, `X_ACCESS_TOKEN_EXPIRES_AT` (an ISO date, Unix
-seconds, or Unix milliseconds), and `X_OAUTH_SCOPES` (a space- or
-comma-separated scope list). Rotate the required credentials in an external
-secret manager before the user access token expires. See the complete
-[authentication reference](./packages/alchemy-x/README.md#authentication).
+Choose **Stored Credentials** for X and paste the four values. Alchemy stores
+them under `~/.alchemy/credentials/<profile>/`. To replace existing or legacy
+OAuth2 credentials, run `bunx alchemy login --configure`.
+
+Alternatively, choose **Environment Variables** and supply:
+
+```sh
+X_API_KEY=...
+X_API_SECRET=...
+X_ACCESS_TOKEN=...
+X_ACCESS_TOKEN_SECRET=...
+```
+
+For a new CI profile, set `CI=1` and these four variables; Alchemy selects the
+environment method without prompting. Existing profiles keep their selected
+method.
+
+User-context requests are signed with OAuth1. When an app-context operation
+needs a Bearer token, `distilled-x` obtains it from X using the API key and
+secret and caches it internally. No separate `X_BEARER_TOKEN`, OAuth2 client
+settings, browser authorization, or refresh-token setup is needed.
+The API secret also signs webhook CRC responses and verifies deliveries.
+See [X's own-account credentials](https://docs.x.com/fundamentals/authentication/oauth-1-0a/overview)
+and [app-token exchange](https://docs.x.com/fundamentals/authentication/oauth-2-0/application-only).
+
+This restriction applies only to Alchemy authentication. `distilled-x` keeps
+explicit app/user Bearer authentication and all OAuth2/PKCE helpers.
+See the [authentication reference](./packages/alchemy-x/README.md#authentication).
 
 ## Automatic webhook registration
 
@@ -194,7 +218,7 @@ Changing a webhook URL replaces the X registration. Pay Per Use currently permit
 
 - X Activity is the granular product used by `ActivitySubscription`. It supports event/filter pairs and bills webhook events by event type; current prices and subscription limits are documented by X in the [X Activity overview](https://docs.x.com/x-api/activity/introduction) and [pricing guide](https://docs.x.com/x-api/getting-started/pricing).
 - Account Activity is the all-events product used by `AccountActivitySubscription`. X documents it as available only to Pay Per Use and Enterprise accounts; Pay Per Use currently allows three unique user subscriptions and one webhook. See the [Account Activity overview](https://docs.x.com/x-api/account-activity/introduction).
-- X's current Account Activity prose describes OAuth 1.0a for adding a user, while its current [OpenAPI contract](https://api.x.com/2/openapi.json) also advertises OAuth 2.0 user tokens. This adapter accepts an externally issued OAuth 2.0 user access token; whether X accepts it for Account Activity can still depend on the account and product access.
+- The Alchemy provider uses OAuth 1.0a for user operations and internally obtained app-only tokens for app operations. Authentication does not grant product access or app permissions; configure the X app for the operations you need.
 
 ## Development
 
@@ -211,4 +235,4 @@ bun run test:live
 
 Review X usage before running live tests because subscription and delivered-event operations may consume paid API credits.
 
-The command is read-only unless `X_LIVE_MUTATE=1` and `X_LIVE_WEBHOOK_ID` are also set; that opt-in uses the supplied OAuth 2.0 access token to run the Account Activity create/check/delete proof against the selected non-production webhook.
+The command is read-only unless `X_LIVE_MUTATE=1` and `X_LIVE_WEBHOOK_ID` are also set; that opt-in uses the configured OAuth 1.0a credentials to run the Account Activity create/check/delete proof against the selected non-production webhook.

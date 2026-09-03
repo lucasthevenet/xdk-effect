@@ -3,19 +3,34 @@
 This stack lets one Cloudflare Worker consume verified X events and automatically
 manages the remote webhook plus an Account Activity subscription.
 
-Supply the X credentials, authenticate Cloudflare, then deploy:
+For local development, authenticate Cloudflare and X, choose **Stored
+Credentials** for X, and paste the API key, API secret, OAuth1 access token, and
+access token secret:
 
 ```sh
-export X_BEARER_TOKEN=...
-export X_API_SECRET=...
-export X_ACCESS_TOKEN=...
 bunx alchemy login
 bunx alchemy deploy
 ```
 
-The X Auth Provider only reads these environment variables. Obtain and rotate
-the OAuth 2.0 user access token through X or an external authorization service;
-the adapter does not issue, persist, or rotate it.
+Stored credentials are saved under the selected Alchemy profile. This is manual
+credential entry, not interactive X OAuth. The adapter does not open an X
+authorization page. It signs user requests with OAuth1 and automatically obtains
+and caches an app-only token when an app operation needs one.
+
+For CI, use environment authentication instead:
+
+```sh
+export CI=1
+export X_API_KEY=...
+export X_API_SECRET=...
+export X_ACCESS_TOKEN=...
+export X_ACCESS_TOKEN_SECRET=...
+bunx alchemy deploy
+```
+
+Generate own-account OAuth1 credentials in the X Developer Console. For stored
+authentication, run `bunx alchemy login --configure` when replacing them.
+No separately configured Bearer token or OAuth2 client settings are needed.
 
 `XCloudflare.EventSourceLive` owns the host integration: it derives the public
 callback from the Worker's URL, binds the API/consumer secret without exposing

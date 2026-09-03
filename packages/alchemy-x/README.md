@@ -1,6 +1,6 @@
 # `alchemy-x`
 
-Alchemy v2 providers for environment-backed X credentials, project webhooks, granular X Activity subscriptions, full Account Activity subscriptions, and verified host-adapted event consumption.
+Alchemy v2 providers for stored or environment-backed X credentials, project webhooks, granular X Activity subscriptions, full Account Activity subscriptions, and verified host-adapted event consumption.
 
 ## Install
 
@@ -17,15 +17,15 @@ the deployment runtime with `bun add @effect/platform-node`.
 
 | Export | Purpose |
 | --- | --- |
-| `providers()`, `Providers` | Register the X resource collection, credentials bridge, and environment-only Auth Provider |
+| `providers()`, `Providers` | Register the X resource collection, credentials bridge, and stored/environment Auth Provider |
 | `Webhook` | Manage an app-scoped X webhook registration |
 | `ActivitySubscription` | Manage a granular X Activity event/filter subscription |
 | `AccountActivitySubscription` | Manage the authenticated user's full Account Activity subscription |
 | `consumeEvents`, `EventSource` | Consume verified X events and automatically declare the selected remote resources |
-| `XAuth`, `makeXAuth` | Default or custom environment-only X Auth Provider registration Layer |
+| `XAuth`, `makeXAuth` | Default or custom stored/environment X Auth Provider registration Layer |
 | `XCredentials`, `XCredentialsContext` | Flattened credential Effect accessor and its provided Context tag |
-| `fromCredentials`, `fromEnv`, `fromAuthProvider` | Programmatic credential Layers; the Auth Provider path reads the environment |
-| `createXClient` | Create a client from literal or `Redacted` app/user tokens |
+| `fromCredentials`, `fromEnv`, `fromAuthProvider` | Programmatic credential Layers; the Auth Provider path uses the selected profile method |
+| `createXClient` | Create a client from literal or `Redacted` OAuth1 credentials |
 | `Api` | The complete portable `distilled-x` API namespace |
 
 The `alchemy-x/Cloudflare` entrypoint exports `EventSourceLive`, the production
@@ -55,46 +55,73 @@ export default Alchemy.Stack(
 );
 ```
 
-Providers are Effect Layers in Alchemy; see [Alchemy's provider guide](https://alchemy.run/infrastructure-as-code/provider/). `X.providers()` supplies all X resource implementations, the credentials service, and an environment-only X Auth Provider.
+Providers are Effect Layers in Alchemy; see [Alchemy's provider guide](https://alchemy.run/infrastructure-as-code/provider/). `X.providers()` supplies all X resource implementations, the credentials service, and an X Auth Provider with stored and environment-variable methods.
 
 ## Authentication
 
-The adapter deliberately keeps these credentials separate:
+Alchemy accepts only **Access Token & Secret (OAuth 1.0a)** credentials, from
+either stored values or environment variables:
 
 | Credential | Purpose |
 | --- | --- |
-| App-only Bearer token | List, create, validate, and delete X webhooks; app-context subscription operations |
-| API secret / consumer secret | Answer webhook CRC requests and verify delivery signatures |
-| OAuth 2.0 user access token | `GET /2/users/me`, full Account Activity enrollment, and private X Activity events |
+| API key | Identifies the developer app |
+| API secret / consumer secret | Signs OAuth1 requests, obtains app-only tokens, and verifies webhook CRC/deliveries |
+| Access token | Identifies the X account acting through the app |
+| Access token secret | Signs OAuth1 requests together with the API secret |
 
 ### Configure the X app
 
-1. Create an X developer app and enable OAuth 2.0 in its authentication settings.
-2. Generate an app-only Bearer token and record the API key's secret. The API secret is the webhook HMAC key; it is distinct from an OAuth 2.0 Client Secret.
-3. Obtain a user access token from X or your external authorization service with the scopes required by the resources you declare. Account Activity currently requires `tweet.read`, `users.read`, `dm.read`, and `dm.write`; private X Activity event types may require additional scopes such as `mute.read` or `block.read`.
+Create an X developer app, configure its permissions for the intended operations,
+and generate an access token and secret for the account that owns the app.
+You do not need an OAuth2 Client ID, Client Secret, or browser callback for this
+workflow. See [X's own-account OAuth1 setup](https://docs.x.com/fundamentals/authentication/oauth-1-0a/overview).
+Product access and app permissions still apply; authentication alone does not
+enable every event type.
 
-See [X app configuration](https://docs.x.com/fundamentals/developer-apps) and
-[X Activity event authentication](https://docs.x.com/x-api/activity/introduction).
+### Stored authentication
+
+Run `bunx alchemy login`, choose **Stored Credentials** for X, and paste the four
+values. Alchemy records the method in `~/.alchemy/profiles.json` and stores the
+credentials under `~/.alchemy/credentials/<profile>/`.
+
+Run `bunx alchemy login --configure` to replace credentials. Old stored OAuth2
+records are rejected with a reconfiguration hint; they are not silently
+interpreted as OAuth1 credentials. Logout removes the local stored values,
+without revoking X credentials or the app-wide token.
 
 ### Environment authentication
 
-Supply credentials to the process before running Alchemy:
+Choose **Environment Variables** and provide:
 
 | Variable | Required | Meaning |
 | --- | --- | --- |
-| `X_BEARER_TOKEN` | Yes | App-only Bearer token |
-| `X_API_SECRET` | Yes | API/consumer secret used for CRC and HMAC verification |
-| `X_ACCESS_TOKEN` | Yes | OAuth 2.0 user access token |
-| `X_CLIENT_ID` | Optional | OAuth 2.0 Client ID metadata |
-| `X_ACCESS_TOKEN_EXPIRES_AT` | Optional | ISO date, Unix seconds, or Unix milliseconds; resolution fails within 60 seconds of expiry |
-| `X_OAUTH_SCOPES` | Optional | Space- or comma-separated scopes associated with the user token |
+| `X_API_KEY` | Yes | API/consumer key |
+| `X_API_SECRET` | Yes | API/consumer secret |
+| `X_ACCESS_TOKEN` | Yes | OAuth 1.0a user access token |
+| `X_ACCESS_TOKEN_SECRET` | Yes | OAuth 1.0a user access token secret |
 
-The X Auth Provider registered by `X.providers()` is environment-only. It reads
-these values but does not open an authorization page, issue tokens, persist
-credentials, or rotate an access token. `X_CLIENT_ID`,
-`X_ACCESS_TOKEN_EXPIRES_AT`, and `X_OAUTH_SCOPES` are metadata only;
-`X_OAUTH_SCOPES` does not grant scopes to the token. Rotate the three required
-values in an external secret manager before the user access token expires.
+For a new CI profile, `CI=1` selects environment authentication without prompting.
+Existing profiles retain their method. The environment method does not persist
+secrets. OAuth2 settings such as `X_BEARER_TOKEN`, `X_CLIENT_ID`,
+`X_ACCESS_TOKEN_EXPIRES_AT`, and `X_OAUTH_SCOPES` are not used by Alchemy.
+
+### Internal authentication
+
+The shared client signs user requests with OAuth1. For app requests, it exchanges
+the API key and secret at `POST https://api.x.com/oauth2/token` using
+`grant_type=client_credentials`. This is not the OAuth2 user-token endpoint
+(`/2/oauth2/token`). No browser, consent callback, or separately supplied Bearer
+token is involved. [X app-only authentication](https://docs.x.com/fundamentals/authentication/oauth-2-0/application-only)
+
+App tokens are cached in memory per client and shared by concurrent requests.
+A rejected derived token is discarded; safe requests may retry within the
+configured attempt limit, but POSTs are not replayed unless explicitly enabled.
+Failed exchanges are not cached. Credential resolution and login do not make
+X API calls. Only the API secret is bound into the webhook receiver Worker.
+
+`distilled-x` retains all authentication methods, including explicit app/user
+Bearer tokens and OAuth2/PKCE helpers. The Alchemy credential methods do not
+expose those additional choices.
 
 ## Automatic event consumption
 
@@ -267,11 +294,11 @@ Changing a `Webhook.url` is a replacement because X has no URL-update operation.
 
 ## X Activity versus Account Activity
 
-Use `ActivitySubscription` when you want one granular event/filter pair. X Activity supports both public app-context events and private OAuth 2.0 user-context events, with tier-based subscription limits; webhook deliveries are billed by event type. See the [X Activity overview](https://docs.x.com/x-api/activity/introduction) and current [X API pricing](https://docs.x.com/x-api/getting-started/pricing).
+Use `ActivitySubscription` when you want one granular event/filter pair. X Activity supports both public app-context events and private user-context events, with tier-based subscription limits; webhook deliveries are billed by event type. See the [X Activity overview](https://docs.x.com/x-api/activity/introduction) and current [X API pricing](https://docs.x.com/x-api/getting-started/pricing).
 
 Use `AccountActivitySubscription` when you need the authenticated account's complete supported activity feed. X documents Account Activity as available only on Pay Per Use and Enterprise. Pay Per Use currently permits three unique user subscriptions and one webhook; the `/all` product cannot be narrowed to selected event types. See the [Account Activity overview](https://docs.x.com/x-api/account-activity/introduction).
 
-There is a first-party contract mismatch to be aware of: the current Account Activity quickstart says user enrollment uses OAuth 1.0a, while the current X [OpenAPI document](https://api.x.com/2/openapi.json) also lists OAuth 2.0 user authentication for the operation. This package accepts an externally issued OAuth 2.0 user access token. Run the gated live test against the actual X account and entitlement before depending on full Account Activity in production.
+This provider enrolls accounts using OAuth 1.0a and uses an internally obtained app-only token for subscription listing and deletion. Verify the required app permissions and product entitlement before deploying full Account Activity in production.
 
 ## Direct API access
 
@@ -279,14 +306,16 @@ The `Api` namespace re-exports `distilled-x` for imperative calls. Its client ac
 
 ```ts
 const client = X.Api.createXClient({
-  appBearerToken: process.env.X_BEARER_TOKEN!,
-  userAccessToken: process.env.X_ACCESS_TOKEN!,
+  apiKey: process.env.X_API_KEY!,
+  apiSecret: process.env.X_API_SECRET!,
+  accessToken: process.env.X_ACCESS_TOKEN!,
+  accessTokenSecret: process.env.X_ACCESS_TOKEN_SECRET!,
 });
 
 const identity = await client.users.getMe();
 ```
 
-The separate root-level `X.createXClient(credentials, options?)` accepts literal strings or `Redacted` app/user tokens. For custom Alchemy integration and tests, `X.XCredentialsContext` is the provided tag, `X.XCredentials` is its flattened Effect accessor, and `X.fromCredentials`, `X.fromEnv`, and `X.fromAuthProvider` build credential Layers.
+The separate root-level `X.createXClient(credentials, options?)` accepts the four OAuth1 values as literal strings or `Redacted` values. For custom Alchemy integration and tests, `X.XCredentialsContext` is the provided tag, `X.XCredentials` is its flattened Effect accessor, and `X.fromCredentials`, `X.fromEnv`, and `X.fromAuthProvider` build credential Layers.
 
 ## Tests
 
@@ -304,4 +333,4 @@ bun run test:live
 
 Supply the environment credentials above and use an app with the relevant [X product access](https://docs.x.com/x-api/account-activity/quickstart). Never run the live test against a production webhook without reviewing the delete-first replacement caveat.
 
-The default live command performs read-only identity/webhook checks. To use the supplied OAuth 2.0 access token for the paid Account Activity create/check/delete proof, also set `X_LIVE_MUTATE=1` and `X_LIVE_WEBHOOK_ID` to a non-production webhook with no existing subscription for the test user.
+The default live command performs read-only identity/webhook checks. To use the configured OAuth 1.0a credentials for the paid Account Activity create/check/delete proof, also set `X_LIVE_MUTATE=1` and `X_LIVE_WEBHOOK_ID` to a non-production webhook with no existing subscription for the test user.

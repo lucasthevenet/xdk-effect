@@ -1,4 +1,6 @@
 import * as Layer from "effect/Layer";
+import { CredentialsStoreLive } from "alchemy/Auth/Credentials";
+import { ProfileLive } from "alchemy/Auth/Profile";
 import * as Provider from "alchemy/Provider";
 import {
   AccountActivitySubscription,
@@ -20,8 +22,8 @@ export type ProviderRequirements = Layer.Services<ReturnType<typeof providers>>;
 
 /**
  * X lifecycle providers plus the AuthProvider discovered by `alchemy login`.
- * Environment credential resolution stays lazy so merely listing or logging
- * in to another provider never reads X secrets.
+ * Stored and environment credential resolution stays lazy so merely listing
+ * or logging in to another provider never reads X secrets.
  */
 export const providers = () =>
   Layer.effect(
@@ -41,5 +43,7 @@ export const providers = () =>
     ),
     Layer.provideMerge(Credentials.fromAuthProvider()),
     Layer.provideMerge(XAuth),
+    Layer.provideMerge(ProfileLive),
+    Layer.provideMerge(CredentialsStoreLive),
     Layer.orDie,
   );

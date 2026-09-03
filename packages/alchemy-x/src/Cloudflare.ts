@@ -15,7 +15,7 @@ import {
   normalizeActivityEventType,
   type ActivitySubscriptionProps,
 } from "./ActivitySubscription.ts";
-import { XAppCredentials } from "./Credentials.ts";
+import { XCredentials } from "./Credentials.ts";
 import {
   EventSource,
   type EventHandler,
@@ -177,9 +177,7 @@ export const EventSourceLive = Layer.effect(
       paths.add(path);
       const consumerSecret = yield* Output.named(
         Output.fromEffect(
-          XAppCredentials.pipe(
-            Effect.map((credentials) => credentials.consumerSecret),
-          ),
+          XCredentials.pipe(Effect.map((credentials) => credentials.apiSecret)),
         ),
         webhookSecretEnvName(worker.LogicalId, options.name),
       );

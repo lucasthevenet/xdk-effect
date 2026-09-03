@@ -1,5 +1,4 @@
 import * as Effect from "effect/Effect";
-import * as Schema from "effect/Schema";
 import { deepEqual, isResolved, type Input, Resource } from "alchemy";
 import { Unowned } from "alchemy/AdoptPolicy";
 import * as Provider from "alchemy/Provider";
@@ -10,7 +9,7 @@ import {
   type XActivitySubscription as ApiSubscription,
   type XAuthKind,
 } from "distilled-x";
-import { XAppCredentials, XCredentials } from "./Credentials.ts";
+import { XCredentials } from "./Credentials.ts";
 import {
   assertXAuthoritative,
   callX,
@@ -119,30 +118,6 @@ export const defaultActivityAuth = (eventType: XActivityEventType): XAuthKind =>
     ? "user"
     : "app";
 
-export class XOAuthScopeMissing extends Schema.TaggedError<XOAuthScopeMissing>()(
-  "XOAuthScopeMissing",
-  {
-    message: Schema.String,
-    eventType: Schema.String,
-    requiredScope: Schema.String,
-  },
-) {}
-
-const requiredActivityScope = (
-  eventType: XActivityEventType,
-): string | undefined => {
-  const normalized = normalizeActivityEventType(eventType);
-  if (normalized === "broadcast.chat") return "broadcast.read";
-  if (normalized.startsWith("chat.") || normalized.startsWith("dm.")) {
-    return "dm.read";
-  }
-  if (normalized.startsWith("like.")) return "like.read";
-  if (normalized.startsWith("mute.")) return "mute.read";
-  if (normalized.startsWith("block.")) return "block.read";
-  if (normalized.startsWith("post.")) return "tweet.read";
-  return undefined;
-};
-
 const sameSubscription = (
   subscription: ApiSubscription,
   desired: {
@@ -159,7 +134,7 @@ const sameSubscription = (
   subscription.tag === desired.tag;
 
 const listAll = Effect.fn(function* () {
-  const { client } = yield* XAppCredentials;
+  const { client } = yield* XCredentials;
   const pages = yield* callX(async () => {
     const values = [];
     for await (const page of client.activity.iterateSubscriptions({
@@ -181,7 +156,7 @@ const listAll = Effect.fn(function* () {
 const deleteActivitySubscription = Effect.fn(function* (
   subscriptionId: string,
 ) {
-  const { client } = yield* XAppCredentials;
+  const { client } = yield* XCredentials;
   const deleted = yield* ignoreXNotFound(
     callX(() => client.activity.deleteSubscription(subscriptionId)),
   );
@@ -256,7 +231,7 @@ export const ActivitySubscriptionProvider = () =>
     }),
 
     reconcile: Effect.fn(function* ({ fqn, instanceId, news, output }) {
-      const appCredentials = yield* XAppCredentials;
+      const { client } = yield* XCredentials;
       const tag = ownershipTag(instanceId, fqn, news.tag);
       // SAFETY: reconcile runs only with fully resolved resource inputs.
       const webhookId = news.webhookId as string;
@@ -274,24 +249,7 @@ export const ActivitySubscriptionProvider = () =>
         subscriptions.find((candidate) => sameSubscription(candidate, desired));
 
       const auth = news.auth ?? defaultActivityAuth(news.eventType);
-      const requiredScope =
-        auth === "user" ? requiredActivityScope(news.eventType) : undefined;
-
       const createDesired = Effect.gen(function* () {
-        const userCredentials =
-          auth === "user" ? yield* XCredentials : undefined;
-        if (
-          requiredScope !== undefined &&
-          userCredentials?.oauthScopes !== undefined &&
-          !userCredentials.oauthScopes.includes(requiredScope)
-        ) {
-          return yield* new XOAuthScopeMissing({
-            eventType: news.eventType,
-            requiredScope,
-            message: `X Activity event ${news.eventType} needs OAuth scope ${requiredScope}. Issue an access token with that scope, update X_ACCESS_TOKEN, and include it in X_OAUTH_SCOPES.`,
-          });
-        }
-        const client = userCredentials?.client ?? appCredentials.client;
         const created = yield* callX(() =>
           client.activity.createSubscription(
             {
@@ -389,21 +347,16 @@ export const ActivitySubscriptionProvider = () =>
 
       if (observed.webhook_id !== webhookId || observed.tag !== tag) {
         const updated = yield* callX(() =>
-          appCredentials.client.activity.updateSubscription(
-            observed.subscription_id,
-            {
-              webhook_id: webhookId,
-              tag,
-            },
-          ),
+          client.activity.updateSubscription(observed.subscription_id, {
+            webhook_id: webhookId,
+            tag,
+          }),
         );
         yield* assertXAuthoritative(
           updated,
           "updating an X Activity subscription",
         );
-        const normalized = appCredentials.client.activity.normalizeSubscription(
-          updated.value,
-        );
+        const normalized = client.activity.normalizeSubscription(updated.value);
         const refreshed =
           normalized && sameSubscription(normalized, desired)
             ? normalized

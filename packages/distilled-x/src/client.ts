@@ -1,15 +1,11 @@
-import {
-  XApiError,
-  XAuthenticationError,
-  XDecodeError,
-  XTransportError,
-} from "./errors.ts";
-import {
-  resolveToken,
-  runtime,
-  type TokenProvider,
-  type XRuntimeOptions,
-} from "./runtime.ts";
+import { XApiError, XDecodeError, XTransportError } from "./errors.ts";
+import { runtime, type XRuntimeOptions } from "./runtime.ts";
+import { createAuthentication, type XAuthentication } from "./auth.ts";
+export type {
+  XCredentials,
+  XBearerCredentials,
+  XAuthentication,
+} from "./auth.ts";
 import type {
   XAccountActivitySubscriptionStatus,
   XAccountActivitySubscriptions,
@@ -48,9 +44,9 @@ export interface XRequestOptions {
   readonly retryNonIdempotent?: boolean;
 }
 
-export interface XClientConfig {
-  readonly appBearerToken?: TokenProvider;
-  readonly userAccessToken?: TokenProvider;
+export type XClientConfig = XAuthentication & XClientOptions;
+
+export interface XClientOptions {
   readonly apiOrigin?: string;
   readonly runtime?: XRuntimeOptions;
   readonly retry?: {
@@ -543,16 +539,7 @@ export const createXClient = (config: XClientConfig) => {
   const baseDelayMs = Math.max(0, config.retry?.baseDelayMs ?? 250);
   const maxDelayMs = Math.max(baseDelayMs, config.retry?.maxDelayMs ?? 30_000);
 
-  const authToken = async (kind: XAuthKind): Promise<string> => {
-    const provider =
-      kind === "app" ? config.appBearerToken : config.userAccessToken;
-    if (!provider) {
-      throw new XAuthenticationError(
-        `${kind === "app" ? "App-only" : "User-context"} X credentials are required for this operation`,
-      );
-    }
-    return resolveToken(provider);
-  };
+  const authentication = createAuthentication(config, platform, base.origin);
 
   const request = async <T>(
     method: XHttpMethod,
@@ -573,17 +560,35 @@ export const createXClient = (config: XClientConfig) => {
       headers.set("Accept", "application/json");
       headers.set(
         "Authorization",
-        `Bearer ${await authToken(options.auth ?? "user")}`,
+        await authentication.authorize(
+          options.auth ?? "user",
+          method,
+          url,
+          options.signal,
+        ),
       );
       const body =
         options.json === undefined ? undefined : JSON.stringify(options.json);
       if (body !== undefined) headers.set("Content-Type", "application/json");
 
       try {
-        return await platform.fetch(
+        const response = await platform.fetch(
           url,
           requestInit(method, headers, body, options.signal),
         );
+        if (
+          response.status === 401 &&
+          options.auth === "app" &&
+          authentication.invalidate(headers.get("Authorization")!)
+        ) {
+          // A rejected write is not automatically replayed. The next call can
+          // obtain a fresh token; safe/idempotent requests may recover here.
+          if (retryableMethod && attempt < maxAttempts) {
+            await response.body?.cancel();
+            return undefined;
+          }
+        }
+        return response;
       } catch (cause) {
         if (options.signal?.aborted) throw cause;
         if (retryableMethod && attempt < maxAttempts) {
