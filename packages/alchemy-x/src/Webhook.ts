@@ -11,6 +11,7 @@ import {
   isXStatus,
   normalizeWebhookUrl,
   requireXData,
+  requireXListData,
   XAdoptionRequired,
 } from "./internal.ts";
 import type * as X from "./Providers.ts";
@@ -61,7 +62,7 @@ const listWebhooks = Effect.fn(function* () {
   const response = yield* Api.getWebhooks({
     webhook_config_fields: ["id", "url", "valid", "created_at"],
   });
-  const data = yield* requireXData(response, "listing X webhooks");
+  const data = yield* requireXListData(response, "listing X webhooks");
   const webhooks = yield* Schema.decodeUnknownEffect(
     Schema.Array(
       Schema.Struct({

@@ -67,6 +67,20 @@ const live = (runtime: { readonly fetch: FetchLike }) =>
 const me = { data: { id: "1", name: "Alchemy", username: "alchemy" } };
 
 describe("generated Effect operations", () => {
+  test("preserves a metadata-only empty webhook list", async () => {
+    const response = { meta: { result_count: 0 } };
+    const result = await Effect.runPromise(
+      getWebhooks({}).pipe(
+        Effect.provide(fromBearer({ appBearerToken: "app-token" })),
+        Effect.provide(
+          transport({ fetch: async () => Response.json(response) }),
+        ),
+      ),
+    );
+    expect(result).toEqual(response);
+    expect(Object.hasOwn(result, "data")).toBe(false);
+  });
+
   test("builds requests from schema traits without a registered operation name", async () => {
     const input = Schema.Struct({
       id: Schema.String.pipe(T.Label()),

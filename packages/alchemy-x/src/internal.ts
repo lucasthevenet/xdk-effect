@@ -52,6 +52,20 @@ export const requireXData = <T>(response: Envelope<T>, operation: string) =>
     ),
   );
 
+/** X can omit data for an empty list, but only a zero count proves emptiness. */
+export const requireXListData = <T>(
+  response: Envelope<T[]> & {
+    readonly meta?: { readonly result_count?: number };
+  },
+  operation: string,
+) =>
+  requireXData<T[]>(
+    response.data === undefined && response.meta?.result_count === 0
+      ? { ...response, data: [] }
+      : response,
+    operation,
+  );
+
 const statusErrors = new Map(
   Object.entries(HTTP_STATUS_MAP).map(([status, error]) => [
     Number(status),

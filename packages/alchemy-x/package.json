@@ -58,10 +58,10 @@
     "effect-xdk": "0.1.0"
   },
   "devDependencies": {
-    "alchemy": "2.0.0-beta.75"
+    "alchemy": "2.0.0-beta.76"
   },
   "peerDependencies": {
-    "alchemy": "2.0.0-beta.75",
+    "alchemy": "2.0.0-beta.76",
     "effect": ">=4.0.0-rc.112 <5"
   }
 }

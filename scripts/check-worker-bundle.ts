@@ -56,7 +56,7 @@ for (const nodeOnlyMarker of nodeOnlyMarkers) {
 }
 
 const eventSourceResult = await Bun.build({
-  entrypoints: [path.join(workerCwd, "alchemy.run.ts")],
+  entrypoints: [path.join(workerCwd, "src/worker.ts")],
   target: "browser",
   format: "esm",
   conditions: ["worker"],

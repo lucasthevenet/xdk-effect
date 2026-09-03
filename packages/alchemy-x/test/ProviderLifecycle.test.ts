@@ -234,6 +234,108 @@ describe("Alchemy X provider ownership and reconciliation", () => {
     expect(Unowned.is(observed)).toBe(true);
   });
 
+  for (const list of [
+    { meta: { result_count: 0 } },
+    { meta: { result_count: 0 }, errors: [] },
+    { data: [] },
+  ]) {
+    test(`creates a webhook after an authoritative empty list ${JSON.stringify(list)}`, async () => {
+      const methods: string[] = [];
+      const webhook = {
+        id: "10",
+        url: "https://events.example.com/x",
+        valid: true,
+        created_at: "2026-08-31T00:00:00Z",
+      };
+      server = Bun.serve({
+        port: 0,
+        fetch: (request) => {
+          methods.push(request.method);
+          return Response.json(
+            request.method === "GET" ? list : { data: webhook },
+          );
+        },
+      });
+
+      const output = await Effect.runPromise(
+        Effect.gen(function* () {
+          const provider = yield* Webhook.Provider;
+          expect(
+            yield* provider.read!({
+              ...lifecycle,
+              olds: { url: webhook.url },
+              output: undefined,
+            }),
+          ).toBeUndefined();
+          expect(
+            yield* provider.read!({
+              ...lifecycle,
+              olds: { url: webhook.url },
+              output: {
+                webhookId: "old",
+                url: webhook.url,
+                valid: true,
+                createdAt: webhook.created_at,
+              },
+            }),
+          ).toBeUndefined();
+          return yield* provider.reconcile({
+            ...lifecycle,
+            news: { url: webhook.url },
+            olds: undefined,
+            output: undefined,
+          });
+        }).pipe(
+          Effect.provide(Layer.mergeAll(WebhookProvider(), credentials())),
+        ),
+      );
+
+      expect(output.webhookId).toBe("10");
+      expect(methods).toEqual(["GET", "GET", "GET", "POST"]);
+    });
+  }
+
+  for (const list of [
+    {},
+    { meta: {} },
+    { meta: { result_count: 1 } },
+    {
+      meta: { result_count: 0 },
+      errors: [{ detail: "partial backend failure" }],
+    },
+    { data: [{ id: "10" }], meta: { result_count: 0 } },
+  ]) {
+    test(`refuses ambiguous or incomplete webhook lists ${JSON.stringify(list)}`, async () => {
+      const methods: string[] = [];
+      server = Bun.serve({
+        port: 0,
+        fetch: (request) => {
+          methods.push(request.method);
+          return Response.json(list);
+        },
+      });
+
+      const error = await Effect.runPromise(
+        Effect.gen(function* () {
+          const provider = yield* Webhook.Provider;
+          return yield* provider
+            .reconcile({
+              ...lifecycle,
+              news: { url: "https://events.example.com/x" },
+              olds: undefined,
+              output: undefined,
+            })
+            .pipe(Effect.flip);
+        }).pipe(
+          Effect.provide(Layer.mergeAll(WebhookProvider(), credentials())),
+        ),
+      );
+
+      expect(error).toBeInstanceOf(XResponseError);
+      expect(methods).toEqual(["GET"]);
+    });
+  }
+
   test("does not treat an errors-only webhook list as an empty account", async () => {
     server = Bun.serve({
       port: 0,

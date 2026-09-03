@@ -7,7 +7,7 @@ import { CredentialsFromEnv } from "effect-xdk/Credentials";
 import { getUsersMe } from "effect-xdk/users";
 import { getWebhooks } from "effect-xdk/webhooks";
 import * as AccountActivity from "effect-xdk/account-activity";
-import { requireXData } from "../../src/internal.ts";
+import { requireXData, requireXListData } from "../../src/internal.ts";
 
 const liveTest = process.env.X_LIVE === "1" ? test : test.skip;
 const mutationTest =
@@ -35,7 +35,9 @@ liveTest("reads the OAuth user and app webhooks", async () => {
         (yield* requireXData(identity, "reading the live user")).id,
       ).toBeTruthy();
       expect(
-        Array.isArray(yield* requireXData(webhooks, "listing live webhooks")),
+        Array.isArray(
+          yield* requireXListData(webhooks, "listing live webhooks"),
+        ),
       ).toBe(true);
     }),
   );
