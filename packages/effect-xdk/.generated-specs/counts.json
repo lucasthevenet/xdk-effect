@@ -103,7 +103,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.counts#GetPostsCountsAllResponse": {
@@ -677,7 +680,8 @@
           "uri": "/2/tweets/counts/all",
           "code": 200
         },
-        "smithy.api#documentation": "Get Posts Counts All\n\nAt most one of `pagination_token`, `next_token` may be provided."
+        "smithy.api#documentation": "Get Posts Counts All\n\nAt most one of `pagination_token`, `next_token` may be provided.",
+        "com.x#response": "json"
       }
     },
     "com.x.counts#GetPostsCountsRecentRequestGranularity": {
@@ -767,7 +771,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "app"
+        ]
       }
     },
     "com.x.counts#GetPostsCountsRecentResponse": {
@@ -855,7 +863,8 @@
           "uri": "/2/tweets/counts/recent",
           "code": 200
         },
-        "smithy.api#documentation": "Get Posts Counts Recent\n\nAt most one of `pagination_token`, `next_token` may be provided."
+        "smithy.api#documentation": "Get Posts Counts Recent\n\nAt most one of `pagination_token`, `next_token` may be provided.",
+        "com.x#response": "json"
       }
     },
     "com.x.counts#Counts": {

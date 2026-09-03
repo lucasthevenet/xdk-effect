@@ -154,13 +154,16 @@ export const AddChatGroupMembersRequest = /*@__PURE__*/ S.suspend(() =>
     encrypted_avatar_url: S.optional(S.String),
     encrypted_title: S.optional(S.String),
     user_ids: AddChatGroupMembersRequestUserIdsList,
-  }).pipe(
-    T.Http({
-      method: "POST",
-      uri: "/2/chat/conversations/{id}/members",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "POST",
+        uri: "/2/chat/conversations/{id}/members",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "AddChatGroupMembersRequest",
 }) as any as S.Schema<AddChatGroupMembersRequest>;
@@ -1212,13 +1215,16 @@ export const AddConversationKeysRequest = /*@__PURE__*/ S.suspend(() =>
     conversation_key_version: S.String,
     conversation_participant_keys:
       AddConversationKeysRequestConversationParticipantKeysList,
-  }).pipe(
-    T.Http({
-      method: "POST",
-      uri: "/2/chat/conversations/{id}/keys",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "POST",
+        uri: "/2/chat/conversations/{id}/keys",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "AddConversationKeysRequest",
 }) as any as S.Schema<AddConversationKeysRequest>;
@@ -1298,9 +1304,12 @@ export const AddUserPublicKeyRequest = /*@__PURE__*/ S.suspend(() =>
     generate_version: S.optional(S.Boolean),
     public_key: AddUserPublicKeyPublicKey,
     version: S.String,
-  }).pipe(
-    T.Http({ method: "POST", uri: "/2/users/{id}/public_keys", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "POST", uri: "/2/users/{id}/public_keys", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "AddUserPublicKeyRequest",
 }) as any as S.Schema<AddUserPublicKeyRequest>;
@@ -1346,13 +1355,15 @@ export const ChatMediaDownloadRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     media_hash_key: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({
-      method: "GET",
-      uri: "/2/chat/media/{id}/{media_hash_key}",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "GET",
+        uri: "/2/chat/media/{id}/{media_hash_key}",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "ChatMediaDownloadRequest",
 }) as any as S.Schema<ChatMediaDownloadRequest>;
@@ -1379,13 +1390,17 @@ export const ChatMediaUploadAppendRequest = /*@__PURE__*/ S.suspend(() =>
     media: MediaData,
     media_hash_key: S.String,
     segment_index: S.Number,
-  }).pipe(
-    T.Http({
-      method: "POST",
-      uri: "/2/chat/media/upload/{id}/append",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "POST",
+        uri: "/2/chat/media/upload/{id}/append",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.Multipart(true))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "ChatMediaUploadAppendRequest",
 }) as any as S.Schema<ChatMediaUploadAppendRequest>;
@@ -1441,13 +1456,16 @@ export const ChatMediaUploadFinalizeRequest = /*@__PURE__*/ S.suspend(() =>
     message_id: S.optional(S.String),
     num_parts: S.String,
     ttl_msec: S.optional(S.String),
-  }).pipe(
-    T.Http({
-      method: "POST",
-      uri: "/2/chat/media/upload/{id}/finalize",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "POST",
+        uri: "/2/chat/media/upload/{id}/finalize",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "ChatMediaUploadFinalizeRequest",
 }) as any as S.Schema<ChatMediaUploadFinalizeRequest>;
@@ -1492,13 +1510,16 @@ export const ChatMediaUploadInitializeRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     conversation_id: S.String,
     total_bytes: S.Number,
-  }).pipe(
-    T.Http({
-      method: "POST",
-      uri: "/2/chat/media/upload/initialize",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "POST",
+        uri: "/2/chat/media/upload/initialize",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "ChatMediaUploadInitializeRequest",
 }) as any as S.Schema<ChatMediaUploadInitializeRequest>;
@@ -1679,9 +1700,12 @@ export const CreateChatConversationRequest = /*@__PURE__*/ S.suspend(() =>
     group_members: CreateChatConversationRequestGroupMembersList,
     group_name: S.optional(S.String),
     ttl_msec: S.optional(S.String),
-  }).pipe(
-    T.Http({ method: "POST", uri: "/2/chat/conversations/group", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "POST", uri: "/2/chat/conversations/group", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "CreateChatConversationRequest",
 }) as any as S.Schema<CreateChatConversationRequest>;
@@ -1805,17 +1829,26 @@ export const GetChatConversationRequest = /*@__PURE__*/ S.suspend(() =>
     chat_conversation_fields: S.optional(
       GetChatConversationRequestChatConversationFieldsList.pipe(
         T.Query("chat_conversation.fields"),
+        T.CsvQuery(true),
       ),
     ),
     expansions: S.optional(
-      GetChatConversationRequestExpansionsList.pipe(T.Query()),
+      GetChatConversationRequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
-      GetChatConversationRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetChatConversationRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/chat/conversations/{id}", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "GET", uri: "/2/chat/conversations/{id}", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetChatConversationRequest",
 }) as any as S.Schema<GetChatConversationRequest>;
@@ -2627,15 +2660,18 @@ export const GetChatConversationEventsRequest = /*@__PURE__*/ S.suspend(() =>
     chat_message_event_fields: S.optional(
       GetChatConversationEventsRequestChatMessageEventFieldsList.pipe(
         T.Query("chat_message_event.fields"),
+        T.CsvQuery(true),
       ),
     ),
-  }).pipe(
-    T.Http({
-      method: "GET",
-      uri: "/2/chat/conversations/{id}/events",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "GET",
+        uri: "/2/chat/conversations/{id}/events",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetChatConversationEventsRequest",
 }) as any as S.Schema<GetChatConversationEventsRequest>;
@@ -2810,15 +2846,24 @@ export const GetChatConversationsRequest = /*@__PURE__*/ S.suspend(() =>
     chat_conversation_fields: S.optional(
       GetChatConversationsRequestChatConversationFieldsList.pipe(
         T.Query("chat_conversation.fields"),
+        T.CsvQuery(true),
       ),
     ),
     expansions: S.optional(
-      GetChatConversationsRequestExpansionsList.pipe(T.Query()),
+      GetChatConversationsRequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
-      GetChatConversationsRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetChatConversationsRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/chat/conversations", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/chat/conversations", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetChatConversationsRequest",
 }) as any as S.Schema<GetChatConversationsRequest>;
@@ -2898,11 +2943,14 @@ export const GetUsersPublicKeyRequest = /*@__PURE__*/ S.suspend(() =>
     public_key_fields: S.optional(
       GetUsersPublicKeyRequestPublicKeyFieldsList.pipe(
         T.Query("public_key.fields"),
+        T.CsvQuery(true),
       ),
     ),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/users/{id}/public_keys", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "GET", uri: "/2/users/{id}/public_keys", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetUsersPublicKeyRequest",
 }) as any as S.Schema<GetUsersPublicKeyRequest>;
@@ -2977,13 +3025,16 @@ export interface GetUsersPublicKeysRequest {
 }
 export const GetUsersPublicKeysRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
-    ids: GetUsersPublicKeysRequestIdsList.pipe(T.Query()),
+    ids: GetUsersPublicKeysRequestIdsList.pipe(T.Query(), T.CsvQuery(true)),
     public_key_fields: S.optional(
       GetUsersPublicKeysRequestPublicKeyFieldsList.pipe(
         T.Query("public_key.fields"),
+        T.CsvQuery(true),
       ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/users/public_keys", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/users/public_keys", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetUsersPublicKeysRequest",
 }) as any as S.Schema<GetUsersPublicKeysRequest>;
@@ -3013,13 +3064,15 @@ export const GetUsersPublicKeysResponse = /*@__PURE__*/ S.suspend(() =>
 
 export interface InitializeChatGroupRequest {}
 export const InitializeChatGroupRequest = /*@__PURE__*/ S.suspend(() =>
-  S.Struct({}).pipe(
-    T.Http({
-      method: "POST",
-      uri: "/2/chat/conversations/group/initialize",
-      code: 200,
-    }),
-  ),
+  S.Struct({})
+    .pipe(
+      T.Http({
+        method: "POST",
+        uri: "/2/chat/conversations/group/initialize",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "InitializeChatGroupRequest",
 }) as any as S.Schema<InitializeChatGroupRequest>;
@@ -3063,13 +3116,16 @@ export const MarkChatConversationReadRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     seen_until_sequence_id: S.String,
-  }).pipe(
-    T.Http({
-      method: "POST",
-      uri: "/2/chat/conversations/{id}/read",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "POST",
+        uri: "/2/chat/conversations/{id}/read",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "MarkChatConversationReadRequest",
 }) as any as S.Schema<MarkChatConversationReadRequest>;
@@ -3123,13 +3179,16 @@ export const SendChatMessageRequest = /*@__PURE__*/ S.suspend(() =>
     encoded_message_create_event: S.String,
     encoded_message_event_signature: S.optional(S.String),
     message_id: S.String,
-  }).pipe(
-    T.Http({
-      method: "POST",
-      uri: "/2/chat/conversations/{id}/messages",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "POST",
+        uri: "/2/chat/conversations/{id}/messages",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "SendChatMessageRequest",
 }) as any as S.Schema<SendChatMessageRequest>;
@@ -3170,13 +3229,15 @@ export interface SendChatTypingIndicatorRequest {
 export const SendChatTypingIndicatorRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({
-      method: "POST",
-      uri: "/2/chat/conversations/{id}/typing",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "POST",
+        uri: "/2/chat/conversations/{id}/typing",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "SendChatTypingIndicatorRequest",
 }) as any as S.Schema<SendChatTypingIndicatorRequest>;
@@ -3265,7 +3326,7 @@ export const chatMediaDownload: API.OperationMethod<
   XOpContext
 > = /*@__PURE__*/ API.make(() => ({
   input: ChatMediaDownloadRequest,
-  output: ChatMediaDownloadResponse,
+  output: ChatMediaDownloadResponse.pipe(T.Response("binary")),
   errors: [XParseError],
   protocol: XProtocol,
   retry: Retry.Retry,

@@ -93,10 +93,10 @@
     },
     "./runtime": null,
     "./types": {
-      "types": "./lib/types.d.ts",
-      "bun": "./src/types.ts",
-      "worker": "./src/types.ts",
-      "default": "./lib/types.js"
+      "types": "./lib/webhooks.d.ts",
+      "bun": "./src/webhooks.ts",
+      "worker": "./src/webhooks.ts",
+      "default": "./lib/webhooks.js"
     },
     "./errors": {
       "types": "./lib/errors.d.ts",

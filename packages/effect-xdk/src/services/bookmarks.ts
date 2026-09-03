@@ -17,13 +17,16 @@ export const CreateUsersBookmarkFolderRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     name: S.String,
-  }).pipe(
-    T.Http({
-      method: "POST",
-      uri: "/2/users/{id}/bookmarks/folders",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "POST",
+        uri: "/2/users/{id}/bookmarks/folders",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "CreateUsersBookmarkFolderRequest",
 }) as any as S.Schema<CreateUsersBookmarkFolderRequest>;
@@ -327,13 +330,15 @@ export const DeleteUsersBookmarkRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     tweet_id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({
-      method: "DELETE",
-      uri: "/2/users/{id}/bookmarks/{tweet_id}",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "DELETE",
+        uri: "/2/users/{id}/bookmarks/{tweet_id}",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2"])),
 ).annotate({
   identifier: "DeleteUsersBookmarkRequest",
 }) as any as S.Schema<DeleteUsersBookmarkRequest>;

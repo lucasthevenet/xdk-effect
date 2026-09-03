@@ -21,12 +21,18 @@ export interface GetRulesRequest {
 }
 export const GetRulesRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
-    ids: S.optional(GetRulesRequestIdsList.pipe(T.Query())),
+    ids: S.optional(GetRulesRequestIdsList.pipe(T.Query(), T.CsvQuery(true))),
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/tweets/search/stream/rules", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "GET",
+        uri: "/2/tweets/search/stream/rules",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "GetRulesRequest",
 }) as any as S.Schema<GetRulesRequest>;
@@ -405,9 +411,16 @@ export const UpdateRulesRequest = /*@__PURE__*/ S.suspend(() =>
     delete_all: S.optional(S.Boolean.pipe(T.Query())),
     add: S.optional(UpdateRulesRequestAddList),
     delete: S.optional(UpdateRulesDelete),
-  }).pipe(
-    T.Http({ method: "POST", uri: "/2/tweets/search/stream/rules", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "POST",
+        uri: "/2/tweets/search/stream/rules",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["app"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "UpdateRulesRequest",
 }) as any as S.Schema<UpdateRulesRequest>;

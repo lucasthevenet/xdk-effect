@@ -555,7 +555,7 @@
     "com.x.accountActivity#GetAccountActivitySubscriptionCount": {
       "type": "operation",
       "input": {
-        "target": "smithy.api#Unit"
+        "target": "com.x.accountActivity#GetAccountActivitySubscriptionCountRequest"
       },
       "output": {
         "target": "com.x.accountActivity#GetAccountActivitySubscriptionCountResponse"
@@ -566,7 +566,8 @@
           "uri": "/2/account_activity/subscriptions/count",
           "code": 200
         },
-        "smithy.api#documentation": "Get Account Activity Subscription Count"
+        "smithy.api#documentation": "Get Account Activity Subscription Count",
+        "com.x#response": "json"
       }
     },
     "com.x.accountActivity#ValidateAccountActivitySubscriptionRequest": {
@@ -581,7 +582,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.accountActivity#ValidateAccountActivitySubscriptionResponse": {
@@ -630,7 +635,8 @@
           "uri": "/2/account_activity/webhooks/{webhook_id}/subscriptions/all",
           "code": 200
         },
-        "smithy.api#documentation": "Validate Account Activity Subscription"
+        "smithy.api#documentation": "Validate Account Activity Subscription",
+        "com.x#response": "json"
       }
     },
     "com.x.accountActivity#CreateAccountActivitySubscriptionRequest2": {
@@ -645,7 +651,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.accountActivity#CreateAccountActivitySubscriptionResponse": {
@@ -694,7 +705,8 @@
           "uri": "/2/account_activity/webhooks/{webhook_id}/subscriptions/all",
           "code": 200
         },
-        "smithy.api#documentation": "Create subscription\n\nCreates an Account Activity subscription for the user and the given webhook."
+        "smithy.api#documentation": "Create subscription\n\nCreates an Account Activity subscription for the user and the given webhook.",
+        "com.x#response": "json"
       }
     },
     "com.x.accountActivity#GetAccountActivitySubscriptionsRequest": {
@@ -709,7 +721,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.accountActivity#GetAccountActivitySubscriptionsResponse": {
@@ -791,7 +806,8 @@
           "uri": "/2/account_activity/webhooks/{webhook_id}/subscriptions/all/list",
           "code": 200
         },
-        "smithy.api#documentation": "Get Account Activity Subscriptions"
+        "smithy.api#documentation": "Get Account Activity Subscriptions",
+        "com.x#response": "json"
       }
     },
     "com.x.accountActivity#DeleteAccountActivitySubscriptionRequest": {
@@ -813,7 +829,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.accountActivity#DeleteAccountActivitySubscriptionResponse": {
@@ -862,7 +881,8 @@
           "uri": "/2/account_activity/webhooks/{webhook_id}/subscriptions/{user_id}/all",
           "code": 200
         },
-        "smithy.api#documentation": "Delete subscription\n\nDeletes an Account Activity subscription for the given webhook and user ID."
+        "smithy.api#documentation": "Delete subscription\n\nDeletes an Account Activity subscription for the given webhook and user ID.",
+        "com.x#response": "json"
       }
     },
     "com.x.accountActivity#AccountActivity": {
@@ -888,6 +908,15 @@
       "traits": {
         "smithy.api#title": "X API v2",
         "smithy.api#documentation": "X API v2 core endpoints"
+      }
+    },
+    "com.x.accountActivity#GetAccountActivitySubscriptionCountRequest": {
+      "type": "structure",
+      "members": {},
+      "traits": {
+        "com.x#security": [
+          "app"
+        ]
       }
     }
   }

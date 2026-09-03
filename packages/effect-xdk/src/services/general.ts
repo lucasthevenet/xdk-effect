@@ -10,9 +10,9 @@ export type { XOpError, XOpContext };
 
 export interface GetOpenApiSpecRequest {}
 export const GetOpenApiSpecRequest = /*@__PURE__*/ S.suspend(() =>
-  S.Struct({}).pipe(
-    T.Http({ method: "GET", uri: "/2/openapi.json", code: 200 }),
-  ),
+  S.Struct({})
+    .pipe(T.Http({ method: "GET", uri: "/2/openapi.json", code: 200 }))
+    .pipe(T.Security([])),
 ).annotate({
   identifier: "GetOpenApiSpecRequest",
 }) as any as S.Schema<GetOpenApiSpecRequest>;

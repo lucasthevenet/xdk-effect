@@ -80,9 +80,12 @@ export const CreateActivitySubscriptionRequest = /*@__PURE__*/ S.suspend(() =>
     filter: CreateActivitySubscriptionFilter,
     tag: S.optional(S.String),
     webhook_id: S.optional(S.String),
-  }).pipe(
-    T.Http({ method: "POST", uri: "/2/activity/subscriptions", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "POST", uri: "/2/activity/subscriptions", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1", "app"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "CreateActivitySubscriptionRequest",
 }) as any as S.Schema<CreateActivitySubscriptionRequest>;
@@ -434,13 +437,15 @@ export interface DeleteActivitySubscriptionRequest {
 export const DeleteActivitySubscriptionRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     subscription_id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({
-      method: "DELETE",
-      uri: "/2/activity/subscriptions/{subscription_id}",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "DELETE",
+        uri: "/2/activity/subscriptions/{subscription_id}",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "DeleteActivitySubscriptionRequest",
 }) as any as S.Schema<DeleteActivitySubscriptionRequest>;
@@ -489,10 +494,19 @@ export interface DeleteActivitySubscriptionsByIdsRequest {
 export const DeleteActivitySubscriptionsByIdsRequest = /*@__PURE__*/ S.suspend(
   () =>
     S.Struct({
-      ids: DeleteActivitySubscriptionsByIdsRequestIdsList.pipe(T.Query()),
-    }).pipe(
-      T.Http({ method: "DELETE", uri: "/2/activity/subscriptions", code: 200 }),
-    ),
+      ids: DeleteActivitySubscriptionsByIdsRequestIdsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
+    })
+      .pipe(
+        T.Http({
+          method: "DELETE",
+          uri: "/2/activity/subscriptions",
+          code: 200,
+        }),
+      )
+      .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "DeleteActivitySubscriptionsByIdsRequest",
 }) as any as S.Schema<DeleteActivitySubscriptionsByIdsRequest>;
@@ -586,9 +600,11 @@ export const GetActivitySubscriptionsRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/activity/subscriptions", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "GET", uri: "/2/activity/subscriptions", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetActivitySubscriptionsRequest",
 }) as any as S.Schema<GetActivitySubscriptionsRequest>;
@@ -666,13 +682,16 @@ export const UpdateActivitySubscriptionRequest = /*@__PURE__*/ S.suspend(() =>
     subscription_id: S.String.pipe(T.Label()),
     tag: S.optional(S.String),
     webhook_id: S.optional(S.String),
-  }).pipe(
-    T.Http({
-      method: "PUT",
-      uri: "/2/activity/subscriptions/{subscription_id}",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "PUT",
+        uri: "/2/activity/subscriptions/{subscription_id}",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["app"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "UpdateActivitySubscriptionRequest",
 }) as any as S.Schema<UpdateActivitySubscriptionRequest>;

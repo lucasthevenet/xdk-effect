@@ -45,9 +45,14 @@ export const SearchNewsRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     max_age_hours: S.optional(S.Number.pipe(T.Query())),
     news_fields: S.optional(
-      SearchNewsRequestNewsFieldsList.pipe(T.Query("news.fields")),
+      SearchNewsRequestNewsFieldsList.pipe(
+        T.Query("news.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/news/search", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/news/search", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "SearchNewsRequest",
 }) as any as S.Schema<SearchNewsRequest>;
@@ -588,22 +593,41 @@ export const SearchPostsAllRequest = /*@__PURE__*/ S.suspend(() =>
     pagination_token: S.optional(S.String.pipe(T.Query())),
     sort_order: S.optional(SearchPostsAllRequestSortOrder.pipe(T.Query())),
     post_fields: S.optional(
-      SearchPostsAllRequestPostFieldsList.pipe(T.Query("post.fields")),
+      SearchPostsAllRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-    expansions: S.optional(SearchPostsAllRequestExpansionsList.pipe(T.Query())),
+    expansions: S.optional(
+      SearchPostsAllRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
+    ),
     user_fields: S.optional(
-      SearchPostsAllRequestUserFieldsList.pipe(T.Query("user.fields")),
+      SearchPostsAllRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      SearchPostsAllRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      SearchPostsAllRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      SearchPostsAllRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      SearchPostsAllRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      SearchPostsAllRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      SearchPostsAllRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/tweets/search/all", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/tweets/search/all", code: 200 }))
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "SearchPostsAllRequest",
 }) as any as S.Schema<SearchPostsAllRequest>;
@@ -2227,24 +2251,41 @@ export const SearchPostsRecentRequest = /*@__PURE__*/ S.suspend(() =>
     until_id: S.optional(S.String.pipe(T.Query())),
     sort_order: S.optional(SearchPostsRecentRequestSortOrder.pipe(T.Query())),
     post_fields: S.optional(
-      SearchPostsRecentRequestPostFieldsList.pipe(T.Query("post.fields")),
+      SearchPostsRecentRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      SearchPostsRecentRequestExpansionsList.pipe(T.Query()),
+      SearchPostsRecentRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
     ),
     user_fields: S.optional(
-      SearchPostsRecentRequestUserFieldsList.pipe(T.Query("user.fields")),
+      SearchPostsRecentRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      SearchPostsRecentRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      SearchPostsRecentRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      SearchPostsRecentRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      SearchPostsRecentRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      SearchPostsRecentRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      SearchPostsRecentRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/tweets/search/recent", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/tweets/search/recent", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "SearchPostsRecentRequest",
 }) as any as S.Schema<SearchPostsRecentRequest>;

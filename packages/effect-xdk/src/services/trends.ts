@@ -36,11 +36,14 @@ export const GetTrendsPersonalizedTrendsRequest = /*@__PURE__*/ S.suspend(() =>
     personalized_trend_fields: S.optional(
       GetTrendsPersonalizedTrendsRequestPersonalizedTrendFieldsList.pipe(
         T.Query("personalized_trend.fields"),
+        T.CsvQuery(true),
       ),
     ),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/users/personalized_trends", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "GET", uri: "/2/users/personalized_trends", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetTrendsPersonalizedTrendsRequest",
 }) as any as S.Schema<GetTrendsPersonalizedTrendsRequest>;

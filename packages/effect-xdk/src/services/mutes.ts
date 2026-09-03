@@ -16,13 +16,15 @@ export const UnmuteUserRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     source_user_id: S.String.pipe(T.Label()),
     target_user_id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({
-      method: "DELETE",
-      uri: "/2/users/{source_user_id}/muting/{target_user_id}",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "DELETE",
+        uri: "/2/users/{source_user_id}/muting/{target_user_id}",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "UnmuteUserRequest",
 }) as any as S.Schema<UnmuteUserRequest>;

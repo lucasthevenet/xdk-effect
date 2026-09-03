@@ -34,9 +34,14 @@ export const GetUsageRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     days: S.optional(S.Number.pipe(T.Query())),
     usage_fields: S.optional(
-      GetUsageRequestUsageFieldsList.pipe(T.Query("usage.fields")),
+      GetUsageRequestUsageFieldsList.pipe(
+        T.Query("usage.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/usage/tweets", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/usage/tweets", code: 200 }))
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "GetUsageRequest",
 }) as any as S.Schema<GetUsageRequest>;

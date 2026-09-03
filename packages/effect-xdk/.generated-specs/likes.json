@@ -435,26 +435,33 @@
           "target": "com.x.likes#GetPostsLikingUsersRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.likes#GetPostsLikingUsersRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "post_fields": {
           "target": "com.x.likes#GetPostsLikingUsersRequestPostFieldsList",
           "traits": {
             "smithy.api#httpQuery": "post.fields",
-            "smithy.api#documentation": "A comma separated list of Post fields to display."
+            "smithy.api#documentation": "A comma separated list of Post fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.likes#GetPostsLikingUsersResponse": {
@@ -3479,7 +3486,8 @@
           "uri": "/2/tweets/{id}/liking_users",
           "code": 200
         },
-        "smithy.api#documentation": "Get Posts Liking Users"
+        "smithy.api#documentation": "Get Posts Liking Users",
+        "com.x#response": "json"
       }
     },
     "com.x.likes#LikePostRequest": {
@@ -3500,7 +3508,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.likes#LikePostResponse": {
@@ -3549,7 +3562,8 @@
           "uri": "/2/users/{id}/likes",
           "code": 200
         },
-        "smithy.api#documentation": "Like Post"
+        "smithy.api#documentation": "Like Post",
+        "com.x#response": "json"
       }
     },
     "com.x.likes#UnlikePostRequest": {
@@ -3571,7 +3585,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.likes#UnlikePostResponse": {
@@ -3620,7 +3638,8 @@
           "uri": "/2/users/{id}/likes/{tweet_id}",
           "code": 200
         },
-        "smithy.api#documentation": "Unlike Post"
+        "smithy.api#documentation": "Unlike Post",
+        "com.x#response": "json"
       }
     },
     "com.x.likes#Likes": {

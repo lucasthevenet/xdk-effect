@@ -116,15 +116,23 @@ export const GetSpacesBuyersRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     user_fields: S.optional(
-      GetSpacesBuyersRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetSpacesBuyersRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetSpacesBuyersRequestExpansionsList.pipe(T.Query()),
+      GetSpacesBuyersRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
     ),
     post_fields: S.optional(
-      GetSpacesBuyersRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetSpacesBuyersRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/spaces/{id}/buyers", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/spaces/{id}/buyers", code: 200 }))
+    .pipe(T.Security(["oauth2"])),
 ).annotate({
   identifier: "GetSpacesBuyersRequest",
 }) as any as S.Schema<GetSpacesBuyersRequest>;
@@ -1923,22 +1931,37 @@ export interface GetSpacesByCreatorIdsRequest {
 }
 export const GetSpacesByCreatorIdsRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
-    user_ids: GetSpacesByCreatorIdsRequestUserIdsList.pipe(T.Query()),
+    user_ids: GetSpacesByCreatorIdsRequestUserIdsList.pipe(
+      T.Query(),
+      T.CsvQuery(true),
+    ),
     space_fields: S.optional(
-      GetSpacesByCreatorIdsRequestSpaceFieldsList.pipe(T.Query("space.fields")),
+      GetSpacesByCreatorIdsRequestSpaceFieldsList.pipe(
+        T.Query("space.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetSpacesByCreatorIdsRequestExpansionsList.pipe(T.Query()),
+      GetSpacesByCreatorIdsRequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
-      GetSpacesByCreatorIdsRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetSpacesByCreatorIdsRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     topic_fields: S.optional(
-      GetSpacesByCreatorIdsRequestTopicFieldsList.pipe(T.Query("topic.fields")),
+      GetSpacesByCreatorIdsRequestTopicFieldsList.pipe(
+        T.Query("topic.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/spaces/by/creator_ids", code: 200 }),
-  ),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/spaces/by/creator_ids", code: 200 }))
+    .pipe(T.Security(["oauth2", "app"])),
 ).annotate({
   identifier: "GetSpacesByCreatorIdsRequest",
 }) as any as S.Schema<GetSpacesByCreatorIdsRequest>;
@@ -2146,16 +2169,29 @@ export const GetSpacesByIdRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     space_fields: S.optional(
-      GetSpacesByIdRequestSpaceFieldsList.pipe(T.Query("space.fields")),
+      GetSpacesByIdRequestSpaceFieldsList.pipe(
+        T.Query("space.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-    expansions: S.optional(GetSpacesByIdRequestExpansionsList.pipe(T.Query())),
+    expansions: S.optional(
+      GetSpacesByIdRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
+    ),
     user_fields: S.optional(
-      GetSpacesByIdRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetSpacesByIdRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     topic_fields: S.optional(
-      GetSpacesByIdRequestTopicFieldsList.pipe(T.Query("topic.fields")),
+      GetSpacesByIdRequestTopicFieldsList.pipe(
+        T.Query("topic.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/spaces/{id}", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/spaces/{id}", code: 200 }))
+    .pipe(T.Security(["oauth2", "app"])),
 ).annotate({
   identifier: "GetSpacesByIdRequest",
 }) as any as S.Schema<GetSpacesByIdRequest>;
@@ -2285,18 +2321,31 @@ export interface GetSpacesByIdsRequest {
 }
 export const GetSpacesByIdsRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
-    ids: GetSpacesByIdsRequestIdsList.pipe(T.Query()),
+    ids: GetSpacesByIdsRequestIdsList.pipe(T.Query(), T.CsvQuery(true)),
     space_fields: S.optional(
-      GetSpacesByIdsRequestSpaceFieldsList.pipe(T.Query("space.fields")),
+      GetSpacesByIdsRequestSpaceFieldsList.pipe(
+        T.Query("space.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-    expansions: S.optional(GetSpacesByIdsRequestExpansionsList.pipe(T.Query())),
+    expansions: S.optional(
+      GetSpacesByIdsRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
+    ),
     user_fields: S.optional(
-      GetSpacesByIdsRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetSpacesByIdsRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     topic_fields: S.optional(
-      GetSpacesByIdsRequestTopicFieldsList.pipe(T.Query("topic.fields")),
+      GetSpacesByIdsRequestTopicFieldsList.pipe(
+        T.Query("topic.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/spaces", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/spaces", code: 200 }))
+    .pipe(T.Security(["oauth2", "app"])),
 ).annotate({
   identifier: "GetSpacesByIdsRequest",
 }) as any as S.Schema<GetSpacesByIdsRequest>;
@@ -2508,22 +2557,41 @@ export const GetSpacesPostsRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     post_fields: S.optional(
-      GetSpacesPostsRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetSpacesPostsRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-    expansions: S.optional(GetSpacesPostsRequestExpansionsList.pipe(T.Query())),
+    expansions: S.optional(
+      GetSpacesPostsRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
+    ),
     user_fields: S.optional(
-      GetSpacesPostsRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetSpacesPostsRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      GetSpacesPostsRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      GetSpacesPostsRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      GetSpacesPostsRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      GetSpacesPostsRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      GetSpacesPostsRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      GetSpacesPostsRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/spaces/{id}/tweets", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/spaces/{id}/tweets", code: 200 }))
+    .pipe(T.Security(["oauth2", "app"])),
 ).annotate({
   identifier: "GetSpacesPostsRequest",
 }) as any as S.Schema<GetSpacesPostsRequest>;
@@ -2664,16 +2732,29 @@ export const SearchSpacesRequest = /*@__PURE__*/ S.suspend(() =>
     state: S.optional(SearchSpacesRequestState.pipe(T.Query())),
     max_results: S.optional(S.Number.pipe(T.Query())),
     space_fields: S.optional(
-      SearchSpacesRequestSpaceFieldsList.pipe(T.Query("space.fields")),
+      SearchSpacesRequestSpaceFieldsList.pipe(
+        T.Query("space.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-    expansions: S.optional(SearchSpacesRequestExpansionsList.pipe(T.Query())),
+    expansions: S.optional(
+      SearchSpacesRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
+    ),
     user_fields: S.optional(
-      SearchSpacesRequestUserFieldsList.pipe(T.Query("user.fields")),
+      SearchSpacesRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     topic_fields: S.optional(
-      SearchSpacesRequestTopicFieldsList.pipe(T.Query("topic.fields")),
+      SearchSpacesRequestTopicFieldsList.pipe(
+        T.Query("topic.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/spaces/search", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/spaces/search", code: 200 }))
+    .pipe(T.Security(["oauth2", "app"])),
 ).annotate({
   identifier: "SearchSpacesRequest",
 }) as any as S.Schema<SearchSpacesRequest>;

@@ -663,7 +663,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.articles#ArticleCreateDraftResponse": {
@@ -1205,7 +1210,8 @@
           "uri": "/2/articles/draft",
           "code": 200
         },
-        "smithy.api#documentation": "Create draft Article\n\nCreates a new Article draft that can later be published."
+        "smithy.api#documentation": "Create draft Article\n\nCreates a new Article draft that can later be published.",
+        "com.x#response": "json"
       }
     },
     "com.x.articles#ArticlePublishRequest": {
@@ -1220,7 +1226,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.articles#ArticlePublishResponse": {
@@ -1269,7 +1279,8 @@
           "uri": "/2/articles/{article_id}/publish",
           "code": 200
         },
-        "smithy.api#documentation": "Publish Article\n\nPublishes a draft Article, making it publicly visible."
+        "smithy.api#documentation": "Publish Article\n\nPublishes a draft Article, making it publicly visible.",
+        "com.x#response": "json"
       }
     },
     "com.x.articles#Articles": {

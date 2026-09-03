@@ -10,9 +10,9 @@ export type { XOpError, XOpContext };
 
 export interface DeleteAllConnectionsRequest {}
 export const DeleteAllConnectionsRequest = /*@__PURE__*/ S.suspend(() =>
-  S.Struct({}).pipe(
-    T.Http({ method: "DELETE", uri: "/2/connections/all", code: 200 }),
-  ),
+  S.Struct({})
+    .pipe(T.Http({ method: "DELETE", uri: "/2/connections/all", code: 200 }))
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "DeleteAllConnectionsRequest",
 }) as any as S.Schema<DeleteAllConnectionsRequest>;
@@ -355,13 +355,15 @@ export interface DeleteConnectionsByEndpointRequest {
 export const DeleteConnectionsByEndpointRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     endpoint_id: DeleteConnectionsByEndpointRequestEndpointId.pipe(T.Label()),
-  }).pipe(
-    T.Http({
-      method: "DELETE",
-      uri: "/2/connections/{endpoint_id}",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "DELETE",
+        uri: "/2/connections/{endpoint_id}",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "DeleteConnectionsByEndpointRequest",
 }) as any as S.Schema<DeleteConnectionsByEndpointRequest>;
@@ -428,7 +430,10 @@ export interface DeleteConnectionsByUuidsRequest {
 export const DeleteConnectionsByUuidsRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     uuids: DeleteConnectionsByUuidsRequestUuidsList,
-  }).pipe(T.Http({ method: "DELETE", uri: "/2/connections", code: 200 })),
+  })
+    .pipe(T.Http({ method: "DELETE", uri: "/2/connections", code: 200 }))
+    .pipe(T.Security(["app"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "DeleteConnectionsByUuidsRequest",
 }) as any as S.Schema<DeleteConnectionsByUuidsRequest>;
@@ -539,16 +544,22 @@ export const GetConnectionHistoryRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     status: S.optional(GetConnectionHistoryRequestStatus.pipe(T.Query())),
     endpoints: S.optional(
-      GetConnectionHistoryRequestEndpointsList.pipe(T.Query()),
+      GetConnectionHistoryRequestEndpointsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     connection_fields: S.optional(
       GetConnectionHistoryRequestConnectionFieldsList.pipe(
         T.Query("connection.fields"),
+        T.CsvQuery(true),
       ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/connections", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/connections", code: 200 }))
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "GetConnectionHistoryRequest",
 }) as any as S.Schema<GetConnectionHistoryRequest>;

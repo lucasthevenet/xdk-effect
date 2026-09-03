@@ -353,40 +353,49 @@
           "target": "com.x.spaces#GetSpacesByIdsRequestIdsList",
           "traits": {
             "smithy.api#httpQuery": "ids",
-            "smithy.api#required": {}
+            "smithy.api#required": {},
+            "com.x#csvQuery": true
           }
         },
         "space_fields": {
           "target": "com.x.spaces#GetSpacesByIdsRequestSpaceFieldsList",
           "traits": {
             "smithy.api#httpQuery": "space.fields",
-            "smithy.api#documentation": "A comma separated list of Space fields to display."
+            "smithy.api#documentation": "A comma separated list of Space fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.spaces#GetSpacesByIdsRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.spaces#GetSpacesByIdsRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "topic_fields": {
           "target": "com.x.spaces#GetSpacesByIdsRequestTopicFieldsList",
           "traits": {
             "smithy.api#httpQuery": "topic.fields",
-            "smithy.api#documentation": "A comma separated list of Topic fields to display."
+            "smithy.api#documentation": "A comma separated list of Topic fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "app"
+        ]
       }
     },
     "com.x.spaces#GetSpacesByIdsResponse": {
@@ -3477,7 +3486,8 @@
           "uri": "/2/spaces",
           "code": 200
         },
-        "smithy.api#documentation": "Get Spaces by IDs"
+        "smithy.api#documentation": "Get Spaces by IDs",
+        "com.x#response": "json"
       }
     },
     "com.x.spaces#GetSpacesByCreatorIdsRequestUserIdsList": {
@@ -3816,40 +3826,49 @@
           "target": "com.x.spaces#GetSpacesByCreatorIdsRequestUserIdsList",
           "traits": {
             "smithy.api#httpQuery": "user_ids",
-            "smithy.api#required": {}
+            "smithy.api#required": {},
+            "com.x#csvQuery": true
           }
         },
         "space_fields": {
           "target": "com.x.spaces#GetSpacesByCreatorIdsRequestSpaceFieldsList",
           "traits": {
             "smithy.api#httpQuery": "space.fields",
-            "smithy.api#documentation": "A comma separated list of Space fields to display."
+            "smithy.api#documentation": "A comma separated list of Space fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.spaces#GetSpacesByCreatorIdsRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.spaces#GetSpacesByCreatorIdsRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "topic_fields": {
           "target": "com.x.spaces#GetSpacesByCreatorIdsRequestTopicFieldsList",
           "traits": {
             "smithy.api#httpQuery": "topic.fields",
-            "smithy.api#documentation": "A comma separated list of Topic fields to display."
+            "smithy.api#documentation": "A comma separated list of Topic fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "app"
+        ]
       }
     },
     "com.x.spaces#GetSpacesByCreatorIdsResponse": {
@@ -3910,7 +3929,8 @@
           "uri": "/2/spaces/by/creator_ids",
           "code": 200
         },
-        "smithy.api#documentation": "Get Spaces by Creator IDs"
+        "smithy.api#documentation": "Get Spaces by Creator IDs",
+        "com.x#response": "json"
       }
     },
     "com.x.spaces#SearchSpacesRequestState": {
@@ -4285,33 +4305,41 @@
           "target": "com.x.spaces#SearchSpacesRequestSpaceFieldsList",
           "traits": {
             "smithy.api#httpQuery": "space.fields",
-            "smithy.api#documentation": "A comma separated list of Space fields to display."
+            "smithy.api#documentation": "A comma separated list of Space fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.spaces#SearchSpacesRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.spaces#SearchSpacesRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "topic_fields": {
           "target": "com.x.spaces#SearchSpacesRequestTopicFieldsList",
           "traits": {
             "smithy.api#httpQuery": "topic.fields",
-            "smithy.api#documentation": "A comma separated list of Topic fields to display."
+            "smithy.api#documentation": "A comma separated list of Topic fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "app"
+        ]
       }
     },
     "com.x.spaces#SearchSpacesResponse": {
@@ -4372,7 +4400,8 @@
           "uri": "/2/spaces/search",
           "code": 200
         },
-        "smithy.api#documentation": "Search Spaces\n\nRetrieves a list of Spaces matching the specified search query."
+        "smithy.api#documentation": "Search Spaces\n\nRetrieves a list of Spaces matching the specified search query.",
+        "com.x#response": "json"
       }
     },
     "com.x.spaces#GetSpacesByIdRequestSpaceFieldsItem": {
@@ -4711,33 +4740,41 @@
           "target": "com.x.spaces#GetSpacesByIdRequestSpaceFieldsList",
           "traits": {
             "smithy.api#httpQuery": "space.fields",
-            "smithy.api#documentation": "A comma separated list of Space fields to display."
+            "smithy.api#documentation": "A comma separated list of Space fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.spaces#GetSpacesByIdRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.spaces#GetSpacesByIdRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "topic_fields": {
           "target": "com.x.spaces#GetSpacesByIdRequestTopicFieldsList",
           "traits": {
             "smithy.api#httpQuery": "topic.fields",
-            "smithy.api#documentation": "A comma separated list of Topic fields to display."
+            "smithy.api#documentation": "A comma separated list of Topic fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "app"
+        ]
       }
     },
     "com.x.spaces#GetSpacesByIdResponse": {
@@ -4776,7 +4813,8 @@
           "uri": "/2/spaces/{id}",
           "code": 200
         },
-        "smithy.api#documentation": "Get Spaces by ID"
+        "smithy.api#documentation": "Get Spaces by ID",
+        "com.x#response": "json"
       }
     },
     "com.x.spaces#GetSpacesBuyersRequestUserFieldsItem": {
@@ -5197,26 +5235,32 @@
           "target": "com.x.spaces#GetSpacesBuyersRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.spaces#GetSpacesBuyersRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "post_fields": {
           "target": "com.x.spaces#GetSpacesBuyersRequestPostFieldsList",
           "traits": {
             "smithy.api#httpQuery": "post.fields",
-            "smithy.api#documentation": "A comma separated list of Post fields to display."
+            "smithy.api#documentation": "A comma separated list of Post fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2"
+        ]
       }
     },
     "com.x.spaces#GetSpacesBuyersResponse": {
@@ -5289,7 +5333,8 @@
           "uri": "/2/spaces/{id}/buyers",
           "code": 200
         },
-        "smithy.api#documentation": "Get Space ticket buyers\n\nRetrieves a list of Users who purchased tickets to a specific Space by its ID."
+        "smithy.api#documentation": "Get Space ticket buyers\n\nRetrieves a list of Users who purchased tickets to a specific Space by its ID.",
+        "com.x#response": "json"
       }
     },
     "com.x.spaces#GetSpacesPostsRequestPostFieldsItem": {
@@ -5965,47 +6010,57 @@
           "target": "com.x.spaces#GetSpacesPostsRequestPostFieldsList",
           "traits": {
             "smithy.api#httpQuery": "post.fields",
-            "smithy.api#documentation": "A comma separated list of Post fields to display."
+            "smithy.api#documentation": "A comma separated list of Post fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.spaces#GetSpacesPostsRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.spaces#GetSpacesPostsRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "media_fields": {
           "target": "com.x.spaces#GetSpacesPostsRequestMediaFieldsList",
           "traits": {
             "smithy.api#httpQuery": "media.fields",
-            "smithy.api#documentation": "A comma separated list of Media fields to display."
+            "smithy.api#documentation": "A comma separated list of Media fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "poll_fields": {
           "target": "com.x.spaces#GetSpacesPostsRequestPollFieldsList",
           "traits": {
             "smithy.api#httpQuery": "poll.fields",
-            "smithy.api#documentation": "A comma separated list of Poll fields to display."
+            "smithy.api#documentation": "A comma separated list of Poll fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "place_fields": {
           "target": "com.x.spaces#GetSpacesPostsRequestPlaceFieldsList",
           "traits": {
             "smithy.api#httpQuery": "place.fields",
-            "smithy.api#documentation": "A comma separated list of Place fields to display."
+            "smithy.api#documentation": "A comma separated list of Place fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "app"
+        ]
       }
     },
     "com.x.spaces#GetSpacesPostsResponse": {
@@ -6078,7 +6133,8 @@
           "uri": "/2/spaces/{id}/tweets",
           "code": 200
         },
-        "smithy.api#documentation": "Get Space Posts\n\nRetrieves a list of Posts shared in a specific Space by its ID."
+        "smithy.api#documentation": "Get Space Posts\n\nRetrieves a list of Posts shared in a specific Space by its ID.",
+        "com.x#response": "json"
       }
     },
     "com.x.spaces#Spaces": {

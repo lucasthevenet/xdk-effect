@@ -422,33 +422,42 @@
           "target": "com.x.users#GetUsersByIdsRequestIdsList",
           "traits": {
             "smithy.api#httpQuery": "ids",
-            "smithy.api#required": {}
+            "smithy.api#required": {},
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.users#GetUsersByIdsRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.users#GetUsersByIdsRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "post_fields": {
           "target": "com.x.users#GetUsersByIdsRequestPostFieldsList",
           "traits": {
             "smithy.api#httpQuery": "post.fields",
-            "smithy.api#documentation": "A comma separated list of Post fields to display."
+            "smithy.api#documentation": "A comma separated list of Post fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1",
+          "app"
+        ]
       }
     },
     "com.x.users#GetUsersByIdsResponse": {
@@ -3446,7 +3455,8 @@
           "uri": "/2/users",
           "code": 200
         },
-        "smithy.api#documentation": "Get Users by IDs"
+        "smithy.api#documentation": "Get Users by IDs",
+        "com.x#response": "json"
       }
     },
     "com.x.users#GetUsersByUsernamesRequestUsernamesList": {
@@ -3854,33 +3864,42 @@
           "target": "com.x.users#GetUsersByUsernamesRequestUsernamesList",
           "traits": {
             "smithy.api#httpQuery": "usernames",
-            "smithy.api#required": {}
+            "smithy.api#required": {},
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.users#GetUsersByUsernamesRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.users#GetUsersByUsernamesRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "post_fields": {
           "target": "com.x.users#GetUsersByUsernamesRequestPostFieldsList",
           "traits": {
             "smithy.api#httpQuery": "post.fields",
-            "smithy.api#documentation": "A comma separated list of Post fields to display."
+            "smithy.api#documentation": "A comma separated list of Post fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1",
+          "app"
+        ]
       }
     },
     "com.x.users#GetUsersByUsernamesResponse": {
@@ -3926,7 +3945,8 @@
           "uri": "/2/users/by",
           "code": 200
         },
-        "smithy.api#documentation": "Get Users by Usernames"
+        "smithy.api#documentation": "Get Users by Usernames",
+        "com.x#response": "json"
       }
     },
     "com.x.users#GetUsersByUsernameRequestUserFieldsItem": {
@@ -4334,26 +4354,34 @@
           "target": "com.x.users#GetUsersByUsernameRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.users#GetUsersByUsernameRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "post_fields": {
           "target": "com.x.users#GetUsersByUsernameRequestPostFieldsList",
           "traits": {
             "smithy.api#httpQuery": "post.fields",
-            "smithy.api#documentation": "A comma separated list of Post fields to display."
+            "smithy.api#documentation": "A comma separated list of Post fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1",
+          "app"
+        ]
       }
     },
     "com.x.users#GetUsersByUsernameResponse": {
@@ -4392,7 +4420,8 @@
           "uri": "/2/users/by/username/{username}",
           "code": 200
         },
-        "smithy.api#documentation": "Get Users by Username"
+        "smithy.api#documentation": "Get Users by Username",
+        "com.x#response": "json"
       }
     },
     "com.x.users#GetUsersMeRequestUserFieldsItem": {
@@ -4793,26 +4822,33 @@
           "target": "com.x.users#GetUsersMeRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.users#GetUsersMeRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "post_fields": {
           "target": "com.x.users#GetUsersMeRequestPostFieldsList",
           "traits": {
             "smithy.api#httpQuery": "post.fields",
-            "smithy.api#documentation": "A comma separated list of Post fields to display."
+            "smithy.api#documentation": "A comma separated list of Post fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.users#GetUsersMeResponse": {
@@ -4851,7 +4887,8 @@
           "uri": "/2/users/me",
           "code": 200
         },
-        "smithy.api#documentation": "Get Users Me"
+        "smithy.api#documentation": "Get Users Me",
+        "com.x#response": "json"
       }
     },
     "com.x.users#GetUsersRepostsOfMeRequestPostFieldsItem": {
@@ -5520,47 +5557,57 @@
           "target": "com.x.users#GetUsersRepostsOfMeRequestPostFieldsList",
           "traits": {
             "smithy.api#httpQuery": "post.fields",
-            "smithy.api#documentation": "A comma separated list of Post fields to display."
+            "smithy.api#documentation": "A comma separated list of Post fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.users#GetUsersRepostsOfMeRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.users#GetUsersRepostsOfMeRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "media_fields": {
           "target": "com.x.users#GetUsersRepostsOfMeRequestMediaFieldsList",
           "traits": {
             "smithy.api#httpQuery": "media.fields",
-            "smithy.api#documentation": "A comma separated list of Media fields to display."
+            "smithy.api#documentation": "A comma separated list of Media fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "poll_fields": {
           "target": "com.x.users#GetUsersRepostsOfMeRequestPollFieldsList",
           "traits": {
             "smithy.api#httpQuery": "poll.fields",
-            "smithy.api#documentation": "A comma separated list of Poll fields to display."
+            "smithy.api#documentation": "A comma separated list of Poll fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "place_fields": {
           "target": "com.x.users#GetUsersRepostsOfMeRequestPlaceFieldsList",
           "traits": {
             "smithy.api#httpQuery": "place.fields",
-            "smithy.api#documentation": "A comma separated list of Place fields to display."
+            "smithy.api#documentation": "A comma separated list of Place fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.users#GetUsersRepostsOfMeResponse": {
@@ -5633,7 +5680,8 @@
           "uri": "/2/users/reposts_of_me",
           "code": 200
         },
-        "smithy.api#documentation": "Get Users Reposts of Me"
+        "smithy.api#documentation": "Get Users Reposts of Me",
+        "com.x#response": "json"
       }
     },
     "com.x.users#SearchUsersRequestUserFieldsItem": {
@@ -6053,26 +6101,33 @@
           "target": "com.x.users#SearchUsersRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.users#SearchUsersRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "post_fields": {
           "target": "com.x.users#SearchUsersRequestPostFieldsList",
           "traits": {
             "smithy.api#httpQuery": "post.fields",
-            "smithy.api#documentation": "A comma separated list of Post fields to display."
+            "smithy.api#documentation": "A comma separated list of Post fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.users#SearchUsersResponse": {
@@ -6139,7 +6194,8 @@
           "uri": "/2/users/search",
           "code": 200
         },
-        "smithy.api#documentation": "Search Users"
+        "smithy.api#documentation": "Search Users",
+        "com.x#response": "json"
       }
     },
     "com.x.users#GetUsersByIdRequestUserFieldsItem": {
@@ -6547,26 +6603,34 @@
           "target": "com.x.users#GetUsersByIdRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.users#GetUsersByIdRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "post_fields": {
           "target": "com.x.users#GetUsersByIdRequestPostFieldsList",
           "traits": {
             "smithy.api#httpQuery": "post.fields",
-            "smithy.api#documentation": "A comma separated list of Post fields to display."
+            "smithy.api#documentation": "A comma separated list of Post fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1",
+          "app"
+        ]
       }
     },
     "com.x.users#GetUsersByIdResponse": {
@@ -6605,7 +6669,8 @@
           "uri": "/2/users/{id}",
           "code": 200
         },
-        "smithy.api#documentation": "Get Users by ID"
+        "smithy.api#documentation": "Get Users by ID",
+        "com.x#response": "json"
       }
     },
     "com.x.users#GetUsersAffiliatesRequestUserFieldsItem": {
@@ -7026,26 +7091,34 @@
           "target": "com.x.users#GetUsersAffiliatesRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.users#GetUsersAffiliatesRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "post_fields": {
           "target": "com.x.users#GetUsersAffiliatesRequestPostFieldsList",
           "traits": {
             "smithy.api#httpQuery": "post.fields",
-            "smithy.api#documentation": "A comma separated list of Post fields to display."
+            "smithy.api#documentation": "A comma separated list of Post fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1",
+          "app"
+        ]
       }
     },
     "com.x.users#GetUsersAffiliatesResponse": {
@@ -7118,7 +7191,8 @@
           "uri": "/2/users/{id}/affiliates",
           "code": 200
         },
-        "smithy.api#documentation": "Get Users Affiliates"
+        "smithy.api#documentation": "Get Users Affiliates",
+        "com.x#response": "json"
       }
     },
     "com.x.users#GetUsersBlockingRequestUserFieldsItem": {
@@ -7538,26 +7612,33 @@
           "target": "com.x.users#GetUsersBlockingRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.users#GetUsersBlockingRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "post_fields": {
           "target": "com.x.users#GetUsersBlockingRequestPostFieldsList",
           "traits": {
             "smithy.api#httpQuery": "post.fields",
-            "smithy.api#documentation": "A comma separated list of Post fields to display."
+            "smithy.api#documentation": "A comma separated list of Post fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.users#GetUsersBlockingResponse": {
@@ -7630,7 +7711,8 @@
           "uri": "/2/users/{id}/blocking",
           "code": 200
         },
-        "smithy.api#documentation": "Get Users Blocking"
+        "smithy.api#documentation": "Get Users Blocking",
+        "com.x#response": "json"
       }
     },
     "com.x.users#GetUsersFollowedListsRequestListFieldsItem": {
@@ -7895,26 +7977,34 @@
           "target": "com.x.users#GetUsersFollowedListsRequestListFieldsList",
           "traits": {
             "smithy.api#httpQuery": "list.fields",
-            "smithy.api#documentation": "A comma separated list of List fields to display."
+            "smithy.api#documentation": "A comma separated list of List fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.users#GetUsersFollowedListsRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.users#GetUsersFollowedListsRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1",
+          "app"
+        ]
       }
     },
     "com.x.users#GetUsersFollowedListsResponse": {
@@ -8017,7 +8107,8 @@
           "uri": "/2/users/{id}/followed_lists",
           "code": 200
         },
-        "smithy.api#documentation": "Get Users Followed Lists"
+        "smithy.api#documentation": "Get Users Followed Lists",
+        "com.x#response": "json"
       }
     },
     "com.x.users#FollowListRequest": {
@@ -8038,7 +8129,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.users#FollowListResponse": {
@@ -8087,7 +8183,8 @@
           "uri": "/2/users/{id}/followed_lists",
           "code": 200
         },
-        "smithy.api#documentation": "Follow List"
+        "smithy.api#documentation": "Follow List",
+        "com.x#response": "json"
       }
     },
     "com.x.users#GetUsersFollowersRequestUserFieldsItem": {
@@ -8508,26 +8605,34 @@
           "target": "com.x.users#GetUsersFollowersRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.users#GetUsersFollowersRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "post_fields": {
           "target": "com.x.users#GetUsersFollowersRequestPostFieldsList",
           "traits": {
             "smithy.api#httpQuery": "post.fields",
-            "smithy.api#documentation": "A comma separated list of Post fields to display."
+            "smithy.api#documentation": "A comma separated list of Post fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1",
+          "app"
+        ]
       }
     },
     "com.x.users#GetUsersFollowersResponse": {
@@ -8600,7 +8705,8 @@
           "uri": "/2/users/{id}/followers",
           "code": 200
         },
-        "smithy.api#documentation": "Get Users Followers"
+        "smithy.api#documentation": "Get Users Followers",
+        "com.x#response": "json"
       }
     },
     "com.x.users#GetUsersFollowingRequestUserFieldsItem": {
@@ -9021,26 +9127,34 @@
           "target": "com.x.users#GetUsersFollowingRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.users#GetUsersFollowingRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "post_fields": {
           "target": "com.x.users#GetUsersFollowingRequestPostFieldsList",
           "traits": {
             "smithy.api#httpQuery": "post.fields",
-            "smithy.api#documentation": "A comma separated list of Post fields to display."
+            "smithy.api#documentation": "A comma separated list of Post fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1",
+          "app"
+        ]
       }
     },
     "com.x.users#GetUsersFollowingResponse": {
@@ -9113,7 +9227,8 @@
           "uri": "/2/users/{id}/following",
           "code": 200
         },
-        "smithy.api#documentation": "Get Users Following"
+        "smithy.api#documentation": "Get Users Following",
+        "com.x#response": "json"
       }
     },
     "com.x.users#FollowUserRequest": {
@@ -9134,7 +9249,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.users#FollowUserResponse": {
@@ -9190,7 +9310,8 @@
           "uri": "/2/users/{id}/following",
           "code": 200
         },
-        "smithy.api#documentation": "Follow User"
+        "smithy.api#documentation": "Follow User",
+        "com.x#response": "json"
       }
     },
     "com.x.users#GetUsersListMembershipsRequestListFieldsItem": {
@@ -9454,26 +9575,34 @@
           "target": "com.x.users#GetUsersListMembershipsRequestListFieldsList",
           "traits": {
             "smithy.api#httpQuery": "list.fields",
-            "smithy.api#documentation": "A comma separated list of List fields to display."
+            "smithy.api#documentation": "A comma separated list of List fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.users#GetUsersListMembershipsRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.users#GetUsersListMembershipsRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1",
+          "app"
+        ]
       }
     },
     "com.x.users#GetUsersListMembershipsResponse": {
@@ -9546,7 +9675,8 @@
           "uri": "/2/users/{id}/list_memberships",
           "code": 200
         },
-        "smithy.api#documentation": "Get Users List Memberships"
+        "smithy.api#documentation": "Get Users List Memberships",
+        "com.x#response": "json"
       }
     },
     "com.x.users#GetUsersMutingRequestUserFieldsItem": {
@@ -9966,26 +10096,33 @@
           "target": "com.x.users#GetUsersMutingRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.users#GetUsersMutingRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "post_fields": {
           "target": "com.x.users#GetUsersMutingRequestPostFieldsList",
           "traits": {
             "smithy.api#httpQuery": "post.fields",
-            "smithy.api#documentation": "A comma separated list of Post fields to display."
+            "smithy.api#documentation": "A comma separated list of Post fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.users#GetUsersMutingResponse": {
@@ -10058,7 +10195,8 @@
           "uri": "/2/users/{id}/muting",
           "code": 200
         },
-        "smithy.api#documentation": "Get Users Muting"
+        "smithy.api#documentation": "Get Users Muting",
+        "com.x#response": "json"
       }
     },
     "com.x.users#MuteUserRequest": {
@@ -10079,7 +10217,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.users#MuteUserResponse": {
@@ -10128,7 +10271,8 @@
           "uri": "/2/users/{id}/muting",
           "code": 200
         },
-        "smithy.api#documentation": "Mute User"
+        "smithy.api#documentation": "Mute User",
+        "com.x#response": "json"
       }
     },
     "com.x.users#GetUsersOwnedListsRequestListFieldsItem": {
@@ -10393,26 +10537,34 @@
           "target": "com.x.users#GetUsersOwnedListsRequestListFieldsList",
           "traits": {
             "smithy.api#httpQuery": "list.fields",
-            "smithy.api#documentation": "A comma separated list of List fields to display."
+            "smithy.api#documentation": "A comma separated list of List fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.users#GetUsersOwnedListsRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.users#GetUsersOwnedListsRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1",
+          "app"
+        ]
       }
     },
     "com.x.users#GetUsersOwnedListsResponse": {
@@ -10485,7 +10637,8 @@
           "uri": "/2/users/{id}/owned_lists",
           "code": 200
         },
-        "smithy.api#documentation": "Get Users Owned Lists"
+        "smithy.api#documentation": "Get Users Owned Lists",
+        "com.x#response": "json"
       }
     },
     "com.x.users#GetUsersPinnedListsRequestListFieldsItem": {
@@ -10737,26 +10890,33 @@
           "target": "com.x.users#GetUsersPinnedListsRequestListFieldsList",
           "traits": {
             "smithy.api#httpQuery": "list.fields",
-            "smithy.api#documentation": "A comma separated list of List fields to display."
+            "smithy.api#documentation": "A comma separated list of List fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.users#GetUsersPinnedListsRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.users#GetUsersPinnedListsRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.users#GetUsersPinnedListsResponse": {
@@ -10817,7 +10977,8 @@
           "uri": "/2/users/{id}/pinned_lists",
           "code": 200
         },
-        "smithy.api#documentation": "Get Users Pinned Lists"
+        "smithy.api#documentation": "Get Users Pinned Lists",
+        "com.x#response": "json"
       }
     },
     "com.x.users#UnfollowUserRequest": {
@@ -10839,7 +11000,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.users#UnfollowUserResponse": {
@@ -10888,7 +11053,8 @@
           "uri": "/2/users/{source_user_id}/following/{target_user_id}",
           "code": 200
         },
-        "smithy.api#documentation": "Unfollow User\n\nCauses the authenticated user to unfollow a specific user by their ID."
+        "smithy.api#documentation": "Unfollow User\n\nCauses the authenticated user to unfollow a specific user by their ID.",
+        "com.x#response": "json"
       }
     },
     "com.x.users#Users": {

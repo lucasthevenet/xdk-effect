@@ -39,7 +39,9 @@ export const GetPostsCountsAllRequest = /*@__PURE__*/ S.suspend(() =>
     search_count_fields: S.optional(
       S.String.pipe(T.Query("search_count.fields")),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/tweets/counts/all", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/tweets/counts/all", code: 200 }))
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "GetPostsCountsAllRequest",
 }) as any as S.Schema<GetPostsCountsAllRequest>;
@@ -390,7 +392,9 @@ export const GetPostsCountsRecentRequest = /*@__PURE__*/ S.suspend(() =>
     search_count_fields: S.optional(
       S.String.pipe(T.Query("search_count.fields")),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/tweets/counts/recent", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/tweets/counts/recent", code: 200 }))
+    .pipe(T.Security(["oauth2", "app"])),
 ).annotate({
   identifier: "GetPostsCountsRecentRequest",
 }) as any as S.Schema<GetPostsCountsRecentRequest>;

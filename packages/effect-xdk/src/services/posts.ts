@@ -243,7 +243,10 @@ export const CreatePostsRequest = /*@__PURE__*/ S.suspend(() =>
     reply_settings: S.optional(CreatePostsRequestReplySettings),
     share_with_followers: S.optional(S.Boolean),
     text: S.optional(S.String),
-  }).pipe(T.Http({ method: "POST", uri: "/2/tweets", code: 200 })),
+  })
+    .pipe(T.Http({ method: "POST", uri: "/2/tweets", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "CreatePostsRequest",
 }) as any as S.Schema<CreatePostsRequest>;
@@ -561,9 +564,10 @@ export const CreateUsersBookmarkRequest = /*@__PURE__*/ S.suspend(() =>
     id: S.String.pipe(T.Label()),
     folder_id: S.optional(S.String),
     tweet_id: S.String,
-  }).pipe(
-    T.Http({ method: "POST", uri: "/2/users/{id}/bookmarks", code: 200 }),
-  ),
+  })
+    .pipe(T.Http({ method: "POST", uri: "/2/users/{id}/bookmarks", code: 200 }))
+    .pipe(T.Security(["oauth2"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "CreateUsersBookmarkRequest",
 }) as any as S.Schema<CreateUsersBookmarkRequest>;
@@ -604,7 +608,9 @@ export interface DeletePostsRequest {
 export const DeletePostsRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
-  }).pipe(T.Http({ method: "DELETE", uri: "/2/tweets/{id}", code: 200 })),
+  })
+    .pipe(T.Http({ method: "DELETE", uri: "/2/tweets/{id}", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "DeletePostsRequest",
 }) as any as S.Schema<DeletePostsRequest>;
@@ -697,7 +703,7 @@ export interface GetPostsAnalyticsRequest {
 }
 export const GetPostsAnalyticsRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
-    ids: GetPostsAnalyticsRequestIdsList.pipe(T.Query()),
+    ids: GetPostsAnalyticsRequestIdsList.pipe(T.Query(), T.CsvQuery(true)),
     start_time: S.String.pipe(T.Query()),
     end_time: S.String.pipe(T.Query()),
     granularity: S.optional(
@@ -706,9 +712,12 @@ export const GetPostsAnalyticsRequest = /*@__PURE__*/ S.suspend(() =>
     analytics_fields: S.optional(
       GetPostsAnalyticsRequestAnalyticsFieldsList.pipe(
         T.Query("analytics.fields"),
+        T.CsvQuery(true),
       ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/tweets/analytics", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/tweets/analytics", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetPostsAnalyticsRequest",
 }) as any as S.Schema<GetPostsAnalyticsRequest>;
@@ -1039,22 +1048,41 @@ export const GetPostsByIdRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     post_fields: S.optional(
-      GetPostsByIdRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetPostsByIdRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-    expansions: S.optional(GetPostsByIdRequestExpansionsList.pipe(T.Query())),
+    expansions: S.optional(
+      GetPostsByIdRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
+    ),
     user_fields: S.optional(
-      GetPostsByIdRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetPostsByIdRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      GetPostsByIdRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      GetPostsByIdRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      GetPostsByIdRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      GetPostsByIdRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      GetPostsByIdRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      GetPostsByIdRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/tweets/{id}", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/tweets/{id}", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetPostsByIdRequest",
 }) as any as S.Schema<GetPostsByIdRequest>;
@@ -2628,24 +2656,43 @@ export interface GetPostsByIdsRequest {
 }
 export const GetPostsByIdsRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
-    ids: GetPostsByIdsRequestIdsList.pipe(T.Query()),
+    ids: GetPostsByIdsRequestIdsList.pipe(T.Query(), T.CsvQuery(true)),
     post_fields: S.optional(
-      GetPostsByIdsRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetPostsByIdsRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-    expansions: S.optional(GetPostsByIdsRequestExpansionsList.pipe(T.Query())),
+    expansions: S.optional(
+      GetPostsByIdsRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
+    ),
     user_fields: S.optional(
-      GetPostsByIdsRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetPostsByIdsRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      GetPostsByIdsRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      GetPostsByIdsRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      GetPostsByIdsRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      GetPostsByIdsRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      GetPostsByIdsRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      GetPostsByIdsRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/tweets", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/tweets", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetPostsByIdsRequest",
 }) as any as S.Schema<GetPostsByIdsRequest>;
@@ -2881,28 +2928,50 @@ export const GetPostsQuotedPostsRequest = /*@__PURE__*/ S.suspend(() =>
     id: S.String.pipe(T.Label()),
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
-    exclude: S.optional(GetPostsQuotedPostsRequestExcludeList.pipe(T.Query())),
+    exclude: S.optional(
+      GetPostsQuotedPostsRequestExcludeList.pipe(T.Query(), T.CsvQuery(true)),
+    ),
     post_fields: S.optional(
-      GetPostsQuotedPostsRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetPostsQuotedPostsRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetPostsQuotedPostsRequestExpansionsList.pipe(T.Query()),
+      GetPostsQuotedPostsRequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
-      GetPostsQuotedPostsRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetPostsQuotedPostsRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      GetPostsQuotedPostsRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      GetPostsQuotedPostsRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      GetPostsQuotedPostsRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      GetPostsQuotedPostsRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      GetPostsQuotedPostsRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      GetPostsQuotedPostsRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/tweets/{id}/quote_tweets", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "GET", uri: "/2/tweets/{id}/quote_tweets", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetPostsQuotedPostsRequest",
 }) as any as S.Schema<GetPostsQuotedPostsRequest>;
@@ -3057,17 +3126,25 @@ export const GetPostsRepostedByRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     user_fields: S.optional(
-      GetPostsRepostedByRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetPostsRepostedByRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetPostsRepostedByRequestExpansionsList.pipe(T.Query()),
+      GetPostsRepostedByRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
     ),
     post_fields: S.optional(
-      GetPostsRepostedByRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetPostsRepostedByRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/tweets/{id}/retweeted_by", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "GET", uri: "/2/tweets/{id}/retweeted_by", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetPostsRepostedByRequest",
 }) as any as S.Schema<GetPostsRepostedByRequest>;
@@ -3299,24 +3376,41 @@ export const GetPostsRepostsRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     post_fields: S.optional(
-      GetPostsRepostsRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetPostsRepostsRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetPostsRepostsRequestExpansionsList.pipe(T.Query()),
+      GetPostsRepostsRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
     ),
     user_fields: S.optional(
-      GetPostsRepostsRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetPostsRepostsRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      GetPostsRepostsRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      GetPostsRepostsRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      GetPostsRepostsRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      GetPostsRepostsRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      GetPostsRepostsRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      GetPostsRepostsRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/tweets/{id}/retweets", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/tweets/{id}/retweets", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetPostsRepostsRequest",
 }) as any as S.Schema<GetPostsRepostsRequest>;
@@ -3375,11 +3469,16 @@ export const GetTrendsByWoeidRequest = /*@__PURE__*/ S.suspend(() =>
     woeid: S.Number.pipe(T.Label()),
     max_trends: S.optional(S.Number.pipe(T.Query())),
     trend_fields: S.optional(
-      GetTrendsByWoeidRequestTrendFieldsList.pipe(T.Query("trend.fields")),
+      GetTrendsByWoeidRequestTrendFieldsList.pipe(
+        T.Query("trend.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/trends/by/woeid/{woeid}", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "GET", uri: "/2/trends/by/woeid/{woeid}", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "app"])),
 ).annotate({
   identifier: "GetTrendsByWoeidRequest",
 }) as any as S.Schema<GetTrendsByWoeidRequest>;
@@ -3429,13 +3528,15 @@ export const GetUsersBookmarkFoldersRequest = /*@__PURE__*/ S.suspend(() =>
     id: S.String.pipe(T.Label()),
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
-  }).pipe(
-    T.Http({
-      method: "GET",
-      uri: "/2/users/{id}/bookmarks/folders",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "GET",
+        uri: "/2/users/{id}/bookmarks/folders",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetUsersBookmarkFoldersRequest",
 }) as any as S.Schema<GetUsersBookmarkFoldersRequest>;
@@ -3661,24 +3762,41 @@ export const GetUsersBookmarksRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     post_fields: S.optional(
-      GetUsersBookmarksRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetUsersBookmarksRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetUsersBookmarksRequestExpansionsList.pipe(T.Query()),
+      GetUsersBookmarksRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
     ),
     user_fields: S.optional(
-      GetUsersBookmarksRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetUsersBookmarksRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      GetUsersBookmarksRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      GetUsersBookmarksRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      GetUsersBookmarksRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      GetUsersBookmarksRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      GetUsersBookmarksRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      GetUsersBookmarksRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/users/{id}/bookmarks", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/users/{id}/bookmarks", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetUsersBookmarksRequest",
 }) as any as S.Schema<GetUsersBookmarksRequest>;
@@ -3726,13 +3844,15 @@ export const GetUsersBookmarksByFolderIdRequest = /*@__PURE__*/ S.suspend(() =>
     folder_id: S.String.pipe(T.Label()),
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
-  }).pipe(
-    T.Http({
-      method: "GET",
-      uri: "/2/users/{id}/bookmarks/folders/{folder_id}",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "GET",
+        uri: "/2/users/{id}/bookmarks/folders/{folder_id}",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetUsersBookmarksByFolderIdRequest",
 }) as any as S.Schema<GetUsersBookmarksByFolderIdRequest>;
@@ -3959,26 +4079,43 @@ export const GetUsersLikedPostsRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     post_fields: S.optional(
-      GetUsersLikedPostsRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetUsersLikedPostsRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetUsersLikedPostsRequestExpansionsList.pipe(T.Query()),
+      GetUsersLikedPostsRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
     ),
     user_fields: S.optional(
-      GetUsersLikedPostsRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetUsersLikedPostsRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      GetUsersLikedPostsRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      GetUsersLikedPostsRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      GetUsersLikedPostsRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      GetUsersLikedPostsRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      GetUsersLikedPostsRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      GetUsersLikedPostsRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/users/{id}/liked_tweets", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "GET", uri: "/2/users/{id}/liked_tweets", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetUsersLikedPostsRequest",
 }) as any as S.Schema<GetUsersLikedPostsRequest>;
@@ -4205,24 +4342,41 @@ export const GetUsersMentionsRequest = /*@__PURE__*/ S.suspend(() =>
     since_id: S.optional(S.String.pipe(T.Query())),
     until_id: S.optional(S.String.pipe(T.Query())),
     post_fields: S.optional(
-      GetUsersMentionsRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetUsersMentionsRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetUsersMentionsRequestExpansionsList.pipe(T.Query()),
+      GetUsersMentionsRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
     ),
     user_fields: S.optional(
-      GetUsersMentionsRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetUsersMentionsRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      GetUsersMentionsRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      GetUsersMentionsRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      GetUsersMentionsRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      GetUsersMentionsRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      GetUsersMentionsRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      GetUsersMentionsRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/users/{id}/mentions", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/users/{id}/mentions", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetUsersMentionsRequest",
 }) as any as S.Schema<GetUsersMentionsRequest>;
@@ -4480,24 +4634,45 @@ export const GetUsersPostsRequest = /*@__PURE__*/ S.suspend(() =>
     end_time: S.optional(S.String.pipe(T.Query())),
     since_id: S.optional(S.String.pipe(T.Query())),
     until_id: S.optional(S.String.pipe(T.Query())),
-    exclude: S.optional(GetUsersPostsRequestExcludeList.pipe(T.Query())),
-    post_fields: S.optional(
-      GetUsersPostsRequestPostFieldsList.pipe(T.Query("post.fields")),
+    exclude: S.optional(
+      GetUsersPostsRequestExcludeList.pipe(T.Query(), T.CsvQuery(true)),
     ),
-    expansions: S.optional(GetUsersPostsRequestExpansionsList.pipe(T.Query())),
+    post_fields: S.optional(
+      GetUsersPostsRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
+    ),
+    expansions: S.optional(
+      GetUsersPostsRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
+    ),
     user_fields: S.optional(
-      GetUsersPostsRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetUsersPostsRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      GetUsersPostsRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      GetUsersPostsRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      GetUsersPostsRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      GetUsersPostsRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      GetUsersPostsRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      GetUsersPostsRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/users/{id}/tweets", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/users/{id}/tweets", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetUsersPostsRequest",
 }) as any as S.Schema<GetUsersPostsRequest>;
@@ -4734,32 +4909,51 @@ export const GetUsersTimelineRequest = /*@__PURE__*/ S.suspend(() =>
     end_time: S.optional(S.String.pipe(T.Query())),
     since_id: S.optional(S.String.pipe(T.Query())),
     until_id: S.optional(S.String.pipe(T.Query())),
-    exclude: S.optional(GetUsersTimelineRequestExcludeList.pipe(T.Query())),
+    exclude: S.optional(
+      GetUsersTimelineRequestExcludeList.pipe(T.Query(), T.CsvQuery(true)),
+    ),
     post_fields: S.optional(
-      GetUsersTimelineRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetUsersTimelineRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetUsersTimelineRequestExpansionsList.pipe(T.Query()),
+      GetUsersTimelineRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
     ),
     user_fields: S.optional(
-      GetUsersTimelineRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetUsersTimelineRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      GetUsersTimelineRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      GetUsersTimelineRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      GetUsersTimelineRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      GetUsersTimelineRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      GetUsersTimelineRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      GetUsersTimelineRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(
-    T.Http({
-      method: "GET",
-      uri: "/2/users/{id}/timelines/reverse_chronological",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "GET",
+        uri: "/2/users/{id}/timelines/reverse_chronological",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetUsersTimelineRequest",
 }) as any as S.Schema<GetUsersTimelineRequest>;
@@ -4803,9 +4997,12 @@ export const HidePostsReplyRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     tweet_id: S.String.pipe(T.Label()),
     hidden: S.Boolean,
-  }).pipe(
-    T.Http({ method: "PUT", uri: "/2/tweets/{tweet_id}/hidden", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "PUT", uri: "/2/tweets/{tweet_id}/hidden", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "HidePostsReplyRequest",
 }) as any as S.Schema<HidePostsReplyRequest>;
@@ -4848,7 +5045,10 @@ export const RepostPostRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     tweet_id: S.String,
-  }).pipe(T.Http({ method: "POST", uri: "/2/users/{id}/retweets", code: 200 })),
+  })
+    .pipe(T.Http({ method: "POST", uri: "/2/users/{id}/retweets", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "RepostPostRequest",
 }) as any as S.Schema<RepostPostRequest>;
@@ -4894,13 +5094,15 @@ export const UnrepostPostRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     source_tweet_id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({
-      method: "DELETE",
-      uri: "/2/users/{id}/retweets/{source_tweet_id}",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "DELETE",
+        uri: "/2/users/{id}/retweets/{source_tweet_id}",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "UnrepostPostRequest",
 }) as any as S.Schema<UnrepostPostRequest>;

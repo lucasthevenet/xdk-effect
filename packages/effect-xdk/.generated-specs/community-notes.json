@@ -160,7 +160,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.communityNotes#CreateCommunityNotesResponse": {
@@ -695,7 +700,8 @@
           "uri": "/2/notes",
           "code": 200
         },
-        "smithy.api#documentation": "Create Community Notes"
+        "smithy.api#documentation": "Create Community Notes",
+        "com.x#response": "json"
       }
     },
     "com.x.communityNotes#EvaluateCommunityNotesRequest": {
@@ -717,7 +723,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.communityNotes#EvaluateCommunityNotesResponse": {
@@ -765,7 +776,8 @@
           "uri": "/2/notes/evaluate",
           "code": 200
         },
-        "smithy.api#documentation": "Evaluate Community Notes"
+        "smithy.api#documentation": "Evaluate Community Notes",
+        "com.x#response": "json"
       }
     },
     "com.x.communityNotes#SearchCommunityNotesWrittenRequestNoteFieldsItem": {
@@ -839,12 +851,17 @@
           "target": "com.x.communityNotes#SearchCommunityNotesWrittenRequestNoteFieldsList",
           "traits": {
             "smithy.api#httpQuery": "note.fields",
-            "smithy.api#documentation": "A comma separated list of Note fields to display."
+            "smithy.api#documentation": "A comma separated list of Note fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.communityNotes#SearchCommunityNotesWrittenResponse": {
@@ -1392,7 +1409,8 @@
           "uri": "/2/notes/search/notes_written",
           "code": 200
         },
-        "smithy.api#documentation": "Search Community Notes Written"
+        "smithy.api#documentation": "Search Community Notes Written",
+        "com.x#response": "json"
       }
     },
     "com.x.communityNotes#SearchEligiblePostsRequestPostFieldsItem": {
@@ -2073,47 +2091,57 @@
           "target": "com.x.communityNotes#SearchEligiblePostsRequestPostFieldsList",
           "traits": {
             "smithy.api#httpQuery": "post.fields",
-            "smithy.api#documentation": "A comma separated list of Post fields to display."
+            "smithy.api#documentation": "A comma separated list of Post fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.communityNotes#SearchEligiblePostsRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.communityNotes#SearchEligiblePostsRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "media_fields": {
           "target": "com.x.communityNotes#SearchEligiblePostsRequestMediaFieldsList",
           "traits": {
             "smithy.api#httpQuery": "media.fields",
-            "smithy.api#documentation": "A comma separated list of Media fields to display."
+            "smithy.api#documentation": "A comma separated list of Media fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "poll_fields": {
           "target": "com.x.communityNotes#SearchEligiblePostsRequestPollFieldsList",
           "traits": {
             "smithy.api#httpQuery": "poll.fields",
-            "smithy.api#documentation": "A comma separated list of Poll fields to display."
+            "smithy.api#documentation": "A comma separated list of Poll fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "place_fields": {
           "target": "com.x.communityNotes#SearchEligiblePostsRequestPlaceFieldsList",
           "traits": {
             "smithy.api#httpQuery": "place.fields",
-            "smithy.api#documentation": "A comma separated list of Place fields to display."
+            "smithy.api#documentation": "A comma separated list of Place fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.communityNotes#SearchEligiblePostsResponse": {
@@ -4646,7 +4674,8 @@
           "uri": "/2/notes/search/posts_eligible_for_notes",
           "code": 200
         },
-        "smithy.api#documentation": "Search Eligible Posts"
+        "smithy.api#documentation": "Search Eligible Posts",
+        "com.x#response": "json"
       }
     },
     "com.x.communityNotes#DeleteCommunityNotesRequest": {
@@ -4661,7 +4690,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.communityNotes#DeleteCommunityNotesResponse": {
@@ -4710,7 +4743,8 @@
           "uri": "/2/notes/{id}",
           "code": 200
         },
-        "smithy.api#documentation": "Delete a Community Note\n\nDeletes a community note."
+        "smithy.api#documentation": "Delete a Community Note\n\nDeletes a community note.",
+        "com.x#response": "json"
       }
     },
     "com.x.communityNotes#CommunityNotes": {

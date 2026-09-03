@@ -124,12 +124,18 @@
           "target": "com.x.news#GetNewsRequestNewsFieldsList",
           "traits": {
             "smithy.api#httpQuery": "news.fields",
-            "smithy.api#documentation": "A comma separated list of News fields to display."
+            "smithy.api#documentation": "A comma separated list of News fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1",
+          "app"
+        ]
       }
     },
     "com.x.news#GetNewsResponse": {
@@ -709,7 +715,8 @@
           "uri": "/2/news/{id}",
           "code": 200
         },
-        "smithy.api#documentation": "Get news stories by ID\n\nRetrieves news story by its ID."
+        "smithy.api#documentation": "Get news stories by ID\n\nRetrieves news story by its ID.",
+        "com.x#response": "json"
       }
     },
     "com.x.news#News": {

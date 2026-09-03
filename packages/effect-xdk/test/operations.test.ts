@@ -5,10 +5,18 @@ import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
 import * as Layer from "effect/Layer";
 import * as Stream from "effect/Stream";
+import * as Schema from "effect/Schema";
+import * as API from "@distilled.cloud/core/api";
+import * as T from "../src/traits.ts";
 import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
 import { fromOAuth1, fromBearer } from "../src/credentials.ts";
 import * as Retry from "../src/retry.ts";
-import { withAuth } from "../src/protocol.ts";
+import {
+  withAuth,
+  XProtocol,
+  type XOpError,
+  type XOpContext,
+} from "../src/protocol.ts";
 import { getUsersMe } from "../src/services/users.ts";
 import {
   createPosts,
@@ -16,8 +24,13 @@ import {
   createUsersBookmark,
 } from "../src/services/posts.ts";
 import { getWebhooks } from "../src/services/webhooks.ts";
-import { mediaUpload } from "../src/services/media.ts";
-import { chatMediaDownload } from "../src/services/chats.ts";
+import { mediaUpload, appendMediaUpload } from "../src/services/media.ts";
+import {
+  chatMediaDownload,
+  chatMediaUploadAppend,
+} from "../src/services/chats.ts";
+import { dmConversationsMediaDownload } from "../src/services/direct-messages.ts";
+import { createAccountActivitySubscription } from "../src/services/account-activity.ts";
 import { streamPostsSample } from "../src/services/stream.ts";
 import { getOpenApiSpec } from "../src/services/general.ts";
 import {
@@ -54,6 +67,87 @@ const live = (runtime: { readonly fetch: FetchLike }) =>
 const me = { data: { id: "1", name: "Alchemy", username: "alchemy" } };
 
 describe("generated Effect operations", () => {
+  test("builds requests from schema traits without a registered operation name", async () => {
+    const input = Schema.Struct({
+      id: Schema.String.pipe(T.Label()),
+      fields: Schema.optional(
+        Schema.Array(Schema.String).pipe(T.Query("item.fields"), T.CsvQuery()),
+      ),
+      labels: Schema.Array(Schema.String).pipe(T.Query("label")),
+      marker: Schema.String.pipe(T.Header("X-Marker")),
+    }).pipe(
+      T.Http({ method: "GET", uri: "/test/{id}" }),
+      T.Security(["oauth2"]),
+    );
+    const operation: API.OperationMethod<
+      typeof input.Type,
+      { ok: boolean },
+      XOpError,
+      XOpContext
+    > = API.make(() => ({
+      input,
+      output: Schema.Struct({ ok: Schema.Boolean }),
+      protocol: XProtocol,
+    }));
+    const args = {
+      id: "a/b",
+      fields: ["id", "name"],
+      labels: ["one", "two"],
+      marker: "test",
+    };
+    const result = await Effect.runPromise(
+      operation(args).pipe(
+        Effect.provide(fromBearer({ userAccessToken: "token" })),
+        Effect.provide(
+          transport({
+            fetch: async (url, init) => {
+              const request = new Request(url, init);
+              const target = new URL(request.url);
+              expect(target.pathname).toBe("/test/a%2Fb");
+              expect(target.searchParams.getAll("item.fields")).toEqual([
+                "id,name",
+              ]);
+              expect(target.searchParams.getAll("label")).toEqual([
+                "one",
+                "two",
+              ]);
+              expect(request.headers.get("x-marker")).toBe("test");
+              expect(request.headers.get("authorization")).toBe("Bearer token");
+              expect(await request.text()).toBe("");
+              return Response.json({ ok: true });
+            },
+          }),
+        ),
+      ),
+    );
+    expect(result).toEqual({ ok: true });
+    expect(args.fields).toEqual(["id", "name"]);
+  });
+
+  test("preserves explicitly empty JSON bodies and empty CSV values", async () => {
+    const requests: Request[] = [];
+    await Effect.runPromise(
+      Effect.gen(function* () {
+        yield* createAccountActivitySubscription({ webhook_id: "1" });
+        yield* getUsersMe({ user_fields: [] });
+      }).pipe(
+        Effect.provide(
+          live({
+            fetch: async (url, init) => {
+              requests.push(new Request(url, init));
+              return Response.json(requests.length === 1 ? {} : me);
+            },
+          }),
+        ),
+      ),
+    );
+    expect(await requests[0]!.json()).toEqual({});
+    expect(
+      new URL(requests[1]!.url).searchParams.getAll("user.fields"),
+    ).toEqual([""]);
+    expect(await requests[1]!.text()).toBe("");
+  });
+
   test("does not attach credentials to an unauthenticated spec operation", async () => {
     const document = { openapi: "3.0.0" };
     const result = await Effect.runPromise(
@@ -282,6 +376,24 @@ describe("generated Effect operations", () => {
           media: "aW1hZ2U=",
           media_category: "tweet_image",
         });
+        yield* appendMediaUpload({
+          id: "1",
+          media: new Blob(["chunk"]),
+          segment_index: 0,
+        });
+        yield* chatMediaUploadAppend({
+          id: "2",
+          conversation_id: "3",
+          media: new Blob(["chat"]),
+          media_hash_key: "hash",
+          segment_index: 1,
+        });
+        // A Blob upload must not change the shared schema's next JSON encoding.
+        yield* appendMediaUpload({
+          id: "1",
+          media: "Y2h1bms=",
+          segment_index: 0,
+        });
       }).pipe(
         Effect.provide(
           live({
@@ -302,16 +414,46 @@ describe("generated Effect operations", () => {
       media: "aW1hZ2U=",
       media_category: "tweet_image",
     });
+    const chunk = await requests[2]!.formData();
+    expect(chunk.get("segment_index")).toBe("0");
+    expect(chunk.get("media")).toBeInstanceOf(Blob);
+    expect(chunk.has("id")).toBeFalse();
+    const chat = await requests[3]!.formData();
+    expect(chat.get("media")).toBeInstanceOf(Blob);
+    expect(chat.get("conversation_id")).toBe("3");
+    expect(chat.get("media_hash_key")).toBe("hash");
+    expect(chat.get("segment_index")).toBe("1");
+    expect(await requests[4]!.json()).toEqual({
+      media: "Y2h1bms=",
+      segment_index: 0,
+    });
   });
 
   test("returns binary downloads as bytes, not JSON", async () => {
     const bytes = new Uint8Array([0, 255, 17, 3]);
-    const result = await Effect.runPromise(
-      chatMediaDownload({ id: "1", media_hash_key: "key" }).pipe(
-        Effect.provide(live({ fetch: async () => new Response(bytes) })),
+    const results = await Effect.runPromise(
+      Effect.all([
+        chatMediaDownload({ id: "1", media_hash_key: "key" }),
+        dmConversationsMediaDownload({
+          dm_id: "1",
+          media_id: "2",
+          resource_id: "3",
+        }),
+      ]).pipe(
+        Effect.provide(fromBearer({ userAccessToken: "token" })),
+        Effect.provide(
+          transport({
+            fetch: async (_url, init) => {
+              expect(new Headers(init?.headers).get("accept")).toBe(
+                "application/octet-stream",
+              );
+              return new Response(bytes);
+            },
+          }),
+        ),
       ),
     );
-    expect(result).toEqual(bytes);
+    expect(results).toEqual([bytes, bytes]);
   });
 
   test("streams chunked NDJSON, ignores heartbeats, and cancels on early termination", async () => {

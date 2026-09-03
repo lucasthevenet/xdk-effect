@@ -39,16 +39,8 @@ try {
       }
     }
   }
-  if (
-    (await readFile(path.join(root, "src/operations.ts"), "utf8")) !==
-    (await readFile(path.join(target, "src/operations.ts"), "utf8"))
-  ) {
-    throw new Error(
-      "Stale generated operation metadata. Run bun run generate.",
-    );
-  }
   console.log(
-    "Verified X Smithy models, generated services, and operation metadata",
+    "Verified X Smithy models, generated services, and schema traits",
   );
 } finally {
   await rm(target, { recursive: true, force: true });

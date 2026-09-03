@@ -11,7 +11,6 @@
   },
   "ignorePatterns": [
     "packages/effect-xdk/src/services/**",
-    "packages/effect-xdk/src/operations.ts",
     ".agent/**",
     ".agents/**",
     ".claude/**",

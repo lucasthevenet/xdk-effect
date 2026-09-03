@@ -14,7 +14,9 @@ export interface BlockUsersDmsRequest {
 export const BlockUsersDmsRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
-  }).pipe(T.Http({ method: "POST", uri: "/2/users/{id}/dm/block", code: 200 })),
+  })
+    .pipe(T.Http({ method: "POST", uri: "/2/users/{id}/dm/block", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "BlockUsersDmsRequest",
 }) as any as S.Schema<BlockUsersDmsRequest>;
@@ -341,13 +343,16 @@ export const CreateDirectMessagesByConversationIdRequest =
         CreateDirectMessagesByConversationIdRequestAttachmentsList,
       ),
       text: S.optional(S.String),
-    }).pipe(
-      T.Http({
-        method: "POST",
-        uri: "/2/dm_conversations/{dm_conversation_id}/messages",
-        code: 200,
-      }),
-    ),
+    })
+      .pipe(
+        T.Http({
+          method: "POST",
+          uri: "/2/dm_conversations/{dm_conversation_id}/messages",
+          code: 200,
+        }),
+      )
+      .pipe(T.Security(["oauth2", "oauth1"]))
+      .pipe(T.RequestBody(true)),
   ).annotate({
     identifier: "CreateDirectMessagesByConversationIdRequest",
   }) as any as S.Schema<CreateDirectMessagesByConversationIdRequest>;
@@ -419,13 +424,16 @@ export const CreateDirectMessagesByParticipantIdRequest =
         CreateDirectMessagesByParticipantIdRequestAttachmentsList,
       ),
       text: S.optional(S.String),
-    }).pipe(
-      T.Http({
-        method: "POST",
-        uri: "/2/dm_conversations/with/{participant_id}/messages",
-        code: 200,
-      }),
-    ),
+    })
+      .pipe(
+        T.Http({
+          method: "POST",
+          uri: "/2/dm_conversations/with/{participant_id}/messages",
+          code: 200,
+        }),
+      )
+      .pipe(T.Security(["oauth2", "oauth1"]))
+      .pipe(T.RequestBody(true)),
   ).annotate({
     identifier: "CreateDirectMessagesByParticipantIdRequest",
   }) as any as S.Schema<CreateDirectMessagesByParticipantIdRequest>;
@@ -518,7 +526,10 @@ export const CreateDirectMessagesConversationRequest = /*@__PURE__*/ S.suspend(
       message: CreateDirectMessagesConversationMessage,
       participant_ids:
         CreateDirectMessagesConversationRequestParticipantIdsList,
-    }).pipe(T.Http({ method: "POST", uri: "/2/dm_conversations", code: 200 })),
+    })
+      .pipe(T.Http({ method: "POST", uri: "/2/dm_conversations", code: 200 }))
+      .pipe(T.Security(["oauth2", "oauth1"]))
+      .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "CreateDirectMessagesConversationRequest",
 }) as any as S.Schema<CreateDirectMessagesConversationRequest>;
@@ -565,9 +576,11 @@ export interface DeleteDirectMessagesEventsRequest {
 export const DeleteDirectMessagesEventsRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     event_id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({ method: "DELETE", uri: "/2/dm_events/{event_id}", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "DELETE", uri: "/2/dm_events/{event_id}", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "DeleteDirectMessagesEventsRequest",
 }) as any as S.Schema<DeleteDirectMessagesEventsRequest>;
@@ -614,13 +627,15 @@ export const DmConversationsMediaDownloadRequest = /*@__PURE__*/ S.suspend(() =>
     dm_id: S.String.pipe(T.Label()),
     media_id: S.String.pipe(T.Label()),
     resource_id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({
-      method: "GET",
-      uri: "/2/dm_conversations/media/{dm_id}/{media_id}/{resource_id}",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "GET",
+        uri: "/2/dm_conversations/media/{dm_id}/{media_id}/{resource_id}",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2"])),
 ).annotate({
   identifier: "DmConversationsMediaDownloadRequest",
 }) as any as S.Schema<DmConversationsMediaDownloadRequest>;
@@ -807,28 +822,44 @@ export const GetDirectMessagesEventsRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     event_types: S.optional(
-      GetDirectMessagesEventsRequestEventTypesList.pipe(T.Query()),
+      GetDirectMessagesEventsRequestEventTypesList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     dm_event_fields: S.optional(
       GetDirectMessagesEventsRequestDmEventFieldsList.pipe(
         T.Query("dm_event.fields"),
+        T.CsvQuery(true),
       ),
     ),
     expansions: S.optional(
-      GetDirectMessagesEventsRequestExpansionsList.pipe(T.Query()),
+      GetDirectMessagesEventsRequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
-      GetDirectMessagesEventsRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetDirectMessagesEventsRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     post_fields: S.optional(
-      GetDirectMessagesEventsRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetDirectMessagesEventsRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
       GetDirectMessagesEventsRequestMediaFieldsList.pipe(
         T.Query("media.fields"),
+        T.CsvQuery(true),
       ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/dm_events", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/dm_events", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetDirectMessagesEventsRequest",
 }) as any as S.Schema<GetDirectMessagesEventsRequest>;
@@ -2593,40 +2624,48 @@ export const GetDirectMessagesEventsByConversationIdRequest =
       event_types: S.optional(
         GetDirectMessagesEventsByConversationIdRequestEventTypesList.pipe(
           T.Query(),
+          T.CsvQuery(true),
         ),
       ),
       dm_event_fields: S.optional(
         GetDirectMessagesEventsByConversationIdRequestDmEventFieldsList.pipe(
           T.Query("dm_event.fields"),
+          T.CsvQuery(true),
         ),
       ),
       expansions: S.optional(
         GetDirectMessagesEventsByConversationIdRequestExpansionsList.pipe(
           T.Query(),
+          T.CsvQuery(true),
         ),
       ),
       user_fields: S.optional(
         GetDirectMessagesEventsByConversationIdRequestUserFieldsList.pipe(
           T.Query("user.fields"),
+          T.CsvQuery(true),
         ),
       ),
       post_fields: S.optional(
         GetDirectMessagesEventsByConversationIdRequestPostFieldsList.pipe(
           T.Query("post.fields"),
+          T.CsvQuery(true),
         ),
       ),
       media_fields: S.optional(
         GetDirectMessagesEventsByConversationIdRequestMediaFieldsList.pipe(
           T.Query("media.fields"),
+          T.CsvQuery(true),
         ),
       ),
-    }).pipe(
-      T.Http({
-        method: "GET",
-        uri: "/2/dm_conversations/{id}/dm_events",
-        code: 200,
-      }),
-    ),
+    })
+      .pipe(
+        T.Http({
+          method: "GET",
+          uri: "/2/dm_conversations/{id}/dm_events",
+          code: 200,
+        }),
+      )
+      .pipe(T.Security(["oauth2", "oauth1"])),
   ).annotate({
     identifier: "GetDirectMessagesEventsByConversationIdRequest",
   }) as any as S.Schema<GetDirectMessagesEventsByConversationIdRequest>;
@@ -2833,27 +2872,36 @@ export const GetDirectMessagesEventsByIdRequest = /*@__PURE__*/ S.suspend(() =>
     dm_event_fields: S.optional(
       GetDirectMessagesEventsByIdRequestDmEventFieldsList.pipe(
         T.Query("dm_event.fields"),
+        T.CsvQuery(true),
       ),
     ),
     expansions: S.optional(
-      GetDirectMessagesEventsByIdRequestExpansionsList.pipe(T.Query()),
+      GetDirectMessagesEventsByIdRequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
       GetDirectMessagesEventsByIdRequestUserFieldsList.pipe(
         T.Query("user.fields"),
+        T.CsvQuery(true),
       ),
     ),
     post_fields: S.optional(
       GetDirectMessagesEventsByIdRequestPostFieldsList.pipe(
         T.Query("post.fields"),
+        T.CsvQuery(true),
       ),
     ),
     media_fields: S.optional(
       GetDirectMessagesEventsByIdRequestMediaFieldsList.pipe(
         T.Query("media.fields"),
+        T.CsvQuery(true),
       ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/dm_events/{event_id}", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/dm_events/{event_id}", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetDirectMessagesEventsByIdRequest",
 }) as any as S.Schema<GetDirectMessagesEventsByIdRequest>;
@@ -3067,40 +3115,48 @@ export const GetDirectMessagesEventsByParticipantIdRequest =
       event_types: S.optional(
         GetDirectMessagesEventsByParticipantIdRequestEventTypesList.pipe(
           T.Query(),
+          T.CsvQuery(true),
         ),
       ),
       dm_event_fields: S.optional(
         GetDirectMessagesEventsByParticipantIdRequestDmEventFieldsList.pipe(
           T.Query("dm_event.fields"),
+          T.CsvQuery(true),
         ),
       ),
       expansions: S.optional(
         GetDirectMessagesEventsByParticipantIdRequestExpansionsList.pipe(
           T.Query(),
+          T.CsvQuery(true),
         ),
       ),
       user_fields: S.optional(
         GetDirectMessagesEventsByParticipantIdRequestUserFieldsList.pipe(
           T.Query("user.fields"),
+          T.CsvQuery(true),
         ),
       ),
       post_fields: S.optional(
         GetDirectMessagesEventsByParticipantIdRequestPostFieldsList.pipe(
           T.Query("post.fields"),
+          T.CsvQuery(true),
         ),
       ),
       media_fields: S.optional(
         GetDirectMessagesEventsByParticipantIdRequestMediaFieldsList.pipe(
           T.Query("media.fields"),
+          T.CsvQuery(true),
         ),
       ),
-    }).pipe(
-      T.Http({
-        method: "GET",
-        uri: "/2/dm_conversations/with/{participant_id}/dm_events",
-        code: 200,
-      }),
-    ),
+    })
+      .pipe(
+        T.Http({
+          method: "GET",
+          uri: "/2/dm_conversations/with/{participant_id}/dm_events",
+          code: 200,
+        }),
+      )
+      .pipe(T.Security(["oauth2", "oauth1"])),
   ).annotate({
     identifier: "GetDirectMessagesEventsByParticipantIdRequest",
   }) as any as S.Schema<GetDirectMessagesEventsByParticipantIdRequest>;
@@ -3150,9 +3206,11 @@ export interface UnblockUsersDmsRequest {
 export const UnblockUsersDmsRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({ method: "POST", uri: "/2/users/{id}/dm/unblock", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "POST", uri: "/2/users/{id}/dm/unblock", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "UnblockUsersDmsRequest",
 }) as any as S.Schema<UnblockUsersDmsRequest>;
@@ -3263,7 +3321,7 @@ export const dmConversationsMediaDownload: API.OperationMethod<
   XOpContext
 > = /*@__PURE__*/ API.make(() => ({
   input: DmConversationsMediaDownloadRequest,
-  output: DmConversationsMediaDownloadResponse,
+  output: DmConversationsMediaDownloadResponse.pipe(T.Response("binary")),
   errors: [XParseError],
   protocol: XProtocol,
   retry: Retry.Retry,

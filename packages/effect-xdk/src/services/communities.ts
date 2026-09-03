@@ -39,9 +39,12 @@ export const GetCommunitiesByIdRequest = /*@__PURE__*/ S.suspend(() =>
     community_fields: S.optional(
       GetCommunitiesByIdRequestCommunityFieldsList.pipe(
         T.Query("community.fields"),
+        T.CsvQuery(true),
       ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/communities/{id}", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/communities/{id}", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetCommunitiesByIdRequest",
 }) as any as S.Schema<GetCommunitiesByIdRequest>;
@@ -378,9 +381,12 @@ export const SearchCommunitiesRequest = /*@__PURE__*/ S.suspend(() =>
     community_fields: S.optional(
       SearchCommunitiesRequestCommunityFieldsList.pipe(
         T.Query("community.fields"),
+        T.CsvQuery(true),
       ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/communities/search", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/communities/search", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "SearchCommunitiesRequest",
 }) as any as S.Schema<SearchCommunitiesRequest>;

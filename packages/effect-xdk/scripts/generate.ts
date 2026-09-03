@@ -3,11 +3,9 @@
 /**
  * generate — Smithy models → Effect SDK through Distilled's shared CLI.
  * Input: .generated-specs/*.json (scripts/convert.ts).
- * Output: src/services/*.ts, src/services/index.ts, src/operations.ts.
+ * Output: src/services/*.ts, src/services/index.ts.
  */
-import { readFile } from "node:fs/promises";
 import path from "node:path";
-import * as Effect from "effect/Effect";
 import { runGeneratorCli } from "@distilled.cloud/core/codegen/cli";
 import { runTool } from "@distilled.cloud/core/codegen/format";
 import {
@@ -15,25 +13,14 @@ import {
   errorUnionAlias,
   type SdkSpec,
 } from "@distilled.cloud/core/codegen/generator";
-import type { OperationDefinition } from "../src/operation-types.ts";
+import type { ShapeMap } from "@distilled.cloud/core/codegen/graph";
 import source from "../specs/source.json";
 
 const root =
   process.env.EFFECT_XDK_GENERATION_ROOT ?? path.resolve(import.meta.dir, "..");
-const manifest: Readonly<Record<string, OperationDefinition>> = JSON.parse(
-  await readFile(path.join(root, ".generated-specs/operations.json"), "utf8"),
-);
-const definitions = new Map(Object.entries(manifest));
-const upperFirst = (value: string) => value[0]!.toUpperCase() + value.slice(1);
 const namespace = (value: string) =>
   value.replace(/-([a-z])/gu, (_, letter: string) => letter.toUpperCase());
-const binaryNames = new Set(
-  [...definitions.values()]
-    .filter((operation) => operation.response === "binary")
-    .map((operation) => upperFirst(operation.id) + "Response"),
-);
-
-const spec: SdkSpec = {
+const spec = (shapes: ShapeMap): SdkSpec => ({
   nullableTrait: "com.distilled.openapi#nullable",
   shapeDocs: true,
   sourceNote: `xdevplatform/xdk@${source.revision} (specs/openapi.json)`,
@@ -59,17 +46,30 @@ const spec: SdkSpec = {
       rootPipe: "T.RawResponseRoot()",
     },
   ],
+  memberTraitPipes: { "com.x#csvQuery": "T.CsvQuery" },
+  structPipes: ({ id, httpTrait }) => [
+    ...(httpTrait ? [`T.Http(${JSON.stringify(httpTrait)})`] : []),
+    ...Object.entries({
+      "com.x#security": "T.Security",
+      "com.x#multipart": "T.Multipart",
+      "com.x#requestBody": "T.RequestBody",
+    }).flatMap(([trait, pipe]) =>
+      shapes[id]?.traits?.[trait] === undefined
+        ? []
+        : [`${pipe}(${JSON.stringify(shapes[id].traits[trait])})`],
+    ),
+  ],
   union: ({ name, caseTargets, tsRef }) => [
     `export type ${name} = ${caseTargets.map(tsRef).join(" | ") || "unknown"};`,
     `export const ${name} = /*@__PURE__*/ S.Unknown as any as S.Schema<${name}>;`,
   ],
-  shapeOverride: ({ name }) => {
+  shapeOverride: ({ name, def }) => {
     if (name === "MediaData")
       return [
         "export type MediaData = string | Blob;",
         "export const MediaData = S.Union([S.String, S.instanceOf(Blob)]);",
       ];
-    if (binaryNames.has(name))
+    if (def.traits?.["com.x#binary"])
       return [
         `export type ${name} = Uint8Array;`,
         `export const ${name} = S.instanceOf(Uint8Array);`,
@@ -77,6 +77,7 @@ const spec: SdkSpec = {
     return undefined;
   },
   operation: ({
+    op,
     opName,
     exportName,
     inputName,
@@ -84,17 +85,18 @@ const spec: SdkSpec = {
     outputSchema,
     doc,
   }) => {
-    const definition = definitions.get(exportName);
-    if (!definition) throw new Error(`No wire metadata for ${exportName}`);
-    const streaming = definition.response === "stream";
+    const response = op.def.traits["com.x#response"];
+    const streaming = response === "stream";
     const output = streaming
       ? `Stream.Stream<${outputTsType}, XOpError>`
       : outputTsType;
     // Core's protocol contract owns decoding. A streamed HTTP body uses the
     // payload AST to decode each record while the operation returns a Stream.
     const schema = streaming
-      ? `${outputSchema} as any as S.Schema<${output}>`
-      : outputSchema;
+      ? `${outputSchema}.pipe(T.Response("stream")) as any as S.Schema<${output}>`
+      : response === "binary"
+        ? `${outputSchema}.pipe(T.Response("binary"))`
+        : outputSchema;
     return [
       errorUnionAlias(opName, [], "XOpError"),
       ...(doc ? [`/** ${doc} */`] : []),
@@ -103,35 +105,18 @@ const spec: SdkSpec = {
         factory: "API.make",
         pure: "/*@__PURE__*/ ",
         typeAnnotation: `API.OperationMethod<${inputName}, ${output}, ${opName}Error, XOpContext>`,
-        config: `{\ninput: ${inputName},\noutput: ${schema},\nerrors: [XParseError],\nprotocol: XProtocol,\n${definition.method === "POST" ? "" : "retry: Retry.Retry,\n"}operationName: ${JSON.stringify(exportName)},\n}`,
+        config: `{\ninput: ${inputName},\noutput: ${schema},\nerrors: [XParseError],\nprotocol: XProtocol,\n${op.def.traits["smithy.api#http"].method === "POST" ? "" : "retry: Retry.Retry,\n"}operationName: ${JSON.stringify(exportName)},\n}`,
       }),
     ].join("\n");
   },
-};
+});
 
 runGeneratorCli({
   description: "Generate the X Effect SDK from its Smithy models",
   root,
   patchesDir: false,
-  excludeModel: (file) => file === "operations.json",
   barrelExportName: namespace,
-  spec: () => spec,
-  prepare: () =>
-    Effect.promise(async () => {
-      await Bun.write(
-        path.join(root, "src/operations.ts"),
-        "// AUTO-GENERATED from specs/openapi.json; do not edit.\n" +
-          'import type { OperationDefinition } from "./operation-types.ts";\n' +
-          `export const operations = ${JSON.stringify(manifest, null, 2)} as const satisfies Readonly<Record<string, OperationDefinition>>;\n`,
-      );
-    }),
+  spec: (model) => spec(model.shapes),
   finalize: (directory) =>
-    runTool([
-      "bun",
-      "x",
-      "--no-install",
-      "oxfmt",
-      directory,
-      path.join(root, "src/operations.ts"),
-    ]),
+    runTool(["bun", "x", "--no-install", "oxfmt", directory]),
 });

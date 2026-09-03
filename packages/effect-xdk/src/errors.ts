@@ -1,4 +1,3 @@
-import type { XJsonValue } from "./types.ts";
 import * as Schema from "effect/Schema";
 import * as Category from "@distilled.cloud/core/category";
 import type { HTTP_STATUS_MAP } from "@distilled.cloud/core/errors";
@@ -75,7 +74,7 @@ export class XOAuthError extends Error {
     readonly error: string,
     readonly errorDescription: string,
     readonly status?: number,
-    readonly body?: XJsonValue,
+    readonly body?: Schema.Json,
   ) {
     super(errorDescription);
   }

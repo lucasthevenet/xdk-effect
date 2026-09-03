@@ -22,7 +22,9 @@ export const ActivityStreamRequest = /*@__PURE__*/ S.suspend(() =>
     backfill_minutes: S.optional(S.Number.pipe(T.Query())),
     start_time: S.optional(S.String.pipe(T.Query())),
     end_time: S.optional(S.String.pipe(T.Query())),
-  }).pipe(T.Http({ method: "GET", uri: "/2/activity/stream", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/activity/stream", code: 200 }))
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "ActivityStreamRequest",
 }) as any as S.Schema<ActivityStreamRequest>;
@@ -1810,13 +1812,15 @@ export const GetRuleCountsRequest = /*@__PURE__*/ S.suspend(() =>
     rules_count_fields: S.optional(
       S.String.pipe(T.Query("rules_count.fields")),
     ),
-  }).pipe(
-    T.Http({
-      method: "GET",
-      uri: "/2/tweets/search/stream/rules/counts",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "GET",
+        uri: "/2/tweets/search/stream/rules/counts",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "GetRuleCountsRequest",
 }) as any as S.Schema<GetRuleCountsRequest>;
@@ -1907,7 +1911,9 @@ export const StreamLabelsComplianceRequest = /*@__PURE__*/ S.suspend(() =>
     backfill_minutes: S.optional(S.Number.pipe(T.Query())),
     start_time: S.optional(S.String.pipe(T.Query())),
     end_time: S.optional(S.String.pipe(T.Query())),
-  }).pipe(T.Http({ method: "GET", uri: "/2/tweets/label/stream", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/tweets/label/stream", code: 200 }))
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "StreamLabelsComplianceRequest",
 }) as any as S.Schema<StreamLabelsComplianceRequest>;
@@ -2041,9 +2047,11 @@ export const StreamLikesComplianceRequest = /*@__PURE__*/ S.suspend(() =>
     backfill_minutes: S.optional(S.Number.pipe(T.Query())),
     start_time: S.optional(S.String.pipe(T.Query())),
     end_time: S.optional(S.String.pipe(T.Query())),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/likes/compliance/stream", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "GET", uri: "/2/likes/compliance/stream", code: 200 }),
+    )
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "StreamLikesComplianceRequest",
 }) as any as S.Schema<StreamLikesComplianceRequest>;
@@ -2291,23 +2299,36 @@ export const StreamLikesFirehoseRequest = /*@__PURE__*/ S.suspend(() =>
     like_with_tweet_author_fields: S.optional(
       StreamLikesFirehoseRequestLikeWithTweetAuthorFieldsList.pipe(
         T.Query("like_with_tweet_author.fields"),
+        T.CsvQuery(true),
       ),
     ),
     expansions: S.optional(
-      StreamLikesFirehoseRequestExpansionsList.pipe(T.Query()),
+      StreamLikesFirehoseRequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      StreamLikesFirehoseRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      StreamLikesFirehoseRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
-      StreamLikesFirehoseRequestUserFieldsList.pipe(T.Query("user.fields")),
+      StreamLikesFirehoseRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     tweet_fields: S.optional(
-      StreamLikesFirehoseRequestTweetFieldsList.pipe(T.Query("tweet.fields")),
+      StreamLikesFirehoseRequestTweetFieldsList.pipe(
+        T.Query("tweet.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/likes/firehose/stream", code: 200 }),
-  ),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/likes/firehose/stream", code: 200 }))
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "StreamLikesFirehoseRequest",
 }) as any as S.Schema<StreamLikesFirehoseRequest>;
@@ -2495,23 +2516,36 @@ export const StreamLikesSample10Request = /*@__PURE__*/ S.suspend(() =>
     like_with_tweet_author_fields: S.optional(
       StreamLikesSample10RequestLikeWithTweetAuthorFieldsList.pipe(
         T.Query("like_with_tweet_author.fields"),
+        T.CsvQuery(true),
       ),
     ),
     expansions: S.optional(
-      StreamLikesSample10RequestExpansionsList.pipe(T.Query()),
+      StreamLikesSample10RequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      StreamLikesSample10RequestMediaFieldsList.pipe(T.Query("media.fields")),
+      StreamLikesSample10RequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
-      StreamLikesSample10RequestUserFieldsList.pipe(T.Query("user.fields")),
+      StreamLikesSample10RequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     tweet_fields: S.optional(
-      StreamLikesSample10RequestTweetFieldsList.pipe(T.Query("tweet.fields")),
+      StreamLikesSample10RequestTweetFieldsList.pipe(
+        T.Query("tweet.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/likes/sample10/stream", code: 200 }),
-  ),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/likes/sample10/stream", code: 200 }))
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "StreamLikesSample10Request",
 }) as any as S.Schema<StreamLikesSample10Request>;
@@ -2722,22 +2756,41 @@ export const StreamPostsRequest = /*@__PURE__*/ S.suspend(() =>
     start_time: S.optional(S.String.pipe(T.Query())),
     end_time: S.optional(S.String.pipe(T.Query())),
     tweet_fields: S.optional(
-      StreamPostsRequestTweetFieldsList.pipe(T.Query("tweet.fields")),
+      StreamPostsRequestTweetFieldsList.pipe(
+        T.Query("tweet.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-    expansions: S.optional(StreamPostsRequestExpansionsList.pipe(T.Query())),
+    expansions: S.optional(
+      StreamPostsRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
+    ),
     media_fields: S.optional(
-      StreamPostsRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      StreamPostsRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      StreamPostsRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      StreamPostsRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
-      StreamPostsRequestUserFieldsList.pipe(T.Query("user.fields")),
+      StreamPostsRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      StreamPostsRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      StreamPostsRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/tweets/search/stream", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/tweets/search/stream", code: 200 }))
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "StreamPostsRequest",
 }) as any as S.Schema<StreamPostsRequest>;
@@ -2803,9 +2856,11 @@ export const StreamPostsComplianceRequest = /*@__PURE__*/ S.suspend(() =>
     partition: S.Number.pipe(T.Query()),
     start_time: S.optional(S.String.pipe(T.Query())),
     end_time: S.optional(S.String.pipe(T.Query())),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/tweets/compliance/stream", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "GET", uri: "/2/tweets/compliance/stream", code: 200 }),
+    )
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "StreamPostsComplianceRequest",
 }) as any as S.Schema<StreamPostsComplianceRequest>;
@@ -3185,29 +3240,49 @@ export const StreamPostsFirehoseRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     backfill_minutes: S.optional(S.Number.pipe(T.Query())),
     tweet_fields: S.optional(
-      StreamPostsFirehoseRequestTweetFieldsList.pipe(T.Query("tweet.fields")),
+      StreamPostsFirehoseRequestTweetFieldsList.pipe(
+        T.Query("tweet.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      StreamPostsFirehoseRequestExpansionsList.pipe(T.Query()),
+      StreamPostsFirehoseRequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      StreamPostsFirehoseRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      StreamPostsFirehoseRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      StreamPostsFirehoseRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      StreamPostsFirehoseRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
-      StreamPostsFirehoseRequestUserFieldsList.pipe(T.Query("user.fields")),
+      StreamPostsFirehoseRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      StreamPostsFirehoseRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      StreamPostsFirehoseRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     partition: S.Number.pipe(T.Query()),
     start_time: S.optional(S.String.pipe(T.Query())),
     end_time: S.optional(S.String.pipe(T.Query())),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/tweets/firehose/stream", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "GET", uri: "/2/tweets/firehose/stream", code: 200 }),
+    )
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "StreamPostsFirehoseRequest",
 }) as any as S.Schema<StreamPostsFirehoseRequest>;
@@ -3427,33 +3502,53 @@ export const StreamPostsFirehoseEnRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     backfill_minutes: S.optional(S.Number.pipe(T.Query())),
     tweet_fields: S.optional(
-      StreamPostsFirehoseEnRequestTweetFieldsList.pipe(T.Query("tweet.fields")),
+      StreamPostsFirehoseEnRequestTweetFieldsList.pipe(
+        T.Query("tweet.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      StreamPostsFirehoseEnRequestExpansionsList.pipe(T.Query()),
+      StreamPostsFirehoseEnRequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      StreamPostsFirehoseEnRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      StreamPostsFirehoseEnRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      StreamPostsFirehoseEnRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      StreamPostsFirehoseEnRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
-      StreamPostsFirehoseEnRequestUserFieldsList.pipe(T.Query("user.fields")),
+      StreamPostsFirehoseEnRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      StreamPostsFirehoseEnRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      StreamPostsFirehoseEnRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     partition: S.Number.pipe(T.Query()),
     start_time: S.optional(S.String.pipe(T.Query())),
     end_time: S.optional(S.String.pipe(T.Query())),
-  }).pipe(
-    T.Http({
-      method: "GET",
-      uri: "/2/tweets/firehose/stream/lang/en",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "GET",
+        uri: "/2/tweets/firehose/stream/lang/en",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "StreamPostsFirehoseEnRequest",
 }) as any as S.Schema<StreamPostsFirehoseEnRequest>;
@@ -3673,33 +3768,53 @@ export const StreamPostsFirehoseJaRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     backfill_minutes: S.optional(S.Number.pipe(T.Query())),
     tweet_fields: S.optional(
-      StreamPostsFirehoseJaRequestTweetFieldsList.pipe(T.Query("tweet.fields")),
+      StreamPostsFirehoseJaRequestTweetFieldsList.pipe(
+        T.Query("tweet.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      StreamPostsFirehoseJaRequestExpansionsList.pipe(T.Query()),
+      StreamPostsFirehoseJaRequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      StreamPostsFirehoseJaRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      StreamPostsFirehoseJaRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      StreamPostsFirehoseJaRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      StreamPostsFirehoseJaRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
-      StreamPostsFirehoseJaRequestUserFieldsList.pipe(T.Query("user.fields")),
+      StreamPostsFirehoseJaRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      StreamPostsFirehoseJaRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      StreamPostsFirehoseJaRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     partition: S.Number.pipe(T.Query()),
     start_time: S.optional(S.String.pipe(T.Query())),
     end_time: S.optional(S.String.pipe(T.Query())),
-  }).pipe(
-    T.Http({
-      method: "GET",
-      uri: "/2/tweets/firehose/stream/lang/ja",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "GET",
+        uri: "/2/tweets/firehose/stream/lang/ja",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "StreamPostsFirehoseJaRequest",
 }) as any as S.Schema<StreamPostsFirehoseJaRequest>;
@@ -3919,33 +4034,53 @@ export const StreamPostsFirehoseKoRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     backfill_minutes: S.optional(S.Number.pipe(T.Query())),
     tweet_fields: S.optional(
-      StreamPostsFirehoseKoRequestTweetFieldsList.pipe(T.Query("tweet.fields")),
+      StreamPostsFirehoseKoRequestTweetFieldsList.pipe(
+        T.Query("tweet.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      StreamPostsFirehoseKoRequestExpansionsList.pipe(T.Query()),
+      StreamPostsFirehoseKoRequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      StreamPostsFirehoseKoRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      StreamPostsFirehoseKoRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      StreamPostsFirehoseKoRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      StreamPostsFirehoseKoRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
-      StreamPostsFirehoseKoRequestUserFieldsList.pipe(T.Query("user.fields")),
+      StreamPostsFirehoseKoRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      StreamPostsFirehoseKoRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      StreamPostsFirehoseKoRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     partition: S.Number.pipe(T.Query()),
     start_time: S.optional(S.String.pipe(T.Query())),
     end_time: S.optional(S.String.pipe(T.Query())),
-  }).pipe(
-    T.Http({
-      method: "GET",
-      uri: "/2/tweets/firehose/stream/lang/ko",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "GET",
+        uri: "/2/tweets/firehose/stream/lang/ko",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "StreamPostsFirehoseKoRequest",
 }) as any as S.Schema<StreamPostsFirehoseKoRequest>;
@@ -4165,33 +4300,53 @@ export const StreamPostsFirehosePtRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     backfill_minutes: S.optional(S.Number.pipe(T.Query())),
     tweet_fields: S.optional(
-      StreamPostsFirehosePtRequestTweetFieldsList.pipe(T.Query("tweet.fields")),
+      StreamPostsFirehosePtRequestTweetFieldsList.pipe(
+        T.Query("tweet.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      StreamPostsFirehosePtRequestExpansionsList.pipe(T.Query()),
+      StreamPostsFirehosePtRequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      StreamPostsFirehosePtRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      StreamPostsFirehosePtRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      StreamPostsFirehosePtRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      StreamPostsFirehosePtRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
-      StreamPostsFirehosePtRequestUserFieldsList.pipe(T.Query("user.fields")),
+      StreamPostsFirehosePtRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      StreamPostsFirehosePtRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      StreamPostsFirehosePtRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     partition: S.Number.pipe(T.Query()),
     start_time: S.optional(S.String.pipe(T.Query())),
     end_time: S.optional(S.String.pipe(T.Query())),
-  }).pipe(
-    T.Http({
-      method: "GET",
-      uri: "/2/tweets/firehose/stream/lang/pt",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "GET",
+        uri: "/2/tweets/firehose/stream/lang/pt",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "StreamPostsFirehosePtRequest",
 }) as any as S.Schema<StreamPostsFirehosePtRequest>;
@@ -4396,24 +4551,41 @@ export const StreamPostsSampleRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     backfill_minutes: S.optional(S.Number.pipe(T.Query())),
     tweet_fields: S.optional(
-      StreamPostsSampleRequestTweetFieldsList.pipe(T.Query("tweet.fields")),
+      StreamPostsSampleRequestTweetFieldsList.pipe(
+        T.Query("tweet.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      StreamPostsSampleRequestExpansionsList.pipe(T.Query()),
+      StreamPostsSampleRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
     ),
     media_fields: S.optional(
-      StreamPostsSampleRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      StreamPostsSampleRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      StreamPostsSampleRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      StreamPostsSampleRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
-      StreamPostsSampleRequestUserFieldsList.pipe(T.Query("user.fields")),
+      StreamPostsSampleRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      StreamPostsSampleRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      StreamPostsSampleRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/tweets/sample/stream", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/tweets/sample/stream", code: 200 }))
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "StreamPostsSampleRequest",
 }) as any as S.Schema<StreamPostsSampleRequest>;
@@ -4624,29 +4796,49 @@ export const StreamPostsSample10Request = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     backfill_minutes: S.optional(S.Number.pipe(T.Query())),
     tweet_fields: S.optional(
-      StreamPostsSample10RequestTweetFieldsList.pipe(T.Query("tweet.fields")),
+      StreamPostsSample10RequestTweetFieldsList.pipe(
+        T.Query("tweet.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      StreamPostsSample10RequestExpansionsList.pipe(T.Query()),
+      StreamPostsSample10RequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      StreamPostsSample10RequestMediaFieldsList.pipe(T.Query("media.fields")),
+      StreamPostsSample10RequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      StreamPostsSample10RequestPollFieldsList.pipe(T.Query("poll.fields")),
+      StreamPostsSample10RequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
-      StreamPostsSample10RequestUserFieldsList.pipe(T.Query("user.fields")),
+      StreamPostsSample10RequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      StreamPostsSample10RequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      StreamPostsSample10RequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     partition: S.Number.pipe(T.Query()),
     start_time: S.optional(S.String.pipe(T.Query())),
     end_time: S.optional(S.String.pipe(T.Query())),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/tweets/sample10/stream", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "GET", uri: "/2/tweets/sample10/stream", code: 200 }),
+    )
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "StreamPostsSample10Request",
 }) as any as S.Schema<StreamPostsSample10Request>;
@@ -4687,9 +4879,11 @@ export const StreamUsersComplianceRequest = /*@__PURE__*/ S.suspend(() =>
     partition: S.Number.pipe(T.Query()),
     start_time: S.optional(S.String.pipe(T.Query())),
     end_time: S.optional(S.String.pipe(T.Query())),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/users/compliance/stream", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "GET", uri: "/2/users/compliance/stream", code: 200 }),
+    )
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "StreamUsersComplianceRequest",
 }) as any as S.Schema<StreamUsersComplianceRequest>;
@@ -4944,7 +5138,7 @@ export const activityStream: API.OperationMethod<
   XOpContext
 > = /*@__PURE__*/ API.make(() => ({
   input: ActivityStreamRequest,
-  output: ActivityStreamResponse as any as S.Schema<
+  output: ActivityStreamResponse.pipe(T.Response("stream")) as any as S.Schema<
     Stream.Stream<ActivityStreamResponse, XOpError>
   >,
   errors: [XParseError],
@@ -4978,7 +5172,9 @@ export const streamLabelsCompliance: API.OperationMethod<
   XOpContext
 > = /*@__PURE__*/ API.make(() => ({
   input: StreamLabelsComplianceRequest,
-  output: StreamLabelsComplianceResponse2 as any as S.Schema<
+  output: StreamLabelsComplianceResponse2.pipe(
+    T.Response("stream"),
+  ) as any as S.Schema<
     Stream.Stream<StreamLabelsComplianceResponse2, XOpError>
   >,
   errors: [XParseError],
@@ -4996,9 +5192,9 @@ export const streamLikesCompliance: API.OperationMethod<
   XOpContext
 > = /*@__PURE__*/ API.make(() => ({
   input: StreamLikesComplianceRequest,
-  output: StreamLikesComplianceResponse2 as any as S.Schema<
-    Stream.Stream<StreamLikesComplianceResponse2, XOpError>
-  >,
+  output: StreamLikesComplianceResponse2.pipe(
+    T.Response("stream"),
+  ) as any as S.Schema<Stream.Stream<StreamLikesComplianceResponse2, XOpError>>,
   errors: [XParseError],
   protocol: XProtocol,
   retry: Retry.Retry,
@@ -5014,9 +5210,9 @@ export const streamLikesFirehose: API.OperationMethod<
   XOpContext
 > = /*@__PURE__*/ API.make(() => ({
   input: StreamLikesFirehoseRequest,
-  output: StreamLikesFirehoseResponse as any as S.Schema<
-    Stream.Stream<StreamLikesFirehoseResponse, XOpError>
-  >,
+  output: StreamLikesFirehoseResponse.pipe(
+    T.Response("stream"),
+  ) as any as S.Schema<Stream.Stream<StreamLikesFirehoseResponse, XOpError>>,
   errors: [XParseError],
   protocol: XProtocol,
   retry: Retry.Retry,
@@ -5032,9 +5228,9 @@ export const streamLikesSample10: API.OperationMethod<
   XOpContext
 > = /*@__PURE__*/ API.make(() => ({
   input: StreamLikesSample10Request,
-  output: StreamLikesSample10Response as any as S.Schema<
-    Stream.Stream<StreamLikesSample10Response, XOpError>
-  >,
+  output: StreamLikesSample10Response.pipe(
+    T.Response("stream"),
+  ) as any as S.Schema<Stream.Stream<StreamLikesSample10Response, XOpError>>,
   errors: [XParseError],
   protocol: XProtocol,
   retry: Retry.Retry,
@@ -5050,7 +5246,7 @@ export const streamPosts: API.OperationMethod<
   XOpContext
 > = /*@__PURE__*/ API.make(() => ({
   input: StreamPostsRequest,
-  output: StreamPostsResponse as any as S.Schema<
+  output: StreamPostsResponse.pipe(T.Response("stream")) as any as S.Schema<
     Stream.Stream<StreamPostsResponse, XOpError>
   >,
   errors: [XParseError],
@@ -5068,9 +5264,9 @@ export const streamPostsCompliance: API.OperationMethod<
   XOpContext
 > = /*@__PURE__*/ API.make(() => ({
   input: StreamPostsComplianceRequest,
-  output: StreamPostsComplianceResponse2 as any as S.Schema<
-    Stream.Stream<StreamPostsComplianceResponse2, XOpError>
-  >,
+  output: StreamPostsComplianceResponse2.pipe(
+    T.Response("stream"),
+  ) as any as S.Schema<Stream.Stream<StreamPostsComplianceResponse2, XOpError>>,
   errors: [XParseError],
   protocol: XProtocol,
   retry: Retry.Retry,
@@ -5086,9 +5282,9 @@ export const streamPostsFirehose: API.OperationMethod<
   XOpContext
 > = /*@__PURE__*/ API.make(() => ({
   input: StreamPostsFirehoseRequest,
-  output: StreamPostsFirehoseResponse as any as S.Schema<
-    Stream.Stream<StreamPostsFirehoseResponse, XOpError>
-  >,
+  output: StreamPostsFirehoseResponse.pipe(
+    T.Response("stream"),
+  ) as any as S.Schema<Stream.Stream<StreamPostsFirehoseResponse, XOpError>>,
   errors: [XParseError],
   protocol: XProtocol,
   retry: Retry.Retry,
@@ -5104,9 +5300,9 @@ export const streamPostsFirehoseEn: API.OperationMethod<
   XOpContext
 > = /*@__PURE__*/ API.make(() => ({
   input: StreamPostsFirehoseEnRequest,
-  output: StreamPostsFirehoseEnResponse as any as S.Schema<
-    Stream.Stream<StreamPostsFirehoseEnResponse, XOpError>
-  >,
+  output: StreamPostsFirehoseEnResponse.pipe(
+    T.Response("stream"),
+  ) as any as S.Schema<Stream.Stream<StreamPostsFirehoseEnResponse, XOpError>>,
   errors: [XParseError],
   protocol: XProtocol,
   retry: Retry.Retry,
@@ -5122,9 +5318,9 @@ export const streamPostsFirehoseJa: API.OperationMethod<
   XOpContext
 > = /*@__PURE__*/ API.make(() => ({
   input: StreamPostsFirehoseJaRequest,
-  output: StreamPostsFirehoseJaResponse as any as S.Schema<
-    Stream.Stream<StreamPostsFirehoseJaResponse, XOpError>
-  >,
+  output: StreamPostsFirehoseJaResponse.pipe(
+    T.Response("stream"),
+  ) as any as S.Schema<Stream.Stream<StreamPostsFirehoseJaResponse, XOpError>>,
   errors: [XParseError],
   protocol: XProtocol,
   retry: Retry.Retry,
@@ -5140,9 +5336,9 @@ export const streamPostsFirehoseKo: API.OperationMethod<
   XOpContext
 > = /*@__PURE__*/ API.make(() => ({
   input: StreamPostsFirehoseKoRequest,
-  output: StreamPostsFirehoseKoResponse as any as S.Schema<
-    Stream.Stream<StreamPostsFirehoseKoResponse, XOpError>
-  >,
+  output: StreamPostsFirehoseKoResponse.pipe(
+    T.Response("stream"),
+  ) as any as S.Schema<Stream.Stream<StreamPostsFirehoseKoResponse, XOpError>>,
   errors: [XParseError],
   protocol: XProtocol,
   retry: Retry.Retry,
@@ -5158,9 +5354,9 @@ export const streamPostsFirehosePt: API.OperationMethod<
   XOpContext
 > = /*@__PURE__*/ API.make(() => ({
   input: StreamPostsFirehosePtRequest,
-  output: StreamPostsFirehosePtResponse as any as S.Schema<
-    Stream.Stream<StreamPostsFirehosePtResponse, XOpError>
-  >,
+  output: StreamPostsFirehosePtResponse.pipe(
+    T.Response("stream"),
+  ) as any as S.Schema<Stream.Stream<StreamPostsFirehosePtResponse, XOpError>>,
   errors: [XParseError],
   protocol: XProtocol,
   retry: Retry.Retry,
@@ -5176,9 +5372,9 @@ export const streamPostsSample: API.OperationMethod<
   XOpContext
 > = /*@__PURE__*/ API.make(() => ({
   input: StreamPostsSampleRequest,
-  output: StreamPostsSampleResponse as any as S.Schema<
-    Stream.Stream<StreamPostsSampleResponse, XOpError>
-  >,
+  output: StreamPostsSampleResponse.pipe(
+    T.Response("stream"),
+  ) as any as S.Schema<Stream.Stream<StreamPostsSampleResponse, XOpError>>,
   errors: [XParseError],
   protocol: XProtocol,
   retry: Retry.Retry,
@@ -5194,9 +5390,9 @@ export const streamPostsSample10: API.OperationMethod<
   XOpContext
 > = /*@__PURE__*/ API.make(() => ({
   input: StreamPostsSample10Request,
-  output: StreamPostsSample10Response as any as S.Schema<
-    Stream.Stream<StreamPostsSample10Response, XOpError>
-  >,
+  output: StreamPostsSample10Response.pipe(
+    T.Response("stream"),
+  ) as any as S.Schema<Stream.Stream<StreamPostsSample10Response, XOpError>>,
   errors: [XParseError],
   protocol: XProtocol,
   retry: Retry.Retry,
@@ -5212,9 +5408,9 @@ export const streamUsersCompliance: API.OperationMethod<
   XOpContext
 > = /*@__PURE__*/ API.make(() => ({
   input: StreamUsersComplianceRequest,
-  output: StreamUsersComplianceResponse2 as any as S.Schema<
-    Stream.Stream<StreamUsersComplianceResponse2, XOpError>
-  >,
+  output: StreamUsersComplianceResponse2.pipe(
+    T.Response("stream"),
+  ) as any as S.Schema<Stream.Stream<StreamUsersComplianceResponse2, XOpError>>,
   errors: [XParseError],
   protocol: XProtocol,
   retry: Retry.Retry,

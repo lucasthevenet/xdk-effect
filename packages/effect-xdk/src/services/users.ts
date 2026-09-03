@@ -16,9 +16,16 @@ export const FollowListRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     list_id: S.String,
-  }).pipe(
-    T.Http({ method: "POST", uri: "/2/users/{id}/followed_lists", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "POST",
+        uri: "/2/users/{id}/followed_lists",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "FollowListRequest",
 }) as any as S.Schema<FollowListRequest>;
@@ -317,9 +324,10 @@ export const FollowUserRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     target_user_id: S.String,
-  }).pipe(
-    T.Http({ method: "POST", uri: "/2/users/{id}/following", code: 200 }),
-  ),
+  })
+    .pipe(T.Http({ method: "POST", uri: "/2/users/{id}/following", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "FollowUserRequest",
 }) as any as S.Schema<FollowUserRequest>;
@@ -465,17 +473,23 @@ export const GetUsersAffiliatesRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     user_fields: S.optional(
-      GetUsersAffiliatesRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetUsersAffiliatesRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetUsersAffiliatesRequestExpansionsList.pipe(T.Query()),
+      GetUsersAffiliatesRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
     ),
     post_fields: S.optional(
-      GetUsersAffiliatesRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetUsersAffiliatesRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/users/{id}/affiliates", code: 200 }),
-  ),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/users/{id}/affiliates", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetUsersAffiliatesRequest",
 }) as any as S.Schema<GetUsersAffiliatesRequest>;
@@ -2014,15 +2028,23 @@ export const GetUsersBlockingRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     user_fields: S.optional(
-      GetUsersBlockingRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetUsersBlockingRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetUsersBlockingRequestExpansionsList.pipe(T.Query()),
+      GetUsersBlockingRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
     ),
     post_fields: S.optional(
-      GetUsersBlockingRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetUsersBlockingRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/users/{id}/blocking", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/users/{id}/blocking", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetUsersBlockingRequest",
 }) as any as S.Schema<GetUsersBlockingRequest>;
@@ -2160,13 +2182,23 @@ export const GetUsersByIdRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     user_fields: S.optional(
-      GetUsersByIdRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetUsersByIdRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-    expansions: S.optional(GetUsersByIdRequestExpansionsList.pipe(T.Query())),
+    expansions: S.optional(
+      GetUsersByIdRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
+    ),
     post_fields: S.optional(
-      GetUsersByIdRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetUsersByIdRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/users/{id}", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/users/{id}", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetUsersByIdRequest",
 }) as any as S.Schema<GetUsersByIdRequest>;
@@ -2297,15 +2329,25 @@ export interface GetUsersByIdsRequest {
 }
 export const GetUsersByIdsRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
-    ids: GetUsersByIdsRequestIdsList.pipe(T.Query()),
+    ids: GetUsersByIdsRequestIdsList.pipe(T.Query(), T.CsvQuery(true)),
     user_fields: S.optional(
-      GetUsersByIdsRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetUsersByIdsRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-    expansions: S.optional(GetUsersByIdsRequestExpansionsList.pipe(T.Query())),
+    expansions: S.optional(
+      GetUsersByIdsRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
+    ),
     post_fields: S.optional(
-      GetUsersByIdsRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetUsersByIdsRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/users", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/users", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetUsersByIdsRequest",
 }) as any as S.Schema<GetUsersByIdsRequest>;
@@ -2438,21 +2480,29 @@ export const GetUsersByUsernameRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     username: S.String.pipe(T.Label()),
     user_fields: S.optional(
-      GetUsersByUsernameRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetUsersByUsernameRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetUsersByUsernameRequestExpansionsList.pipe(T.Query()),
+      GetUsersByUsernameRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
     ),
     post_fields: S.optional(
-      GetUsersByUsernameRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetUsersByUsernameRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(
-    T.Http({
-      method: "GET",
-      uri: "/2/users/by/username/{username}",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "GET",
+        uri: "/2/users/by/username/{username}",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetUsersByUsernameRequest",
 }) as any as S.Schema<GetUsersByUsernameRequest>;
@@ -2583,17 +2633,31 @@ export interface GetUsersByUsernamesRequest {
 }
 export const GetUsersByUsernamesRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
-    usernames: GetUsersByUsernamesRequestUsernamesList.pipe(T.Query()),
+    usernames: GetUsersByUsernamesRequestUsernamesList.pipe(
+      T.Query(),
+      T.CsvQuery(true),
+    ),
     user_fields: S.optional(
-      GetUsersByUsernamesRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetUsersByUsernamesRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetUsersByUsernamesRequestExpansionsList.pipe(T.Query()),
+      GetUsersByUsernamesRequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     post_fields: S.optional(
-      GetUsersByUsernamesRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetUsersByUsernamesRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/users/by", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/users/by", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetUsersByUsernamesRequest",
 }) as any as S.Schema<GetUsersByUsernamesRequest>;
@@ -2707,17 +2771,28 @@ export const GetUsersFollowedListsRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     list_fields: S.optional(
-      GetUsersFollowedListsRequestListFieldsList.pipe(T.Query("list.fields")),
+      GetUsersFollowedListsRequestListFieldsList.pipe(
+        T.Query("list.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetUsersFollowedListsRequestExpansionsList.pipe(T.Query()),
+      GetUsersFollowedListsRequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
-      GetUsersFollowedListsRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetUsersFollowedListsRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/users/{id}/followed_lists", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "GET", uri: "/2/users/{id}/followed_lists", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetUsersFollowedListsRequest",
 }) as any as S.Schema<GetUsersFollowedListsRequest>;
@@ -2883,15 +2958,23 @@ export const GetUsersFollowersRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     user_fields: S.optional(
-      GetUsersFollowersRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetUsersFollowersRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetUsersFollowersRequestExpansionsList.pipe(T.Query()),
+      GetUsersFollowersRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
     ),
     post_fields: S.optional(
-      GetUsersFollowersRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetUsersFollowersRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/users/{id}/followers", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/users/{id}/followers", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetUsersFollowersRequest",
 }) as any as S.Schema<GetUsersFollowersRequest>;
@@ -3034,15 +3117,23 @@ export const GetUsersFollowingRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     user_fields: S.optional(
-      GetUsersFollowingRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetUsersFollowingRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetUsersFollowingRequestExpansionsList.pipe(T.Query()),
+      GetUsersFollowingRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
     ),
     post_fields: S.optional(
-      GetUsersFollowingRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetUsersFollowingRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/users/{id}/following", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/users/{id}/following", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetUsersFollowingRequest",
 }) as any as S.Schema<GetUsersFollowingRequest>;
@@ -3163,17 +3254,32 @@ export const GetUsersListMembershipsRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     list_fields: S.optional(
-      GetUsersListMembershipsRequestListFieldsList.pipe(T.Query("list.fields")),
+      GetUsersListMembershipsRequestListFieldsList.pipe(
+        T.Query("list.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetUsersListMembershipsRequestExpansionsList.pipe(T.Query()),
+      GetUsersListMembershipsRequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
-      GetUsersListMembershipsRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetUsersListMembershipsRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/users/{id}/list_memberships", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "GET",
+        uri: "/2/users/{id}/list_memberships",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetUsersListMembershipsRequest",
 }) as any as S.Schema<GetUsersListMembershipsRequest>;
@@ -3311,13 +3417,23 @@ export interface GetUsersMeRequest {
 export const GetUsersMeRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     user_fields: S.optional(
-      GetUsersMeRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetUsersMeRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-    expansions: S.optional(GetUsersMeRequestExpansionsList.pipe(T.Query())),
+    expansions: S.optional(
+      GetUsersMeRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
+    ),
     post_fields: S.optional(
-      GetUsersMeRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetUsersMeRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/users/me", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/users/me", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetUsersMeRequest",
 }) as any as S.Schema<GetUsersMeRequest>;
@@ -3449,13 +3565,23 @@ export const GetUsersMutingRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     user_fields: S.optional(
-      GetUsersMutingRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetUsersMutingRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-    expansions: S.optional(GetUsersMutingRequestExpansionsList.pipe(T.Query())),
+    expansions: S.optional(
+      GetUsersMutingRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
+    ),
     post_fields: S.optional(
-      GetUsersMutingRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetUsersMutingRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/users/{id}/muting", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/users/{id}/muting", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetUsersMutingRequest",
 }) as any as S.Schema<GetUsersMutingRequest>;
@@ -3571,17 +3697,25 @@ export const GetUsersOwnedListsRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     list_fields: S.optional(
-      GetUsersOwnedListsRequestListFieldsList.pipe(T.Query("list.fields")),
+      GetUsersOwnedListsRequestListFieldsList.pipe(
+        T.Query("list.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetUsersOwnedListsRequestExpansionsList.pipe(T.Query()),
+      GetUsersOwnedListsRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
     ),
     user_fields: S.optional(
-      GetUsersOwnedListsRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetUsersOwnedListsRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/users/{id}/owned_lists", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "GET", uri: "/2/users/{id}/owned_lists", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetUsersOwnedListsRequest",
 }) as any as S.Schema<GetUsersOwnedListsRequest>;
@@ -3692,17 +3826,28 @@ export const GetUsersPinnedListsRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     list_fields: S.optional(
-      GetUsersPinnedListsRequestListFieldsList.pipe(T.Query("list.fields")),
+      GetUsersPinnedListsRequestListFieldsList.pipe(
+        T.Query("list.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetUsersPinnedListsRequestExpansionsList.pipe(T.Query()),
+      GetUsersPinnedListsRequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
-      GetUsersPinnedListsRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetUsersPinnedListsRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/users/{id}/pinned_lists", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "GET", uri: "/2/users/{id}/pinned_lists", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetUsersPinnedListsRequest",
 }) as any as S.Schema<GetUsersPinnedListsRequest>;
@@ -3926,24 +4071,44 @@ export const GetUsersRepostsOfMeRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     post_fields: S.optional(
-      GetUsersRepostsOfMeRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetUsersRepostsOfMeRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetUsersRepostsOfMeRequestExpansionsList.pipe(T.Query()),
+      GetUsersRepostsOfMeRequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
-      GetUsersRepostsOfMeRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetUsersRepostsOfMeRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      GetUsersRepostsOfMeRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      GetUsersRepostsOfMeRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      GetUsersRepostsOfMeRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      GetUsersRepostsOfMeRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      GetUsersRepostsOfMeRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      GetUsersRepostsOfMeRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/users/reposts_of_me", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/users/reposts_of_me", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetUsersRepostsOfMeRequest",
 }) as any as S.Schema<GetUsersRepostsOfMeRequest>;
@@ -3986,7 +4151,10 @@ export const MuteUserRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     target_user_id: S.String,
-  }).pipe(T.Http({ method: "POST", uri: "/2/users/{id}/muting", code: 200 })),
+  })
+    .pipe(T.Http({ method: "POST", uri: "/2/users/{id}/muting", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "MuteUserRequest",
 }) as any as S.Schema<MuteUserRequest>;
@@ -4128,13 +4296,23 @@ export const SearchUsersRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     next_token: S.optional(S.String.pipe(T.Query())),
     user_fields: S.optional(
-      SearchUsersRequestUserFieldsList.pipe(T.Query("user.fields")),
+      SearchUsersRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-    expansions: S.optional(SearchUsersRequestExpansionsList.pipe(T.Query())),
+    expansions: S.optional(
+      SearchUsersRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
+    ),
     post_fields: S.optional(
-      SearchUsersRequestPostFieldsList.pipe(T.Query("post.fields")),
+      SearchUsersRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/users/search", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/users/search", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "SearchUsersRequest",
 }) as any as S.Schema<SearchUsersRequest>;
@@ -4189,13 +4367,15 @@ export const UnfollowUserRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     source_user_id: S.String.pipe(T.Label()),
     target_user_id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({
-      method: "DELETE",
-      uri: "/2/users/{source_user_id}/following/{target_user_id}",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "DELETE",
+        uri: "/2/users/{source_user_id}/following/{target_user_id}",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "UnfollowUserRequest",
 }) as any as S.Schema<UnfollowUserRequest>;

@@ -124,19 +124,26 @@
           "target": "com.x.media#GetMediaByMediaKeysRequestMediaKeysList",
           "traits": {
             "smithy.api#httpQuery": "media_keys",
-            "smithy.api#required": {}
+            "smithy.api#required": {},
+            "com.x#csvQuery": true
           }
         },
         "media_fields": {
           "target": "com.x.media#GetMediaByMediaKeysRequestMediaFieldsList",
           "traits": {
             "smithy.api#httpQuery": "media.fields",
-            "smithy.api#documentation": "A comma separated list of Media fields to display."
+            "smithy.api#documentation": "A comma separated list of Media fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1",
+          "app"
+        ]
       }
     },
     "com.x.media#GetMediaByMediaKeysResponse": {
@@ -906,7 +913,8 @@
           "uri": "/2/media",
           "code": 200
         },
-        "smithy.api#documentation": "Get Media by media keys"
+        "smithy.api#documentation": "Get Media by media keys",
+        "com.x#response": "json"
       }
     },
     "com.x.media#GetMediaAnalyticsRequestMediaKeysList": {
@@ -1040,7 +1048,8 @@
           "target": "com.x.media#GetMediaAnalyticsRequestMediaKeysList",
           "traits": {
             "smithy.api#httpQuery": "media_keys",
-            "smithy.api#required": {}
+            "smithy.api#required": {},
+            "com.x#csvQuery": true
           }
         },
         "start_time": {
@@ -1067,12 +1076,17 @@
           "target": "com.x.media#GetMediaAnalyticsRequestMediaAnalyticsFieldsList",
           "traits": {
             "smithy.api#httpQuery": "media_analytics.fields",
-            "smithy.api#documentation": "A comma separated list of MediaAnalytics fields to display."
+            "smithy.api#documentation": "A comma separated list of MediaAnalytics fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.media#GetMediaAnalyticsResponse": {
@@ -1407,7 +1421,8 @@
           "uri": "/2/media/analytics",
           "code": 200
         },
-        "smithy.api#documentation": "Get Media analytics"
+        "smithy.api#documentation": "Get Media analytics",
+        "com.x#response": "json"
       }
     },
     "com.x.media#CreateMediaMetadataMetadata": {
@@ -1610,7 +1625,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.media#CreateMediaMetadataResponse": {
@@ -1665,7 +1685,8 @@
           "uri": "/2/media/metadata",
           "code": 200
         },
-        "smithy.api#documentation": "Create Media metadata\n\nCreates metadata for a Media file."
+        "smithy.api#documentation": "Create Media metadata\n\nCreates metadata for a Media file.",
+        "com.x#response": "json"
       }
     },
     "com.x.media#CreateMediaSubtitlesRequestMediaCategory": {
@@ -1735,7 +1756,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.media#CreateMediaSubtitlesResponse": {
@@ -1795,7 +1821,8 @@
           "uri": "/2/media/subtitles",
           "code": 200
         },
-        "smithy.api#documentation": "Create Media subtitles\n\nCreates subtitles for a specific Media file."
+        "smithy.api#documentation": "Create Media subtitles\n\nCreates subtitles for a specific Media file.",
+        "com.x#response": "json"
       }
     },
     "com.x.media#DeleteMediaSubtitlesRequest": {
@@ -1824,7 +1851,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.media#DeleteMediaSubtitlesResponse": {
@@ -1873,7 +1905,8 @@
           "uri": "/2/media/subtitles",
           "code": 200
         },
-        "smithy.api#documentation": "Delete Media subtitles\n\nDeletes subtitles for a specific Media file."
+        "smithy.api#documentation": "Delete Media subtitles\n\nDeletes subtitles for a specific Media file.",
+        "com.x#response": "json"
       }
     },
     "com.x.media#GetMediaUploadStatusRequestCommand": {
@@ -1906,7 +1939,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.media#GetMediaUploadStatusResponse": {
@@ -2042,7 +2079,8 @@
           "uri": "/2/media/upload",
           "code": 200
         },
-        "smithy.api#documentation": "Get Media upload status\n\nRetrieves the status of a Media upload by its ID."
+        "smithy.api#documentation": "Get Media upload status\n\nRetrieves the status of a Media upload by its ID.",
+        "com.x#response": "json"
       }
     },
     "com.x.media#MediaUploadRequestMediaCategory": {
@@ -2120,7 +2158,13 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#multipart": true,
+        "com.x#requestBody": true
       }
     },
     "com.x.media#MediaUploadResponse": {
@@ -2256,7 +2300,8 @@
           "uri": "/2/media/upload",
           "code": 200
         },
-        "smithy.api#documentation": "Upload media\n\nUploads a media file for use in posts or other content."
+        "smithy.api#documentation": "Upload media\n\nUploads a media file for use in posts or other content.",
+        "com.x#response": "json"
       }
     },
     "com.x.media#InitializeMediaUploadRequestAdditionalOwnersList": {
@@ -2457,7 +2502,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.media#InitializeMediaUploadResponse": {
@@ -2518,7 +2568,8 @@
           "uri": "/2/media/upload/initialize",
           "code": 200
         },
-        "smithy.api#documentation": "Initialize media upload\n\nInitializes a media upload."
+        "smithy.api#documentation": "Initialize media upload\n\nInitializes a media upload.",
+        "com.x#response": "json"
       }
     },
     "com.x.media#AppendMediaUploadRequest": {
@@ -2547,7 +2598,13 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#multipart": true,
+        "com.x#requestBody": true
       }
     },
     "com.x.media#AppendMediaUploadResponse": {
@@ -2595,7 +2652,8 @@
           "uri": "/2/media/upload/{id}/append",
           "code": 200
         },
-        "smithy.api#documentation": "Append Media Upload"
+        "smithy.api#documentation": "Append Media Upload",
+        "com.x#response": "json"
       }
     },
     "com.x.media#FinalizeMediaUploadRequest": {
@@ -2610,7 +2668,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.media#FinalizeMediaUploadResponse": {
@@ -2746,7 +2808,8 @@
           "uri": "/2/media/upload/{id}/finalize",
           "code": 200
         },
-        "smithy.api#documentation": "Finalize Media upload\n\nFinalizes a Media upload request."
+        "smithy.api#documentation": "Finalize Media upload\n\nFinalizes a Media upload request.",
+        "com.x#response": "json"
       }
     },
     "com.x.media#GetMediaByMediaKeyRequestMediaFieldsItem": {
@@ -2856,12 +2919,18 @@
           "target": "com.x.media#GetMediaByMediaKeyRequestMediaFieldsList",
           "traits": {
             "smithy.api#httpQuery": "media.fields",
-            "smithy.api#documentation": "A comma separated list of Media fields to display."
+            "smithy.api#documentation": "A comma separated list of Media fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1",
+          "app"
+        ]
       }
     },
     "com.x.media#GetMediaByMediaKeyResponse": {
@@ -2897,7 +2966,8 @@
           "uri": "/2/media/{media_key}",
           "code": 200
         },
-        "smithy.api#documentation": "Get Media by media key"
+        "smithy.api#documentation": "Get Media by media key",
+        "com.x#response": "json"
       }
     },
     "com.x.media#Media": {

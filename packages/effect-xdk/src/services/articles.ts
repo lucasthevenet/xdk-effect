@@ -375,7 +375,10 @@ export const ArticleCreateDraftRequest = /*@__PURE__*/ S.suspend(() =>
     content_state: ArticleCreateDraftContentState,
     cover_media: S.optional(ArticleCreateDraftCoverMedia),
     title: S.String,
-  }).pipe(T.Http({ method: "POST", uri: "/2/articles/draft", code: 200 })),
+  })
+    .pipe(T.Http({ method: "POST", uri: "/2/articles/draft", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "ArticleCreateDraftRequest",
 }) as any as S.Schema<ArticleCreateDraftRequest>;
@@ -675,13 +678,15 @@ export interface ArticlePublishRequest {
 export const ArticlePublishRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     article_id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({
-      method: "POST",
-      uri: "/2/articles/{article_id}/publish",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "POST",
+        uri: "/2/articles/{article_id}/publish",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "ArticlePublishRequest",
 }) as any as S.Schema<ArticlePublishRequest>;

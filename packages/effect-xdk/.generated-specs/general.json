@@ -35,7 +35,7 @@
     "com.x.general#GetOpenApiSpec": {
       "type": "operation",
       "input": {
-        "target": "smithy.api#Unit"
+        "target": "com.x.general#GetOpenApiSpecRequest"
       },
       "output": {
         "target": "com.x.general#GetOpenApiSpecResponse"
@@ -46,7 +46,8 @@
           "uri": "/2/openapi.json",
           "code": 200
         },
-        "smithy.api#documentation": "Get OpenAPI Spec.\n\nRetrieves the full OpenAPI Specification in JSON format. (See https://github.com/OAI/OpenAPI-Specification/blob/master/README.md)"
+        "smithy.api#documentation": "Get OpenAPI Spec.\n\nRetrieves the full OpenAPI Specification in JSON format. (See https://github.com/OAI/OpenAPI-Specification/blob/master/README.md)",
+        "com.x#response": "json"
       }
     },
     "com.x.general#General": {
@@ -60,6 +61,13 @@
       "traits": {
         "smithy.api#title": "X API v2",
         "smithy.api#documentation": "X API v2 core endpoints"
+      }
+    },
+    "com.x.general#GetOpenApiSpecRequest": {
+      "type": "structure",
+      "members": {},
+      "traits": {
+        "com.x#security": []
       }
     }
   }

@@ -583,7 +583,7 @@
     "com.x.webhooks#GetWebhooksStreamLinks": {
       "type": "operation",
       "input": {
-        "target": "smithy.api#Unit"
+        "target": "com.x.webhooks#GetWebhooksStreamLinksRequest"
       },
       "output": {
         "target": "com.x.webhooks#GetWebhooksStreamLinksResponse"
@@ -594,7 +594,8 @@
           "uri": "/2/tweets/search/webhooks",
           "code": 200
         },
-        "smithy.api#documentation": "Get stream links\n\nGet a list of webhook links associated with a filtered stream ruleset."
+        "smithy.api#documentation": "Get stream links\n\nGet a list of webhook links associated with a filtered stream ruleset.",
+        "com.x#response": "json"
       }
     },
     "com.x.webhooks#CreateWebhooksStreamLinkRequest": {
@@ -609,7 +610,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.webhooks#CreateWebhooksStreamLinkResponse": {
@@ -658,7 +662,8 @@
           "uri": "/2/tweets/search/webhooks/{webhook_id}",
           "code": 200
         },
-        "smithy.api#documentation": "Create stream link\n\nCreates a link to deliver FilteredStream events to the given webhook."
+        "smithy.api#documentation": "Create stream link\n\nCreates a link to deliver FilteredStream events to the given webhook.",
+        "com.x#response": "json"
       }
     },
     "com.x.webhooks#DeleteWebhooksStreamLinkRequest": {
@@ -673,7 +678,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.webhooks#DeleteWebhooksStreamLinkResponse": {
@@ -722,7 +730,8 @@
           "uri": "/2/tweets/search/webhooks/{webhook_id}",
           "code": 200
         },
-        "smithy.api#documentation": "Delete stream link\n\nDeletes the link delivering FilteredStream events to the given webhook."
+        "smithy.api#documentation": "Delete stream link\n\nDeletes the link delivering FilteredStream events to the given webhook.",
+        "com.x#response": "json"
       }
     },
     "com.x.webhooks#GetWebhooksRequestWebhookConfigFieldsItem": {
@@ -771,12 +780,16 @@
           "target": "com.x.webhooks#GetWebhooksRequestWebhookConfigFieldsList",
           "traits": {
             "smithy.api#httpQuery": "webhook_config.fields",
-            "smithy.api#documentation": "A comma separated list of WebhookConfig fields to display."
+            "smithy.api#documentation": "A comma separated list of WebhookConfig fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.webhooks#GetWebhooksResponse": {
@@ -852,7 +865,8 @@
           "uri": "/2/webhooks",
           "code": 200
         },
-        "smithy.api#documentation": "Get webhook\n\nGet a list of webhook configs associated with a client app."
+        "smithy.api#documentation": "Get webhook\n\nGet a list of webhook configs associated with a client app.",
+        "com.x#response": "json"
       }
     },
     "com.x.webhooks#CreateWebhooksRequest": {
@@ -867,7 +881,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth1",
+          "app"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.webhooks#CreateWebhooksResponse": {
@@ -937,7 +956,8 @@
           "uri": "/2/webhooks",
           "code": 200
         },
-        "smithy.api#documentation": "Create webhook\n\nCreates a new webhook configuration."
+        "smithy.api#documentation": "Create webhook\n\nCreates a new webhook configuration.",
+        "com.x#response": "json"
       }
     },
     "com.x.webhooks#CreateWebhookReplayJobRequest": {
@@ -966,7 +986,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.webhooks#CreateWebhookReplayJobResponse": {
@@ -1022,7 +1046,8 @@
           "uri": "/2/webhooks/replay",
           "code": 200
         },
-        "smithy.api#documentation": "Create replay job for webhook\n\nCreates a replay job to retrieve events from up to the past 24 hours for all events delivered or attempted to be delivered to the webhook."
+        "smithy.api#documentation": "Create replay job for webhook\n\nCreates a replay job to retrieve events from up to the past 24 hours for all events delivered or attempted to be delivered to the webhook.",
+        "com.x#response": "json"
       }
     },
     "com.x.webhooks#ValidateWebhooksRequest": {
@@ -1037,7 +1062,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth1",
+          "app"
+        ]
       }
     },
     "com.x.webhooks#ValidateWebhooksResponse": {
@@ -1086,7 +1115,8 @@
           "uri": "/2/webhooks/{webhook_id}",
           "code": 200
         },
-        "smithy.api#documentation": "Validate webhook\n\nTriggers a CRC check for a given webhook."
+        "smithy.api#documentation": "Validate webhook\n\nTriggers a CRC check for a given webhook.",
+        "com.x#response": "json"
       }
     },
     "com.x.webhooks#DeleteWebhooksRequest": {
@@ -1101,7 +1131,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth1",
+          "app"
+        ]
       }
     },
     "com.x.webhooks#DeleteWebhooksResponse": {
@@ -1150,7 +1184,8 @@
           "uri": "/2/webhooks/{webhook_id}",
           "code": 200
         },
-        "smithy.api#documentation": "Delete webhook\n\nDeletes an existing webhook configuration."
+        "smithy.api#documentation": "Delete webhook\n\nDeletes an existing webhook configuration.",
+        "com.x#response": "json"
       }
     },
     "com.x.webhooks#Webhooks": {
@@ -1185,6 +1220,15 @@
       "traits": {
         "smithy.api#title": "X API v2",
         "smithy.api#documentation": "X API v2 core endpoints"
+      }
+    },
+    "com.x.webhooks#GetWebhooksStreamLinksRequest": {
+      "type": "structure",
+      "members": {},
+      "traits": {
+        "com.x#security": [
+          "app"
+        ]
       }
     }
   }

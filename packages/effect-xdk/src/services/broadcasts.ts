@@ -71,9 +71,10 @@ export const CreateScheduledBroadcastRequest = /*@__PURE__*/ S.suspend(() =>
     telecast_id: S.optional(S.String),
     thumbnail_media_id: S.optional(S.String),
     title: S.optional(S.String),
-  }).pipe(
-    T.Http({ method: "POST", uri: "/2/broadcasts/scheduled", code: 200 }),
-  ),
+  })
+    .pipe(T.Http({ method: "POST", uri: "/2/broadcasts/scheduled", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "CreateScheduledBroadcastRequest",
 }) as any as S.Schema<CreateScheduledBroadcastRequest>;
@@ -415,13 +416,15 @@ export const DeleteScheduledBroadcastRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     roll_forward: S.optional(S.Boolean.pipe(T.Query())),
-  }).pipe(
-    T.Http({
-      method: "DELETE",
-      uri: "/2/broadcasts/scheduled/{id}",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "DELETE",
+        uri: "/2/broadcasts/scheduled/{id}",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "DeleteScheduledBroadcastRequest",
 }) as any as S.Schema<DeleteScheduledBroadcastRequest>;
@@ -463,9 +466,11 @@ export interface GetScheduledBroadcastRequest {
 export const GetScheduledBroadcastRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/broadcasts/scheduled/{id}", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "GET", uri: "/2/broadcasts/scheduled/{id}", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetScheduledBroadcastRequest",
 }) as any as S.Schema<GetScheduledBroadcastRequest>;
@@ -499,13 +504,15 @@ export interface GoLiveScheduledBroadcastRequest {
 export const GoLiveScheduledBroadcastRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({
-      method: "POST",
-      uri: "/2/broadcasts/scheduled/{id}/live",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "POST",
+        uri: "/2/broadcasts/scheduled/{id}/live",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GoLiveScheduledBroadcastRequest",
 }) as any as S.Schema<GoLiveScheduledBroadcastRequest>;
@@ -545,7 +552,9 @@ export const ListScheduledBroadcastsRequest = /*@__PURE__*/ S.suspend(() =>
     oldest_start_time: S.optional(S.String.pipe(T.Query())),
     newest_start_time: S.optional(S.String.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
-  }).pipe(T.Http({ method: "GET", uri: "/2/broadcasts/scheduled", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/broadcasts/scheduled", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "ListScheduledBroadcastsRequest",
 }) as any as S.Schema<ListScheduledBroadcastsRequest>;
@@ -588,9 +597,10 @@ export const SendBroadcastChatRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     text: S.String,
-  }).pipe(
-    T.Http({ method: "POST", uri: "/2/broadcasts/{id}/chat", code: 200 }),
-  ),
+  })
+    .pipe(T.Http({ method: "POST", uri: "/2/broadcasts/{id}/chat", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "SendBroadcastChatRequest",
 }) as any as S.Schema<SendBroadcastChatRequest>;
@@ -673,9 +683,12 @@ export const UpdateScheduledBroadcastRequest = /*@__PURE__*/ S.suspend(() =>
     source_id: S.optional(S.String),
     thumbnail_media_id: S.optional(S.String),
     title: S.optional(S.String),
-  }).pipe(
-    T.Http({ method: "PUT", uri: "/2/broadcasts/scheduled/{id}", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "PUT", uri: "/2/broadcasts/scheduled/{id}", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "UpdateScheduledBroadcastRequest",
 }) as any as S.Schema<UpdateScheduledBroadcastRequest>;

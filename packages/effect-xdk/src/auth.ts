@@ -4,7 +4,7 @@ import * as Effect from "effect/Effect";
 import * as Encoding from "effect/Encoding";
 import { XAuthenticationError } from "./errors.ts";
 import { Hmac } from "./hmac.ts";
-import type { OperationDefinition } from "./operation-types.ts";
+import type { SecurityScheme } from "./traits.ts";
 
 /** One credential set for user signing and internal app-token exchange. */
 export interface XCredentials {
@@ -25,7 +25,7 @@ export type XAuthentication = XCredentials | XBearerCredentials;
 /** Select only authentication schemes declared by this operation's spec. */
 export const selectAuthentication = (
   credentials: XAuthentication,
-  security: OperationDefinition["security"],
+  security: readonly SecurityScheme[],
   preferred?: "app" | "user",
 ): "app" | "user" | undefined => {
   if (security.length === 0) return undefined;
@@ -113,7 +113,9 @@ export const signOAuth1 = (
     const signature = Encoding.encodeBase64(
       yield* hmac.sign({
         hash: "SHA-1",
-        key: new TextEncoder().encode(`${encode(apiSecret)}&${encode(accessTokenSecret)}`),
+        key: new TextEncoder().encode(
+          `${encode(apiSecret)}&${encode(accessTokenSecret)}`,
+        ),
         data: new TextEncoder().encode(baseString),
       }),
     );

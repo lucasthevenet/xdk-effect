@@ -69,6 +69,8 @@ for (const packageDirectory of packages) {
             "lib/protocol.d.ts",
             "lib/retry.js",
             "lib/retry.d.ts",
+            "lib/webhooks.js",
+            "lib/webhooks.d.ts",
             "lib/services/index.js",
             "lib/services/posts.js",
             "lib/services/posts.d.ts",
@@ -93,6 +95,18 @@ for (const packageDirectory of packages) {
       "src/CredentialFiles.ts",
       "src/OAuthLoopback.ts",
       "src/WebhookRoute.ts",
+      "src/operations.ts",
+      "lib/operations.js",
+      "lib/operations.d.ts",
+      "src/operation-types.ts",
+      "lib/operation-types.js",
+      "lib/operation-types.d.ts",
+      "src/operation-wire.ts",
+      "lib/operation-wire.js",
+      "lib/operation-wire.d.ts",
+      "src/types.ts",
+      "lib/types.js",
+      "lib/types.d.ts",
     ]) {
       if (files.has(removed)) {
         throw new Error(`${manifest.name} tarball still contains ${removed}`);

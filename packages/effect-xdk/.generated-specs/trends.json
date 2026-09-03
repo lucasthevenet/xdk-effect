@@ -63,12 +63,17 @@
           "target": "com.x.trends#GetTrendsPersonalizedTrendsRequestPersonalizedTrendFieldsList",
           "traits": {
             "smithy.api#httpQuery": "personalized_trend.fields",
-            "smithy.api#documentation": "A comma separated list of PersonalizedTrend fields to display."
+            "smithy.api#documentation": "A comma separated list of PersonalizedTrend fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.trends#GetTrendsPersonalizedTrendsResponse": {
@@ -615,7 +620,8 @@
           "uri": "/2/users/personalized_trends",
           "code": 200
         },
-        "smithy.api#documentation": "Get Trends Personalized Trends"
+        "smithy.api#documentation": "Get Trends Personalized Trends",
+        "com.x#response": "json"
       }
     },
     "com.x.trends#Trends": {

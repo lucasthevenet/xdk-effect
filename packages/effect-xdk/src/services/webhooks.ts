@@ -21,7 +21,10 @@ export const CreateWebhookReplayJobRequest = /*@__PURE__*/ S.suspend(() =>
     from_date: S.String,
     to_date: S.String,
     webhook_id: S.String,
-  }).pipe(T.Http({ method: "POST", uri: "/2/webhooks/replay", code: 200 })),
+  })
+    .pipe(T.Http({ method: "POST", uri: "/2/webhooks/replay", code: 200 }))
+    .pipe(T.Security(["app"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "CreateWebhookReplayJobRequest",
 }) as any as S.Schema<CreateWebhookReplayJobRequest>;
@@ -322,7 +325,10 @@ export interface CreateWebhooksRequest {
 export const CreateWebhooksRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     url: S.String,
-  }).pipe(T.Http({ method: "POST", uri: "/2/webhooks", code: 200 })),
+  })
+    .pipe(T.Http({ method: "POST", uri: "/2/webhooks", code: 200 }))
+    .pipe(T.Security(["oauth1", "app"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "CreateWebhooksRequest",
 }) as any as S.Schema<CreateWebhooksRequest>;
@@ -372,13 +378,15 @@ export interface CreateWebhooksStreamLinkRequest {
 export const CreateWebhooksStreamLinkRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     webhook_id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({
-      method: "POST",
-      uri: "/2/tweets/search/webhooks/{webhook_id}",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "POST",
+        uri: "/2/tweets/search/webhooks/{webhook_id}",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "CreateWebhooksStreamLinkRequest",
 }) as any as S.Schema<CreateWebhooksStreamLinkRequest>;
@@ -420,9 +428,11 @@ export interface DeleteWebhooksRequest {
 export const DeleteWebhooksRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     webhook_id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({ method: "DELETE", uri: "/2/webhooks/{webhook_id}", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "DELETE", uri: "/2/webhooks/{webhook_id}", code: 200 }),
+    )
+    .pipe(T.Security(["oauth1", "app"])),
 ).annotate({
   identifier: "DeleteWebhooksRequest",
 }) as any as S.Schema<DeleteWebhooksRequest>;
@@ -463,13 +473,15 @@ export interface DeleteWebhooksStreamLinkRequest {
 export const DeleteWebhooksStreamLinkRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     webhook_id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({
-      method: "DELETE",
-      uri: "/2/tweets/search/webhooks/{webhook_id}",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "DELETE",
+        uri: "/2/tweets/search/webhooks/{webhook_id}",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "DeleteWebhooksStreamLinkRequest",
 }) as any as S.Schema<DeleteWebhooksStreamLinkRequest>;
@@ -529,9 +541,12 @@ export const GetWebhooksRequest = /*@__PURE__*/ S.suspend(() =>
     webhook_config_fields: S.optional(
       GetWebhooksRequestWebhookConfigFieldsList.pipe(
         T.Query("webhook_config.fields"),
+        T.CsvQuery(true),
       ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/webhooks", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/webhooks", code: 200 }))
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "GetWebhooksRequest",
 }) as any as S.Schema<GetWebhooksRequest>;
@@ -590,9 +605,11 @@ export const GetWebhooksResponse = /*@__PURE__*/ S.suspend(() =>
 
 export interface GetWebhooksStreamLinksRequest {}
 export const GetWebhooksStreamLinksRequest = /*@__PURE__*/ S.suspend(() =>
-  S.Struct({}).pipe(
-    T.Http({ method: "GET", uri: "/2/tweets/search/webhooks", code: 200 }),
-  ),
+  S.Struct({})
+    .pipe(
+      T.Http({ method: "GET", uri: "/2/tweets/search/webhooks", code: 200 }),
+    )
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "GetWebhooksStreamLinksRequest",
 }) as any as S.Schema<GetWebhooksStreamLinksRequest>;
@@ -661,9 +678,9 @@ export interface ValidateWebhooksRequest {
 export const ValidateWebhooksRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     webhook_id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({ method: "PUT", uri: "/2/webhooks/{webhook_id}", code: 200 }),
-  ),
+  })
+    .pipe(T.Http({ method: "PUT", uri: "/2/webhooks/{webhook_id}", code: 200 }))
+    .pipe(T.Security(["oauth1", "app"])),
 ).annotate({
   identifier: "ValidateWebhooksRequest",
 }) as any as S.Schema<ValidateWebhooksRequest>;

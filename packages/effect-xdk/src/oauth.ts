@@ -5,8 +5,7 @@ import * as Redacted from "effect/Redacted";
 import * as HttpClient from "effect/unstable/http/HttpClient";
 import * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
 import { XOAuthError, XOAuthStateError } from "./errors.ts";
-import { utf8 } from "./runtime.ts";
-import type { XJsonObject, XJsonValue } from "./types.ts";
+import type * as Schema from "effect/Schema";
 
 export const X_OAUTH_AUTHORIZE_URL = "https://x.com/i/oauth2/authorize";
 export const X_OAUTH_TOKEN_URL = "https://api.x.com/2/oauth2/token";
@@ -35,25 +34,25 @@ export interface OAuth2Config {
   readonly revokeUrl?: string;
 }
 
-const isJsonObject = (value: XJsonValue): value is XJsonObject =>
+const isJsonObject = (value: Schema.Json): value is Schema.JsonObject =>
   Object.prototype.toString.call(value) === "[object Object]";
 
-const isJsonString = (value: XJsonValue | undefined): value is string =>
+const isJsonString = (value: Schema.Json | undefined): value is string =>
   Object.prototype.toString.call(value) === "[object String]";
 
-const isJsonNumber = (value: XJsonValue | undefined): value is number =>
+const isJsonNumber = (value: Schema.Json | undefined): value is number =>
   Object.prototype.toString.call(value) === "[object Number]" &&
   Number.isFinite(Number(value));
 
 const isSafeErrorField = (
-  value: XJsonValue | undefined,
+  value: Schema.Json | undefined,
 ): value is boolean | number | string =>
   Object.prototype.toString.call(value) === "[object Boolean]" ||
   isJsonNumber(value) ||
   isJsonString(value);
 
 const oauthError = (
-  body: XJsonValue | undefined,
+  body: Schema.Json | undefined,
   status: number,
   fallback: string,
 ): XOAuthError => {
@@ -87,7 +86,7 @@ const oauthError = (
 };
 
 const decodeToken = (
-  body: XJsonValue | undefined,
+  body: Schema.Json | undefined,
   status: number,
 ): OAuth2Token => {
   if (body === undefined || !isJsonObject(body)) {
@@ -162,7 +161,7 @@ const oauthRequest = (
       );
     const text = yield* response.text.pipe(Effect.mapError(invalidResponse));
     const body = yield* Effect.try({
-      try: (): XJsonValue | undefined =>
+      try: (): Schema.Json | undefined =>
         text.trim() ? JSON.parse(text) : undefined,
       catch: invalidResponse,
     });

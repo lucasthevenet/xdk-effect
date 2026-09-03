@@ -16,7 +16,10 @@ export const AddListsMemberRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     user_id: S.String,
-  }).pipe(T.Http({ method: "POST", uri: "/2/lists/{id}/members", code: 200 })),
+  })
+    .pipe(T.Http({ method: "POST", uri: "/2/lists/{id}/members", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "AddListsMemberRequest",
 }) as any as S.Schema<AddListsMemberRequest>;
@@ -320,7 +323,10 @@ export const CreateListsRequest = /*@__PURE__*/ S.suspend(() =>
     description: S.optional(S.String),
     name: S.String,
     private: S.optional(S.Boolean),
-  }).pipe(T.Http({ method: "POST", uri: "/2/lists", code: 200 })),
+  })
+    .pipe(T.Http({ method: "POST", uri: "/2/lists", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "CreateListsRequest",
 }) as any as S.Schema<CreateListsRequest>;
@@ -364,7 +370,9 @@ export interface DeleteListsRequest {
 export const DeleteListsRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
-  }).pipe(T.Http({ method: "DELETE", uri: "/2/lists/{id}", code: 200 })),
+  })
+    .pipe(T.Http({ method: "DELETE", uri: "/2/lists/{id}", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "DeleteListsRequest",
 }) as any as S.Schema<DeleteListsRequest>;
@@ -475,13 +483,23 @@ export const GetListsByIdRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     list_fields: S.optional(
-      GetListsByIdRequestListFieldsList.pipe(T.Query("list.fields")),
+      GetListsByIdRequestListFieldsList.pipe(
+        T.Query("list.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-    expansions: S.optional(GetListsByIdRequestExpansionsList.pipe(T.Query())),
+    expansions: S.optional(
+      GetListsByIdRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
+    ),
     user_fields: S.optional(
-      GetListsByIdRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetListsByIdRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/lists/{id}", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/lists/{id}", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetListsByIdRequest",
 }) as any as S.Schema<GetListsByIdRequest>;
@@ -2006,15 +2024,23 @@ export const GetListsFollowersRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     user_fields: S.optional(
-      GetListsFollowersRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetListsFollowersRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetListsFollowersRequestExpansionsList.pipe(T.Query()),
+      GetListsFollowersRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
     ),
     post_fields: S.optional(
-      GetListsFollowersRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetListsFollowersRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/lists/{id}/followers", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/lists/{id}/followers", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetListsFollowersRequest",
 }) as any as S.Schema<GetListsFollowersRequest>;
@@ -2172,15 +2198,23 @@ export const GetListsMembersRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     user_fields: S.optional(
-      GetListsMembersRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetListsMembersRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetListsMembersRequestExpansionsList.pipe(T.Query()),
+      GetListsMembersRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
     ),
     post_fields: S.optional(
-      GetListsMembersRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetListsMembersRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/lists/{id}/members", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/lists/{id}/members", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetListsMembersRequest",
 }) as any as S.Schema<GetListsMembersRequest>;
@@ -2397,22 +2431,41 @@ export const GetListsPostsRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     post_fields: S.optional(
-      GetListsPostsRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetListsPostsRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-    expansions: S.optional(GetListsPostsRequestExpansionsList.pipe(T.Query())),
+    expansions: S.optional(
+      GetListsPostsRequestExpansionsList.pipe(T.Query(), T.CsvQuery(true)),
+    ),
     user_fields: S.optional(
-      GetListsPostsRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetListsPostsRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      GetListsPostsRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      GetListsPostsRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      GetListsPostsRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      GetListsPostsRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      GetListsPostsRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      GetListsPostsRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/lists/{id}/tweets", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/lists/{id}/tweets", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetListsPostsRequest",
 }) as any as S.Schema<GetListsPostsRequest>;
@@ -2455,9 +2508,12 @@ export const PinListRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     list_id: S.String,
-  }).pipe(
-    T.Http({ method: "POST", uri: "/2/users/{id}/pinned_lists", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "POST", uri: "/2/users/{id}/pinned_lists", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({ identifier: "PinListRequest" }) as any as S.Schema<PinListRequest>;
 
 export interface PinListResponseData {
@@ -2498,13 +2554,15 @@ export const RemoveListsMemberByUserIdRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     user_id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({
-      method: "DELETE",
-      uri: "/2/lists/{id}/members/{user_id}",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "DELETE",
+        uri: "/2/lists/{id}/members/{user_id}",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "RemoveListsMemberByUserIdRequest",
 }) as any as S.Schema<RemoveListsMemberByUserIdRequest>;
@@ -2539,13 +2597,15 @@ export const UnfollowListRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     list_id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({
-      method: "DELETE",
-      uri: "/2/users/{id}/followed_lists/{list_id}",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "DELETE",
+        uri: "/2/users/{id}/followed_lists/{list_id}",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "UnfollowListRequest",
 }) as any as S.Schema<UnfollowListRequest>;
@@ -2588,13 +2648,15 @@ export const UnpinListRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     list_id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({
-      method: "DELETE",
-      uri: "/2/users/{id}/pinned_lists/{list_id}",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "DELETE",
+        uri: "/2/users/{id}/pinned_lists/{list_id}",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "UnpinListRequest",
 }) as any as S.Schema<UnpinListRequest>;
@@ -2635,7 +2697,10 @@ export const UpdateListsRequest = /*@__PURE__*/ S.suspend(() =>
     description: S.optional(S.String),
     name: S.optional(S.String),
     private: S.optional(S.Boolean),
-  }).pipe(T.Http({ method: "PUT", uri: "/2/lists/{id}", code: 200 })),
+  })
+    .pipe(T.Http({ method: "PUT", uri: "/2/lists/{id}", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "UpdateListsRequest",
 }) as any as S.Schema<UpdateListsRequest>;

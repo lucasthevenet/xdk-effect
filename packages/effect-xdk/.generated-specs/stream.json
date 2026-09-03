@@ -43,7 +43,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.stream#ActivityStreamResponse": {
@@ -3212,7 +3215,8 @@
           "uri": "/2/activity/stream",
           "code": 200
         },
-        "smithy.api#documentation": "Activity Stream\n\nStream of X Activities"
+        "smithy.api#documentation": "Activity Stream\n\nStream of X Activities",
+        "com.x#response": "stream"
       }
     },
     "com.x.stream#StreamLikesComplianceRequest": {
@@ -3241,7 +3245,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.stream#StreamLikesComplianceResponse": {
@@ -3369,7 +3376,8 @@
           "uri": "/2/likes/compliance/stream",
           "code": 200
         },
-        "smithy.api#documentation": "Stream Likes compliance data\n\nStreams all compliance data related to Likes for Users."
+        "smithy.api#documentation": "Stream Likes compliance data\n\nStreams all compliance data related to Likes for Users.",
+        "com.x#response": "stream"
       }
     },
     "com.x.stream#StreamLikesFirehoseRequestLikeWithTweetAuthorFieldsItem": {
@@ -3965,40 +3973,48 @@
           "target": "com.x.stream#StreamLikesFirehoseRequestLikeWithTweetAuthorFieldsList",
           "traits": {
             "smithy.api#httpQuery": "like_with_tweet_author.fields",
-            "smithy.api#documentation": "A comma separated list of LikeWithTweetAuthor fields to display."
+            "smithy.api#documentation": "A comma separated list of LikeWithTweetAuthor fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.stream#StreamLikesFirehoseRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "media_fields": {
           "target": "com.x.stream#StreamLikesFirehoseRequestMediaFieldsList",
           "traits": {
             "smithy.api#httpQuery": "media.fields",
-            "smithy.api#documentation": "A comma separated list of Media fields to display."
+            "smithy.api#documentation": "A comma separated list of Media fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.stream#StreamLikesFirehoseRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "tweet_fields": {
           "target": "com.x.stream#StreamLikesFirehoseRequestTweetFieldsList",
           "traits": {
             "smithy.api#httpQuery": "tweet.fields",
-            "smithy.api#documentation": "A comma separated list of Tweet fields to display."
+            "smithy.api#documentation": "A comma separated list of Tweet fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.stream#StreamLikesFirehoseResponse": {
@@ -4037,7 +4053,8 @@
           "uri": "/2/likes/firehose/stream",
           "code": 200
         },
-        "smithy.api#documentation": "Stream all Likes\n\nStreams all public Likes in real-time."
+        "smithy.api#documentation": "Stream all Likes\n\nStreams all public Likes in real-time.",
+        "com.x#response": "stream"
       }
     },
     "com.x.stream#StreamLikesSample10RequestLikeWithTweetAuthorFieldsItem": {
@@ -4633,40 +4650,48 @@
           "target": "com.x.stream#StreamLikesSample10RequestLikeWithTweetAuthorFieldsList",
           "traits": {
             "smithy.api#httpQuery": "like_with_tweet_author.fields",
-            "smithy.api#documentation": "A comma separated list of LikeWithTweetAuthor fields to display."
+            "smithy.api#documentation": "A comma separated list of LikeWithTweetAuthor fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.stream#StreamLikesSample10RequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "media_fields": {
           "target": "com.x.stream#StreamLikesSample10RequestMediaFieldsList",
           "traits": {
             "smithy.api#httpQuery": "media.fields",
-            "smithy.api#documentation": "A comma separated list of Media fields to display."
+            "smithy.api#documentation": "A comma separated list of Media fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.stream#StreamLikesSample10RequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "tweet_fields": {
           "target": "com.x.stream#StreamLikesSample10RequestTweetFieldsList",
           "traits": {
             "smithy.api#httpQuery": "tweet.fields",
-            "smithy.api#documentation": "A comma separated list of Tweet fields to display."
+            "smithy.api#documentation": "A comma separated list of Tweet fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.stream#StreamLikesSample10Response": {
@@ -4705,7 +4730,8 @@
           "uri": "/2/likes/sample10/stream",
           "code": 200
         },
-        "smithy.api#documentation": "Stream sampled Likes\n\nStreams a 10% sample of public Likes in real-time."
+        "smithy.api#documentation": "Stream sampled Likes\n\nStreams a 10% sample of public Likes in real-time.",
+        "com.x#response": "stream"
       }
     },
     "com.x.stream#StreamPostsComplianceRequest": {
@@ -4742,7 +4768,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.stream#StreamPostsComplianceResponse": {
@@ -5047,7 +5076,8 @@
           "uri": "/2/tweets/compliance/stream",
           "code": 200
         },
-        "smithy.api#documentation": "Stream Posts compliance data\n\nStreams all compliance data related to Posts."
+        "smithy.api#documentation": "Stream Posts compliance data\n\nStreams all compliance data related to Posts.",
+        "com.x#response": "stream"
       }
     },
     "com.x.stream#StreamPostsFirehoseRequestTweetFieldsItem": {
@@ -5742,42 +5772,48 @@
           "target": "com.x.stream#StreamPostsFirehoseRequestTweetFieldsList",
           "traits": {
             "smithy.api#httpQuery": "tweet.fields",
-            "smithy.api#documentation": "A comma separated list of Tweet fields to display."
+            "smithy.api#documentation": "A comma separated list of Tweet fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.stream#StreamPostsFirehoseRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "media_fields": {
           "target": "com.x.stream#StreamPostsFirehoseRequestMediaFieldsList",
           "traits": {
             "smithy.api#httpQuery": "media.fields",
-            "smithy.api#documentation": "A comma separated list of Media fields to display."
+            "smithy.api#documentation": "A comma separated list of Media fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "poll_fields": {
           "target": "com.x.stream#StreamPostsFirehoseRequestPollFieldsList",
           "traits": {
             "smithy.api#httpQuery": "poll.fields",
-            "smithy.api#documentation": "A comma separated list of Poll fields to display."
+            "smithy.api#documentation": "A comma separated list of Poll fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.stream#StreamPostsFirehoseRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "place_fields": {
           "target": "com.x.stream#StreamPostsFirehoseRequestPlaceFieldsList",
           "traits": {
             "smithy.api#httpQuery": "place.fields",
-            "smithy.api#documentation": "A comma separated list of Place fields to display."
+            "smithy.api#documentation": "A comma separated list of Place fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "partition": {
@@ -5804,7 +5840,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.stream#StreamPostsFirehoseResponse": {
@@ -5843,7 +5882,8 @@
           "uri": "/2/tweets/firehose/stream",
           "code": 200
         },
-        "smithy.api#documentation": "Stream all Posts\n\nStreams all public Posts in real-time."
+        "smithy.api#documentation": "Stream all Posts\n\nStreams all public Posts in real-time.",
+        "com.x#response": "stream"
       }
     },
     "com.x.stream#StreamPostsFirehoseEnRequestTweetFieldsItem": {
@@ -6538,42 +6578,48 @@
           "target": "com.x.stream#StreamPostsFirehoseEnRequestTweetFieldsList",
           "traits": {
             "smithy.api#httpQuery": "tweet.fields",
-            "smithy.api#documentation": "A comma separated list of Tweet fields to display."
+            "smithy.api#documentation": "A comma separated list of Tweet fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.stream#StreamPostsFirehoseEnRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "media_fields": {
           "target": "com.x.stream#StreamPostsFirehoseEnRequestMediaFieldsList",
           "traits": {
             "smithy.api#httpQuery": "media.fields",
-            "smithy.api#documentation": "A comma separated list of Media fields to display."
+            "smithy.api#documentation": "A comma separated list of Media fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "poll_fields": {
           "target": "com.x.stream#StreamPostsFirehoseEnRequestPollFieldsList",
           "traits": {
             "smithy.api#httpQuery": "poll.fields",
-            "smithy.api#documentation": "A comma separated list of Poll fields to display."
+            "smithy.api#documentation": "A comma separated list of Poll fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.stream#StreamPostsFirehoseEnRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "place_fields": {
           "target": "com.x.stream#StreamPostsFirehoseEnRequestPlaceFieldsList",
           "traits": {
             "smithy.api#httpQuery": "place.fields",
-            "smithy.api#documentation": "A comma separated list of Place fields to display."
+            "smithy.api#documentation": "A comma separated list of Place fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "partition": {
@@ -6600,7 +6646,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.stream#StreamPostsFirehoseEnResponse": {
@@ -6639,7 +6688,8 @@
           "uri": "/2/tweets/firehose/stream/lang/en",
           "code": 200
         },
-        "smithy.api#documentation": "Stream English Posts\n\nStreams all public English-language Posts in real-time."
+        "smithy.api#documentation": "Stream English Posts\n\nStreams all public English-language Posts in real-time.",
+        "com.x#response": "stream"
       }
     },
     "com.x.stream#StreamPostsFirehoseJaRequestTweetFieldsItem": {
@@ -7334,42 +7384,48 @@
           "target": "com.x.stream#StreamPostsFirehoseJaRequestTweetFieldsList",
           "traits": {
             "smithy.api#httpQuery": "tweet.fields",
-            "smithy.api#documentation": "A comma separated list of Tweet fields to display."
+            "smithy.api#documentation": "A comma separated list of Tweet fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.stream#StreamPostsFirehoseJaRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "media_fields": {
           "target": "com.x.stream#StreamPostsFirehoseJaRequestMediaFieldsList",
           "traits": {
             "smithy.api#httpQuery": "media.fields",
-            "smithy.api#documentation": "A comma separated list of Media fields to display."
+            "smithy.api#documentation": "A comma separated list of Media fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "poll_fields": {
           "target": "com.x.stream#StreamPostsFirehoseJaRequestPollFieldsList",
           "traits": {
             "smithy.api#httpQuery": "poll.fields",
-            "smithy.api#documentation": "A comma separated list of Poll fields to display."
+            "smithy.api#documentation": "A comma separated list of Poll fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.stream#StreamPostsFirehoseJaRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "place_fields": {
           "target": "com.x.stream#StreamPostsFirehoseJaRequestPlaceFieldsList",
           "traits": {
             "smithy.api#httpQuery": "place.fields",
-            "smithy.api#documentation": "A comma separated list of Place fields to display."
+            "smithy.api#documentation": "A comma separated list of Place fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "partition": {
@@ -7396,7 +7452,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.stream#StreamPostsFirehoseJaResponse": {
@@ -7435,7 +7494,8 @@
           "uri": "/2/tweets/firehose/stream/lang/ja",
           "code": 200
         },
-        "smithy.api#documentation": "Stream Japanese Posts\n\nStreams all public Japanese-language Posts in real-time."
+        "smithy.api#documentation": "Stream Japanese Posts\n\nStreams all public Japanese-language Posts in real-time.",
+        "com.x#response": "stream"
       }
     },
     "com.x.stream#StreamPostsFirehoseKoRequestTweetFieldsItem": {
@@ -8130,42 +8190,48 @@
           "target": "com.x.stream#StreamPostsFirehoseKoRequestTweetFieldsList",
           "traits": {
             "smithy.api#httpQuery": "tweet.fields",
-            "smithy.api#documentation": "A comma separated list of Tweet fields to display."
+            "smithy.api#documentation": "A comma separated list of Tweet fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.stream#StreamPostsFirehoseKoRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "media_fields": {
           "target": "com.x.stream#StreamPostsFirehoseKoRequestMediaFieldsList",
           "traits": {
             "smithy.api#httpQuery": "media.fields",
-            "smithy.api#documentation": "A comma separated list of Media fields to display."
+            "smithy.api#documentation": "A comma separated list of Media fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "poll_fields": {
           "target": "com.x.stream#StreamPostsFirehoseKoRequestPollFieldsList",
           "traits": {
             "smithy.api#httpQuery": "poll.fields",
-            "smithy.api#documentation": "A comma separated list of Poll fields to display."
+            "smithy.api#documentation": "A comma separated list of Poll fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.stream#StreamPostsFirehoseKoRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "place_fields": {
           "target": "com.x.stream#StreamPostsFirehoseKoRequestPlaceFieldsList",
           "traits": {
             "smithy.api#httpQuery": "place.fields",
-            "smithy.api#documentation": "A comma separated list of Place fields to display."
+            "smithy.api#documentation": "A comma separated list of Place fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "partition": {
@@ -8192,7 +8258,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.stream#StreamPostsFirehoseKoResponse": {
@@ -8231,7 +8300,8 @@
           "uri": "/2/tweets/firehose/stream/lang/ko",
           "code": 200
         },
-        "smithy.api#documentation": "Stream Korean Posts\n\nStreams all public Korean-language Posts in real-time."
+        "smithy.api#documentation": "Stream Korean Posts\n\nStreams all public Korean-language Posts in real-time.",
+        "com.x#response": "stream"
       }
     },
     "com.x.stream#StreamPostsFirehosePtRequestTweetFieldsItem": {
@@ -8926,42 +8996,48 @@
           "target": "com.x.stream#StreamPostsFirehosePtRequestTweetFieldsList",
           "traits": {
             "smithy.api#httpQuery": "tweet.fields",
-            "smithy.api#documentation": "A comma separated list of Tweet fields to display."
+            "smithy.api#documentation": "A comma separated list of Tweet fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.stream#StreamPostsFirehosePtRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "media_fields": {
           "target": "com.x.stream#StreamPostsFirehosePtRequestMediaFieldsList",
           "traits": {
             "smithy.api#httpQuery": "media.fields",
-            "smithy.api#documentation": "A comma separated list of Media fields to display."
+            "smithy.api#documentation": "A comma separated list of Media fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "poll_fields": {
           "target": "com.x.stream#StreamPostsFirehosePtRequestPollFieldsList",
           "traits": {
             "smithy.api#httpQuery": "poll.fields",
-            "smithy.api#documentation": "A comma separated list of Poll fields to display."
+            "smithy.api#documentation": "A comma separated list of Poll fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.stream#StreamPostsFirehosePtRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "place_fields": {
           "target": "com.x.stream#StreamPostsFirehosePtRequestPlaceFieldsList",
           "traits": {
             "smithy.api#httpQuery": "place.fields",
-            "smithy.api#documentation": "A comma separated list of Place fields to display."
+            "smithy.api#documentation": "A comma separated list of Place fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "partition": {
@@ -8988,7 +9064,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.stream#StreamPostsFirehosePtResponse": {
@@ -9027,7 +9106,8 @@
           "uri": "/2/tweets/firehose/stream/lang/pt",
           "code": 200
         },
-        "smithy.api#documentation": "Stream Portuguese Posts\n\nStreams all public Portuguese-language Posts in real-time."
+        "smithy.api#documentation": "Stream Portuguese Posts\n\nStreams all public Portuguese-language Posts in real-time.",
+        "com.x#response": "stream"
       }
     },
     "com.x.stream#StreamLabelsComplianceRequest": {
@@ -9056,7 +9136,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.stream#StreamLabelsComplianceResponse": {
@@ -9286,7 +9369,8 @@
           "uri": "/2/tweets/label/stream",
           "code": 200
         },
-        "smithy.api#documentation": "Stream Post labels\n\nStreams all labeling events applied to Posts."
+        "smithy.api#documentation": "Stream Post labels\n\nStreams all labeling events applied to Posts.",
+        "com.x#response": "stream"
       }
     },
     "com.x.stream#StreamPostsSampleRequestTweetFieldsItem": {
@@ -9981,47 +10065,56 @@
           "target": "com.x.stream#StreamPostsSampleRequestTweetFieldsList",
           "traits": {
             "smithy.api#httpQuery": "tweet.fields",
-            "smithy.api#documentation": "A comma separated list of Tweet fields to display."
+            "smithy.api#documentation": "A comma separated list of Tweet fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.stream#StreamPostsSampleRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "media_fields": {
           "target": "com.x.stream#StreamPostsSampleRequestMediaFieldsList",
           "traits": {
             "smithy.api#httpQuery": "media.fields",
-            "smithy.api#documentation": "A comma separated list of Media fields to display."
+            "smithy.api#documentation": "A comma separated list of Media fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "poll_fields": {
           "target": "com.x.stream#StreamPostsSampleRequestPollFieldsList",
           "traits": {
             "smithy.api#httpQuery": "poll.fields",
-            "smithy.api#documentation": "A comma separated list of Poll fields to display."
+            "smithy.api#documentation": "A comma separated list of Poll fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.stream#StreamPostsSampleRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "place_fields": {
           "target": "com.x.stream#StreamPostsSampleRequestPlaceFieldsList",
           "traits": {
             "smithy.api#httpQuery": "place.fields",
-            "smithy.api#documentation": "A comma separated list of Place fields to display."
+            "smithy.api#documentation": "A comma separated list of Place fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.stream#StreamPostsSampleResponse": {
@@ -10060,7 +10153,8 @@
           "uri": "/2/tweets/sample/stream",
           "code": 200
         },
-        "smithy.api#documentation": "Stream sampled Posts\n\nStreams a 1% sample of public Posts in real-time."
+        "smithy.api#documentation": "Stream sampled Posts\n\nStreams a 1% sample of public Posts in real-time.",
+        "com.x#response": "stream"
       }
     },
     "com.x.stream#StreamPostsSample10RequestTweetFieldsItem": {
@@ -10755,42 +10849,48 @@
           "target": "com.x.stream#StreamPostsSample10RequestTweetFieldsList",
           "traits": {
             "smithy.api#httpQuery": "tweet.fields",
-            "smithy.api#documentation": "A comma separated list of Tweet fields to display."
+            "smithy.api#documentation": "A comma separated list of Tweet fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.stream#StreamPostsSample10RequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "media_fields": {
           "target": "com.x.stream#StreamPostsSample10RequestMediaFieldsList",
           "traits": {
             "smithy.api#httpQuery": "media.fields",
-            "smithy.api#documentation": "A comma separated list of Media fields to display."
+            "smithy.api#documentation": "A comma separated list of Media fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "poll_fields": {
           "target": "com.x.stream#StreamPostsSample10RequestPollFieldsList",
           "traits": {
             "smithy.api#httpQuery": "poll.fields",
-            "smithy.api#documentation": "A comma separated list of Poll fields to display."
+            "smithy.api#documentation": "A comma separated list of Poll fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.stream#StreamPostsSample10RequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "place_fields": {
           "target": "com.x.stream#StreamPostsSample10RequestPlaceFieldsList",
           "traits": {
             "smithy.api#httpQuery": "place.fields",
-            "smithy.api#documentation": "A comma separated list of Place fields to display."
+            "smithy.api#documentation": "A comma separated list of Place fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "partition": {
@@ -10817,7 +10917,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.stream#StreamPostsSample10Response": {
@@ -10856,7 +10959,8 @@
           "uri": "/2/tweets/sample10/stream",
           "code": 200
         },
-        "smithy.api#documentation": "Stream 10% sampled Posts\n\nStreams a 10% sample of public Posts in real-time."
+        "smithy.api#documentation": "Stream 10% sampled Posts\n\nStreams a 10% sample of public Posts in real-time.",
+        "com.x#response": "stream"
       }
     },
     "com.x.stream#StreamPostsRequestTweetFieldsItem": {
@@ -11565,47 +11669,56 @@
           "target": "com.x.stream#StreamPostsRequestTweetFieldsList",
           "traits": {
             "smithy.api#httpQuery": "tweet.fields",
-            "smithy.api#documentation": "A comma separated list of Tweet fields to display."
+            "smithy.api#documentation": "A comma separated list of Tweet fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.stream#StreamPostsRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "media_fields": {
           "target": "com.x.stream#StreamPostsRequestMediaFieldsList",
           "traits": {
             "smithy.api#httpQuery": "media.fields",
-            "smithy.api#documentation": "A comma separated list of Media fields to display."
+            "smithy.api#documentation": "A comma separated list of Media fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "poll_fields": {
           "target": "com.x.stream#StreamPostsRequestPollFieldsList",
           "traits": {
             "smithy.api#httpQuery": "poll.fields",
-            "smithy.api#documentation": "A comma separated list of Poll fields to display."
+            "smithy.api#documentation": "A comma separated list of Poll fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.stream#StreamPostsRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "place_fields": {
           "target": "com.x.stream#StreamPostsRequestPlaceFieldsList",
           "traits": {
             "smithy.api#httpQuery": "place.fields",
-            "smithy.api#documentation": "A comma separated list of Place fields to display."
+            "smithy.api#documentation": "A comma separated list of Place fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.stream#StreamPostsResponse": {
@@ -11676,7 +11789,8 @@
           "uri": "/2/tweets/search/stream",
           "code": 200
         },
-        "smithy.api#documentation": "Stream filtered Posts\n\nStreams Posts in real-time matching the active rule set."
+        "smithy.api#documentation": "Stream filtered Posts\n\nStreams Posts in real-time matching the active rule set.",
+        "com.x#response": "stream"
       }
     },
     "com.x.stream#GetRuleCountsRequest": {
@@ -11690,7 +11804,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.stream#GetRuleCountsResponse": {
@@ -11813,7 +11930,8 @@
           "uri": "/2/tweets/search/stream/rules/counts",
           "code": 200
         },
-        "smithy.api#documentation": "Get Rule Counts"
+        "smithy.api#documentation": "Get Rule Counts",
+        "com.x#response": "json"
       }
     },
     "com.x.stream#StreamUsersComplianceRequest": {
@@ -11850,7 +11968,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.stream#StreamUsersComplianceResponse": {
@@ -12227,7 +12348,8 @@
           "uri": "/2/users/compliance/stream",
           "code": 200
         },
-        "smithy.api#documentation": "Stream Users compliance data\n\nStreams all compliance data related to Users."
+        "smithy.api#documentation": "Stream Users compliance data\n\nStreams all compliance data related to Users.",
+        "com.x#response": "stream"
       }
     },
     "com.x.stream#Stream": {

@@ -301,26 +301,33 @@
           "target": "com.x.chats#GetChatConversationsRequestChatConversationFieldsList",
           "traits": {
             "smithy.api#httpQuery": "chat_conversation.fields",
-            "smithy.api#documentation": "A comma separated list of ChatConversation fields to display."
+            "smithy.api#documentation": "A comma separated list of ChatConversation fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.chats#GetChatConversationsRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.chats#GetChatConversationsRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.chats#GetChatConversationsResponse": {
@@ -3411,7 +3418,8 @@
           "uri": "/2/chat/conversations",
           "code": 200
         },
-        "smithy.api#documentation": "Get Chat Conversations\n\nRetrieves a list of Chat conversations for the authenticated user's inbox."
+        "smithy.api#documentation": "Get Chat Conversations\n\nRetrieves a list of Chat conversations for the authenticated user's inbox.",
+        "com.x#response": "json"
       }
     },
     "com.x.chats#CreateChatConversationActionSignatures": {
@@ -3654,7 +3662,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.chats#CreateChatConversationResponse": {
@@ -3709,7 +3722,8 @@
           "uri": "/2/chat/conversations/group",
           "code": 200
         },
-        "smithy.api#documentation": "Create Chat Group Conversation\n\nCreates a new encrypted Chat group conversation on behalf of the authenticated user."
+        "smithy.api#documentation": "Create Chat Group Conversation\n\nCreates a new encrypted Chat group conversation on behalf of the authenticated user.",
+        "com.x#response": "json"
       }
     },
     "com.x.chats#InitializeChatGroupResponse": {
@@ -3747,7 +3761,7 @@
     "com.x.chats#InitializeChatGroup": {
       "type": "operation",
       "input": {
-        "target": "smithy.api#Unit"
+        "target": "com.x.chats#InitializeChatGroupRequest"
       },
       "output": {
         "target": "com.x.chats#InitializeChatGroupResponse"
@@ -3758,7 +3772,8 @@
           "uri": "/2/chat/conversations/group/initialize",
           "code": 200
         },
-        "smithy.api#documentation": "Initialize Chat Group\n\nInitializes a new Chat group conversation and returns a unique conversation ID. Use the returned conversation_id in a subsequent POST /chat/conversations/group call to fully create and configure the group."
+        "smithy.api#documentation": "Initialize Chat Group\n\nInitializes a new Chat group conversation and returns a unique conversation ID. Use the returned conversation_id in a subsequent POST /chat/conversations/group call to fully create and configure the group.",
+        "com.x#response": "json"
       }
     },
     "com.x.chats#GetChatConversationRequestChatConversationFieldsItem": {
@@ -4040,26 +4055,33 @@
           "target": "com.x.chats#GetChatConversationRequestChatConversationFieldsList",
           "traits": {
             "smithy.api#httpQuery": "chat_conversation.fields",
-            "smithy.api#documentation": "A comma separated list of ChatConversation fields to display."
+            "smithy.api#documentation": "A comma separated list of ChatConversation fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "expansions": {
           "target": "com.x.chats#GetChatConversationRequestExpansionsList",
           "traits": {
             "smithy.api#httpQuery": "expansions",
-            "smithy.api#documentation": "A comma separated list of fields to expand."
+            "smithy.api#documentation": "A comma separated list of fields to expand.",
+            "com.x#csvQuery": true
           }
         },
         "user_fields": {
           "target": "com.x.chats#GetChatConversationRequestUserFieldsList",
           "traits": {
             "smithy.api#httpQuery": "user.fields",
-            "smithy.api#documentation": "A comma separated list of User fields to display."
+            "smithy.api#documentation": "A comma separated list of User fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.chats#GetChatConversationResponse": {
@@ -4098,7 +4120,8 @@
           "uri": "/2/chat/conversations/{id}",
           "code": 200
         },
-        "smithy.api#documentation": "Get Chat Conversation\n\nReturns metadata for a Chat conversation including type, muted status, and group details. Use chat_conversation.fields to select which fields are returned. Use expansions to hydrate member, admin, or participant user objects. Use user.fields to control which profile fields are returned for expanded users."
+        "smithy.api#documentation": "Get Chat Conversation\n\nReturns metadata for a Chat conversation including type, muted status, and group details. Use chat_conversation.fields to select which fields are returned. Use expansions to hydrate member, admin, or participant user objects. Use user.fields to control which profile fields are returned for expanded users.",
+        "com.x#response": "json"
       }
     },
     "com.x.chats#GetChatConversationEventsRequestChatMessageEventFieldsItem": {
@@ -4196,12 +4219,17 @@
           "target": "com.x.chats#GetChatConversationEventsRequestChatMessageEventFieldsList",
           "traits": {
             "smithy.api#httpQuery": "chat_message_event.fields",
-            "smithy.api#documentation": "A comma separated list of ChatMessageEvent fields to display."
+            "smithy.api#documentation": "A comma separated list of ChatMessageEvent fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.chats#GetChatConversationEventsResponse": {
@@ -4311,7 +4339,8 @@
           "uri": "/2/chat/conversations/{id}/events",
           "code": 200
         },
-        "smithy.api#documentation": "Get Chat Conversation Events\n\nRetrieves messages and key change events for a specific Chat conversation with pagination support. For 1:1 conversations, provide the recipient's user ID; the server constructs the canonical conversation ID from the authenticated user and recipient."
+        "smithy.api#documentation": "Get Chat Conversation Events\n\nRetrieves messages and key change events for a specific Chat conversation with pagination support. For 1:1 conversations, provide the recipient's user ID; the server constructs the canonical conversation ID from the authenticated user and recipient.",
+        "com.x#response": "json"
       }
     },
     "com.x.chats#AddConversationKeysActionSignatures": {
@@ -4499,7 +4528,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.chats#AddConversationKeysResponse": {
@@ -4553,7 +4587,8 @@
           "uri": "/2/chat/conversations/{id}/keys",
           "code": 200
         },
-        "smithy.api#documentation": "Add Conversation Keys\n\nAdds (initializes or rotates) the encryption keys for a Chat conversation. Call this before sending messages in a new 1:1 conversation, and again with a newer key version to rotate the conversation key. For 1:1 conversations, provide the recipient's user ID as the conversation id; the server constructs the canonical conversation ID from the authenticated user and recipient. The request body must contain the conversation key version and participant keys (the conversation key encrypted for each participant using their public key)."
+        "smithy.api#documentation": "Add Conversation Keys\n\nAdds (initializes or rotates) the encryption keys for a Chat conversation. Call this before sending messages in a new 1:1 conversation, and again with a newer key version to rotate the conversation key. For 1:1 conversations, provide the recipient's user ID as the conversation id; the server constructs the canonical conversation ID from the authenticated user and recipient. The request body must contain the conversation key version and participant keys (the conversation key encrypted for each participant using their public key).",
+        "com.x#response": "json"
       }
     },
     "com.x.chats#AddChatGroupMembersActionSignatures": {
@@ -4761,7 +4796,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.chats#AddChatGroupMembersResponse": {
@@ -4797,7 +4837,8 @@
           "uri": "/2/chat/conversations/{id}/members",
           "code": 200
         },
-        "smithy.api#documentation": "Add members to a Chat group conversation\n\nAdds one or more members to an existing encrypted Chat group conversation, rotating the conversation key."
+        "smithy.api#documentation": "Add members to a Chat group conversation\n\nAdds one or more members to an existing encrypted Chat group conversation, rotating the conversation key.",
+        "com.x#response": "json"
       }
     },
     "com.x.chats#SendChatMessageRequest": {
@@ -4838,7 +4879,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.chats#SendChatMessageResponse": {
@@ -4887,7 +4933,8 @@
           "uri": "/2/chat/conversations/{id}/messages",
           "code": 200
         },
-        "smithy.api#documentation": "Send Chat Message\n\nSends an encrypted message to a specific Chat conversation. For 1:1 conversations, provide the recipient's user ID; the server constructs the canonical conversation ID from the authenticated user and recipient."
+        "smithy.api#documentation": "Send Chat Message\n\nSends an encrypted message to a specific Chat conversation. For 1:1 conversations, provide the recipient's user ID; the server constructs the canonical conversation ID from the authenticated user and recipient.",
+        "com.x#response": "json"
       }
     },
     "com.x.chats#MarkChatConversationReadRequest": {
@@ -4909,7 +4956,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.chats#MarkChatConversationReadResponse": {
@@ -4958,7 +5010,8 @@
           "uri": "/2/chat/conversations/{id}/read",
           "code": 200
         },
-        "smithy.api#documentation": "Mark Conversation as Read\n\nMarks a specific Chat conversation as read on behalf of the authenticated user. For 1:1 conversations, provide the recipient's user ID; the server constructs the canonical conversation ID from the authenticated user and recipient."
+        "smithy.api#documentation": "Mark Conversation as Read\n\nMarks a specific Chat conversation as read on behalf of the authenticated user. For 1:1 conversations, provide the recipient's user ID; the server constructs the canonical conversation ID from the authenticated user and recipient.",
+        "com.x#response": "json"
       }
     },
     "com.x.chats#SendChatTypingIndicatorRequest": {
@@ -4973,7 +5026,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.chats#SendChatTypingIndicatorResponse": {
@@ -5022,7 +5079,8 @@
           "uri": "/2/chat/conversations/{id}/typing",
           "code": 200
         },
-        "smithy.api#documentation": "Send Typing Indicator\n\nSends a typing indicator to a specific Chat conversation on behalf of the authenticated user. For 1:1 conversations, provide the recipient's user ID; the server constructs the canonical conversation ID from the authenticated user and recipient."
+        "smithy.api#documentation": "Send Typing Indicator\n\nSends a typing indicator to a specific Chat conversation on behalf of the authenticated user. For 1:1 conversations, provide the recipient's user ID; the server constructs the canonical conversation ID from the authenticated user and recipient.",
+        "com.x#response": "json"
       }
     },
     "com.x.chats#ChatMediaUploadInitializeRequest": {
@@ -5044,7 +5102,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.chats#ChatMediaUploadInitializeResponse": {
@@ -5107,7 +5170,8 @@
           "uri": "/2/chat/media/upload/initialize",
           "code": 200
         },
-        "smithy.api#documentation": "Initialize Chat Media Upload\n\nInitializes an XChat media upload session."
+        "smithy.api#documentation": "Initialize Chat Media Upload\n\nInitializes an XChat media upload session.",
+        "com.x#response": "json"
       }
     },
     "com.x.chats#ChatMediaUploadAppendRequest": {
@@ -5150,7 +5214,13 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#multipart": true,
+        "com.x#requestBody": true
       }
     },
     "com.x.chats#ChatMediaUploadAppendResponse": {
@@ -5198,7 +5268,8 @@
           "uri": "/2/chat/media/upload/{id}/append",
           "code": 200
         },
-        "smithy.api#documentation": "Append Chat Media Upload\n\nAppends media data to an XChat upload session."
+        "smithy.api#documentation": "Append Chat Media Upload\n\nAppends media data to an XChat upload session.",
+        "com.x#response": "json"
       }
     },
     "com.x.chats#ChatMediaUploadFinalizeRequest": {
@@ -5246,7 +5317,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.chats#ChatMediaUploadFinalizeResponse": {
@@ -5295,7 +5371,8 @@
           "uri": "/2/chat/media/upload/{id}/finalize",
           "code": 200
         },
-        "smithy.api#documentation": "Finalize Chat Media Upload\n\nFinalizes an XChat media upload session."
+        "smithy.api#documentation": "Finalize Chat Media Upload\n\nFinalizes an XChat media upload session.",
+        "com.x#response": "json"
       }
     },
     "com.x.chats#ChatMediaDownloadRequest": {
@@ -5317,7 +5394,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.chats#ChatMediaDownload": {
@@ -5334,7 +5415,8 @@
           "uri": "/2/chat/media/{id}/{media_hash_key}",
           "code": 200
         },
-        "smithy.api#documentation": "Download Chat Media\n\nDownloads encrypted media bytes from an XChat conversation. The response body contains raw binary bytes."
+        "smithy.api#documentation": "Download Chat Media\n\nDownloads encrypted media bytes from an XChat conversation. The response body contains raw binary bytes.",
+        "com.x#response": "binary"
       }
     },
     "com.x.chats#GetUsersPublicKeysRequestIdsList": {
@@ -5396,19 +5478,25 @@
           "target": "com.x.chats#GetUsersPublicKeysRequestIdsList",
           "traits": {
             "smithy.api#httpQuery": "ids",
-            "smithy.api#required": {}
+            "smithy.api#required": {},
+            "com.x#csvQuery": true
           }
         },
         "public_key_fields": {
           "target": "com.x.chats#GetUsersPublicKeysRequestPublicKeyFieldsList",
           "traits": {
             "smithy.api#httpQuery": "public_key.fields",
-            "smithy.api#documentation": "A comma separated list of PublicKey fields to display."
+            "smithy.api#documentation": "A comma separated list of PublicKey fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.chats#GetUsersPublicKeysResponse": {
@@ -5472,7 +5560,8 @@
           "uri": "/2/users/public_keys",
           "code": 200
         },
-        "smithy.api#documentation": "Get public keys\n\nReturns registered public keys for X Chat encryption for the specified users."
+        "smithy.api#documentation": "Get public keys\n\nReturns registered public keys for X Chat encryption for the specified users.",
+        "com.x#response": "json"
       }
     },
     "com.x.chats#GetUsersPublicKeyRequestPublicKeyFieldsItem": {
@@ -5534,12 +5623,17 @@
           "target": "com.x.chats#GetUsersPublicKeyRequestPublicKeyFieldsList",
           "traits": {
             "smithy.api#httpQuery": "public_key.fields",
-            "smithy.api#documentation": "A comma separated list of PublicKey fields to display."
+            "smithy.api#documentation": "A comma separated list of PublicKey fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.chats#GetUsersPublicKeyResponse": {
@@ -5582,7 +5676,8 @@
           "uri": "/2/users/{id}/public_keys",
           "code": 200
         },
-        "smithy.api#documentation": "Get public keys\n\nReturns a user's registered public keys for X Chat encryption."
+        "smithy.api#documentation": "Get public keys\n\nReturns a user's registered public keys for X Chat encryption.",
+        "com.x#response": "json"
       }
     },
     "com.x.chats#AddUserPublicKeyPublicKey": {
@@ -5659,7 +5754,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.chats#AddUserPublicKeyResponse": {
@@ -5713,7 +5813,8 @@
           "uri": "/2/users/{id}/public_keys",
           "code": 200
         },
-        "smithy.api#documentation": "Add public key\n\nRegisters a user's public key for X Chat encryption."
+        "smithy.api#documentation": "Add public key\n\nRegisters a user's public key for X Chat encryption.",
+        "com.x#response": "json"
       }
     },
     "com.x.chats#Chats": {
@@ -5777,12 +5878,25 @@
         "smithy.api#documentation": "X API v2 core endpoints"
       }
     },
+    "com.x.chats#InitializeChatGroupRequest": {
+      "type": "structure",
+      "members": {},
+      "traits": {
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
+      }
+    },
     "com.x.chats#MediaData": {
       "type": "document"
     },
     "com.x.chats#ChatMediaDownloadResponse": {
       "type": "structure",
-      "members": {}
+      "members": {},
+      "traits": {
+        "com.x#binary": true
+      }
     }
   }
 }

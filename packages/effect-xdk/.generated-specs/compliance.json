@@ -160,12 +160,16 @@
           "target": "com.x.compliance#GetComplianceJobsRequestComplianceJobFieldsList",
           "traits": {
             "smithy.api#httpQuery": "compliance_job.fields",
-            "smithy.api#documentation": "A comma separated list of ComplianceJob fields to display."
+            "smithy.api#documentation": "A comma separated list of ComplianceJob fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.compliance#GetComplianceJobsResponse": {
@@ -745,7 +749,8 @@
           "uri": "/2/compliance/jobs",
           "code": 200
         },
-        "smithy.api#documentation": "Get Compliance Jobs\n\nRetrieves a list of Compliance Jobs filtered by job type and optional status."
+        "smithy.api#documentation": "Get Compliance Jobs\n\nRetrieves a list of Compliance Jobs filtered by job type and optional status.",
+        "com.x#response": "json"
       }
     },
     "com.x.compliance#CreateComplianceJobsRequestComplianceJobFieldsItem": {
@@ -850,7 +855,8 @@
           "target": "com.x.compliance#CreateComplianceJobsRequestComplianceJobFieldsList",
           "traits": {
             "smithy.api#httpQuery": "compliance_job.fields",
-            "smithy.api#documentation": "A comma separated list of ComplianceJob fields to display."
+            "smithy.api#documentation": "A comma separated list of ComplianceJob fields to display.",
+            "com.x#csvQuery": true
           }
         },
         "name": {
@@ -874,7 +880,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.compliance#CreateComplianceJobsResponse": {
@@ -910,7 +920,8 @@
           "uri": "/2/compliance/jobs",
           "code": 200
         },
-        "smithy.api#documentation": "Create Compliance Job\n\nCreates a new Compliance Job for the specified job type."
+        "smithy.api#documentation": "Create Compliance Job\n\nCreates a new Compliance Job for the specified job type.",
+        "com.x#response": "json"
       }
     },
     "com.x.compliance#GetComplianceJobsByIdRequestComplianceJobFieldsItem": {
@@ -1002,12 +1013,16 @@
           "target": "com.x.compliance#GetComplianceJobsByIdRequestComplianceJobFieldsList",
           "traits": {
             "smithy.api#httpQuery": "compliance_job.fields",
-            "smithy.api#documentation": "A comma separated list of ComplianceJob fields to display."
+            "smithy.api#documentation": "A comma separated list of ComplianceJob fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.compliance#GetComplianceJobsByIdResponse": {
@@ -1043,7 +1058,8 @@
           "uri": "/2/compliance/jobs/{id}",
           "code": 200
         },
-        "smithy.api#documentation": "Get Compliance Job by ID\n\nRetrieves details of a specific Compliance Job by its ID."
+        "smithy.api#documentation": "Get Compliance Job by ID\n\nRetrieves details of a specific Compliance Job by its ID.",
+        "com.x#response": "json"
       }
     },
     "com.x.compliance#Compliance": {

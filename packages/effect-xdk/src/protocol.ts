@@ -7,7 +7,14 @@
  */
 import * as API from "@distilled.cloud/core/api";
 import { ConfigError, HTTP_STATUS_MAP } from "@distilled.cloud/core/errors";
-import { mapKeys } from "@distilled.cloud/core/protocol-http";
+import {
+  buildRequest,
+  getAnn,
+  getProps,
+  getPropAnn,
+  mapKeys,
+} from "@distilled.cloud/core/protocol-http";
+import { httpSymbol, type HttpTrait } from "@distilled.cloud/core/trait";
 import { parseRetryAfterForStatus } from "@distilled.cloud/core/retry-after";
 import * as Context from "effect/Context";
 import type * as Crypto from "effect/Crypto";
@@ -17,6 +24,7 @@ import * as Exit from "effect/Exit";
 import * as Effect from "effect/Effect";
 import * as Encoding from "effect/Encoding";
 import * as Layer from "effect/Layer";
+import * as Option from "effect/Option";
 import * as Redacted from "effect/Redacted";
 import * as Schema from "effect/Schema";
 import * as Stream from "effect/Stream";
@@ -42,12 +50,9 @@ import {
   XTokenExpired,
   type DefaultErrors,
 } from "./errors.ts";
-import { prepareOperation } from "./operation-wire.ts";
 import type { Hmac } from "./hmac.ts";
-import type { OperationDefinition } from "./operation-types.ts";
-import { operations } from "./operations.ts";
+import * as T from "./traits.ts";
 export type XAuthKind = "app" | "user";
-import type { XJsonValue } from "./types.ts";
 
 export type XOpError =
   | DefaultErrors
@@ -78,16 +83,6 @@ interface BearerTokens {
   appBearerToken?: string;
   userAccessToken?: string;
 }
-
-const definitions = new Map<string, OperationDefinition>(
-  Object.entries(operations),
-);
-const definitionOf = (config: API.ProtocolOperationConfig) => {
-  const definition = definitions.get(config.operationName ?? "");
-  if (!definition)
-    throw new Error(`Unknown generated X operation: ${config.operationName}`);
-  return definition;
-};
 
 const unredact = (config: ResolvedCredentials): XAuthentication => {
   if (config.type === "oauth1")
@@ -255,7 +250,7 @@ const invalidateToken = (response: HttpClientResponse.HttpClientResponse) =>
 
 const encode = (args: EncodeArgs) =>
   Effect.gen(function* () {
-    const definition = definitionOf(args.config);
+    const operationName = args.config.operationName ?? "X operation";
     const resolver = yield* Credentials;
     const config = yield* resolver;
     const input = yield* Schema.decodeUnknownEffect(
@@ -264,44 +259,83 @@ const encode = (args: EncodeArgs) =>
     )(args.input).pipe(
       Effect.mapError(
         (cause) =>
-          new XInputError(`Invalid input for ${definition.id}`, { cause }),
+          new XInputError(`Invalid input for ${operationName}`, { cause }),
       ),
     );
-    // SAFETY: Every generated X request schema describes an object; decoding
-    // above validates that object before the binding serializer reads its fields.
-    const prepared = yield* Effect.try({
-      try: () => prepareOperation(definition, input as object),
+    const requestResult = yield* Effect.try({
+      try: () => {
+        // SAFETY: Every generated request schema validates an object before
+        // these member-level adaptations run; core owns all HTTP bindings.
+        const fields = input as Record<string, Schema.Json | Blob | undefined>;
+        const wireInput = { ...fields };
+        for (const prop of getProps(args.inputAst)) {
+          const key = String(prop.name);
+          const value = fields[key];
+          if (
+            getPropAnn(prop, T.csvQuerySymbol) === true &&
+            Array.isArray(value)
+          )
+            wireInput[key] = value.join(",");
+        }
+        let inputAst = args.inputAst;
+        if (
+          getAnn(inputAst, T.multipartSymbol) === true &&
+          Object.values(fields).some((value) => value instanceof Blob)
+        ) {
+          // SAFETY: Generated operation inputs carry core's HTTP trait.
+          const http = getAnn(inputAst, httpSymbol) as HttpTrait;
+          inputAst = Schema.make<Schema.Top>(inputAst).annotate({
+            [httpSymbol]: { ...http, contentType: "multipart" },
+          }).ast;
+        }
+        let request = buildRequest({
+          input: wireInput,
+          inputAst,
+          // X's spec paths are absolute, including when overriding the origin.
+          baseUrl: new URL(config.apiBaseUrl).origin,
+        });
+        if (
+          request.body._tag === "Empty" &&
+          getAnn(inputAst, T.requestBodySymbol) === true
+        )
+          request = HttpClientRequest.bodyJsonUnsafe(request, {});
+        if (
+          args.config.output &&
+          getAnn(args.config.output.ast, T.responseSymbol) === "binary"
+        )
+          request = HttpClientRequest.setHeader(
+            request,
+            "Accept",
+            "application/octet-stream",
+          );
+        return request;
+      },
       catch: (cause) =>
-        new XInputError(`Cannot encode ${definition.id}`, { cause }),
+        new XInputError(`Cannot encode ${operationName}`, { cause }),
     });
-    const url = new URL(prepared.path, config.apiBaseUrl);
+    const url = yield* Option.match(HttpClientRequest.toUrl(requestResult), {
+      onSome: Effect.succeed,
+      onNone: () =>
+        Effect.fail(new XInputError(`Invalid URL for ${operationName}`)),
+    });
+    // SAFETY: The generator emits Security on every request schema, including [].
+    const security = getAnn(args.inputAst, T.securitySymbol) as
+      | readonly T.SecurityScheme[]
+      | undefined;
+    if (security === undefined)
+      return yield* Effect.fail(
+        new XInputError(`Missing security trait for ${operationName}`),
+      );
     const raw = unredact(config);
     const preferred = yield* AuthContext;
     const auth = yield* Effect.try({
-      try: () => selectAuthentication(raw, definition.security, preferred),
+      try: () => selectAuthentication(raw, security, preferred),
       catch: (cause) =>
         cause instanceof XAuthenticationError
           ? cause
           : new XAuthenticationError("Invalid X authentication", { cause }),
     });
-    let request = HttpClientRequest.make(definition.method)(url, {
-      headers: new Headers(prepared.options.headers),
-    });
-    if (prepared.options.rawBody)
-      request = HttpClientRequest.bodyFormData(
-        request,
-        prepared.options.rawBody,
-      );
-    else if (prepared.options.json !== undefined)
-      request = yield* HttpClientRequest.bodyJson(
-        request,
-        prepared.options.json,
-      ).pipe(
-        Effect.mapError(
-          (cause) =>
-            new XInputError(`Invalid JSON for ${definition.id}`, { cause }),
-        ),
-      );
+    const request = requestResult;
     if (auth === undefined) return request;
     let header: string;
     if (config.type === "bearer") {
@@ -314,7 +348,7 @@ const encode = (args: EncodeArgs) =>
       header = `Bearer ${Redacted.value(token)}`;
     } else if (auth === "app")
       header = `Bearer ${yield* appToken(resolver, config)}`;
-    else header = yield* signOAuth1(raw, definition.method, url);
+    else header = yield* signOAuth1(raw, request.method, url);
     return HttpClientRequest.setHeader(request, "Authorization", header);
   });
 
@@ -332,7 +366,7 @@ const ErrorEnvelope = Schema.Struct({
 
 const decode = (args: DecodeArgs) =>
   Effect.gen(function* () {
-    const definition = definitionOf(args.config);
+    const operationName = args.config.operationName ?? "X operation";
     const { response } = args;
     if (response.status === 401 && (yield* invalidateToken(response))) {
       yield* response.text.pipe(Effect.ignore);
@@ -341,34 +375,34 @@ const decode = (args: DecodeArgs) =>
       );
     }
     const outputSchema = Schema.toType(Schema.make(args.outputAst));
-    const decodeValue = (value: XJsonValue | Uint8Array | undefined) =>
+    const decodeValue = (value: Schema.Json | Uint8Array | undefined) =>
       Schema.decodeUnknownEffect(outputSchema, {
         onExcessProperty: "preserve",
       })(mapKeys(args.outputAst, value, "decode")).pipe(
         Effect.mapError(
           (cause) =>
             new XParseError({
-              message: `Invalid ${definition.id} response`,
+              message: `Invalid ${operationName} response`,
               cause,
             }),
         ),
       );
     if (response.status >= 200 && response.status < 300) {
-      if (definition.response === "binary")
+      if (getAnn(args.outputAst, T.responseSymbol) === "binary")
         return yield* response.arrayBuffer.pipe(
           Effect.flatMap((buffer) => decodeValue(new Uint8Array(buffer))),
         );
-      if (definition.response === "stream")
+      if (getAnn(args.outputAst, T.responseSymbol) === "stream")
         return response.stream.pipe(
           Stream.decodeText(),
           Stream.splitLines,
           Stream.filter((line) => line.trim().length > 0),
           Stream.mapEffect((line) =>
             Effect.try({
-              try: (): XJsonValue => JSON.parse(line),
+              try: (): Schema.Json => JSON.parse(line),
               catch: (cause) =>
                 new XParseError({
-                  message: `Malformed ${definition.id} stream record`,
+                  message: `Malformed ${operationName} stream record`,
                   cause,
                 }),
             }).pipe(Effect.flatMap(decodeValue)),
@@ -377,11 +411,11 @@ const decode = (args: DecodeArgs) =>
     }
     const text = yield* response.text;
     const body = yield* Effect.try({
-      try: (): XJsonValue | undefined =>
+      try: (): Schema.Json | undefined =>
         text.trim() ? JSON.parse(text) : undefined,
       catch: (cause) =>
         new XParseError({
-          message: `Malformed ${definition.id} response`,
+          message: `Malformed ${operationName} response`,
           cause,
         }),
     }).pipe(

@@ -35,7 +35,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1",
+          "app"
+        ]
       }
     },
     "com.x.activity#GetActivitySubscriptionsResponse": {
@@ -633,7 +638,8 @@
           "uri": "/2/activity/subscriptions",
           "code": 200
         },
-        "smithy.api#documentation": "Get X activity subscriptions\n\nGet a list of active subscriptions for XAA"
+        "smithy.api#documentation": "Get X activity subscriptions\n\nGet a list of active subscriptions for XAA",
+        "com.x#response": "json"
       }
     },
     "com.x.activity#CreateActivitySubscriptionRequestEventType": {
@@ -893,7 +899,13 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1",
+          "app"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.activity#CreateActivitySubscriptionResponse": {
@@ -1010,7 +1022,8 @@
           "uri": "/2/activity/subscriptions",
           "code": 200
         },
-        "smithy.api#documentation": "Create X activity subscription\n\nCreates a subscription for an X activity event. OAuth2 user-context tokens must hold the scope matching the requested event_type: dm.read for chat.* and dm.* events, like.read for like.* events, mute.read for mute.* events, block.read for block.* events, and tweet.read for all other event types. Mute and block subscriptions are actor-only: filter.user_id must identify the authenticated user and direction is not supported."
+        "smithy.api#documentation": "Create X activity subscription\n\nCreates a subscription for an X activity event. OAuth2 user-context tokens must hold the scope matching the requested event_type: dm.read for chat.* and dm.* events, like.read for like.* events, mute.read for mute.* events, block.read for block.* events, and tweet.read for all other event types. Mute and block subscriptions are actor-only: filter.user_id must identify the authenticated user and direction is not supported.",
+        "com.x#response": "json"
       }
     },
     "com.x.activity#DeleteActivitySubscriptionsByIdsRequestIdsList": {
@@ -1027,12 +1040,16 @@
           "target": "com.x.activity#DeleteActivitySubscriptionsByIdsRequestIdsList",
           "traits": {
             "smithy.api#httpQuery": "ids",
-            "smithy.api#required": {}
+            "smithy.api#required": {},
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.activity#DeleteActivitySubscriptionsByIdsResponse": {
@@ -1137,7 +1154,8 @@
           "uri": "/2/activity/subscriptions",
           "code": 200
         },
-        "smithy.api#documentation": "Delete X activity subscriptions by IDs\n\nDeletes multiple subscriptions for X activity events by their IDs"
+        "smithy.api#documentation": "Delete X activity subscriptions by IDs\n\nDeletes multiple subscriptions for X activity events by their IDs",
+        "com.x#response": "json"
       }
     },
     "com.x.activity#UpdateActivitySubscriptionRequest": {
@@ -1164,7 +1182,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.activity#UpdateActivitySubscriptionResponse": {
@@ -1287,7 +1309,8 @@
           "uri": "/2/activity/subscriptions/{subscription_id}",
           "code": 200
         },
-        "smithy.api#documentation": "Update X activity subscription\n\nUpdates a subscription for an X activity event"
+        "smithy.api#documentation": "Update X activity subscription\n\nUpdates a subscription for an X activity event",
+        "com.x#response": "json"
       }
     },
     "com.x.activity#DeleteActivitySubscriptionRequest": {
@@ -1302,7 +1325,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.activity#DeleteActivitySubscriptionResponse": {
@@ -1351,7 +1377,8 @@
           "uri": "/2/activity/subscriptions/{subscription_id}",
           "code": 200
         },
-        "smithy.api#documentation": "Deletes X activity subscription\n\nDeletes a subscription for an X activity event"
+        "smithy.api#documentation": "Deletes X activity subscription\n\nDeletes a subscription for an X activity event",
+        "com.x#response": "json"
       }
     },
     "com.x.activity#Activity": {

@@ -106,12 +106,17 @@
           "target": "com.x.communities#SearchCommunitiesRequestCommunityFieldsList",
           "traits": {
             "smithy.api#httpQuery": "community.fields",
-            "smithy.api#documentation": "A comma separated list of Community fields to display."
+            "smithy.api#documentation": "A comma separated list of Community fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.communities#SearchCommunitiesResponse": {
@@ -682,7 +687,8 @@
           "uri": "/2/communities/search",
           "code": 200
         },
-        "smithy.api#documentation": "Search Communities"
+        "smithy.api#documentation": "Search Communities",
+        "com.x#response": "json"
       }
     },
     "com.x.communities#GetCommunitiesByIdRequestCommunityFieldsItem": {
@@ -756,12 +762,18 @@
           "target": "com.x.communities#GetCommunitiesByIdRequestCommunityFieldsList",
           "traits": {
             "smithy.api#httpQuery": "community.fields",
-            "smithy.api#documentation": "A comma separated list of Community fields to display."
+            "smithy.api#documentation": "A comma separated list of Community fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1",
+          "app"
+        ]
       }
     },
     "com.x.communities#GetCommunitiesByIdResponse": {
@@ -797,7 +809,8 @@
           "uri": "/2/communities/{id}",
           "code": 200
         },
-        "smithy.api#documentation": "Get Communities by ID"
+        "smithy.api#documentation": "Get Communities by ID",
+        "com.x#response": "json"
       }
     },
     "com.x.communities#Communities": {

@@ -30,7 +30,8 @@
         "ids": {
           "target": "com.x.tweets#GetRulesRequestIdsList",
           "traits": {
-            "smithy.api#httpQuery": "ids"
+            "smithy.api#httpQuery": "ids",
+            "com.x#csvQuery": true
           }
         },
         "max_results": {
@@ -48,7 +49,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.tweets#GetRulesResponse": {
@@ -622,7 +626,8 @@
           "uri": "/2/tweets/search/stream/rules",
           "code": 200
         },
-        "smithy.api#documentation": "Get filtered-stream rules\n\nReturns the active filtered-stream rules for the authenticated app. Provide `ids` to fetch specific rules; omit it to list all rules."
+        "smithy.api#documentation": "Get filtered-stream rules\n\nReturns the active filtered-stream rules for the authenticated app. Provide `ids` to fetch specific rules; omit it to list all rules.",
+        "com.x#response": "json"
       }
     },
     "com.x.tweets#UpdateRulesAdd": {
@@ -718,7 +723,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.tweets#UpdateRulesResponse": {
@@ -800,7 +809,8 @@
           "uri": "/2/tweets/search/stream/rules",
           "code": 200
         },
-        "smithy.api#documentation": "Update stream rules\n\nAdds or deletes rules from the active rule set for the filtered stream. Exactly one of `add`, `delete`, or `?delete_all=true` must be specified. Use `?dry_run=true` to validate without committing."
+        "smithy.api#documentation": "Update stream rules\n\nAdds or deletes rules from the active rule set for the filtered stream. Exactly one of `add`, `delete`, or `?delete_all=true` must be specified. Use `?dry_run=true` to validate without committing.",
+        "com.x#response": "json"
       }
     },
     "com.x.tweets#Tweets": {

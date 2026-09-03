@@ -70,7 +70,10 @@ export const CreateCommunityNotesRequest = /*@__PURE__*/ S.suspend(() =>
     info: CreateCommunityNotesInfo,
     post_id: S.String,
     test_mode: S.Boolean,
-  }).pipe(T.Http({ method: "POST", uri: "/2/notes", code: 200 })),
+  })
+    .pipe(T.Http({ method: "POST", uri: "/2/notes", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "CreateCommunityNotesRequest",
 }) as any as S.Schema<CreateCommunityNotesRequest>;
@@ -367,7 +370,9 @@ export interface DeleteCommunityNotesRequest {
 export const DeleteCommunityNotesRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
-  }).pipe(T.Http({ method: "DELETE", uri: "/2/notes/{id}", code: 200 })),
+  })
+    .pipe(T.Http({ method: "DELETE", uri: "/2/notes/{id}", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "DeleteCommunityNotesRequest",
 }) as any as S.Schema<DeleteCommunityNotesRequest>;
@@ -412,7 +417,10 @@ export const EvaluateCommunityNotesRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     note_text: S.String,
     post_id: S.String,
-  }).pipe(T.Http({ method: "POST", uri: "/2/notes/evaluate", code: 200 })),
+  })
+    .pipe(T.Http({ method: "POST", uri: "/2/notes/evaluate", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "EvaluateCommunityNotesRequest",
 }) as any as S.Schema<EvaluateCommunityNotesRequest>;
@@ -480,11 +488,18 @@ export const SearchCommunityNotesWrittenRequest = /*@__PURE__*/ S.suspend(() =>
     note_fields: S.optional(
       SearchCommunityNotesWrittenRequestNoteFieldsList.pipe(
         T.Query("note.fields"),
+        T.CsvQuery(true),
       ),
     ),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/notes/search/notes_written", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "GET",
+        uri: "/2/notes/search/notes_written",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "SearchCommunityNotesWrittenRequest",
 }) as any as S.Schema<SearchCommunityNotesWrittenRequest>;
@@ -1054,30 +1069,50 @@ export const SearchEligiblePostsRequest = /*@__PURE__*/ S.suspend(() =>
     pagination_token: S.optional(S.String.pipe(T.Query())),
     post_selection: S.optional(S.String.pipe(T.Query())),
     post_fields: S.optional(
-      SearchEligiblePostsRequestPostFieldsList.pipe(T.Query("post.fields")),
+      SearchEligiblePostsRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      SearchEligiblePostsRequestExpansionsList.pipe(T.Query()),
+      SearchEligiblePostsRequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     user_fields: S.optional(
-      SearchEligiblePostsRequestUserFieldsList.pipe(T.Query("user.fields")),
+      SearchEligiblePostsRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     media_fields: S.optional(
-      SearchEligiblePostsRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      SearchEligiblePostsRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     poll_fields: S.optional(
-      SearchEligiblePostsRequestPollFieldsList.pipe(T.Query("poll.fields")),
+      SearchEligiblePostsRequestPollFieldsList.pipe(
+        T.Query("poll.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     place_fields: S.optional(
-      SearchEligiblePostsRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+      SearchEligiblePostsRequestPlaceFieldsList.pipe(
+        T.Query("place.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(
-    T.Http({
-      method: "GET",
-      uri: "/2/notes/search/posts_eligible_for_notes",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "GET",
+        uri: "/2/notes/search/posts_eligible_for_notes",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "SearchEligiblePostsRequest",
 }) as any as S.Schema<SearchEligiblePostsRequest>;

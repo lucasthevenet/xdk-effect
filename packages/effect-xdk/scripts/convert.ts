@@ -49,23 +49,6 @@ interface Document {
     readonly parameters: Readonly<Record<string, Parameter>>;
   };
 }
-interface Binding {
-  readonly name: string;
-  readonly wire: string;
-  readonly in: "path" | "query" | "header" | "body";
-  readonly explode?: boolean;
-}
-interface Definition {
-  readonly id: string;
-  readonly method: string;
-  readonly path: string;
-  readonly security: readonly string[];
-  readonly bindings: readonly Binding[];
-  readonly body: boolean;
-  readonly response: "json" | "binary" | "stream";
-  readonly multipart: boolean;
-}
-
 const root = path.resolve(import.meta.dir, "..");
 const text = await readFile(path.join(root, "specs/openapi.json"), "utf8");
 if (createHash("sha256").update(text).digest("hex") !== source.sha256) {
@@ -98,7 +81,7 @@ const schemeNames = new Map([
   ["BearerToken", "app"],
 ]);
 const groups = new Map<string, Record<string, PathItem>>();
-const definitions = new Map<string, Definition>();
+let converted = 0;
 const operations = new Map<string, Operation>();
 for (const [uri, item] of Object.entries(document.paths)) {
   for (const key of Object.keys(item)) {
@@ -158,7 +141,11 @@ for (const [group, paths] of [...groups].toSorted(([a], [b]) =>
       const prefix = `com.x.${namespace(group)}#`;
       const shape = model.shapes[prefix + name];
       if (!shape) throw new Error(`Converter omitted ${operation.operationId}`);
-      const input = model.shapes[shape.input?.target];
+      if (!shape.input || shape.input.target === "smithy.api#Unit") {
+        shape.input = { target: prefix + name + "Request" };
+        model.shapes[shape.input.target] = { type: "structure", members: {} };
+      }
+      const input = model.shapes[shape.input.target];
       const parameters = [
         ...(item.parameters ?? []),
         ...(operation.parameters ?? []),
@@ -169,38 +156,25 @@ for (const [group, paths] of [...groups].toSorted(([a], [b]) =>
           throw new Error(`Unsupported security in ${name}`);
         return schemeNames.get(names[0]!)!;
       });
-      const bindings: Binding[] = Object.entries(input?.members ?? {}).map(
-        ([key, value]) => {
-          // SAFETY: Distilled's converter emits Smithy member records at this seam.
-          const member = value as {
-            traits?: Record<string, string>;
-            target: string;
-          };
-          const traits = member.traits ?? {};
-          const query = traits["smithy.api#httpQuery"];
-          const header = traits["smithy.api#httpHeader"];
-          const label = "smithy.api#httpLabel" in traits;
-          const wire = query ?? header ?? traits["smithy.api#jsonName"] ?? key;
-          const location = label
-            ? "path"
-            : query
-              ? "query"
-              : header
-                ? "header"
-                : "body";
-          const parameter = parameters.find(
-            (entry) => entry.name === wire && entry.in === location,
-          );
-          if (parameter?.style && !["simple", "form"].includes(parameter.style))
-            throw new Error(`Unsupported parameter style in ${name}`);
-          return {
-            name: key,
-            wire,
-            in: location,
-            explode: parameter?.explode ?? true,
-          };
-        },
-      );
+      for (const parameter of parameters) {
+        if (parameter.style && !["simple", "form"].includes(parameter.style))
+          throw new Error(`Unsupported parameter style in ${name}`);
+      }
+      for (const value of Object.values(input.members ?? {})) {
+        // SAFETY: Distilled's converter emits Smithy member records at this seam.
+        const member = value as {
+          traits?: Record<string, string | boolean>;
+          target: string;
+        };
+        const query = member.traits?.["smithy.api#httpQuery"];
+        if (query === undefined) continue;
+        const parameter = parameters.find(
+          (entry) => entry.name === query && entry.in === "query",
+        );
+        if (parameter?.explode === false) {
+          member.traits!["com.x#csvQuery"] = true;
+        }
+      }
       const success = Object.entries(operation.responses).find(([status]) =>
         status.startsWith("2"),
       )?.[1];
@@ -215,22 +189,28 @@ for (const [group, paths] of [...groups].toSorted(([a], [b]) =>
         operation.requestBody?.content["multipart/form-data"] !== undefined;
       if (binary) {
         shape.output = { target: prefix + name + "Response" };
-        model.shapes[shape.output.target] = { type: "structure", members: {} };
+        model.shapes[shape.output.target] = {
+          type: "structure",
+          members: {},
+          traits: { "com.x#binary": true },
+        };
       }
       if (multipart && input?.members?.media) {
         input.members.media.target = prefix + "MediaData";
         model.shapes[prefix + "MediaData"] = { type: "document" };
       }
-      definitions.set(operation.operationId, {
-        id: operation.operationId,
-        method: method.toUpperCase(),
-        path: uri,
-        security,
-        bindings,
-        body: operation.requestBody !== undefined,
-        response: binary ? "binary" : stream ? "stream" : "json",
-        multipart,
-      });
+      input.traits = {
+        ...input.traits,
+        "com.x#security": security,
+      };
+      if (multipart) input.traits["com.x#multipart"] = true;
+      if (operation.requestBody) input.traits["com.x#requestBody"] = true;
+      shape.traits["com.x#response"] = binary
+        ? "binary"
+        : stream
+          ? "stream"
+          : "json";
+      converted++;
     }
   }
   outputs.set(
@@ -238,23 +218,13 @@ for (const [group, paths] of [...groups].toSorted(([a], [b]) =>
     JSON.stringify(model, null, 2) + "\n",
   );
 }
-if (definitions.size !== operations.size)
+if (converted !== operations.size)
   throw new Error("Conversion lost operations");
-outputs.set(
-  ".generated-specs/operations.json",
-  JSON.stringify(
-    Object.fromEntries(
-      [...definitions].toSorted(([a], [b]) => a.localeCompare(b)),
-    ),
-    null,
-    2,
-  ) + "\n",
-);
 const target = process.env.EFFECT_XDK_GENERATION_ROOT ?? root;
 for (const [file, code] of outputs) {
   await mkdir(path.dirname(path.join(target, file)), { recursive: true });
   await Bun.write(path.join(target, file), code);
 }
 console.log(
-  `Converted ${definitions.size} X operations into ${groups.size} Smithy models (spec ${document.info.version})`,
+  `Converted ${converted} X operations into ${groups.size} Smithy models (spec ${document.info.version})`,
 );

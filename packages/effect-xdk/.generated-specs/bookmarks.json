@@ -36,7 +36,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.bookmarks#CreateUsersBookmarkFolderResponse": {
@@ -578,7 +582,8 @@
           "uri": "/2/users/{id}/bookmarks/folders",
           "code": 200
         },
-        "smithy.api#documentation": "Create Bookmark Folder\n\nCreates a new Bookmark folder for the authenticated user."
+        "smithy.api#documentation": "Create Bookmark Folder\n\nCreates a new Bookmark folder for the authenticated user.",
+        "com.x#response": "json"
       }
     },
     "com.x.bookmarks#DeleteUsersBookmarkRequest": {
@@ -600,7 +605,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2"
+        ]
       }
     },
     "com.x.bookmarks#DeleteUsersBookmarkResponse": {
@@ -649,7 +657,8 @@
           "uri": "/2/users/{id}/bookmarks/{tweet_id}",
           "code": 200
         },
-        "smithy.api#documentation": "Delete Bookmark\n\nRemoves a Post from the authenticated user's Bookmarks by its ID."
+        "smithy.api#documentation": "Delete Bookmark\n\nRemoves a Post from the authenticated user's Bookmarks by its ID.",
+        "com.x#response": "json"
       }
     },
     "com.x.bookmarks#Bookmarks": {

@@ -116,17 +116,28 @@ export const GetPostsLikingUsersRequest = /*@__PURE__*/ S.suspend(() =>
     max_results: S.optional(S.Number.pipe(T.Query())),
     pagination_token: S.optional(S.String.pipe(T.Query())),
     user_fields: S.optional(
-      GetPostsLikingUsersRequestUserFieldsList.pipe(T.Query("user.fields")),
+      GetPostsLikingUsersRequestUserFieldsList.pipe(
+        T.Query("user.fields"),
+        T.CsvQuery(true),
+      ),
     ),
     expansions: S.optional(
-      GetPostsLikingUsersRequestExpansionsList.pipe(T.Query()),
+      GetPostsLikingUsersRequestExpansionsList.pipe(
+        T.Query(),
+        T.CsvQuery(true),
+      ),
     ),
     post_fields: S.optional(
-      GetPostsLikingUsersRequestPostFieldsList.pipe(T.Query("post.fields")),
+      GetPostsLikingUsersRequestPostFieldsList.pipe(
+        T.Query("post.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(
-    T.Http({ method: "GET", uri: "/2/tweets/{id}/liking_users", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "GET", uri: "/2/tweets/{id}/liking_users", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetPostsLikingUsersRequest",
 }) as any as S.Schema<GetPostsLikingUsersRequest>;
@@ -1822,7 +1833,10 @@ export const LikePostRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     tweet_id: S.String,
-  }).pipe(T.Http({ method: "POST", uri: "/2/users/{id}/likes", code: 200 })),
+  })
+    .pipe(T.Http({ method: "POST", uri: "/2/users/{id}/likes", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "LikePostRequest",
 }) as any as S.Schema<LikePostRequest>;
@@ -1865,13 +1879,15 @@ export const UnlikePostRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     tweet_id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({
-      method: "DELETE",
-      uri: "/2/users/{id}/likes/{tweet_id}",
-      code: 200,
-    }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "DELETE",
+        uri: "/2/users/{id}/likes/{tweet_id}",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "UnlikePostRequest",
 }) as any as S.Schema<UnlikePostRequest>;

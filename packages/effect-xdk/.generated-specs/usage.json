@@ -81,12 +81,16 @@
           "target": "com.x.usage#GetUsageRequestUsageFieldsList",
           "traits": {
             "smithy.api#httpQuery": "usage.fields",
-            "smithy.api#documentation": "A comma separated list of Usage fields to display."
+            "smithy.api#documentation": "A comma separated list of Usage fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.usage#GetUsageResponse": {
@@ -753,7 +757,8 @@
           "uri": "/2/usage/tweets",
           "code": 200
         },
-        "smithy.api#documentation": "Get Usage"
+        "smithy.api#documentation": "Get Usage",
+        "com.x#response": "json"
       }
     },
     "com.x.usage#Usage": {

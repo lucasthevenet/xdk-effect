@@ -50,12 +50,16 @@ export const CreateComplianceJobsRequest = /*@__PURE__*/ S.suspend(() =>
     compliance_job_fields: S.optional(
       CreateComplianceJobsRequestComplianceJobFieldsList.pipe(
         T.Query("compliance_job.fields"),
+        T.CsvQuery(true),
       ),
     ),
     name: S.optional(S.String),
     resumable: S.optional(S.Boolean),
     type: CreateComplianceJobsRequestType,
-  }).pipe(T.Http({ method: "POST", uri: "/2/compliance/jobs", code: 200 })),
+  })
+    .pipe(T.Http({ method: "POST", uri: "/2/compliance/jobs", code: 200 }))
+    .pipe(T.Security(["app"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "CreateComplianceJobsRequest",
 }) as any as S.Schema<CreateComplianceJobsRequest>;
@@ -407,9 +411,12 @@ export const GetComplianceJobsRequest = /*@__PURE__*/ S.suspend(() =>
     compliance_job_fields: S.optional(
       GetComplianceJobsRequestComplianceJobFieldsList.pipe(
         T.Query("compliance_job.fields"),
+        T.CsvQuery(true),
       ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/compliance/jobs", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/compliance/jobs", code: 200 }))
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "GetComplianceJobsRequest",
 }) as any as S.Schema<GetComplianceJobsRequest>;
@@ -485,9 +492,12 @@ export const GetComplianceJobsByIdRequest = /*@__PURE__*/ S.suspend(() =>
     compliance_job_fields: S.optional(
       GetComplianceJobsByIdRequestComplianceJobFieldsList.pipe(
         T.Query("compliance_job.fields"),
+        T.CsvQuery(true),
       ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/compliance/jobs/{id}", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/compliance/jobs/{id}", code: 200 }))
+    .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "GetComplianceJobsByIdRequest",
 }) as any as S.Schema<GetComplianceJobsByIdRequest>;

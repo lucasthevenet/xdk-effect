@@ -15,13 +15,16 @@ export const CreateAccountActivitySubscriptionRequest2 =
   /*@__PURE__*/ S.suspend(() =>
     S.Struct({
       webhook_id: S.String.pipe(T.Label()),
-    }).pipe(
-      T.Http({
-        method: "POST",
-        uri: "/2/account_activity/webhooks/{webhook_id}/subscriptions/all",
-        code: 200,
-      }),
-    ),
+    })
+      .pipe(
+        T.Http({
+          method: "POST",
+          uri: "/2/account_activity/webhooks/{webhook_id}/subscriptions/all",
+          code: 200,
+        }),
+      )
+      .pipe(T.Security(["oauth2", "oauth1"]))
+      .pipe(T.RequestBody(true)),
   ).annotate({
     identifier: "CreateAccountActivitySubscriptionRequest2",
   }) as any as S.Schema<CreateAccountActivitySubscriptionRequest2>;
@@ -325,13 +328,15 @@ export const DeleteAccountActivitySubscriptionRequest = /*@__PURE__*/ S.suspend(
     S.Struct({
       webhook_id: S.String.pipe(T.Label()),
       user_id: S.String.pipe(T.Label()),
-    }).pipe(
-      T.Http({
-        method: "DELETE",
-        uri: "/2/account_activity/webhooks/{webhook_id}/subscriptions/{user_id}/all",
-        code: 200,
-      }),
-    ),
+    })
+      .pipe(
+        T.Http({
+          method: "DELETE",
+          uri: "/2/account_activity/webhooks/{webhook_id}/subscriptions/{user_id}/all",
+          code: 200,
+        }),
+      )
+      .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "DeleteAccountActivitySubscriptionRequest",
 }) as any as S.Schema<DeleteAccountActivitySubscriptionRequest>;
@@ -373,13 +378,15 @@ export const DeleteAccountActivitySubscriptionResponse =
 export interface GetAccountActivitySubscriptionCountRequest {}
 export const GetAccountActivitySubscriptionCountRequest =
   /*@__PURE__*/ S.suspend(() =>
-    S.Struct({}).pipe(
-      T.Http({
-        method: "GET",
-        uri: "/2/account_activity/subscriptions/count",
-        code: 200,
-      }),
-    ),
+    S.Struct({})
+      .pipe(
+        T.Http({
+          method: "GET",
+          uri: "/2/account_activity/subscriptions/count",
+          code: 200,
+        }),
+      )
+      .pipe(T.Security(["app"])),
   ).annotate({
     identifier: "GetAccountActivitySubscriptionCountRequest",
   }) as any as S.Schema<GetAccountActivitySubscriptionCountRequest>;
@@ -434,13 +441,15 @@ export const GetAccountActivitySubscriptionsRequest = /*@__PURE__*/ S.suspend(
   () =>
     S.Struct({
       webhook_id: S.String.pipe(T.Label()),
-    }).pipe(
-      T.Http({
-        method: "GET",
-        uri: "/2/account_activity/webhooks/{webhook_id}/subscriptions/all/list",
-        code: 200,
-      }),
-    ),
+    })
+      .pipe(
+        T.Http({
+          method: "GET",
+          uri: "/2/account_activity/webhooks/{webhook_id}/subscriptions/all/list",
+          code: 200,
+        }),
+      )
+      .pipe(T.Security(["app"])),
 ).annotate({
   identifier: "GetAccountActivitySubscriptionsRequest",
 }) as any as S.Schema<GetAccountActivitySubscriptionsRequest>;
@@ -515,13 +524,15 @@ export const ValidateAccountActivitySubscriptionRequest =
   /*@__PURE__*/ S.suspend(() =>
     S.Struct({
       webhook_id: S.String.pipe(T.Label()),
-    }).pipe(
-      T.Http({
-        method: "GET",
-        uri: "/2/account_activity/webhooks/{webhook_id}/subscriptions/all",
-        code: 200,
-      }),
-    ),
+    })
+      .pipe(
+        T.Http({
+          method: "GET",
+          uri: "/2/account_activity/webhooks/{webhook_id}/subscriptions/all",
+          code: 200,
+        }),
+      )
+      .pipe(T.Security(["oauth2", "oauth1"])),
   ).annotate({
     identifier: "ValidateAccountActivitySubscriptionRequest",
   }) as any as S.Schema<ValidateAccountActivitySubscriptionRequest>;

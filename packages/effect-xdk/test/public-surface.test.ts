@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import * as X from "../src/index.ts";
 import manifest from "../package.json";
+import type { XActivityFilter } from "effect-xdk/types";
 
 test("the package exposes only Effect-native SDK operations and async helpers", () => {
   expect(X).not.toHaveProperty("createXClient");
@@ -35,4 +36,15 @@ test("the package exposes only Effect-native SDK operations and async helpers", 
       ),
     ),
   ).toBe(true);
+});
+
+test("webhook types remain available through root and types exports", () => {
+  const filter: X.XActivityFilter = {
+    user_id: "42",
+    direction: "inbound",
+    qualifiers: { language: "en" },
+  };
+  const importedFilter: XActivityFilter = filter;
+  expect(importedFilter).toEqual(filter);
+  expect(manifest.exports["./types"].types).toBe("./lib/webhooks.d.ts");
 });

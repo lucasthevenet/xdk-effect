@@ -46,7 +46,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.broadcasts#ListScheduledBroadcastsResponse": {
@@ -671,7 +675,8 @@
           "uri": "/2/broadcasts/scheduled",
           "code": 200
         },
-        "smithy.api#documentation": "List scheduled broadcasts\n\nReturns scheduled broadcasts owned by the authenticated user."
+        "smithy.api#documentation": "List scheduled broadcasts\n\nReturns scheduled broadcasts owned by the authenticated user.",
+        "com.x#response": "json"
       }
     },
     "com.x.broadcasts#CreateScheduledBroadcastRecurrence": {
@@ -800,7 +805,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.broadcasts#CreateScheduledBroadcastResponse": {
@@ -932,7 +942,8 @@
           "uri": "/2/broadcasts/scheduled",
           "code": 200
         },
-        "smithy.api#documentation": "Create a scheduled broadcast\n\nSchedules a one-off or recurring broadcast for the authenticated user. A `source_id` (ingest) is required at create time."
+        "smithy.api#documentation": "Create a scheduled broadcast\n\nSchedules a one-off or recurring broadcast for the authenticated user. A `source_id` (ingest) is required at create time.",
+        "com.x#response": "json"
       }
     },
     "com.x.broadcasts#GetScheduledBroadcastRequest": {
@@ -947,7 +958,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.broadcasts#GetScheduledBroadcastResponse": {
@@ -1079,7 +1094,8 @@
           "uri": "/2/broadcasts/scheduled/{id}",
           "code": 200
         },
-        "smithy.api#documentation": "Get a scheduled broadcast\n\nReturns a single scheduled broadcast by its alphanumeric UBS broadcast id."
+        "smithy.api#documentation": "Get a scheduled broadcast\n\nReturns a single scheduled broadcast by its alphanumeric UBS broadcast id.",
+        "com.x#response": "json"
       }
     },
     "com.x.broadcasts#UpdateScheduledBroadcastRequest": {
@@ -1175,7 +1191,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.broadcasts#UpdateScheduledBroadcastResponse": {
@@ -1307,7 +1328,8 @@
           "uri": "/2/broadcasts/scheduled/{id}",
           "code": 200
         },
-        "smithy.api#documentation": "Update a scheduled broadcast\n\nFully replaces schedule fields for a broadcast. Path `:id` is the UBS broadcast id; the body must include `scheduled_broadcast_id` and re-send any fields that should be kept."
+        "smithy.api#documentation": "Update a scheduled broadcast\n\nFully replaces schedule fields for a broadcast. Path `:id` is the UBS broadcast id; the body must include `scheduled_broadcast_id` and re-send any fields that should be kept.",
+        "com.x#response": "json"
       }
     },
     "com.x.broadcasts#DeleteScheduledBroadcastRequest": {
@@ -1328,7 +1350,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.broadcasts#DeleteScheduledBroadcastResponse": {
@@ -1377,7 +1403,8 @@
           "uri": "/2/broadcasts/scheduled/{id}",
           "code": 200
         },
-        "smithy.api#documentation": "Delete a scheduled broadcast\n\nDeletes a scheduled broadcast by its alphanumeric UBS broadcast id."
+        "smithy.api#documentation": "Delete a scheduled broadcast\n\nDeletes a scheduled broadcast by its alphanumeric UBS broadcast id.",
+        "com.x#response": "json"
       }
     },
     "com.x.broadcasts#GoLiveScheduledBroadcastRequest": {
@@ -1392,7 +1419,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.broadcasts#GoLiveScheduledBroadcastResponse": {
@@ -1524,7 +1555,8 @@
           "uri": "/2/broadcasts/scheduled/{id}/live",
           "code": 200
         },
-        "smithy.api#documentation": "Go live on a scheduled broadcast\n\nPublishes a schedule that was created or updated with `manual_publish: true`. Without that flag the coordinator auto-publishes at start and this call is rejected."
+        "smithy.api#documentation": "Go live on a scheduled broadcast\n\nPublishes a schedule that was created or updated with `manual_publish: true`. Without that flag the coordinator auto-publishes at start and this call is rejected.",
+        "com.x#response": "json"
       }
     },
     "com.x.broadcasts#SendBroadcastChatRequest": {
@@ -1546,7 +1578,12 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.broadcasts#SendBroadcastChatResponse": {
@@ -1602,7 +1639,8 @@
           "uri": "/2/broadcasts/{id}/chat",
           "code": 200
         },
-        "smithy.api#documentation": "Send a chat message to a live broadcast\n\nPosts a chat message to a running broadcast, attributed to the authenticated user."
+        "smithy.api#documentation": "Send a chat message to a live broadcast\n\nPosts a chat message to a running broadcast, attributed to the authenticated user.",
+        "com.x#response": "json"
       }
     },
     "com.x.broadcasts#Broadcasts": {

@@ -22,9 +22,13 @@ export const AppendMediaUploadRequest = /*@__PURE__*/ S.suspend(() =>
     id: S.String.pipe(T.Label()),
     media: MediaData,
     segment_index: S.Number,
-  }).pipe(
-    T.Http({ method: "POST", uri: "/2/media/upload/{id}/append", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "POST", uri: "/2/media/upload/{id}/append", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.Multipart(true))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "AppendMediaUploadRequest",
 }) as any as S.Schema<AppendMediaUploadRequest>;
@@ -500,7 +504,10 @@ export const CreateMediaMetadataRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String,
     metadata: S.optional(CreateMediaMetadataMetadata),
-  }).pipe(T.Http({ method: "POST", uri: "/2/media/metadata", code: 200 })),
+  })
+    .pipe(T.Http({ method: "POST", uri: "/2/media/metadata", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "CreateMediaMetadataRequest",
 }) as any as S.Schema<CreateMediaMetadataRequest>;
@@ -575,7 +582,10 @@ export const CreateMediaSubtitlesRequest = /*@__PURE__*/ S.suspend(() =>
     id: S.optional(S.String),
     media_category: S.optional(CreateMediaSubtitlesRequestMediaCategory),
     subtitles: S.optional(CreateMediaSubtitlesSubtitles),
-  }).pipe(T.Http({ method: "POST", uri: "/2/media/subtitles", code: 200 })),
+  })
+    .pipe(T.Http({ method: "POST", uri: "/2/media/subtitles", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "CreateMediaSubtitlesRequest",
 }) as any as S.Schema<CreateMediaSubtitlesRequest>;
@@ -629,7 +639,10 @@ export const DeleteMediaSubtitlesRequest = /*@__PURE__*/ S.suspend(() =>
     id: S.String,
     language_code: S.String,
     media_category: S.String,
-  }).pipe(T.Http({ method: "DELETE", uri: "/2/media/subtitles", code: 200 })),
+  })
+    .pipe(T.Http({ method: "DELETE", uri: "/2/media/subtitles", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "DeleteMediaSubtitlesRequest",
 }) as any as S.Schema<DeleteMediaSubtitlesRequest>;
@@ -670,9 +683,15 @@ export interface FinalizeMediaUploadRequest {
 export const FinalizeMediaUploadRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
-  }).pipe(
-    T.Http({ method: "POST", uri: "/2/media/upload/{id}/finalize", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({
+        method: "POST",
+        uri: "/2/media/upload/{id}/finalize",
+        code: 200,
+      }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "FinalizeMediaUploadRequest",
 }) as any as S.Schema<FinalizeMediaUploadRequest>;
@@ -817,7 +836,10 @@ export interface GetMediaAnalyticsRequest {
 }
 export const GetMediaAnalyticsRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
-    media_keys: GetMediaAnalyticsRequestMediaKeysList.pipe(T.Query()),
+    media_keys: GetMediaAnalyticsRequestMediaKeysList.pipe(
+      T.Query(),
+      T.CsvQuery(true),
+    ),
     start_time: S.String.pipe(T.Query()),
     end_time: S.String.pipe(T.Query()),
     granularity: S.optional(
@@ -826,9 +848,12 @@ export const GetMediaAnalyticsRequest = /*@__PURE__*/ S.suspend(() =>
     media_analytics_fields: S.optional(
       GetMediaAnalyticsRequestMediaAnalyticsFieldsList.pipe(
         T.Query("media_analytics.fields"),
+        T.CsvQuery(true),
       ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/media/analytics", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/media/analytics", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetMediaAnalyticsRequest",
 }) as any as S.Schema<GetMediaAnalyticsRequest>;
@@ -1068,9 +1093,14 @@ export const GetMediaByMediaKeyRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     media_key: S.String.pipe(T.Label()),
     media_fields: S.optional(
-      GetMediaByMediaKeyRequestMediaFieldsList.pipe(T.Query("media.fields")),
+      GetMediaByMediaKeyRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/media/{media_key}", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/media/{media_key}", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetMediaByMediaKeyRequest",
 }) as any as S.Schema<GetMediaByMediaKeyRequest>;
@@ -1281,11 +1311,19 @@ export interface GetMediaByMediaKeysRequest {
 }
 export const GetMediaByMediaKeysRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
-    media_keys: GetMediaByMediaKeysRequestMediaKeysList.pipe(T.Query()),
-    media_fields: S.optional(
-      GetMediaByMediaKeysRequestMediaFieldsList.pipe(T.Query("media.fields")),
+    media_keys: GetMediaByMediaKeysRequestMediaKeysList.pipe(
+      T.Query(),
+      T.CsvQuery(true),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/media", code: 200 })),
+    media_fields: S.optional(
+      GetMediaByMediaKeysRequestMediaFieldsList.pipe(
+        T.Query("media.fields"),
+        T.CsvQuery(true),
+      ),
+    ),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/media", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({
   identifier: "GetMediaByMediaKeysRequest",
 }) as any as S.Schema<GetMediaByMediaKeysRequest>;
@@ -1324,7 +1362,9 @@ export const GetMediaUploadStatusRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     media_id: S.String.pipe(T.Query()),
     command: S.optional(GetMediaUploadStatusRequestCommand.pipe(T.Query())),
-  }).pipe(T.Http({ method: "GET", uri: "/2/media/upload", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/media/upload", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"])),
 ).annotate({
   identifier: "GetMediaUploadStatusRequest",
 }) as any as S.Schema<GetMediaUploadStatusRequest>;
@@ -1424,9 +1464,12 @@ export const InitializeMediaUploadRequest = /*@__PURE__*/ S.suspend(() =>
     media_type: S.optional(InitializeMediaUploadRequestMediaType),
     shared: S.optional(S.Boolean),
     total_bytes: S.optional(S.Number),
-  }).pipe(
-    T.Http({ method: "POST", uri: "/2/media/upload/initialize", code: 200 }),
-  ),
+  })
+    .pipe(
+      T.Http({ method: "POST", uri: "/2/media/upload/initialize", code: 200 }),
+    )
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "InitializeMediaUploadRequest",
 }) as any as S.Schema<InitializeMediaUploadRequest>;
@@ -1491,7 +1534,11 @@ export const MediaUploadRequest = /*@__PURE__*/ S.suspend(() =>
     additional_owners: S.optional(S.String),
     media: MediaData,
     media_category: MediaUploadRequestMediaCategory,
-  }).pipe(T.Http({ method: "POST", uri: "/2/media/upload", code: 200 })),
+  })
+    .pipe(T.Http({ method: "POST", uri: "/2/media/upload", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1"]))
+    .pipe(T.Multipart(true))
+    .pipe(T.RequestBody(true)),
 ).annotate({
   identifier: "MediaUploadRequest",
 }) as any as S.Schema<MediaUploadRequest>;

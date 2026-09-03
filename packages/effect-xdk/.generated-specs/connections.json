@@ -201,7 +201,8 @@
         "endpoints": {
           "target": "com.x.connections#GetConnectionHistoryRequestEndpointsList",
           "traits": {
-            "smithy.api#httpQuery": "endpoints"
+            "smithy.api#httpQuery": "endpoints",
+            "com.x#csvQuery": true
           }
         },
         "max_results": {
@@ -220,12 +221,16 @@
           "target": "com.x.connections#GetConnectionHistoryRequestConnectionFieldsList",
           "traits": {
             "smithy.api#httpQuery": "connection.fields",
-            "smithy.api#documentation": "A comma separated list of Connection fields to display."
+            "smithy.api#documentation": "A comma separated list of Connection fields to display.",
+            "com.x#csvQuery": true
           }
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.connections#GetConnectionHistoryResponse": {
@@ -799,7 +804,8 @@
           "uri": "/2/connections",
           "code": 200
         },
-        "smithy.api#documentation": "Get Connection History\n\nReturns active and historical streaming connections with disconnect reasons for the authenticated application."
+        "smithy.api#documentation": "Get Connection History\n\nReturns active and historical streaming connections with disconnect reasons for the authenticated application.",
+        "com.x#response": "json"
       }
     },
     "com.x.connections#DeleteConnectionsByUuidsRequestUuidsList": {
@@ -823,7 +829,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ],
+        "com.x#requestBody": true
       }
     },
     "com.x.connections#DeleteConnectionsByUuidsResponse": {
@@ -910,7 +920,8 @@
           "uri": "/2/connections",
           "code": 200
         },
-        "smithy.api#documentation": "Terminate multiple connections\n\nTerminates multiple streaming connections by their UUIDs for the authenticated application."
+        "smithy.api#documentation": "Terminate multiple connections\n\nTerminates multiple streaming connections by their UUIDs for the authenticated application.",
+        "com.x#response": "json"
       }
     },
     "com.x.connections#DeleteAllConnectionsResponse": {
@@ -986,7 +997,7 @@
     "com.x.connections#DeleteAllConnections": {
       "type": "operation",
       "input": {
-        "target": "smithy.api#Unit"
+        "target": "com.x.connections#DeleteAllConnectionsRequest"
       },
       "output": {
         "target": "com.x.connections#DeleteAllConnectionsResponse"
@@ -997,7 +1008,8 @@
           "uri": "/2/connections/all",
           "code": 200
         },
-        "smithy.api#documentation": "Terminate all connections\n\nTerminates all active streaming connections for the authenticated application."
+        "smithy.api#documentation": "Terminate all connections\n\nTerminates all active streaming connections for the authenticated application.",
+        "com.x#response": "json"
       }
     },
     "com.x.connections#DeleteConnectionsByEndpointRequestEndpointId": {
@@ -1102,7 +1114,10 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "app"
+        ]
       }
     },
     "com.x.connections#DeleteConnectionsByEndpointResponse": {
@@ -1189,7 +1204,8 @@
           "uri": "/2/connections/{endpoint_id}",
           "code": 200
         },
-        "smithy.api#documentation": "Terminate connections by endpoint\n\nTerminates all streaming connections for a specific endpoint ID for the authenticated application."
+        "smithy.api#documentation": "Terminate connections by endpoint\n\nTerminates all streaming connections for a specific endpoint ID for the authenticated application.",
+        "com.x#response": "json"
       }
     },
     "com.x.connections#Connections": {
@@ -1212,6 +1228,15 @@
       "traits": {
         "smithy.api#title": "X API v2",
         "smithy.api#documentation": "X API v2 core endpoints"
+      }
+    },
+    "com.x.connections#DeleteAllConnectionsRequest": {
+      "type": "structure",
+      "members": {},
+      "traits": {
+        "com.x#security": [
+          "app"
+        ]
       }
     }
   }

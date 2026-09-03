@@ -36,7 +36,11 @@
         }
       },
       "traits": {
-        "smithy.api#input": {}
+        "smithy.api#input": {},
+        "com.x#security": [
+          "oauth2",
+          "oauth1"
+        ]
       }
     },
     "com.x.mutes#UnmuteUserResponse": {
@@ -571,7 +575,8 @@
           "uri": "/2/users/{source_user_id}/muting/{target_user_id}",
           "code": 200
         },
-        "smithy.api#documentation": "Unmute User\n\nCauses the authenticated user to unmute the target user."
+        "smithy.api#documentation": "Unmute User\n\nCauses the authenticated user to unmute the target user.",
+        "com.x#response": "json"
       }
     },
     "com.x.mutes#Mutes": {

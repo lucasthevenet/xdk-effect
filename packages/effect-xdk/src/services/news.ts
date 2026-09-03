@@ -41,9 +41,14 @@ export const GetNewsRequest = /*@__PURE__*/ S.suspend(() =>
   S.Struct({
     id: S.String.pipe(T.Label()),
     news_fields: S.optional(
-      GetNewsRequestNewsFieldsList.pipe(T.Query("news.fields")),
+      GetNewsRequestNewsFieldsList.pipe(
+        T.Query("news.fields"),
+        T.CsvQuery(true),
+      ),
     ),
-  }).pipe(T.Http({ method: "GET", uri: "/2/news/{id}", code: 200 })),
+  })
+    .pipe(T.Http({ method: "GET", uri: "/2/news/{id}", code: 200 }))
+    .pipe(T.Security(["oauth2", "oauth1", "app"])),
 ).annotate({ identifier: "GetNewsRequest" }) as any as S.Schema<GetNewsRequest>;
 
 /** A Post belonging to this news story's cluster. */
