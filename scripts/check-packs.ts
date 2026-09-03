@@ -63,6 +63,12 @@ for (const packageDirectory of packages) {
             "lib/oauth.d.ts",
             "src/auth.ts",
             "src/oauth.ts",
+            "lib/operation.js",
+            "lib/operation.d.ts",
+            "lib/services/index.js",
+            "lib/services/posts.js",
+            "lib/services/posts.d.ts",
+            "src/services/posts.ts",
           ]),
     ];
     for (const required of requiredFiles) {

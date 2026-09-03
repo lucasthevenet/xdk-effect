@@ -1,0 +1,1218 @@
+{
+  "smithy": "2.0",
+  "metadata": {
+    "suppressions": [
+      {
+        "id": "HttpUriConflict",
+        "namespace": "*"
+      },
+      {
+        "id": "HttpMethodSemantics",
+        "namespace": "*"
+      },
+      {
+        "id": "UnreferencedShape",
+        "namespace": "*"
+      }
+    ]
+  },
+  "shapes": {
+    "com.x.connections#GetConnectionHistoryRequestStatus": {
+      "type": "enum",
+      "members": {
+        "ACTIVE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "active"
+          }
+        },
+        "INACTIVE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "inactive"
+          }
+        },
+        "ALL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "all"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#GetConnectionHistoryRequestEndpointsItem": {
+      "type": "enum",
+      "members": {
+        "FILTERED_STREAM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "filtered_stream"
+          }
+        },
+        "SAMPLE_STREAM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "sample_stream"
+          }
+        },
+        "SAMPLE10_STREAM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "sample10_stream"
+          }
+        },
+        "FIREHOSE_STREAM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "firehose_stream"
+          }
+        },
+        "TWEETS_COMPLIANCE_STREAM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "tweets_compliance_stream"
+          }
+        },
+        "USERS_COMPLIANCE_STREAM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "users_compliance_stream"
+          }
+        },
+        "TWEET_LABEL_STREAM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "tweet_label_stream"
+          }
+        },
+        "FIREHOSE_STREAM_LANG_EN": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "firehose_stream_lang_en"
+          }
+        },
+        "FIREHOSE_STREAM_LANG_JA": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "firehose_stream_lang_ja"
+          }
+        },
+        "FIREHOSE_STREAM_LANG_KO": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "firehose_stream_lang_ko"
+          }
+        },
+        "FIREHOSE_STREAM_LANG_PT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "firehose_stream_lang_pt"
+          }
+        },
+        "LIKES_FIREHOSE_STREAM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "likes_firehose_stream"
+          }
+        },
+        "LIKES_SAMPLE10_STREAM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "likes_sample10_stream"
+          }
+        },
+        "LIKES_COMPLIANCE_STREAM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "likes_compliance_stream"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#GetConnectionHistoryRequestEndpointsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.connections#GetConnectionHistoryRequestEndpointsItem"
+      },
+      "traits": {}
+    },
+    "com.x.connections#GetConnectionHistoryRequestConnectionFieldsItem": {
+      "type": "enum",
+      "members": {
+        "CLIENT_IP": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "client_ip"
+          }
+        },
+        "CONNECTED_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "connected_at"
+          }
+        },
+        "DISCONNECT_REASON": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "disconnect_reason"
+          }
+        },
+        "DISCONNECTED_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "disconnected_at"
+          }
+        },
+        "ENDPOINT_NAME": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "endpoint_name"
+          }
+        },
+        "ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "id"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#GetConnectionHistoryRequestConnectionFieldsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.connections#GetConnectionHistoryRequestConnectionFieldsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "The fields available for a Connection object."
+      }
+    },
+    "com.x.connections#GetConnectionHistoryRequest": {
+      "type": "structure",
+      "members": {
+        "status": {
+          "target": "com.x.connections#GetConnectionHistoryRequestStatus",
+          "traits": {
+            "smithy.api#httpQuery": "status"
+          }
+        },
+        "endpoints": {
+          "target": "com.x.connections#GetConnectionHistoryRequestEndpointsList",
+          "traits": {
+            "smithy.api#httpQuery": "endpoints"
+          }
+        },
+        "max_results": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#httpQuery": "max_results"
+          }
+        },
+        "pagination_token": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpQuery": "pagination_token"
+          }
+        },
+        "connection_fields": {
+          "target": "com.x.connections#GetConnectionHistoryRequestConnectionFieldsList",
+          "traits": {
+            "smithy.api#httpQuery": "connection.fields",
+            "smithy.api#documentation": "A comma separated list of Connection fields to display."
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.connections#GetConnectionHistoryResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.connections#GetConnectionHistoryResponseDataList"
+        },
+        "errors": {
+          "target": "com.x.connections#GetConnectionHistoryResponseErrorsList"
+        },
+        "meta": {
+          "target": "com.x.connections#GetConnectionHistoryResponseMeta"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#Connection": {
+      "type": "structure",
+      "members": {
+        "client_ip": {
+          "target": "smithy.api#String"
+        },
+        "connected_at": {
+          "target": "smithy.api#String"
+        },
+        "disconnect_reason": {
+          "target": "smithy.api#String"
+        },
+        "disconnected_at": {
+          "target": "smithy.api#String"
+        },
+        "endpoint_name": {
+          "target": "smithy.api#String"
+        },
+        "id": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#GetConnectionHistoryResponseDataList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.connections#Connection"
+      },
+      "traits": {}
+    },
+    "com.x.connections#Problem": {
+      "type": "union",
+      "members": {
+        "ResourceNotFoundProblem": {
+          "target": "com.x.connections#ResourceNotFoundProblem"
+        },
+        "InvalidRequestProblem": {
+          "target": "com.x.connections#InvalidRequestProblem"
+        },
+        "NotAuthorizedForResourceProblem": {
+          "target": "com.x.connections#NotAuthorizedForResourceProblem"
+        },
+        "NotAuthorizedForFieldProblem": {
+          "target": "com.x.connections#NotAuthorizedForFieldProblem"
+        },
+        "FieldUnauthorizedProblem": {
+          "target": "com.x.connections#FieldUnauthorizedProblem"
+        },
+        "FieldHydrationFailureProblem": {
+          "target": "com.x.connections#FieldHydrationFailureProblem"
+        },
+        "ResourceUnavailableProblem": {
+          "target": "com.x.connections#ResourceUnavailableProblem"
+        },
+        "DisallowedResourceProblem": {
+          "target": "com.x.connections#DisallowedResourceProblem"
+        },
+        "InternalErrorProblem": {
+          "target": "com.x.connections#InternalErrorProblem"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#ResourceNotFoundProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.connections#ResourceNotFoundProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#ResourceNotFoundProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_RESOURCE_NOT_FOUND": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/resource-not-found"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#InvalidRequestProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.connections#InvalidRequestProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#InvalidRequestProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_INVALID_REQUEST": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/invalid-request"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#NotAuthorizedForResourceProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.connections#NotAuthorizedForResourceProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#NotAuthorizedForResourceProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_NOT_AUTHORIZED_FOR_RESOURCE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/not-authorized-for-resource"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#NotAuthorizedForFieldProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.connections#NotAuthorizedForFieldProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#NotAuthorizedForFieldProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_NOT_AUTHORIZED_FOR_FIELD": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/not-authorized-for-field"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#FieldUnauthorizedProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.connections#FieldUnauthorizedProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#FieldUnauthorizedProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_FIELD_UNAUTHORIZED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/field-unauthorized"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#FieldHydrationFailureProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.connections#FieldHydrationFailureProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#FieldHydrationFailureProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_FIELD_HYDRATION_FAILURE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/field-hydration-failure"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#ResourceUnavailableProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.connections#ResourceUnavailableProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#ResourceUnavailableProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_RESOURCE_UNAVAILABLE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/resource-unavailable"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#DisallowedResourceProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.connections#DisallowedResourceProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#DisallowedResourceProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_DISALLOWED_RESOURCE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/disallowed-resource"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#InternalErrorProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.connections#InternalErrorProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#InternalErrorProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_INTERNAL_ERROR": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/internal-error"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#GetConnectionHistoryResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.connections#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.connections#GetConnectionHistoryResponseMeta": {
+      "type": "structure",
+      "members": {
+        "next_token": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Pagination token for the next page of results."
+          }
+        },
+        "result_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of items in the data array."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#GetConnectionHistory": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.connections#GetConnectionHistoryRequest"
+      },
+      "output": {
+        "target": "com.x.connections#GetConnectionHistoryResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "GET",
+          "uri": "/2/connections",
+          "code": 200
+        },
+        "smithy.api#documentation": "Get Connection History\n\nReturns active and historical streaming connections with disconnect reasons for the authenticated application."
+      }
+    },
+    "com.x.connections#DeleteConnectionsByUuidsRequestUuidsList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "Connection UUIDs to terminate (1-100)."
+      }
+    },
+    "com.x.connections#DeleteConnectionsByUuidsRequest": {
+      "type": "structure",
+      "members": {
+        "uuids": {
+          "target": "com.x.connections#DeleteConnectionsByUuidsRequestUuidsList",
+          "traits": {
+            "smithy.api#documentation": "Connection UUIDs to terminate (1-100).",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.connections#DeleteConnectionsByUuidsResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.connections#DeleteConnectionsByUuidsResponseData"
+        },
+        "errors": {
+          "target": "com.x.connections#DeleteConnectionsByUuidsResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#DeleteConnectionsByUuidsResponseData": {
+      "type": "structure",
+      "members": {
+        "failed_kills": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of connections that could not be terminated.",
+            "smithy.api#required": {}
+          }
+        },
+        "results": {
+          "target": "com.x.connections#DeleteConnectionsByUuidsResponseDataResultsList"
+        },
+        "successful_kills": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of connections successfully terminated.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#DeleteConnectionsByUuidsResponseDataResults": {
+      "type": "structure",
+      "members": {
+        "error_message": {
+          "target": "smithy.api#String"
+        },
+        "success": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "uuid": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#DeleteConnectionsByUuidsResponseDataResultsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.connections#DeleteConnectionsByUuidsResponseDataResults"
+      },
+      "traits": {}
+    },
+    "com.x.connections#DeleteConnectionsByUuidsResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.connections#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.connections#DeleteConnectionsByUuids": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.connections#DeleteConnectionsByUuidsRequest"
+      },
+      "output": {
+        "target": "com.x.connections#DeleteConnectionsByUuidsResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "DELETE",
+          "uri": "/2/connections",
+          "code": 200
+        },
+        "smithy.api#documentation": "Terminate multiple connections\n\nTerminates multiple streaming connections by their UUIDs for the authenticated application."
+      }
+    },
+    "com.x.connections#DeleteAllConnectionsResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.connections#DeleteAllConnectionsResponseData"
+        },
+        "errors": {
+          "target": "com.x.connections#DeleteAllConnectionsResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#DeleteAllConnectionsResponseData": {
+      "type": "structure",
+      "members": {
+        "failed_kills": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of connections that could not be terminated.",
+            "smithy.api#required": {}
+          }
+        },
+        "results": {
+          "target": "com.x.connections#DeleteAllConnectionsResponseDataResultsList"
+        },
+        "successful_kills": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of connections successfully terminated.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#DeleteAllConnectionsResponseDataResults": {
+      "type": "structure",
+      "members": {
+        "error_message": {
+          "target": "smithy.api#String"
+        },
+        "success": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "uuid": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#DeleteAllConnectionsResponseDataResultsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.connections#DeleteAllConnectionsResponseDataResults"
+      },
+      "traits": {}
+    },
+    "com.x.connections#DeleteAllConnectionsResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.connections#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.connections#DeleteAllConnections": {
+      "type": "operation",
+      "input": {
+        "target": "smithy.api#Unit"
+      },
+      "output": {
+        "target": "com.x.connections#DeleteAllConnectionsResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "DELETE",
+          "uri": "/2/connections/all",
+          "code": 200
+        },
+        "smithy.api#documentation": "Terminate all connections\n\nTerminates all active streaming connections for the authenticated application."
+      }
+    },
+    "com.x.connections#DeleteConnectionsByEndpointRequestEndpointId": {
+      "type": "enum",
+      "members": {
+        "FILTERED_STREAM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "filtered_stream"
+          }
+        },
+        "SAMPLE_STREAM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "sample_stream"
+          }
+        },
+        "SAMPLE10_STREAM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "sample10_stream"
+          }
+        },
+        "FIREHOSE_STREAM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "firehose_stream"
+          }
+        },
+        "TWEETS_COMPLIANCE_STREAM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "tweets_compliance_stream"
+          }
+        },
+        "USERS_COMPLIANCE_STREAM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "users_compliance_stream"
+          }
+        },
+        "TWEET_LABEL_STREAM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "tweet_label_stream"
+          }
+        },
+        "FIREHOSE_STREAM_LANG_EN": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "firehose_stream_lang_en"
+          }
+        },
+        "FIREHOSE_STREAM_LANG_JA": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "firehose_stream_lang_ja"
+          }
+        },
+        "FIREHOSE_STREAM_LANG_KO": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "firehose_stream_lang_ko"
+          }
+        },
+        "FIREHOSE_STREAM_LANG_PT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "firehose_stream_lang_pt"
+          }
+        },
+        "LIKES_FIREHOSE_STREAM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "likes_firehose_stream"
+          }
+        },
+        "LIKES_SAMPLE10_STREAM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "likes_sample10_stream"
+          }
+        },
+        "LIKES_COMPLIANCE_STREAM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "likes_compliance_stream"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#DeleteConnectionsByEndpointRequest": {
+      "type": "structure",
+      "members": {
+        "endpoint_id": {
+          "target": "com.x.connections#DeleteConnectionsByEndpointRequestEndpointId",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.connections#DeleteConnectionsByEndpointResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.connections#DeleteConnectionsByEndpointResponseData"
+        },
+        "errors": {
+          "target": "com.x.connections#DeleteConnectionsByEndpointResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#DeleteConnectionsByEndpointResponseData": {
+      "type": "structure",
+      "members": {
+        "failed_kills": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of connections that could not be terminated.",
+            "smithy.api#required": {}
+          }
+        },
+        "results": {
+          "target": "com.x.connections#DeleteConnectionsByEndpointResponseDataResultsList"
+        },
+        "successful_kills": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of connections successfully terminated.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#DeleteConnectionsByEndpointResponseDataResults": {
+      "type": "structure",
+      "members": {
+        "error_message": {
+          "target": "smithy.api#String"
+        },
+        "success": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "uuid": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.connections#DeleteConnectionsByEndpointResponseDataResultsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.connections#DeleteConnectionsByEndpointResponseDataResults"
+      },
+      "traits": {}
+    },
+    "com.x.connections#DeleteConnectionsByEndpointResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.connections#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.connections#DeleteConnectionsByEndpoint": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.connections#DeleteConnectionsByEndpointRequest"
+      },
+      "output": {
+        "target": "com.x.connections#DeleteConnectionsByEndpointResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "DELETE",
+          "uri": "/2/connections/{endpoint_id}",
+          "code": 200
+        },
+        "smithy.api#documentation": "Terminate connections by endpoint\n\nTerminates all streaming connections for a specific endpoint ID for the authenticated application."
+      }
+    },
+    "com.x.connections#Connections": {
+      "type": "service",
+      "version": "2.167",
+      "operations": [
+        {
+          "target": "com.x.connections#GetConnectionHistory"
+        },
+        {
+          "target": "com.x.connections#DeleteConnectionsByUuids"
+        },
+        {
+          "target": "com.x.connections#DeleteAllConnections"
+        },
+        {
+          "target": "com.x.connections#DeleteConnectionsByEndpoint"
+        }
+      ],
+      "traits": {
+        "smithy.api#title": "X API v2",
+        "smithy.api#documentation": "X API v2 core endpoints"
+      }
+    }
+  }
+}

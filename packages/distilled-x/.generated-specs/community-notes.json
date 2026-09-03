@@ -1,0 +1,4742 @@
+{
+  "smithy": "2.0",
+  "metadata": {
+    "suppressions": [
+      {
+        "id": "HttpUriConflict",
+        "namespace": "*"
+      },
+      {
+        "id": "HttpMethodSemantics",
+        "namespace": "*"
+      },
+      {
+        "id": "UnreferencedShape",
+        "namespace": "*"
+      }
+    ]
+  },
+  "shapes": {
+    "com.x.communityNotes#CreateCommunityNotesInfo": {
+      "type": "structure",
+      "members": {
+        "classification": {
+          "target": "com.x.communityNotes#CreateCommunityNotesInfoClassification",
+          "traits": {
+            "smithy.api#documentation": "Community Note classification.",
+            "smithy.api#required": {}
+          }
+        },
+        "is_media_note": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Whether the note is a media note."
+          }
+        },
+        "misleading_tags": {
+          "target": "com.x.communityNotes#CreateCommunityNotesInfoMisleadingTagsList",
+          "traits": {
+            "smithy.api#documentation": "Tags describing why the Post is misleading.",
+            "smithy.api#required": {}
+          }
+        },
+        "text": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The text summary of the Community Note (must contain a URL).",
+            "smithy.api#required": {}
+          }
+        },
+        "trustworthy_sources": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Whether the note cites trustworthy sources.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#CreateCommunityNotesInfoClassification": {
+      "type": "enum",
+      "members": {
+        "MISINFORMED_OR_POTENTIALLY_MISLEADING": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "misinformed_or_potentially_misleading"
+          }
+        },
+        "NOT_MISLEADING": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "not_misleading"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Community Note classification."
+      }
+    },
+    "com.x.communityNotes#CreateCommunityNotesInfoMisleadingTagsItem": {
+      "type": "enum",
+      "members": {
+        "DISPUTED_CLAIM_AS_FACT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "disputed_claim_as_fact"
+          }
+        },
+        "FACTUAL_ERROR": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "factual_error"
+          }
+        },
+        "MANIPULATED_MEDIA": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "manipulated_media"
+          }
+        },
+        "MISINTERPRETED_SATIRE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "misinterpreted_satire"
+          }
+        },
+        "MISSING_IMPORTANT_CONTEXT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "missing_important_context"
+          }
+        },
+        "OTHER": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "other"
+          }
+        },
+        "OUTDATED_INFORMATION": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "outdated_information"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#CreateCommunityNotesInfoMisleadingTagsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#CreateCommunityNotesInfoMisleadingTagsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "Tags describing why the Post is misleading."
+      }
+    },
+    "com.x.communityNotes#CreateCommunityNotesRequest": {
+      "type": "structure",
+      "members": {
+        "info": {
+          "target": "com.x.communityNotes#CreateCommunityNotesInfo",
+          "traits": {
+            "smithy.api#documentation": "The Community Note contents.",
+            "smithy.api#required": {}
+          }
+        },
+        "post_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "ID of the Post the note is about.",
+            "smithy.api#required": {}
+          }
+        },
+        "test_mode": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "If true, the note is only for testing and is not publicly visible.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.communityNotes#CreateCommunityNotesResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.communityNotes#CreateCommunityNotesResponseData"
+        },
+        "errors": {
+          "target": "com.x.communityNotes#CreateCommunityNotesResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#CreateCommunityNotesResponseData": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of the created Community Note.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#Problem": {
+      "type": "union",
+      "members": {
+        "ResourceNotFoundProblem": {
+          "target": "com.x.communityNotes#ResourceNotFoundProblem"
+        },
+        "InvalidRequestProblem": {
+          "target": "com.x.communityNotes#InvalidRequestProblem"
+        },
+        "NotAuthorizedForResourceProblem": {
+          "target": "com.x.communityNotes#NotAuthorizedForResourceProblem"
+        },
+        "NotAuthorizedForFieldProblem": {
+          "target": "com.x.communityNotes#NotAuthorizedForFieldProblem"
+        },
+        "FieldUnauthorizedProblem": {
+          "target": "com.x.communityNotes#FieldUnauthorizedProblem"
+        },
+        "FieldHydrationFailureProblem": {
+          "target": "com.x.communityNotes#FieldHydrationFailureProblem"
+        },
+        "ResourceUnavailableProblem": {
+          "target": "com.x.communityNotes#ResourceUnavailableProblem"
+        },
+        "DisallowedResourceProblem": {
+          "target": "com.x.communityNotes#DisallowedResourceProblem"
+        },
+        "InternalErrorProblem": {
+          "target": "com.x.communityNotes#InternalErrorProblem"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#ResourceNotFoundProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.communityNotes#ResourceNotFoundProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#ResourceNotFoundProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_RESOURCE_NOT_FOUND": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/resource-not-found"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#InvalidRequestProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.communityNotes#InvalidRequestProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#InvalidRequestProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_INVALID_REQUEST": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/invalid-request"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#NotAuthorizedForResourceProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.communityNotes#NotAuthorizedForResourceProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#NotAuthorizedForResourceProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_NOT_AUTHORIZED_FOR_RESOURCE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/not-authorized-for-resource"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#NotAuthorizedForFieldProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.communityNotes#NotAuthorizedForFieldProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#NotAuthorizedForFieldProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_NOT_AUTHORIZED_FOR_FIELD": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/not-authorized-for-field"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#FieldUnauthorizedProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.communityNotes#FieldUnauthorizedProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#FieldUnauthorizedProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_FIELD_UNAUTHORIZED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/field-unauthorized"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#FieldHydrationFailureProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.communityNotes#FieldHydrationFailureProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#FieldHydrationFailureProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_FIELD_HYDRATION_FAILURE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/field-hydration-failure"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#ResourceUnavailableProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.communityNotes#ResourceUnavailableProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#ResourceUnavailableProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_RESOURCE_UNAVAILABLE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/resource-unavailable"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#DisallowedResourceProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.communityNotes#DisallowedResourceProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#DisallowedResourceProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_DISALLOWED_RESOURCE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/disallowed-resource"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#InternalErrorProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.communityNotes#InternalErrorProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#InternalErrorProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_INTERNAL_ERROR": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/internal-error"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#CreateCommunityNotesResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#CreateCommunityNotes": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.communityNotes#CreateCommunityNotesRequest"
+      },
+      "output": {
+        "target": "com.x.communityNotes#CreateCommunityNotesResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/notes",
+          "code": 200
+        },
+        "smithy.api#documentation": "Create Community Notes"
+      }
+    },
+    "com.x.communityNotes#EvaluateCommunityNotesRequest": {
+      "type": "structure",
+      "members": {
+        "note_text": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Text of the community note to evaluate.",
+            "smithy.api#required": {}
+          }
+        },
+        "post_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "ID of the Post the note evaluates.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.communityNotes#EvaluateCommunityNotesResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.communityNotes#EvaluateCommunityNotesResponseData"
+        },
+        "errors": {
+          "target": "com.x.communityNotes#EvaluateCommunityNotesResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#EvaluateCommunityNotesResponseData": {
+      "type": "structure",
+      "members": {
+        "claim_opinion_score": {
+          "target": "smithy.api#Double",
+          "traits": {
+            "smithy.api#documentation": "The evaluated claim-opinion score for the note."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#EvaluateCommunityNotesResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#EvaluateCommunityNotes": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.communityNotes#EvaluateCommunityNotesRequest"
+      },
+      "output": {
+        "target": "com.x.communityNotes#EvaluateCommunityNotesResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/notes/evaluate",
+          "code": 200
+        },
+        "smithy.api#documentation": "Evaluate Community Notes"
+      }
+    },
+    "com.x.communityNotes#SearchCommunityNotesWrittenRequestNoteFieldsItem": {
+      "type": "enum",
+      "members": {
+        "ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "id"
+          }
+        },
+        "INFO": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "info"
+          }
+        },
+        "SCORING_STATUS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "scoring_status"
+          }
+        },
+        "STATUS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "status"
+          }
+        },
+        "TEST_RESULT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "test_result"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#SearchCommunityNotesWrittenRequestNoteFieldsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#SearchCommunityNotesWrittenRequestNoteFieldsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "The fields available for a Note object."
+      }
+    },
+    "com.x.communityNotes#SearchCommunityNotesWrittenRequest": {
+      "type": "structure",
+      "members": {
+        "test_mode": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#httpQuery": "test_mode",
+            "smithy.api#required": {}
+          }
+        },
+        "max_results": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#httpQuery": "max_results"
+          }
+        },
+        "pagination_token": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpQuery": "pagination_token"
+          }
+        },
+        "note_fields": {
+          "target": "com.x.communityNotes#SearchCommunityNotesWrittenRequestNoteFieldsList",
+          "traits": {
+            "smithy.api#httpQuery": "note.fields",
+            "smithy.api#documentation": "A comma separated list of Note fields to display."
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.communityNotes#SearchCommunityNotesWrittenResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.communityNotes#SearchCommunityNotesWrittenResponseDataList"
+        },
+        "errors": {
+          "target": "com.x.communityNotes#SearchCommunityNotesWrittenResponseErrorsList"
+        },
+        "meta": {
+          "target": "com.x.communityNotes#SearchCommunityNotesWrittenResponseMeta"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#Note": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String"
+        },
+        "info": {
+          "target": "com.x.communityNotes#NoteInfo"
+        },
+        "scoring_status": {
+          "target": "com.x.communityNotes#NoteScoringStatus"
+        },
+        "status": {
+          "target": "smithy.api#String"
+        },
+        "test_result": {
+          "target": "com.x.communityNotes#NoteTestResult"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#NoteInfo": {
+      "type": "structure",
+      "members": {
+        "classification": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "How the noted Post was classified (snake_case).",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "misleading_tags": {
+          "target": "com.x.communityNotes#NoteInfoMisleadingTagsList",
+          "traits": {
+            "smithy.api#documentation": "Reasons the noted Post may be misleading (snake_case).",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "post_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of the Post this note is about.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "rating_status": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Current rating status of the note.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "text": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The text of the Community Note.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "trustworthy_sources": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Whether the note cites trustworthy sources.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Details about the Community Note's content, classification and source."
+      }
+    },
+    "com.x.communityNotes#NoteInfoMisleadingTagsList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "Reasons the noted Post may be misleading (snake_case)."
+      }
+    },
+    "com.x.communityNotes#NoteScoringStatus": {
+      "type": "structure",
+      "members": {
+        "has_access": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Whether the caller has access to the scoring details.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "rating_counts_per_model": {
+          "target": "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelList",
+          "traits": {
+            "smithy.api#documentation": "Rating counts broken down per scoring model.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Per-model scoring breakdown for the Community Note."
+      }
+    },
+    "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValueNegativeFactorBucketCountsHelpfulTagCountsItem": {
+      "type": "structure",
+      "members": {
+        "tag_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "tag_name": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A tag and its count."
+      }
+    },
+    "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValueNegativeFactorBucketCountsHelpfulTagCountsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValueNegativeFactorBucketCountsHelpfulTagCountsItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValueNegativeFactorBucketCountsNotHelpfulTagCountsItem": {
+      "type": "structure",
+      "members": {
+        "tag_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "tag_name": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A tag and its count."
+      }
+    },
+    "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValueNegativeFactorBucketCountsNotHelpfulTagCountsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValueNegativeFactorBucketCountsNotHelpfulTagCountsItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValueNegativeFactorBucketCounts": {
+      "type": "structure",
+      "members": {
+        "helpful_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "helpful_tag_counts": {
+          "target": "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValueNegativeFactorBucketCountsHelpfulTagCountsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "not_helpful_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "not_helpful_tag_counts": {
+          "target": "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValueNegativeFactorBucketCountsNotHelpfulTagCountsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "somewhat_helpful_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Helpfulness counts for one rating factor bucket."
+      }
+    },
+    "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValueNeutralFactorBucketCountsHelpfulTagCountsItem": {
+      "type": "structure",
+      "members": {
+        "tag_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "tag_name": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A tag and its count."
+      }
+    },
+    "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValueNeutralFactorBucketCountsHelpfulTagCountsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValueNeutralFactorBucketCountsHelpfulTagCountsItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValueNeutralFactorBucketCountsNotHelpfulTagCountsItem": {
+      "type": "structure",
+      "members": {
+        "tag_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "tag_name": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A tag and its count."
+      }
+    },
+    "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValueNeutralFactorBucketCountsNotHelpfulTagCountsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValueNeutralFactorBucketCountsNotHelpfulTagCountsItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValueNeutralFactorBucketCounts": {
+      "type": "structure",
+      "members": {
+        "helpful_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "helpful_tag_counts": {
+          "target": "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValueNeutralFactorBucketCountsHelpfulTagCountsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "not_helpful_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "not_helpful_tag_counts": {
+          "target": "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValueNeutralFactorBucketCountsNotHelpfulTagCountsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "somewhat_helpful_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Helpfulness counts for one rating factor bucket."
+      }
+    },
+    "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValuePositiveFactorBucketCountsHelpfulTagCountsItem": {
+      "type": "structure",
+      "members": {
+        "tag_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "tag_name": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A tag and its count."
+      }
+    },
+    "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValuePositiveFactorBucketCountsHelpfulTagCountsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValuePositiveFactorBucketCountsHelpfulTagCountsItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValuePositiveFactorBucketCountsNotHelpfulTagCountsItem": {
+      "type": "structure",
+      "members": {
+        "tag_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "tag_name": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A tag and its count."
+      }
+    },
+    "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValuePositiveFactorBucketCountsNotHelpfulTagCountsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValuePositiveFactorBucketCountsNotHelpfulTagCountsItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValuePositiveFactorBucketCounts": {
+      "type": "structure",
+      "members": {
+        "helpful_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "helpful_tag_counts": {
+          "target": "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValuePositiveFactorBucketCountsHelpfulTagCountsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "not_helpful_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "not_helpful_tag_counts": {
+          "target": "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValuePositiveFactorBucketCountsNotHelpfulTagCountsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "somewhat_helpful_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Helpfulness counts for one rating factor bucket."
+      }
+    },
+    "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValue": {
+      "type": "structure",
+      "members": {
+        "negative_factor_bucket_counts": {
+          "target": "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValueNegativeFactorBucketCounts",
+          "traits": {
+            "smithy.api#documentation": "Helpfulness counts for one rating factor bucket.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "neutral_factor_bucket_counts": {
+          "target": "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValueNeutralFactorBucketCounts",
+          "traits": {
+            "smithy.api#documentation": "Helpfulness counts for one rating factor bucket.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "positive_factor_bucket_counts": {
+          "target": "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValuePositiveFactorBucketCounts",
+          "traits": {
+            "smithy.api#documentation": "Helpfulness counts for one rating factor bucket.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Per-factor bucket counts for a scoring model."
+      }
+    },
+    "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItem": {
+      "type": "structure",
+      "members": {
+        "model_name": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Name of the scoring model.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "value": {
+          "target": "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItemValue",
+          "traits": {
+            "smithy.api#documentation": "Per-factor bucket counts for a scoring model.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Rating counts for one scoring model."
+      }
+    },
+    "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#NoteScoringStatusRatingCountsPerModelItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "Rating counts broken down per scoring model."
+      }
+    },
+    "com.x.communityNotes#NoteTestResult": {
+      "type": "structure",
+      "members": {
+        "evaluation_outcome": {
+          "target": "com.x.communityNotes#NoteTestResultEvaluationOutcomeList",
+          "traits": {
+            "smithy.api#documentation": "Per-evaluator outcomes for the note.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "AI evaluation results for the Community Note (returned in test mode)."
+      }
+    },
+    "com.x.communityNotes#NoteTestResultEvaluationOutcomeItem": {
+      "type": "structure",
+      "members": {
+        "evaluator_score_bucket": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The score bucket the evaluator assigned.",
+            "smithy.api#required": {}
+          }
+        },
+        "evaluator_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The type of evaluator that produced this outcome.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A single evaluator's outcome for a Community Note."
+      }
+    },
+    "com.x.communityNotes#NoteTestResultEvaluationOutcomeList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#NoteTestResultEvaluationOutcomeItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "Per-evaluator outcomes for the note."
+      }
+    },
+    "com.x.communityNotes#SearchCommunityNotesWrittenResponseDataList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#Note"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#SearchCommunityNotesWrittenResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#SearchCommunityNotesWrittenResponseMeta": {
+      "type": "structure",
+      "members": {
+        "next_token": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Pagination token for the next page of results."
+          }
+        },
+        "result_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of items in the data array."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#SearchCommunityNotesWritten": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.communityNotes#SearchCommunityNotesWrittenRequest"
+      },
+      "output": {
+        "target": "com.x.communityNotes#SearchCommunityNotesWrittenResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "GET",
+          "uri": "/2/notes/search/notes_written",
+          "code": 200
+        },
+        "smithy.api#documentation": "Search Community Notes Written"
+      }
+    },
+    "com.x.communityNotes#SearchEligiblePostsRequestPostFieldsItem": {
+      "type": "enum",
+      "members": {
+        "ARTICLE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "article"
+          }
+        },
+        "ARTICLE_TITLE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "article_title"
+          }
+        },
+        "ATTACHMENTS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "attachments"
+          }
+        },
+        "CARD_URI": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "card_uri"
+          }
+        },
+        "COMMUNITY_ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "community_id"
+          }
+        },
+        "CONTEXT_ANNOTATIONS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "context_annotations"
+          }
+        },
+        "CONVERSATION_ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "conversation_id"
+          }
+        },
+        "CREATED_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "created_at"
+          }
+        },
+        "DISPLAY_TEXT_RANGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "display_text_range"
+          }
+        },
+        "EDIT_CONTROLS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "edit_controls"
+          }
+        },
+        "ENTITIES": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "entities"
+          }
+        },
+        "GEO": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "geo"
+          }
+        },
+        "ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "id"
+          }
+        },
+        "LANG": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "lang"
+          }
+        },
+        "MATCHED_MEDIA_NOTES": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "matched_media_notes"
+          }
+        },
+        "MEDIA_METADATA": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "media_metadata"
+          }
+        },
+        "NON_PUBLIC_METRICS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "non_public_metrics"
+          }
+        },
+        "NOTE_POST": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "note_post"
+          }
+        },
+        "NOTE_REQUEST_SUGGESTIONS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "note_request_suggestions"
+          }
+        },
+        "ORGANIC_METRICS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "organic_metrics"
+          }
+        },
+        "PAID_PARTNERSHIP": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "paid_partnership"
+          }
+        },
+        "POSSIBLY_SENSITIVE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "possibly_sensitive"
+          }
+        },
+        "PROMOTED_METRICS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "promoted_metrics"
+          }
+        },
+        "PUBLIC_METRICS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "public_metrics"
+          }
+        },
+        "REPLY_SETTINGS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "reply_settings"
+          }
+        },
+        "SCOPES": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "scopes"
+          }
+        },
+        "SOURCE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "source"
+          }
+        },
+        "SUGGESTED_SOURCE_LINKS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "suggested_source_links"
+          }
+        },
+        "SUGGESTED_SOURCE_LINKS_WITH_COUNTS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "suggested_source_links_with_counts"
+          }
+        },
+        "TEXT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "text"
+          }
+        },
+        "WITHHELD": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "withheld"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#SearchEligiblePostsRequestPostFieldsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#SearchEligiblePostsRequestPostFieldsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "The fields available for a Post object."
+      }
+    },
+    "com.x.communityNotes#SearchEligiblePostsRequestExpansionsItem": {
+      "type": "enum",
+      "members": {
+        "ARTICLE_COVER_MEDIA": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "article.cover_media"
+          }
+        },
+        "ARTICLE_MEDIA_ENTITIES": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "article.media_entities"
+          }
+        },
+        "ATTACHMENTS_MEDIA_KEYS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "attachments.media_keys"
+          }
+        },
+        "ATTACHMENTS_MEDIA_SOURCE_TWEET": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "attachments.media_source_tweet"
+          }
+        },
+        "ATTACHMENTS_POLL_IDS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "attachments.poll_ids"
+          }
+        },
+        "AUTHOR_ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "author_id"
+          }
+        },
+        "EDIT_HISTORY_POST_IDS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "edit_history_post_ids"
+          }
+        },
+        "ENTITIES_MENTIONS_USERNAME": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "entities.mentions.username"
+          }
+        },
+        "GEO_PLACE_ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "geo.place_id"
+          }
+        },
+        "IN_REPLY_TO_USER_ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "in_reply_to_user_id"
+          }
+        },
+        "REFERENCED_POSTS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "referenced_posts"
+          }
+        },
+        "USERNAME": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "username"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#SearchEligiblePostsRequestExpansionsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#SearchEligiblePostsRequestExpansionsItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#SearchEligiblePostsRequestUserFieldsItem": {
+      "type": "enum",
+      "members": {
+        "CONFIRMED_EMAIL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "confirmed_email"
+          }
+        },
+        "CONNECTION_STATUS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "connection_status"
+          }
+        },
+        "CREATED_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "created_at"
+          }
+        },
+        "DESCRIPTION": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "description"
+          }
+        },
+        "ENTITIES": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "entities"
+          }
+        },
+        "ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "id"
+          }
+        },
+        "IS_IDENTITY_VERIFIED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "is_identity_verified"
+          }
+        },
+        "LOCATION": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "location"
+          }
+        },
+        "NAME": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "name"
+          }
+        },
+        "PARODY": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "parody"
+          }
+        },
+        "PROFILE_BANNER_URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "profile_banner_url"
+          }
+        },
+        "PROFILE_IMAGE_URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "profile_image_url"
+          }
+        },
+        "PROTECTED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "protected"
+          }
+        },
+        "PUBLIC_METRICS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "public_metrics"
+          }
+        },
+        "RECEIVES_YOUR_DM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "receives_your_dm"
+          }
+        },
+        "SUBSCRIBES_TO_YOU": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "subscribes_to_you"
+          }
+        },
+        "SUBSCRIPTION": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "subscription"
+          }
+        },
+        "SUBSCRIPTION_TYPE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "subscription_type"
+          }
+        },
+        "URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "url"
+          }
+        },
+        "USERNAME": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "username"
+          }
+        },
+        "VERIFIED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "verified"
+          }
+        },
+        "VERIFIED_FOLLOWERS_COUNT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "verified_followers_count"
+          }
+        },
+        "VERIFIED_TYPE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "verified_type"
+          }
+        },
+        "WITHHELD": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "withheld"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#SearchEligiblePostsRequestUserFieldsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#SearchEligiblePostsRequestUserFieldsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "The fields available for a User object."
+      }
+    },
+    "com.x.communityNotes#SearchEligiblePostsRequestMediaFieldsItem": {
+      "type": "enum",
+      "members": {
+        "ALT_TEXT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "alt_text"
+          }
+        },
+        "DURATION_MS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "duration_ms"
+          }
+        },
+        "HEIGHT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "height"
+          }
+        },
+        "MEDIA_KEY": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "media_key"
+          }
+        },
+        "NON_PUBLIC_METRICS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "non_public_metrics"
+          }
+        },
+        "ORGANIC_METRICS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "organic_metrics"
+          }
+        },
+        "PREVIEW_IMAGE_URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "preview_image_url"
+          }
+        },
+        "PROMOTED_METRICS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "promoted_metrics"
+          }
+        },
+        "PUBLIC_METRICS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "public_metrics"
+          }
+        },
+        "TYPE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "type"
+          }
+        },
+        "URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "url"
+          }
+        },
+        "VARIANTS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "variants"
+          }
+        },
+        "WIDTH": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "width"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#SearchEligiblePostsRequestMediaFieldsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#SearchEligiblePostsRequestMediaFieldsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "The fields available for a Media object."
+      }
+    },
+    "com.x.communityNotes#SearchEligiblePostsRequestPollFieldsItem": {
+      "type": "enum",
+      "members": {
+        "DURATION_MINUTES": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "duration_minutes"
+          }
+        },
+        "END_DATETIME": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "end_datetime"
+          }
+        },
+        "ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "id"
+          }
+        },
+        "OPTIONS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "options"
+          }
+        },
+        "VOTING_STATUS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "voting_status"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#SearchEligiblePostsRequestPollFieldsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#SearchEligiblePostsRequestPollFieldsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "The fields available for a Poll object."
+      }
+    },
+    "com.x.communityNotes#SearchEligiblePostsRequestPlaceFieldsItem": {
+      "type": "enum",
+      "members": {
+        "CONTAINED_WITHIN": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "contained_within"
+          }
+        },
+        "COUNTRY": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "country"
+          }
+        },
+        "COUNTRY_CODE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "country_code"
+          }
+        },
+        "FULL_NAME": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "full_name"
+          }
+        },
+        "GEO": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "geo"
+          }
+        },
+        "ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "id"
+          }
+        },
+        "NAME": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "name"
+          }
+        },
+        "PLACE_TYPE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "place_type"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#SearchEligiblePostsRequestPlaceFieldsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#SearchEligiblePostsRequestPlaceFieldsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "The fields available for a Place object."
+      }
+    },
+    "com.x.communityNotes#SearchEligiblePostsRequest": {
+      "type": "structure",
+      "members": {
+        "test_mode": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#httpQuery": "test_mode",
+            "smithy.api#required": {}
+          }
+        },
+        "max_results": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#httpQuery": "max_results"
+          }
+        },
+        "pagination_token": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpQuery": "pagination_token"
+          }
+        },
+        "post_selection": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpQuery": "post_selection"
+          }
+        },
+        "post_fields": {
+          "target": "com.x.communityNotes#SearchEligiblePostsRequestPostFieldsList",
+          "traits": {
+            "smithy.api#httpQuery": "post.fields",
+            "smithy.api#documentation": "A comma separated list of Post fields to display."
+          }
+        },
+        "expansions": {
+          "target": "com.x.communityNotes#SearchEligiblePostsRequestExpansionsList",
+          "traits": {
+            "smithy.api#httpQuery": "expansions",
+            "smithy.api#documentation": "A comma separated list of fields to expand."
+          }
+        },
+        "user_fields": {
+          "target": "com.x.communityNotes#SearchEligiblePostsRequestUserFieldsList",
+          "traits": {
+            "smithy.api#httpQuery": "user.fields",
+            "smithy.api#documentation": "A comma separated list of User fields to display."
+          }
+        },
+        "media_fields": {
+          "target": "com.x.communityNotes#SearchEligiblePostsRequestMediaFieldsList",
+          "traits": {
+            "smithy.api#httpQuery": "media.fields",
+            "smithy.api#documentation": "A comma separated list of Media fields to display."
+          }
+        },
+        "poll_fields": {
+          "target": "com.x.communityNotes#SearchEligiblePostsRequestPollFieldsList",
+          "traits": {
+            "smithy.api#httpQuery": "poll.fields",
+            "smithy.api#documentation": "A comma separated list of Poll fields to display."
+          }
+        },
+        "place_fields": {
+          "target": "com.x.communityNotes#SearchEligiblePostsRequestPlaceFieldsList",
+          "traits": {
+            "smithy.api#httpQuery": "place.fields",
+            "smithy.api#documentation": "A comma separated list of Place fields to display."
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.communityNotes#SearchEligiblePostsResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.communityNotes#SearchEligiblePostsResponseDataList"
+        },
+        "errors": {
+          "target": "com.x.communityNotes#SearchEligiblePostsResponseErrorsList"
+        },
+        "includes": {
+          "target": "com.x.communityNotes#Expansions"
+        },
+        "meta": {
+          "target": "com.x.communityNotes#SearchEligiblePostsResponseMeta"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#Post": {
+      "type": "structure",
+      "members": {
+        "article": {
+          "target": "smithy.api#Document"
+        },
+        "article_title": {
+          "target": "smithy.api#Document",
+          "traits": {
+            "smithy.api#documentation": "Metadata about the long-form Article attached to this Post, if any."
+          }
+        },
+        "attachments": {
+          "target": "com.x.communityNotes#PostAttachments"
+        },
+        "author_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of the author of this Post."
+          }
+        },
+        "card_uri": {
+          "target": "smithy.api#String"
+        },
+        "community_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The unique identifier of the Community this Post belongs to, if any."
+          }
+        },
+        "context_annotations": {
+          "target": "com.x.communityNotes#PostContextAnnotations"
+        },
+        "conversation_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The ID of the conversation this Post belongs to (matches the root Post's ID)."
+          }
+        },
+        "created_at": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Creation time of the Post."
+          }
+        },
+        "display_text_range": {
+          "target": "com.x.communityNotes#PostDisplayTextRange"
+        },
+        "edit_controls": {
+          "target": "com.x.communityNotes#PostEditControls"
+        },
+        "edit_history_post_ids": {
+          "target": "com.x.communityNotes#PostEditHistoryPostIdsList",
+          "traits": {
+            "smithy.api#documentation": "A list of Post IDs in this Post's edit history chain."
+          }
+        },
+        "entities": {
+          "target": "com.x.communityNotes#PostEntities"
+        },
+        "geo": {
+          "target": "com.x.communityNotes#PostGeo"
+        },
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of this Post."
+          }
+        },
+        "in_reply_to_user_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of the User this Post is replying to."
+          }
+        },
+        "lang": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Language of the Post, if detected by X. Returned as a BCP47 language tag."
+          }
+        },
+        "matched_media_notes": {
+          "target": "com.x.communityNotes#PostMatchedMediaNotes"
+        },
+        "media_metadata": {
+          "target": "com.x.communityNotes#PostMediaMetadata"
+        },
+        "non_public_metrics": {
+          "target": "smithy.api#Document",
+          "traits": {
+            "smithy.api#documentation": "Nonpublic engagement metrics for the Post at the time of the request."
+          }
+        },
+        "note_post": {
+          "target": "com.x.communityNotes#PostNotePost"
+        },
+        "note_request_suggestions": {
+          "target": "com.x.communityNotes#PostNoteRequestSuggestions"
+        },
+        "organic_metrics": {
+          "target": "smithy.api#Document",
+          "traits": {
+            "smithy.api#documentation": "Organic nonpublic engagement metrics for the Post at the time of the request."
+          }
+        },
+        "paid_partnership": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates if this Post is a paid partnership, i.e. it has been disclosed by the author as containing paid promotion."
+          }
+        },
+        "possibly_sensitive": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates if this Post contains URLs marked as sensitive, for example content suitable for mature audiences."
+          }
+        },
+        "promoted_metrics": {
+          "target": "smithy.api#Document",
+          "traits": {
+            "smithy.api#documentation": "Promoted nonpublic engagement metrics for the Post at the time of the request."
+          }
+        },
+        "public_metrics": {
+          "target": "com.x.communityNotes#PostPublicMetrics"
+        },
+        "referenced_posts": {
+          "target": "com.x.communityNotes#PostReferencedPosts"
+        },
+        "reply_settings": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Shows who can reply to this Post."
+          }
+        },
+        "scopes": {
+          "target": "com.x.communityNotes#PostScopes"
+        },
+        "source": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The name of the app the user posted from. This is deprecated."
+          }
+        },
+        "suggested_source_links": {
+          "target": "com.x.communityNotes#PostSuggestedSourceLinks"
+        },
+        "suggested_source_links_with_counts": {
+          "target": "com.x.communityNotes#PostSuggestedSourceLinksWithCounts"
+        },
+        "text": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The content of the Post."
+          }
+        },
+        "username": {
+          "target": "smithy.api#String"
+        },
+        "withheld": {
+          "target": "com.x.communityNotes#PostWithheld"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#PostAttachments": {
+      "type": "structure",
+      "members": {
+        "media_keys": {
+          "target": "com.x.communityNotes#PostAttachmentsMediaKeysList",
+          "traits": {
+            "smithy.api#documentation": "Media keys of media attached to this Post.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "media_source_tweet_id": {
+          "target": "com.x.communityNotes#PostAttachmentsMediaSourceTweetIdList",
+          "traits": {
+            "smithy.api#documentation": "IDs of the source Posts the attached media originated from.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "poll_ids": {
+          "target": "com.x.communityNotes#PostAttachmentsPollIdsList",
+          "traits": {
+            "smithy.api#documentation": "IDs of polls attached to this Post.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Specifies the type of attachments (if any) present in this Post."
+      }
+    },
+    "com.x.communityNotes#PostAttachmentsMediaKeysList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "Media keys of media attached to this Post."
+      }
+    },
+    "com.x.communityNotes#PostAttachmentsMediaSourceTweetIdList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "IDs of the source Posts the attached media originated from."
+      }
+    },
+    "com.x.communityNotes#PostAttachmentsPollIdsList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "IDs of polls attached to this Post."
+      }
+    },
+    "com.x.communityNotes#PostContextAnnotations": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#PostContextAnnotationsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "Annotations inferred about the Post (domain and entity context)."
+      }
+    },
+    "com.x.communityNotes#PostContextAnnotationsItemDomain": {
+      "type": "structure",
+      "members": {
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "name": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A domain or entity referenced by a context annotation."
+      }
+    },
+    "com.x.communityNotes#PostContextAnnotationsItemEntity": {
+      "type": "structure",
+      "members": {
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "name": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A domain or entity referenced by a context annotation."
+      }
+    },
+    "com.x.communityNotes#PostContextAnnotationsItem": {
+      "type": "structure",
+      "members": {
+        "domain": {
+          "target": "com.x.communityNotes#PostContextAnnotationsItemDomain",
+          "traits": {
+            "smithy.api#documentation": "The domain (broad category) this annotation belongs to.",
+            "smithy.api#required": {}
+          }
+        },
+        "entity": {
+          "target": "com.x.communityNotes#PostContextAnnotationsItemEntity",
+          "traits": {
+            "smithy.api#documentation": "The specific entity recognized within the domain.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A single inferred annotation about the Post (domain and entity context)."
+      }
+    },
+    "com.x.communityNotes#PostDisplayTextRange": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#Integer"
+      },
+      "traits": {
+        "smithy.api#documentation": "The inclusive start and exclusive end indices of the displayable content of the Post."
+      }
+    },
+    "com.x.communityNotes#PostEditControls": {
+      "type": "structure",
+      "members": {
+        "editable_until": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The time until which this Post can be edited.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "edits_remaining": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of edits still allowed for this Post.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "is_edit_eligible": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates whether this Post is eligible to be edited.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Indicates how much longer (if at all) this Post can be edited."
+      }
+    },
+    "com.x.communityNotes#PostEditHistoryPostIdsList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "A list of Post IDs in this Post's edit history chain."
+      }
+    },
+    "com.x.communityNotes#PostEntities": {
+      "type": "structure",
+      "members": {
+        "cashtags": {
+          "target": "com.x.communityNotes#PostEntitiesCashtagsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "hashtags": {
+          "target": "com.x.communityNotes#PostEntitiesHashtagsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "mentions": {
+          "target": "com.x.communityNotes#PostEntitiesMentionsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "urls": {
+          "target": "com.x.communityNotes#PostEntitiesUrlsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A list of metadata entities (hashtags, mentions, URLs) found in the Post text."
+      }
+    },
+    "com.x.communityNotes#PostEntitiesCashtagsItem": {
+      "type": "structure",
+      "members": {
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "End index in the text (exclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Start index in the text (inclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "tag": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A hashtag or cashtag entity."
+      }
+    },
+    "com.x.communityNotes#PostEntitiesCashtagsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#PostEntitiesCashtagsItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#PostEntitiesHashtagsItem": {
+      "type": "structure",
+      "members": {
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "End index in the text (exclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Start index in the text (inclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "tag": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A hashtag or cashtag entity."
+      }
+    },
+    "com.x.communityNotes#PostEntitiesHashtagsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#PostEntitiesHashtagsItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#PostEntitiesMentionsItem": {
+      "type": "structure",
+      "members": {
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "username": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A user mention entity."
+      }
+    },
+    "com.x.communityNotes#PostEntitiesMentionsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#PostEntitiesMentionsItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#PostEntitiesUrlsItemImagesItem": {
+      "type": "structure",
+      "members": {
+        "height": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "width": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A preview image for a linked page."
+      }
+    },
+    "com.x.communityNotes#PostEntitiesUrlsItemImagesList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#PostEntitiesUrlsItemImagesItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#PostEntitiesUrlsItem": {
+      "type": "structure",
+      "members": {
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Description of the linked page, when available.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "display_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The URL as displayed in the Post text.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "expanded_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The fully resolved URL.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "images": {
+          "target": "com.x.communityNotes#PostEntitiesUrlsItemImagesList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "media_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "HTTP status from resolving the URL.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Title of the linked page, when available.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "unwound_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The final destination after following redirects.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The t.co shortened URL.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A URL entity found in the Post text, enriched with link metadata."
+      }
+    },
+    "com.x.communityNotes#PostEntitiesUrlsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#PostEntitiesUrlsItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#PostGeo": {
+      "type": "structure",
+      "members": {
+        "coordinates": {
+          "target": "com.x.communityNotes#PostGeoCoordinates",
+          "traits": {
+            "smithy.api#documentation": "A GeoJSON Point geometry.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "place_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The unique identifier of the tagged place.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "The location tagged on the Post, if the user provided one."
+      }
+    },
+    "com.x.communityNotes#PostGeoCoordinatesCoordinatesList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#Double"
+      },
+      "traits": {
+        "smithy.api#documentation": "[longitude, latitude]."
+      }
+    },
+    "com.x.communityNotes#PostGeoCoordinatesType": {
+      "type": "enum",
+      "members": {
+        "POINT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "Point"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "The GeoJSON geometry type."
+      }
+    },
+    "com.x.communityNotes#PostGeoCoordinates": {
+      "type": "structure",
+      "members": {
+        "coordinates": {
+          "target": "com.x.communityNotes#PostGeoCoordinatesCoordinatesList",
+          "traits": {
+            "smithy.api#documentation": "[longitude, latitude].",
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.communityNotes#PostGeoCoordinatesType",
+          "traits": {
+            "smithy.api#documentation": "The GeoJSON geometry type.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A GeoJSON Point geometry."
+      }
+    },
+    "com.x.communityNotes#PostMatchedMediaNotes": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#PostMatchedMediaNotesItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "Community-Notes media matches for this Post."
+      }
+    },
+    "com.x.communityNotes#PostMatchedMediaNotesItem": {
+      "type": "structure",
+      "members": {
+        "match_status": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The status of the media note match.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "note_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The matched note's unique identifier.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A Community-Notes media match for this Post."
+      }
+    },
+    "com.x.communityNotes#PostMediaMetadata": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#PostMediaMetadataItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "Metadata for media attached to this Post."
+      }
+    },
+    "com.x.communityNotes#PostMediaMetadataItem": {
+      "type": "structure",
+      "members": {
+        "alt_text": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Alternative text describing the media for accessibility.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Description of the media.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "media_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The unique identifier of the media.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Title of the media.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Metadata for one media item attached to this Post."
+      }
+    },
+    "com.x.communityNotes#PostNotePost": {
+      "type": "structure",
+      "members": {
+        "entities": {
+          "target": "com.x.communityNotes#PostNotePostEntities",
+          "traits": {
+            "smithy.api#documentation": "Metadata entities (hashtags, cashtags, mentions, URLs) found in the note Post text.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "text": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The full note text of the Post.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "The full content of the Post, including text beyond 280 characters."
+      }
+    },
+    "com.x.communityNotes#PostNotePostEntitiesCashtagsItem": {
+      "type": "structure",
+      "members": {
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "End index in the text (exclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Start index in the text (inclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "tag": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A hashtag or cashtag entity."
+      }
+    },
+    "com.x.communityNotes#PostNotePostEntitiesCashtagsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#PostNotePostEntitiesCashtagsItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#PostNotePostEntitiesHashtagsItem": {
+      "type": "structure",
+      "members": {
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "End index in the text (exclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Start index in the text (inclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "tag": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A hashtag or cashtag entity."
+      }
+    },
+    "com.x.communityNotes#PostNotePostEntitiesHashtagsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#PostNotePostEntitiesHashtagsItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#PostNotePostEntitiesMentionsItem": {
+      "type": "structure",
+      "members": {
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "username": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A user mention entity."
+      }
+    },
+    "com.x.communityNotes#PostNotePostEntitiesMentionsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#PostNotePostEntitiesMentionsItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#PostNotePostEntitiesUrlsItem": {
+      "type": "structure",
+      "members": {
+        "display_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "expanded_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A URL entity found in note Post text."
+      }
+    },
+    "com.x.communityNotes#PostNotePostEntitiesUrlsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#PostNotePostEntitiesUrlsItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#PostNotePostEntities": {
+      "type": "structure",
+      "members": {
+        "cashtags": {
+          "target": "com.x.communityNotes#PostNotePostEntitiesCashtagsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "hashtags": {
+          "target": "com.x.communityNotes#PostNotePostEntitiesHashtagsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "mentions": {
+          "target": "com.x.communityNotes#PostNotePostEntitiesMentionsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "urls": {
+          "target": "com.x.communityNotes#PostNotePostEntitiesUrlsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Metadata entities (hashtags, cashtags, mentions, URLs) found in the note Post text."
+      }
+    },
+    "com.x.communityNotes#PostNoteRequestSuggestions": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#PostNoteRequestSuggestionsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "Community-Notes request suggestions for this Post."
+      }
+    },
+    "com.x.communityNotes#PostNoteRequestSuggestionsItem": {
+      "type": "structure",
+      "members": {
+        "source_link": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "A suggested source link supporting the note request.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "suggestion": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The text of the note request suggestion.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "suggestion_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The unique identifier of the note request suggestion.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A Community-Notes request suggestion for this Post."
+      }
+    },
+    "com.x.communityNotes#PostPublicMetrics": {
+      "type": "structure",
+      "members": {
+        "bookmark_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of times this Post has been bookmarked.",
+            "smithy.api#required": {}
+          }
+        },
+        "impression_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of times this Post has been viewed.",
+            "smithy.api#required": {}
+          }
+        },
+        "like_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of likes on this Post.",
+            "smithy.api#required": {}
+          }
+        },
+        "quote_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of quote Posts of this Post.",
+            "smithy.api#required": {}
+          }
+        },
+        "reply_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of replies to this Post.",
+            "smithy.api#required": {}
+          }
+        },
+        "repost_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of times this Post has been reposted.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Engagement metrics for the Post at the time of the request."
+      }
+    },
+    "com.x.communityNotes#PostReferencedPosts": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#PostReferencedPostsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "A list of Posts this Post refers to. If the Post is a Retweet, Quote or Reply, it includes the referenced Post's type and ID."
+      }
+    },
+    "com.x.communityNotes#PostReferencedPostsItemType": {
+      "type": "enum",
+      "members": {
+        "RETWEETED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "retweeted"
+          }
+        },
+        "QUOTED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "quoted"
+          }
+        },
+        "REPLIED_TO": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "replied_to"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "The kind of Post-to-Post reference."
+      }
+    },
+    "com.x.communityNotes#PostReferencedPostsItem": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of the referenced Post.",
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.communityNotes#PostReferencedPostsItemType",
+          "traits": {
+            "smithy.api#documentation": "How this Post references the other Post.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A reference from this Post to another Post (repost, quote, or reply)."
+      }
+    },
+    "com.x.communityNotes#PostScopes": {
+      "type": "structure",
+      "members": {
+        "followers": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates whether visibility of this Post is limited to the author's followers.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "The scopes for this Post."
+      }
+    },
+    "com.x.communityNotes#PostSuggestedSourceLinks": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "URLs suggested as sources for this Post."
+      }
+    },
+    "com.x.communityNotes#PostSuggestedSourceLinksWithCounts": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#PostSuggestedSourceLinksWithCountsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "Suggested source URLs for this Post, each with the number of times it was suggested."
+      }
+    },
+    "com.x.communityNotes#PostSuggestedSourceLinksWithCountsItem": {
+      "type": "structure",
+      "members": {
+        "count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of times this source link was suggested.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The suggested source URL.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A suggested source URL for this Post with the number of times it was suggested."
+      }
+    },
+    "com.x.communityNotes#PostWithheld": {
+      "type": "structure",
+      "members": {
+        "copyright": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates whether this content is withheld due to a copyright claim.",
+            "smithy.api#required": {}
+          }
+        },
+        "country_codes": {
+          "target": "com.x.communityNotes#PostWithheldCountryCodesList",
+          "traits": {
+            "smithy.api#documentation": "Uppercase ISO 3166-1 alpha-2 country codes where this content is withheld.",
+            "smithy.api#required": {}
+          }
+        },
+        "scope": {
+          "target": "com.x.communityNotes#PostWithheldScope",
+          "traits": {
+            "smithy.api#documentation": "Whether the withholding applies to a Post or a User.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Withholding details for withheld content."
+      }
+    },
+    "com.x.communityNotes#PostWithheldCountryCodesList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "Uppercase ISO 3166-1 alpha-2 country codes where this content is withheld."
+      }
+    },
+    "com.x.communityNotes#PostWithheldScope": {
+      "type": "enum",
+      "members": {
+        "POST": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "post"
+          }
+        },
+        "USER": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "user"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Whether the withholding applies to a Post or a User."
+      }
+    },
+    "com.x.communityNotes#SearchEligiblePostsResponseDataList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#Post"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#SearchEligiblePostsResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#Expansions": {
+      "type": "structure",
+      "members": {
+        "media": {
+          "target": "com.x.communityNotes#ExpansionsMediaList"
+        },
+        "places": {
+          "target": "com.x.communityNotes#ExpansionsPlacesList"
+        },
+        "polls": {
+          "target": "com.x.communityNotes#ExpansionsPollsList"
+        },
+        "posts": {
+          "target": "com.x.communityNotes#ExpansionsPostsList"
+        },
+        "topics": {
+          "target": "com.x.communityNotes#ExpansionsTopicsList"
+        },
+        "users": {
+          "target": "com.x.communityNotes#ExpansionsUsersList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#Media": {
+      "type": "structure",
+      "members": {
+        "alt_text": {
+          "target": "smithy.api#String"
+        },
+        "duration_ms": {
+          "target": "smithy.api#Integer"
+        },
+        "height": {
+          "target": "smithy.api#Integer"
+        },
+        "media_key": {
+          "target": "smithy.api#String"
+        },
+        "non_public_metrics": {
+          "target": "com.x.communityNotes#MediaNonPublicMetrics"
+        },
+        "organic_metrics": {
+          "target": "com.x.communityNotes#MediaOrganicMetrics"
+        },
+        "preview_image_url": {
+          "target": "smithy.api#String"
+        },
+        "promoted_metrics": {
+          "target": "com.x.communityNotes#MediaPromotedMetrics"
+        },
+        "public_metrics": {
+          "target": "com.x.communityNotes#MediaPublicMetrics"
+        },
+        "type": {
+          "target": "smithy.api#String"
+        },
+        "url": {
+          "target": "smithy.api#String"
+        },
+        "variants": {
+          "target": "com.x.communityNotes#MediaVariants"
+        },
+        "width": {
+          "target": "smithy.api#Integer"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#MediaNonPublicMetrics": {
+      "type": "structure",
+      "members": {
+        "playback_0_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who started playback (0% quartile) of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_100_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who completed playback (100% quartile) of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_25_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who watched at least 25% of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_50_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who watched at least 50% of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_75_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who watched at least 75% of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Nonpublic engagement metrics for the media at the time of the request."
+      }
+    },
+    "com.x.communityNotes#MediaOrganicMetrics": {
+      "type": "structure",
+      "members": {
+        "playback_0_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who started playback (0% quartile) of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_100_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who completed playback (100% quartile) of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_25_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who watched at least 25% of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_50_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who watched at least 50% of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_75_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who watched at least 75% of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "view_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "The number of organic views of this video. Null when the backend returns quartile data without a view count.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Organic nonpublic engagement metrics for the media at the time of the request."
+      }
+    },
+    "com.x.communityNotes#MediaPromotedMetrics": {
+      "type": "structure",
+      "members": {
+        "playback_0_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who started playback (0% quartile) of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_100_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who completed playback (100% quartile) of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_25_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who watched at least 25% of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_50_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who watched at least 50% of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_75_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who watched at least 75% of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "view_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "The number of promoted views of this video. Null when the backend returns quartile data without a view count.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Promoted nonpublic engagement metrics for the media at the time of the request."
+      }
+    },
+    "com.x.communityNotes#MediaPublicMetrics": {
+      "type": "structure",
+      "members": {
+        "view_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "The number of times this video has been viewed.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Public engagement metrics for the media at the time of the request."
+      }
+    },
+    "com.x.communityNotes#MediaVariants": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#MediaVariantsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "Each media object may have multiple display or playback variants, with different resolutions or formats."
+      }
+    },
+    "com.x.communityNotes#MediaVariantsItem": {
+      "type": "structure",
+      "members": {
+        "bit_rate": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "The bit rate of this variant, in bits per second. Absent for playlist variants.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "content_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The MIME type of this variant, for example \"video/mp4\" or \"application/x-mpegURL\".",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The URL to this media variant.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A single playback or display variant of a media object."
+      }
+    },
+    "com.x.communityNotes#ExpansionsMediaList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#Media"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#Place": {
+      "type": "structure",
+      "members": {
+        "contained_within": {
+          "target": "com.x.communityNotes#PlaceContainedWithin"
+        },
+        "country": {
+          "target": "smithy.api#String"
+        },
+        "country_code": {
+          "target": "smithy.api#String"
+        },
+        "full_name": {
+          "target": "smithy.api#String"
+        },
+        "geo": {
+          "target": "com.x.communityNotes#PlaceGeo"
+        },
+        "id": {
+          "target": "smithy.api#String"
+        },
+        "name": {
+          "target": "smithy.api#String"
+        },
+        "place_type": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#PlaceContainedWithin": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "A list of unique identifiers of the Places that contain this place."
+      }
+    },
+    "com.x.communityNotes#PlaceGeo": {
+      "type": "structure",
+      "members": {
+        "bbox": {
+          "target": "com.x.communityNotes#PlaceGeoBboxList",
+          "traits": {
+            "smithy.api#documentation": "The bounding box as [southwest_longitude, southwest_latitude, northeast_longitude, northeast_latitude].",
+            "smithy.api#required": {}
+          }
+        },
+        "properties": {
+          "target": "smithy.api#Document",
+          "traits": {
+            "smithy.api#documentation": "Additional GeoJSON feature properties.",
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.communityNotes#PlaceGeoType",
+          "traits": {
+            "smithy.api#documentation": "The GeoJSON feature type.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "The geographic location of this place, expressed as a GeoJSON Feature."
+      }
+    },
+    "com.x.communityNotes#PlaceGeoBboxList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#Double"
+      },
+      "traits": {
+        "smithy.api#documentation": "The bounding box as [southwest_longitude, southwest_latitude, northeast_longitude, northeast_latitude]."
+      }
+    },
+    "com.x.communityNotes#PlaceGeoType": {
+      "type": "enum",
+      "members": {
+        "FEATURE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "Feature"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#ExpansionsPlacesList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#Place"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#Poll": {
+      "type": "structure",
+      "members": {
+        "duration_minutes": {
+          "target": "smithy.api#Integer"
+        },
+        "end_datetime": {
+          "target": "smithy.api#String"
+        },
+        "id": {
+          "target": "smithy.api#String"
+        },
+        "options": {
+          "target": "com.x.communityNotes#PollOptions"
+        },
+        "voting_status": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#PollOptions": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#PollOptionsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "The list of options (choices) available in this poll."
+      }
+    },
+    "com.x.communityNotes#PollOptionsItem": {
+      "type": "structure",
+      "members": {
+        "label": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The text label of this poll option.",
+            "smithy.api#required": {}
+          }
+        },
+        "position": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "The 1-based position of this option within the poll.",
+            "smithy.api#required": {}
+          }
+        },
+        "votes": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "The number of votes this option has received.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A single option (choice) available in a poll."
+      }
+    },
+    "com.x.communityNotes#ExpansionsPollsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#Poll"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#ExpansionsPostsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#Post"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#Topic": {
+      "type": "structure",
+      "members": {
+        "description": {
+          "target": "smithy.api#String"
+        },
+        "id": {
+          "target": "smithy.api#String"
+        },
+        "name": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#ExpansionsTopicsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#Topic"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#User": {
+      "type": "structure",
+      "members": {
+        "affiliation": {
+          "target": "com.x.communityNotes#UserAffiliation"
+        },
+        "confirmed_email": {
+          "target": "smithy.api#String"
+        },
+        "connection_status": {
+          "target": "com.x.communityNotes#UserConnectionStatus"
+        },
+        "created_at": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Creation time of this User."
+          }
+        },
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The text of this User's profile description (also known as bio), if the User provided one."
+          }
+        },
+        "entities": {
+          "target": "com.x.communityNotes#UserEntities"
+        },
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of this User."
+          }
+        },
+        "is_identity_verified": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates if this User has completed identity verification."
+          }
+        },
+        "location": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The location specified in the User's profile, if the User provided one. As this is a freeform value, it may not indicate a valid location."
+          }
+        },
+        "most_recent_post_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of this User's most recent Post."
+          }
+        },
+        "name": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The friendly name of this User, as shown on their profile."
+          }
+        },
+        "parody": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates if this User is a parody account."
+          }
+        },
+        "pinned_post_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of this User's pinned Post."
+          }
+        },
+        "profile_banner_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The URL to the profile banner for this User."
+          }
+        },
+        "profile_image_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The URL to the profile image for this User."
+          }
+        },
+        "protected": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates if this User has chosen to protect their Posts (in other words, if this User's Posts are private)."
+          }
+        },
+        "public_metrics": {
+          "target": "com.x.communityNotes#UserPublicMetrics"
+        },
+        "receives_your_dm": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates if you can send a DM to this User."
+          }
+        },
+        "subscribes_to_you": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates if this User subscribes to you."
+          }
+        },
+        "subscription": {
+          "target": "com.x.communityNotes#UserSubscription"
+        },
+        "subscription_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The X Blue subscription type of the user, e.g.: Basic, Premium, PremiumPlus or None."
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The URL specified in the User's profile."
+          }
+        },
+        "username": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The X handle (screen name) of this User."
+          }
+        },
+        "verified": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates if this User is a verified X User."
+          }
+        },
+        "verified_followers_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "The number of verified followers of this User."
+          }
+        },
+        "verified_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The X Blue verified type of the user, e.g.: blue, government, business or none."
+          }
+        },
+        "withheld": {
+          "target": "com.x.communityNotes#UserWithheld"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#UserAffiliation": {
+      "type": "structure",
+      "members": {
+        "badge_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "URL of the affiliation badge image shown on the User's profile.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Description of the affiliation.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "URL associated with the affiliation.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "user_id": {
+          "target": "com.x.communityNotes#UserAffiliationUserIdList",
+          "traits": {
+            "smithy.api#documentation": "A list of unique identifiers of the accounts this User is affiliated with.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Metadata about a user's affiliation."
+      }
+    },
+    "com.x.communityNotes#UserAffiliationUserIdList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "A list of unique identifiers of the accounts this User is affiliated with."
+      }
+    },
+    "com.x.communityNotes#UserConnectionStatus": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#UserConnectionStatusItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "Returns detailed information about the relationship between two users."
+      }
+    },
+    "com.x.communityNotes#UserConnectionStatusItem": {
+      "type": "enum",
+      "members": {
+        "BLOCKING": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "blocking"
+          }
+        },
+        "FOLLOW_REQUEST_RECEIVED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "follow_request_received"
+          }
+        },
+        "FOLLOW_REQUEST_SENT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "follow_request_sent"
+          }
+        },
+        "FOLLOWED_BY": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "followed_by"
+          }
+        },
+        "FOLLOWING": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "following"
+          }
+        },
+        "MUTING": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "muting"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A connection between the authenticated User and this User."
+      }
+    },
+    "com.x.communityNotes#UserEntities": {
+      "type": "structure",
+      "members": {
+        "description": {
+          "target": "com.x.communityNotes#UserEntitiesDescription",
+          "traits": {
+            "smithy.api#documentation": "Entities found in the User's bio.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "url": {
+          "target": "com.x.communityNotes#UserEntitiesUrl",
+          "traits": {
+            "smithy.api#documentation": "Entities for the User's profile website URL.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A list of metadata found in the User's profile description."
+      }
+    },
+    "com.x.communityNotes#UserEntitiesDescriptionCashtagsItem": {
+      "type": "structure",
+      "members": {
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "End index in the text (exclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Start index in the text (inclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "tag": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A hashtag or cashtag entity."
+      }
+    },
+    "com.x.communityNotes#UserEntitiesDescriptionCashtagsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#UserEntitiesDescriptionCashtagsItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#UserEntitiesDescriptionHashtagsItem": {
+      "type": "structure",
+      "members": {
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "End index in the text (exclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Start index in the text (inclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "tag": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A hashtag or cashtag entity."
+      }
+    },
+    "com.x.communityNotes#UserEntitiesDescriptionHashtagsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#UserEntitiesDescriptionHashtagsItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#UserEntitiesDescriptionMentionsItem": {
+      "type": "structure",
+      "members": {
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "username": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A user mention entity."
+      }
+    },
+    "com.x.communityNotes#UserEntitiesDescriptionMentionsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#UserEntitiesDescriptionMentionsItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#UserEntitiesDescriptionUrlsItemImagesItem": {
+      "type": "structure",
+      "members": {
+        "height": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "width": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A preview image for a linked page."
+      }
+    },
+    "com.x.communityNotes#UserEntitiesDescriptionUrlsItemImagesList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#UserEntitiesDescriptionUrlsItemImagesItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#UserEntitiesDescriptionUrlsItem": {
+      "type": "structure",
+      "members": {
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Description of the linked page, when available.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "display_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The URL as displayed in the Post text.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "expanded_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The fully resolved URL.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "images": {
+          "target": "com.x.communityNotes#UserEntitiesDescriptionUrlsItemImagesList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "media_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "HTTP status from resolving the URL.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Title of the linked page, when available.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "unwound_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The final destination after following redirects.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The t.co shortened URL.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A URL entity found in profile text."
+      }
+    },
+    "com.x.communityNotes#UserEntitiesDescriptionUrlsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#UserEntitiesDescriptionUrlsItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#UserEntitiesDescription": {
+      "type": "structure",
+      "members": {
+        "cashtags": {
+          "target": "com.x.communityNotes#UserEntitiesDescriptionCashtagsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "hashtags": {
+          "target": "com.x.communityNotes#UserEntitiesDescriptionHashtagsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "mentions": {
+          "target": "com.x.communityNotes#UserEntitiesDescriptionMentionsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "urls": {
+          "target": "com.x.communityNotes#UserEntitiesDescriptionUrlsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Entities found in the User's bio."
+      }
+    },
+    "com.x.communityNotes#UserEntitiesUrlUrlsItemImagesItem": {
+      "type": "structure",
+      "members": {
+        "height": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "width": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A preview image for a linked page."
+      }
+    },
+    "com.x.communityNotes#UserEntitiesUrlUrlsItemImagesList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#UserEntitiesUrlUrlsItemImagesItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#UserEntitiesUrlUrlsItem": {
+      "type": "structure",
+      "members": {
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Description of the linked page, when available.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "display_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The URL as displayed in the Post text.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "expanded_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The fully resolved URL.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "images": {
+          "target": "com.x.communityNotes#UserEntitiesUrlUrlsItemImagesList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "media_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "HTTP status from resolving the URL.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Title of the linked page, when available.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "unwound_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The final destination after following redirects.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The t.co shortened URL.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A URL entity found in profile text."
+      }
+    },
+    "com.x.communityNotes#UserEntitiesUrlUrlsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#UserEntitiesUrlUrlsItem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#UserEntitiesUrl": {
+      "type": "structure",
+      "members": {
+        "urls": {
+          "target": "com.x.communityNotes#UserEntitiesUrlUrlsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Entities for the User's profile website URL."
+      }
+    },
+    "com.x.communityNotes#UserPublicMetrics": {
+      "type": "structure",
+      "members": {
+        "followers_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of Users who follow this User.",
+            "smithy.api#required": {}
+          }
+        },
+        "following_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of Users this User follows.",
+            "smithy.api#required": {}
+          }
+        },
+        "like_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of Posts this User has liked.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "listed_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of Lists that include this User.",
+            "smithy.api#required": {}
+          }
+        },
+        "media_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of media items posted by this User.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "post_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of Posts (including Reposts) created by this User.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A list of metrics for this User."
+      }
+    },
+    "com.x.communityNotes#UserSubscription": {
+      "type": "structure",
+      "members": {
+        "subscribes_to_you": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates if this User subscribes to you.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "The subscription relationship between this User and you."
+      }
+    },
+    "com.x.communityNotes#UserWithheld": {
+      "type": "structure",
+      "members": {
+        "country_codes": {
+          "target": "com.x.communityNotes#UserWithheldCountryCodesList",
+          "traits": {
+            "smithy.api#documentation": "A list of countries (as ISO 3166-1 alpha-2 codes) where this content is withheld.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "scope": {
+          "target": "com.x.communityNotes#UserWithheldScope",
+          "traits": {
+            "smithy.api#documentation": "The scope of the withholding. Only present, with the value \"user\", when the entire User is withheld.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Withholding details for withheld content."
+      }
+    },
+    "com.x.communityNotes#UserWithheldCountryCodesList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "A list of countries (as ISO 3166-1 alpha-2 codes) where this content is withheld."
+      }
+    },
+    "com.x.communityNotes#UserWithheldScope": {
+      "type": "enum",
+      "members": {
+        "USER": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "user"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "The scope of the withholding. Only present, with the value \"user\", when the entire User is withheld."
+      }
+    },
+    "com.x.communityNotes#ExpansionsUsersList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#User"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#SearchEligiblePostsResponseMeta": {
+      "type": "structure",
+      "members": {
+        "next_token": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Pagination token for the next page of results."
+          }
+        },
+        "result_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of items in the data array."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#SearchEligiblePosts": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.communityNotes#SearchEligiblePostsRequest"
+      },
+      "output": {
+        "target": "com.x.communityNotes#SearchEligiblePostsResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "GET",
+          "uri": "/2/notes/search/posts_eligible_for_notes",
+          "code": 200
+        },
+        "smithy.api#documentation": "Search Eligible Posts"
+      }
+    },
+    "com.x.communityNotes#DeleteCommunityNotesRequest": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.communityNotes#DeleteCommunityNotesResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.communityNotes#DeleteCommunityNotesResponseData"
+        },
+        "errors": {
+          "target": "com.x.communityNotes#DeleteCommunityNotesResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#DeleteCommunityNotesResponseData": {
+      "type": "structure",
+      "members": {
+        "deleted": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates whether the Community Note was deleted.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#DeleteCommunityNotesResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.communityNotes#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.communityNotes#DeleteCommunityNotes": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.communityNotes#DeleteCommunityNotesRequest"
+      },
+      "output": {
+        "target": "com.x.communityNotes#DeleteCommunityNotesResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "DELETE",
+          "uri": "/2/notes/{id}",
+          "code": 200
+        },
+        "smithy.api#documentation": "Delete a Community Note\n\nDeletes a community note."
+      }
+    },
+    "com.x.communityNotes#CommunityNotes": {
+      "type": "service",
+      "version": "2.167",
+      "operations": [
+        {
+          "target": "com.x.communityNotes#CreateCommunityNotes"
+        },
+        {
+          "target": "com.x.communityNotes#EvaluateCommunityNotes"
+        },
+        {
+          "target": "com.x.communityNotes#SearchCommunityNotesWritten"
+        },
+        {
+          "target": "com.x.communityNotes#SearchEligiblePosts"
+        },
+        {
+          "target": "com.x.communityNotes#DeleteCommunityNotes"
+        }
+      ],
+      "traits": {
+        "smithy.api#title": "X API v2",
+        "smithy.api#documentation": "X API v2 core endpoints"
+      }
+    }
+  }
+}

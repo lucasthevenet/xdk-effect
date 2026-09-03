@@ -47,6 +47,12 @@
     "packages/distilled-x": {
       "name": "distilled-x",
       "version": "0.1.0",
+      "dependencies": {
+        "@distilled.cloud/core": "1.0.0-rc.8",
+      },
+      "peerDependencies": {
+        "effect": ">=4.0.0-rc.112 <5",
+      },
     },
   },
   "catalogs": {

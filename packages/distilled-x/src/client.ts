@@ -1,6 +1,13 @@
 import { XApiError, XDecodeError, XTransportError } from "./errors.ts";
 import { runtime, type XRuntimeOptions } from "./runtime.ts";
-import { createAuthentication, type XAuthentication } from "./auth.ts";
+import {
+  createAuthentication,
+  selectAuthentication,
+  type XAuthentication,
+} from "./auth.ts";
+import { prepareOperation } from "./operation-wire.ts";
+import type { OperationDefinition } from "./operation-types.ts";
+import { operations } from "./operations.ts";
 export type {
   XCredentials,
   XBearerCredentials,
@@ -38,6 +45,10 @@ export interface XRequestOptions {
     >
   >;
   readonly json?: unknown;
+  /** Internal transport support for generated multipart and streaming calls. */
+  readonly rawBody?: FormData;
+  readonly responseType?: "json" | "response";
+  readonly security?: OperationDefinition["security"];
   readonly headers?: HeadersInit;
   readonly signal?: AbortSignal;
   readonly auth?: XAuthKind;
@@ -106,10 +117,10 @@ const canRetryMethod = (
 const requestInit = (
   method: XHttpMethod,
   headers: Headers,
-  body: string | undefined,
+  body: string | FormData | undefined,
   signal: AbortSignal | undefined,
 ): RequestInit => {
-  const init: RequestInit = { method, headers };
+  const init: RequestInit = { method, headers, redirect: "error" };
   if (body !== undefined) init.body = body;
   if (signal !== undefined) init.signal = signal;
   return init;
@@ -551,25 +562,28 @@ export const createXClient = (config: XClientConfig) => {
       throw new TypeError("X request paths must stay on the configured origin");
     }
     addQuery(url, options.query);
+    const auth = options.security
+      ? selectAuthentication(config, options.security, options.auth)
+      : (options.auth ?? "user");
     const retryableMethod = canRetryMethod(method, options.retryNonIdempotent);
 
     const fetchAttempt = async (
       attempt: number,
     ): Promise<Response | undefined> => {
       const headers = new Headers(options.headers);
-      headers.set("Accept", "application/json");
-      headers.set(
-        "Authorization",
-        await authentication.authorize(
-          options.auth ?? "user",
-          method,
-          url,
-          options.signal,
-        ),
-      );
+      if (!headers.has("Accept")) headers.set("Accept", "application/json");
+      if (auth)
+        headers.set(
+          "Authorization",
+          await authentication.authorize(auth, method, url, options.signal),
+        );
+      else headers.delete("Authorization");
       const body =
-        options.json === undefined ? undefined : JSON.stringify(options.json);
-      if (body !== undefined) headers.set("Content-Type", "application/json");
+        options.rawBody ??
+        (options.json === undefined ? undefined : JSON.stringify(options.json));
+      if (options.rawBody) headers.delete("Content-Type");
+      else if (body !== undefined)
+        headers.set("Content-Type", "application/json");
 
       try {
         const response = await platform.fetch(
@@ -578,7 +592,7 @@ export const createXClient = (config: XClientConfig) => {
         );
         if (
           response.status === 401 &&
-          options.auth === "app" &&
+          auth === "app" &&
           authentication.invalidate(headers.get("Authorization")!)
         ) {
           // A rejected write is not automatically replayed. The next call can
@@ -612,7 +626,10 @@ export const createXClient = (config: XClientConfig) => {
       const response = await fetchAttempt(attempt);
       if (response === undefined) continue;
       const rateLimit = rateLimitOf(response.headers);
-      const decoded = await decodeResponseBody(response);
+      const decoded =
+        response.ok && options.responseType === "response"
+          ? response
+          : await decodeResponseBody(response);
 
       if (canRetryResponse(response, retryableMethod, attempt, maxAttempts)) {
         const resetDelay = rateLimit?.resetAt
@@ -630,14 +647,16 @@ export const createXClient = (config: XClientConfig) => {
       }
 
       if (!response.ok) {
-        const problems = problemsOf(decoded);
+        // SAFETY: Non-success responses are always decoded as JSON/text above.
+        const errorBody = decoded as XResponseBody;
+        const problems = problemsOf(errorBody);
         throw new XApiError(
           errorMessage(response.status, problems),
           response.status,
           method,
           url.toString(),
           problems,
-          decoded,
+          errorBody,
           rateLimit,
         );
       }
@@ -655,26 +674,53 @@ export const createXClient = (config: XClientConfig) => {
     }
   };
 
+  const requestOperation = <T, I extends object = object>(
+    definition: OperationDefinition,
+    input: I,
+    options: XRequestOptions = {},
+  ): Promise<XResult<T>> => {
+    const prepared = prepareOperation(definition, input);
+    const headers = new Headers(prepared.options.headers);
+    new Headers(options.headers).forEach((value, name) =>
+      headers.set(name, value),
+    );
+    return request<T>(definition.method, prepared.path, {
+      ...prepared.options,
+      ...options,
+      headers,
+      security: definition.security,
+    });
+  };
+
   const listWebhooks = async (options: XRequestOptions = {}) =>
     mapEnvelopeData(
-      await request<XResponseBody>("GET", "/2/webhooks", {
-        ...options,
-        auth: "app",
-      }),
+      await requestOperation<XResponseBody>(
+        operations.getWebhooks,
+        {},
+        {
+          ...options,
+          auth: "app",
+        },
+      ),
       "X returned a malformed webhook envelope",
       decodeWebhookList,
     );
 
   return {
     request,
+    requestOperation,
 
     users: {
       async getMe(options: XRequestOptions = {}) {
         return mapEnvelopeData(
-          await request<XResponseBody>("GET", "/2/users/me", {
-            ...options,
-            auth: "user",
-          }),
+          await requestOperation<XResponseBody>(
+            operations.getUsersMe,
+            {},
+            {
+              ...options,
+              auth: "user",
+            },
+          ),
           "X returned a malformed user envelope",
           decodeUser,
         );
@@ -689,11 +735,14 @@ export const createXClient = (config: XClientConfig) => {
         options: XRequestOptions = {},
       ) {
         return mapEnvelopeData(
-          await request<XResponseBody>("POST", "/2/webhooks", {
-            ...options,
-            auth: "app",
-            json: input,
-          }),
+          await requestOperation<XResponseBody>(
+            operations.createWebhooks,
+            input,
+            {
+              ...options,
+              auth: "app",
+            },
+          ),
           "X returned a malformed webhook envelope",
           decodeWebhook,
         );
@@ -701,9 +750,9 @@ export const createXClient = (config: XClientConfig) => {
 
       async validate(webhookId: string, options: XRequestOptions = {}) {
         return mapEnvelopeData(
-          await request<XResponseBody>(
-            "PUT",
-            `/2/webhooks/${encodeURIComponent(webhookId)}`,
+          await requestOperation<XResponseBody>(
+            operations.validateWebhooks,
+            { webhook_id: webhookId },
             { ...options, auth: "app" },
           ),
           "X returned a malformed webhook validation envelope",
@@ -713,9 +762,9 @@ export const createXClient = (config: XClientConfig) => {
 
       async delete(webhookId: string, options: XRequestOptions = {}) {
         return mapEnvelopeData(
-          await request<XResponseBody>(
-            "DELETE",
-            `/2/webhooks/${encodeURIComponent(webhookId)}`,
+          await requestOperation<XResponseBody>(
+            operations.deleteWebhooks,
+            { webhook_id: webhookId },
             { ...options, auth: "app" },
           ),
           "X returned a malformed webhook deletion envelope",
@@ -805,9 +854,9 @@ export const createXClient = (config: XClientConfig) => {
             ? listOptions
             : { ...listOptions, signal: input.signal };
         return mapEnvelopeData(
-          await request<XResponseBody>(
-            "GET",
-            "/2/activity/subscriptions",
+          await requestOperation<XResponseBody>(
+            operations.getActivitySubscriptions,
+            {},
             options,
           ),
           "X returned a malformed activity subscription envelope",
@@ -847,10 +896,10 @@ export const createXClient = (config: XClientConfig) => {
         input: XActivitySubscriptionInput,
         options: XRequestOptions = {},
       ) {
-        return request<XEnvelope<unknown>>(
-          "POST",
-          "/2/activity/subscriptions",
-          { ...options, auth: options.auth ?? "app", json: input },
+        return requestOperation<XEnvelope<unknown>>(
+          operations.createActivitySubscription,
+          input,
+          { ...options, auth: options.auth ?? "app" },
         );
       },
 
@@ -859,10 +908,10 @@ export const createXClient = (config: XClientConfig) => {
         input: { readonly tag?: string; readonly webhook_id?: string },
         options: XRequestOptions = {},
       ) {
-        return request<XEnvelope<unknown>>(
-          "PUT",
-          `/2/activity/subscriptions/${encodeURIComponent(subscriptionId)}`,
-          { ...options, auth: "app", json: input },
+        return requestOperation<XEnvelope<unknown>>(
+          operations.updateActivitySubscription,
+          { ...input, subscription_id: subscriptionId },
+          { ...options, auth: "app" },
         );
       },
 
@@ -871,9 +920,9 @@ export const createXClient = (config: XClientConfig) => {
         options: XRequestOptions = {},
       ) {
         return mapEnvelopeData(
-          await request<XResponseBody>(
-            "DELETE",
-            `/2/activity/subscriptions/${encodeURIComponent(subscriptionId)}`,
+          await requestOperation<XResponseBody>(
+            operations.deleteActivitySubscription,
+            { subscription_id: subscriptionId },
             { ...options, auth: "app" },
           ),
           "X returned a malformed activity deletion envelope",
@@ -890,9 +939,9 @@ export const createXClient = (config: XClientConfig) => {
         options: XRequestOptions = {},
       ) {
         return mapEnvelopeData(
-          await request<XResponseBody>(
-            "GET",
-            `/2/account_activity/webhooks/${encodeURIComponent(webhookId)}/subscriptions/all`,
+          await requestOperation<XResponseBody>(
+            operations.validateAccountActivitySubscription,
+            { webhook_id: webhookId },
             { ...options, auth: "user" },
           ),
           "X returned a malformed Account Activity status envelope",
@@ -905,9 +954,9 @@ export const createXClient = (config: XClientConfig) => {
         options: XRequestOptions = {},
       ) {
         return mapEnvelopeData(
-          await request<XResponseBody>(
-            "POST",
-            `/2/account_activity/webhooks/${encodeURIComponent(webhookId)}/subscriptions/all`,
+          await requestOperation<XResponseBody>(
+            operations.createAccountActivitySubscription,
+            { webhook_id: webhookId },
             { ...options, auth: "user", json: {} },
           ),
           "X returned a malformed Account Activity status envelope",
@@ -920,9 +969,9 @@ export const createXClient = (config: XClientConfig) => {
         options: XRequestOptions = {},
       ) {
         return mapEnvelopeData(
-          await request<XResponseBody>(
-            "GET",
-            `/2/account_activity/webhooks/${encodeURIComponent(webhookId)}/subscriptions/all/list`,
+          await requestOperation<XResponseBody>(
+            operations.getAccountActivitySubscriptions,
+            { webhook_id: webhookId },
             { ...options, auth: "app" },
           ),
           "X returned a malformed Account Activity list envelope",
@@ -936,9 +985,9 @@ export const createXClient = (config: XClientConfig) => {
         options: XRequestOptions = {},
       ) {
         return mapEnvelopeData(
-          await request<XResponseBody>(
-            "DELETE",
-            `/2/account_activity/webhooks/${encodeURIComponent(webhookId)}/subscriptions/${encodeURIComponent(userId)}/all`,
+          await requestOperation<XResponseBody>(
+            operations.deleteAccountActivitySubscription,
+            { webhook_id: webhookId, user_id: userId },
             { ...options, auth: "app" },
           ),
           "X returned a malformed Account Activity status envelope",

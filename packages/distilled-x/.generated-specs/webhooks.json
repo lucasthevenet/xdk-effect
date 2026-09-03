@@ -1,0 +1,1191 @@
+{
+  "smithy": "2.0",
+  "metadata": {
+    "suppressions": [
+      {
+        "id": "HttpUriConflict",
+        "namespace": "*"
+      },
+      {
+        "id": "HttpMethodSemantics",
+        "namespace": "*"
+      },
+      {
+        "id": "UnreferencedShape",
+        "namespace": "*"
+      }
+    ]
+  },
+  "shapes": {
+    "com.x.webhooks#GetWebhooksStreamLinksResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.webhooks#GetWebhooksStreamLinksResponseDataList"
+        },
+        "errors": {
+          "target": "com.x.webhooks#GetWebhooksStreamLinksResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#GetWebhooksStreamLinksResponseData": {
+      "type": "structure",
+      "members": {
+        "application_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The application ID"
+          }
+        },
+        "business_user_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The user ID"
+          }
+        },
+        "created_at": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The datetime the webhook was linked to the stream"
+          }
+        },
+        "fields": {
+          "target": "com.x.webhooks#GetWebhooksStreamLinksResponseDataFieldsList",
+          "traits": {
+            "smithy.api#documentation": "Requested fields to be rendered"
+          }
+        },
+        "instance_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The stream ID associated with the FilteredStream instance"
+          }
+        },
+        "webhook_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The unique identifier for the webhook"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#GetWebhooksStreamLinksResponseDataFieldsList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "Requested fields to be rendered"
+      }
+    },
+    "com.x.webhooks#GetWebhooksStreamLinksResponseDataList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.webhooks#GetWebhooksStreamLinksResponseData"
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#Problem": {
+      "type": "union",
+      "members": {
+        "ResourceNotFoundProblem": {
+          "target": "com.x.webhooks#ResourceNotFoundProblem"
+        },
+        "InvalidRequestProblem": {
+          "target": "com.x.webhooks#InvalidRequestProblem"
+        },
+        "NotAuthorizedForResourceProblem": {
+          "target": "com.x.webhooks#NotAuthorizedForResourceProblem"
+        },
+        "NotAuthorizedForFieldProblem": {
+          "target": "com.x.webhooks#NotAuthorizedForFieldProblem"
+        },
+        "FieldUnauthorizedProblem": {
+          "target": "com.x.webhooks#FieldUnauthorizedProblem"
+        },
+        "FieldHydrationFailureProblem": {
+          "target": "com.x.webhooks#FieldHydrationFailureProblem"
+        },
+        "ResourceUnavailableProblem": {
+          "target": "com.x.webhooks#ResourceUnavailableProblem"
+        },
+        "DisallowedResourceProblem": {
+          "target": "com.x.webhooks#DisallowedResourceProblem"
+        },
+        "InternalErrorProblem": {
+          "target": "com.x.webhooks#InternalErrorProblem"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#ResourceNotFoundProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.webhooks#ResourceNotFoundProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#ResourceNotFoundProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_RESOURCE_NOT_FOUND": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/resource-not-found"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#InvalidRequestProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.webhooks#InvalidRequestProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#InvalidRequestProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_INVALID_REQUEST": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/invalid-request"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#NotAuthorizedForResourceProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.webhooks#NotAuthorizedForResourceProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#NotAuthorizedForResourceProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_NOT_AUTHORIZED_FOR_RESOURCE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/not-authorized-for-resource"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#NotAuthorizedForFieldProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.webhooks#NotAuthorizedForFieldProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#NotAuthorizedForFieldProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_NOT_AUTHORIZED_FOR_FIELD": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/not-authorized-for-field"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#FieldUnauthorizedProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.webhooks#FieldUnauthorizedProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#FieldUnauthorizedProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_FIELD_UNAUTHORIZED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/field-unauthorized"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#FieldHydrationFailureProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.webhooks#FieldHydrationFailureProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#FieldHydrationFailureProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_FIELD_HYDRATION_FAILURE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/field-hydration-failure"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#ResourceUnavailableProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.webhooks#ResourceUnavailableProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#ResourceUnavailableProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_RESOURCE_UNAVAILABLE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/resource-unavailable"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#DisallowedResourceProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.webhooks#DisallowedResourceProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#DisallowedResourceProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_DISALLOWED_RESOURCE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/disallowed-resource"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#InternalErrorProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.webhooks#InternalErrorProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#InternalErrorProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_INTERNAL_ERROR": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/internal-error"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#GetWebhooksStreamLinksResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.webhooks#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#GetWebhooksStreamLinks": {
+      "type": "operation",
+      "input": {
+        "target": "smithy.api#Unit"
+      },
+      "output": {
+        "target": "com.x.webhooks#GetWebhooksStreamLinksResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "GET",
+          "uri": "/2/tweets/search/webhooks",
+          "code": 200
+        },
+        "smithy.api#documentation": "Get stream links\n\nGet a list of webhook links associated with a filtered stream ruleset."
+      }
+    },
+    "com.x.webhooks#CreateWebhooksStreamLinkRequest": {
+      "type": "structure",
+      "members": {
+        "webhook_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.webhooks#CreateWebhooksStreamLinkResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.webhooks#CreateWebhooksStreamLinkResponseData"
+        },
+        "errors": {
+          "target": "com.x.webhooks#CreateWebhooksStreamLinkResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#CreateWebhooksStreamLinkResponseData": {
+      "type": "structure",
+      "members": {
+        "provisioned": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates whether the stream link was provisioned.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#CreateWebhooksStreamLinkResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.webhooks#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#CreateWebhooksStreamLink": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.webhooks#CreateWebhooksStreamLinkRequest"
+      },
+      "output": {
+        "target": "com.x.webhooks#CreateWebhooksStreamLinkResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/tweets/search/webhooks/{webhook_id}",
+          "code": 200
+        },
+        "smithy.api#documentation": "Create stream link\n\nCreates a link to deliver FilteredStream events to the given webhook."
+      }
+    },
+    "com.x.webhooks#DeleteWebhooksStreamLinkRequest": {
+      "type": "structure",
+      "members": {
+        "webhook_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.webhooks#DeleteWebhooksStreamLinkResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.webhooks#DeleteWebhooksStreamLinkResponseData"
+        },
+        "errors": {
+          "target": "com.x.webhooks#DeleteWebhooksStreamLinkResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#DeleteWebhooksStreamLinkResponseData": {
+      "type": "structure",
+      "members": {
+        "deleted": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates whether the stream link was deleted.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#DeleteWebhooksStreamLinkResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.webhooks#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#DeleteWebhooksStreamLink": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.webhooks#DeleteWebhooksStreamLinkRequest"
+      },
+      "output": {
+        "target": "com.x.webhooks#DeleteWebhooksStreamLinkResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "DELETE",
+          "uri": "/2/tweets/search/webhooks/{webhook_id}",
+          "code": 200
+        },
+        "smithy.api#documentation": "Delete stream link\n\nDeletes the link delivering FilteredStream events to the given webhook."
+      }
+    },
+    "com.x.webhooks#GetWebhooksRequestWebhookConfigFieldsItem": {
+      "type": "enum",
+      "members": {
+        "CREATED_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "created_at"
+          }
+        },
+        "ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "id"
+          }
+        },
+        "URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "url"
+          }
+        },
+        "VALID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "valid"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#GetWebhooksRequestWebhookConfigFieldsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.webhooks#GetWebhooksRequestWebhookConfigFieldsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "The fields available for a WebhookConfig object."
+      }
+    },
+    "com.x.webhooks#GetWebhooksRequest": {
+      "type": "structure",
+      "members": {
+        "webhook_config_fields": {
+          "target": "com.x.webhooks#GetWebhooksRequestWebhookConfigFieldsList",
+          "traits": {
+            "smithy.api#httpQuery": "webhook_config.fields",
+            "smithy.api#documentation": "A comma separated list of WebhookConfig fields to display."
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.webhooks#GetWebhooksResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.webhooks#GetWebhooksResponseDataList"
+        },
+        "errors": {
+          "target": "com.x.webhooks#GetWebhooksResponseErrorsList"
+        },
+        "meta": {
+          "target": "com.x.webhooks#GetWebhooksResponseMeta"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#WebhookConfig": {
+      "type": "structure",
+      "members": {
+        "created_at": {
+          "target": "smithy.api#String"
+        },
+        "id": {
+          "target": "smithy.api#String"
+        },
+        "url": {
+          "target": "smithy.api#String"
+        },
+        "valid": {
+          "target": "smithy.api#Boolean"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#GetWebhooksResponseDataList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.webhooks#WebhookConfig"
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#GetWebhooksResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.webhooks#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#GetWebhooksResponseMeta": {
+      "type": "structure",
+      "members": {
+        "result_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of items in the data array."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#GetWebhooks": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.webhooks#GetWebhooksRequest"
+      },
+      "output": {
+        "target": "com.x.webhooks#GetWebhooksResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "GET",
+          "uri": "/2/webhooks",
+          "code": 200
+        },
+        "smithy.api#documentation": "Get webhook\n\nGet a list of webhook configs associated with a client app."
+      }
+    },
+    "com.x.webhooks#CreateWebhooksRequest": {
+      "type": "structure",
+      "members": {
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The URL the webhook delivers events to.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.webhooks#CreateWebhooksResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.webhooks#CreateWebhooksResponseData"
+        },
+        "errors": {
+          "target": "com.x.webhooks#CreateWebhooksResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#CreateWebhooksResponseData": {
+      "type": "structure",
+      "members": {
+        "created_at": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Creation time of the webhook configuration.",
+            "smithy.api#required": {}
+          }
+        },
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of the webhook configuration.",
+            "smithy.api#required": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The URL the webhook delivers events to.",
+            "smithy.api#required": {}
+          }
+        },
+        "valid": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates whether the webhook URL passed validation.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#CreateWebhooksResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.webhooks#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#CreateWebhooks": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.webhooks#CreateWebhooksRequest"
+      },
+      "output": {
+        "target": "com.x.webhooks#CreateWebhooksResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/webhooks",
+          "code": 200
+        },
+        "smithy.api#documentation": "Create webhook\n\nCreates a new webhook configuration."
+      }
+    },
+    "com.x.webhooks#CreateWebhookReplayJobRequest": {
+      "type": "structure",
+      "members": {
+        "from_date": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The oldest (inclusive) UTC timestamp from which events are replayed, in yyyymmddhhmm format.",
+            "smithy.api#required": {}
+          }
+        },
+        "to_date": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The newest (inclusive) UTC timestamp up to which events are replayed, in yyyymmddhhmm format.",
+            "smithy.api#required": {}
+          }
+        },
+        "webhook_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The ID of the webhook to replay events to.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.webhooks#CreateWebhookReplayJobResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.webhooks#CreateWebhookReplayJobResponseData"
+        },
+        "errors": {
+          "target": "com.x.webhooks#CreateWebhookReplayJobResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#CreateWebhookReplayJobResponseData": {
+      "type": "structure",
+      "members": {
+        "created_at": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The UTC timestamp when the replay job was created.",
+            "smithy.api#required": {}
+          }
+        },
+        "job_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The unique identifier for the initiated replay job.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#CreateWebhookReplayJobResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.webhooks#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#CreateWebhookReplayJob": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.webhooks#CreateWebhookReplayJobRequest"
+      },
+      "output": {
+        "target": "com.x.webhooks#CreateWebhookReplayJobResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/webhooks/replay",
+          "code": 200
+        },
+        "smithy.api#documentation": "Create replay job for webhook\n\nCreates a replay job to retrieve events from up to the past 24 hours for all events delivered or attempted to be delivered to the webhook."
+      }
+    },
+    "com.x.webhooks#ValidateWebhooksRequest": {
+      "type": "structure",
+      "members": {
+        "webhook_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.webhooks#ValidateWebhooksResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.webhooks#ValidateWebhooksResponseData"
+        },
+        "errors": {
+          "target": "com.x.webhooks#ValidateWebhooksResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#ValidateWebhooksResponseData": {
+      "type": "structure",
+      "members": {
+        "valid": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates whether the CRC validation check was triggered.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#ValidateWebhooksResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.webhooks#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#ValidateWebhooks": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.webhooks#ValidateWebhooksRequest"
+      },
+      "output": {
+        "target": "com.x.webhooks#ValidateWebhooksResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "PUT",
+          "uri": "/2/webhooks/{webhook_id}",
+          "code": 200
+        },
+        "smithy.api#documentation": "Validate webhook\n\nTriggers a CRC check for a given webhook."
+      }
+    },
+    "com.x.webhooks#DeleteWebhooksRequest": {
+      "type": "structure",
+      "members": {
+        "webhook_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.webhooks#DeleteWebhooksResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.webhooks#DeleteWebhooksResponseData"
+        },
+        "errors": {
+          "target": "com.x.webhooks#DeleteWebhooksResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#DeleteWebhooksResponseData": {
+      "type": "structure",
+      "members": {
+        "deleted": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates whether the webhook configuration was deleted.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#DeleteWebhooksResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.webhooks#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.webhooks#DeleteWebhooks": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.webhooks#DeleteWebhooksRequest"
+      },
+      "output": {
+        "target": "com.x.webhooks#DeleteWebhooksResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "DELETE",
+          "uri": "/2/webhooks/{webhook_id}",
+          "code": 200
+        },
+        "smithy.api#documentation": "Delete webhook\n\nDeletes an existing webhook configuration."
+      }
+    },
+    "com.x.webhooks#Webhooks": {
+      "type": "service",
+      "version": "2.167",
+      "operations": [
+        {
+          "target": "com.x.webhooks#GetWebhooksStreamLinks"
+        },
+        {
+          "target": "com.x.webhooks#CreateWebhooksStreamLink"
+        },
+        {
+          "target": "com.x.webhooks#DeleteWebhooksStreamLink"
+        },
+        {
+          "target": "com.x.webhooks#GetWebhooks"
+        },
+        {
+          "target": "com.x.webhooks#CreateWebhooks"
+        },
+        {
+          "target": "com.x.webhooks#CreateWebhookReplayJob"
+        },
+        {
+          "target": "com.x.webhooks#ValidateWebhooks"
+        },
+        {
+          "target": "com.x.webhooks#DeleteWebhooks"
+        }
+      ],
+      "traits": {
+        "smithy.api#title": "X API v2",
+        "smithy.api#documentation": "X API v2 core endpoints"
+      }
+    }
+  }
+}

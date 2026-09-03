@@ -1,0 +1,1640 @@
+{
+  "smithy": "2.0",
+  "metadata": {
+    "suppressions": [
+      {
+        "id": "HttpUriConflict",
+        "namespace": "*"
+      },
+      {
+        "id": "HttpMethodSemantics",
+        "namespace": "*"
+      },
+      {
+        "id": "UnreferencedShape",
+        "namespace": "*"
+      }
+    ]
+  },
+  "shapes": {
+    "com.x.broadcasts#ListScheduledBroadcastsRequest": {
+      "type": "structure",
+      "members": {
+        "max_results": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#httpQuery": "max_results"
+          }
+        },
+        "oldest_start_time": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpQuery": "oldest_start_time"
+          }
+        },
+        "newest_start_time": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpQuery": "newest_start_time"
+          }
+        },
+        "pagination_token": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpQuery": "pagination_token"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.broadcasts#ListScheduledBroadcastsResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.broadcasts#ListScheduledBroadcastsResponseDataList"
+        },
+        "errors": {
+          "target": "com.x.broadcasts#ListScheduledBroadcastsResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#ListScheduledBroadcastsResponseData": {
+      "type": "structure",
+      "members": {
+        "available_for_replay": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Whether replay is enabled."
+          }
+        },
+        "broadcast_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Alphanumeric UBS broadcast id (path `:id` for get/update/delete/live)."
+          }
+        },
+        "chat_option": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional chat permission option."
+          }
+        },
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional description."
+          }
+        },
+        "locale": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional locale."
+          }
+        },
+        "manual_publish": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "When true, coordinator will not auto-publish; call POST .../live when ready."
+          }
+        },
+        "recurring_schedule_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Set when this occurrence belongs to a recurrence."
+          }
+        },
+        "scheduled_broadcast_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Numeric scheduler id. Required in the update request body."
+          }
+        },
+        "scheduled_end_ms": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Scheduled end, milliseconds since Unix epoch (decimal string)."
+          }
+        },
+        "scheduled_start_ms": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Scheduled start, milliseconds since Unix epoch (decimal string)."
+          }
+        },
+        "source_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Bound ingest / source id (`rtmp_stream_key`)."
+          }
+        },
+        "state": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Scheduler state (Created, Scheduled, Running, …)."
+          }
+        },
+        "telecast_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional telecast association."
+          }
+        },
+        "thumbnail_media_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional pre-live slate media id."
+          }
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Broadcast title / status text."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#ListScheduledBroadcastsResponseDataList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.broadcasts#ListScheduledBroadcastsResponseData"
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#Problem": {
+      "type": "union",
+      "members": {
+        "ResourceNotFoundProblem": {
+          "target": "com.x.broadcasts#ResourceNotFoundProblem"
+        },
+        "InvalidRequestProblem": {
+          "target": "com.x.broadcasts#InvalidRequestProblem"
+        },
+        "NotAuthorizedForResourceProblem": {
+          "target": "com.x.broadcasts#NotAuthorizedForResourceProblem"
+        },
+        "NotAuthorizedForFieldProblem": {
+          "target": "com.x.broadcasts#NotAuthorizedForFieldProblem"
+        },
+        "FieldUnauthorizedProblem": {
+          "target": "com.x.broadcasts#FieldUnauthorizedProblem"
+        },
+        "FieldHydrationFailureProblem": {
+          "target": "com.x.broadcasts#FieldHydrationFailureProblem"
+        },
+        "ResourceUnavailableProblem": {
+          "target": "com.x.broadcasts#ResourceUnavailableProblem"
+        },
+        "DisallowedResourceProblem": {
+          "target": "com.x.broadcasts#DisallowedResourceProblem"
+        },
+        "InternalErrorProblem": {
+          "target": "com.x.broadcasts#InternalErrorProblem"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#ResourceNotFoundProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.broadcasts#ResourceNotFoundProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#ResourceNotFoundProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_RESOURCE_NOT_FOUND": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/resource-not-found"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#InvalidRequestProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.broadcasts#InvalidRequestProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#InvalidRequestProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_INVALID_REQUEST": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/invalid-request"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#NotAuthorizedForResourceProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.broadcasts#NotAuthorizedForResourceProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#NotAuthorizedForResourceProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_NOT_AUTHORIZED_FOR_RESOURCE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/not-authorized-for-resource"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#NotAuthorizedForFieldProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.broadcasts#NotAuthorizedForFieldProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#NotAuthorizedForFieldProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_NOT_AUTHORIZED_FOR_FIELD": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/not-authorized-for-field"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#FieldUnauthorizedProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.broadcasts#FieldUnauthorizedProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#FieldUnauthorizedProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_FIELD_UNAUTHORIZED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/field-unauthorized"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#FieldHydrationFailureProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.broadcasts#FieldHydrationFailureProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#FieldHydrationFailureProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_FIELD_HYDRATION_FAILURE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/field-hydration-failure"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#ResourceUnavailableProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.broadcasts#ResourceUnavailableProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#ResourceUnavailableProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_RESOURCE_UNAVAILABLE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/resource-unavailable"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#DisallowedResourceProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.broadcasts#DisallowedResourceProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#DisallowedResourceProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_DISALLOWED_RESOURCE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/disallowed-resource"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#InternalErrorProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.broadcasts#InternalErrorProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#InternalErrorProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_INTERNAL_ERROR": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/internal-error"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#ListScheduledBroadcastsResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.broadcasts#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#ListScheduledBroadcasts": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.broadcasts#ListScheduledBroadcastsRequest"
+      },
+      "output": {
+        "target": "com.x.broadcasts#ListScheduledBroadcastsResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "GET",
+          "uri": "/2/broadcasts/scheduled",
+          "code": 200
+        },
+        "smithy.api#documentation": "List scheduled broadcasts\n\nReturns scheduled broadcasts owned by the authenticated user."
+      }
+    },
+    "com.x.broadcasts#CreateScheduledBroadcastRecurrence": {
+      "type": "structure",
+      "members": {
+        "frequency": {
+          "target": "com.x.broadcasts#CreateScheduledBroadcastRecurrenceFrequency",
+          "traits": {
+            "smithy.api#documentation": "Recurrence frequency.",
+            "smithy.api#required": {}
+          }
+        },
+        "repeats": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Number of repeats (numeric string).",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#CreateScheduledBroadcastRecurrenceFrequency": {
+      "type": "enum",
+      "members": {
+        "DAILY": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "Daily"
+          }
+        },
+        "WEEKLY": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "Weekly"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Recurrence frequency."
+      }
+    },
+    "com.x.broadcasts#CreateScheduledBroadcastRequest": {
+      "type": "structure",
+      "members": {
+        "available_for_replay": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Enable replay."
+          }
+        },
+        "chat_option": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Chat permission option (numeric string)."
+          }
+        },
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Description."
+          }
+        },
+        "is_locked": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Lock the broadcast."
+          }
+        },
+        "locale": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Locale."
+          }
+        },
+        "manual_publish": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "If true, do not auto-publish at start; call POST .../live when ready."
+          }
+        },
+        "recurrence": {
+          "target": "com.x.broadcasts#CreateScheduledBroadcastRecurrence",
+          "traits": {
+            "smithy.api#documentation": "If set, creates a recurring series."
+          }
+        },
+        "scheduled_end_ms": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "End time, ms since Unix epoch (decimal string).",
+            "smithy.api#required": {}
+          }
+        },
+        "scheduled_start_ms": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Start time, ms since Unix epoch (decimal string).",
+            "smithy.api#required": {}
+          }
+        },
+        "source_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Ingest / source id to bind (same as sources `rtmp_stream_key`).",
+            "smithy.api#required": {}
+          }
+        },
+        "telecast_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional telecast id (numeric string)."
+          }
+        },
+        "thumbnail_media_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Pre-live slate media id (numeric string)."
+          }
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Title / status text."
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.broadcasts#CreateScheduledBroadcastResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.broadcasts#CreateScheduledBroadcastResponseData"
+        },
+        "errors": {
+          "target": "com.x.broadcasts#CreateScheduledBroadcastResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#CreateScheduledBroadcastResponseData": {
+      "type": "structure",
+      "members": {
+        "available_for_replay": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Whether replay is enabled."
+          }
+        },
+        "broadcast_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Alphanumeric UBS broadcast id (path `:id` for get/update/delete/live)."
+          }
+        },
+        "chat_option": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional chat permission option."
+          }
+        },
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional description."
+          }
+        },
+        "locale": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional locale."
+          }
+        },
+        "manual_publish": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "When true, coordinator will not auto-publish; call POST .../live when ready."
+          }
+        },
+        "recurring_schedule_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Set when this occurrence belongs to a recurrence."
+          }
+        },
+        "scheduled_broadcast_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Numeric scheduler id. Required in the update request body."
+          }
+        },
+        "scheduled_end_ms": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Scheduled end, milliseconds since Unix epoch (decimal string)."
+          }
+        },
+        "scheduled_start_ms": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Scheduled start, milliseconds since Unix epoch (decimal string)."
+          }
+        },
+        "source_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Bound ingest / source id (`rtmp_stream_key`)."
+          }
+        },
+        "state": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Scheduler state (Created, Scheduled, Running, …)."
+          }
+        },
+        "telecast_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional telecast association."
+          }
+        },
+        "thumbnail_media_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional pre-live slate media id."
+          }
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Broadcast title / status text."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#CreateScheduledBroadcastResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.broadcasts#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#CreateScheduledBroadcast": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.broadcasts#CreateScheduledBroadcastRequest"
+      },
+      "output": {
+        "target": "com.x.broadcasts#CreateScheduledBroadcastResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/broadcasts/scheduled",
+          "code": 200
+        },
+        "smithy.api#documentation": "Create a scheduled broadcast\n\nSchedules a one-off or recurring broadcast for the authenticated user. A `source_id` (ingest) is required at create time."
+      }
+    },
+    "com.x.broadcasts#GetScheduledBroadcastRequest": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.broadcasts#GetScheduledBroadcastResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.broadcasts#GetScheduledBroadcastResponseData"
+        },
+        "errors": {
+          "target": "com.x.broadcasts#GetScheduledBroadcastResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#GetScheduledBroadcastResponseData": {
+      "type": "structure",
+      "members": {
+        "available_for_replay": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Whether replay is enabled."
+          }
+        },
+        "broadcast_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Alphanumeric UBS broadcast id (path `:id` for get/update/delete/live)."
+          }
+        },
+        "chat_option": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional chat permission option."
+          }
+        },
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional description."
+          }
+        },
+        "locale": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional locale."
+          }
+        },
+        "manual_publish": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "When true, coordinator will not auto-publish; call POST .../live when ready."
+          }
+        },
+        "recurring_schedule_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Set when this occurrence belongs to a recurrence."
+          }
+        },
+        "scheduled_broadcast_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Numeric scheduler id. Required in the update request body."
+          }
+        },
+        "scheduled_end_ms": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Scheduled end, milliseconds since Unix epoch (decimal string)."
+          }
+        },
+        "scheduled_start_ms": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Scheduled start, milliseconds since Unix epoch (decimal string)."
+          }
+        },
+        "source_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Bound ingest / source id (`rtmp_stream_key`)."
+          }
+        },
+        "state": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Scheduler state (Created, Scheduled, Running, …)."
+          }
+        },
+        "telecast_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional telecast association."
+          }
+        },
+        "thumbnail_media_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional pre-live slate media id."
+          }
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Broadcast title / status text."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#GetScheduledBroadcastResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.broadcasts#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#GetScheduledBroadcast": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.broadcasts#GetScheduledBroadcastRequest"
+      },
+      "output": {
+        "target": "com.x.broadcasts#GetScheduledBroadcastResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "GET",
+          "uri": "/2/broadcasts/scheduled/{id}",
+          "code": 200
+        },
+        "smithy.api#documentation": "Get a scheduled broadcast\n\nReturns a single scheduled broadcast by its alphanumeric UBS broadcast id."
+      }
+    },
+    "com.x.broadcasts#UpdateScheduledBroadcastRequest": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        },
+        "available_for_replay": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Enable replay."
+          }
+        },
+        "chat_option": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Chat permission option (numeric string)."
+          }
+        },
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Description."
+          }
+        },
+        "is_locked": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Lock the broadcast."
+          }
+        },
+        "locale": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Locale."
+          }
+        },
+        "manual_publish": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "If true, do not auto-publish at start; call POST .../live when ready."
+          }
+        },
+        "roll_forward": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "When true, shift the head of a recurring series."
+          }
+        },
+        "scheduled_broadcast_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Numeric scheduler id from create/list/get.",
+            "smithy.api#required": {}
+          }
+        },
+        "scheduled_end_ms": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "End time, ms since Unix epoch (decimal string).",
+            "smithy.api#required": {}
+          }
+        },
+        "scheduled_start_ms": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Start time, ms since Unix epoch (decimal string).",
+            "smithy.api#required": {}
+          }
+        },
+        "source_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Ingest / source id."
+          }
+        },
+        "thumbnail_media_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Pre-live slate media id (numeric string)."
+          }
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Title / status text."
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.broadcasts#UpdateScheduledBroadcastResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.broadcasts#UpdateScheduledBroadcastResponseData"
+        },
+        "errors": {
+          "target": "com.x.broadcasts#UpdateScheduledBroadcastResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#UpdateScheduledBroadcastResponseData": {
+      "type": "structure",
+      "members": {
+        "available_for_replay": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Whether replay is enabled."
+          }
+        },
+        "broadcast_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Alphanumeric UBS broadcast id (path `:id` for get/update/delete/live)."
+          }
+        },
+        "chat_option": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional chat permission option."
+          }
+        },
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional description."
+          }
+        },
+        "locale": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional locale."
+          }
+        },
+        "manual_publish": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "When true, coordinator will not auto-publish; call POST .../live when ready."
+          }
+        },
+        "recurring_schedule_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Set when this occurrence belongs to a recurrence."
+          }
+        },
+        "scheduled_broadcast_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Numeric scheduler id. Required in the update request body."
+          }
+        },
+        "scheduled_end_ms": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Scheduled end, milliseconds since Unix epoch (decimal string)."
+          }
+        },
+        "scheduled_start_ms": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Scheduled start, milliseconds since Unix epoch (decimal string)."
+          }
+        },
+        "source_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Bound ingest / source id (`rtmp_stream_key`)."
+          }
+        },
+        "state": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Scheduler state (Created, Scheduled, Running, …)."
+          }
+        },
+        "telecast_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional telecast association."
+          }
+        },
+        "thumbnail_media_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional pre-live slate media id."
+          }
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Broadcast title / status text."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#UpdateScheduledBroadcastResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.broadcasts#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#UpdateScheduledBroadcast": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.broadcasts#UpdateScheduledBroadcastRequest"
+      },
+      "output": {
+        "target": "com.x.broadcasts#UpdateScheduledBroadcastResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "PUT",
+          "uri": "/2/broadcasts/scheduled/{id}",
+          "code": 200
+        },
+        "smithy.api#documentation": "Update a scheduled broadcast\n\nFully replaces schedule fields for a broadcast. Path `:id` is the UBS broadcast id; the body must include `scheduled_broadcast_id` and re-send any fields that should be kept."
+      }
+    },
+    "com.x.broadcasts#DeleteScheduledBroadcastRequest": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        },
+        "roll_forward": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#httpQuery": "roll_forward"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.broadcasts#DeleteScheduledBroadcastResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.broadcasts#DeleteScheduledBroadcastResponseData"
+        },
+        "errors": {
+          "target": "com.x.broadcasts#DeleteScheduledBroadcastResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#DeleteScheduledBroadcastResponseData": {
+      "type": "structure",
+      "members": {
+        "deleted": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Whether the scheduled broadcast was deleted.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#DeleteScheduledBroadcastResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.broadcasts#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#DeleteScheduledBroadcast": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.broadcasts#DeleteScheduledBroadcastRequest"
+      },
+      "output": {
+        "target": "com.x.broadcasts#DeleteScheduledBroadcastResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "DELETE",
+          "uri": "/2/broadcasts/scheduled/{id}",
+          "code": 200
+        },
+        "smithy.api#documentation": "Delete a scheduled broadcast\n\nDeletes a scheduled broadcast by its alphanumeric UBS broadcast id."
+      }
+    },
+    "com.x.broadcasts#GoLiveScheduledBroadcastRequest": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.broadcasts#GoLiveScheduledBroadcastResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.broadcasts#GoLiveScheduledBroadcastResponseData"
+        },
+        "errors": {
+          "target": "com.x.broadcasts#GoLiveScheduledBroadcastResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#GoLiveScheduledBroadcastResponseData": {
+      "type": "structure",
+      "members": {
+        "available_for_replay": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Whether replay is enabled."
+          }
+        },
+        "broadcast_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Alphanumeric UBS broadcast id (path `:id` for get/update/delete/live)."
+          }
+        },
+        "chat_option": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional chat permission option."
+          }
+        },
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional description."
+          }
+        },
+        "locale": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional locale."
+          }
+        },
+        "manual_publish": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "When true, coordinator will not auto-publish; call POST .../live when ready."
+          }
+        },
+        "recurring_schedule_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Set when this occurrence belongs to a recurrence."
+          }
+        },
+        "scheduled_broadcast_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Numeric scheduler id. Required in the update request body."
+          }
+        },
+        "scheduled_end_ms": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Scheduled end, milliseconds since Unix epoch (decimal string)."
+          }
+        },
+        "scheduled_start_ms": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Scheduled start, milliseconds since Unix epoch (decimal string)."
+          }
+        },
+        "source_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Bound ingest / source id (`rtmp_stream_key`)."
+          }
+        },
+        "state": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Scheduler state (Created, Scheduled, Running, …)."
+          }
+        },
+        "telecast_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional telecast association."
+          }
+        },
+        "thumbnail_media_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional pre-live slate media id."
+          }
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Broadcast title / status text."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#GoLiveScheduledBroadcastResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.broadcasts#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#GoLiveScheduledBroadcast": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.broadcasts#GoLiveScheduledBroadcastRequest"
+      },
+      "output": {
+        "target": "com.x.broadcasts#GoLiveScheduledBroadcastResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/broadcasts/scheduled/{id}/live",
+          "code": 200
+        },
+        "smithy.api#documentation": "Go live on a scheduled broadcast\n\nPublishes a schedule that was created or updated with `manual_publish: true`. Without that flag the coordinator auto-publishes at start and this call is rejected."
+      }
+    },
+    "com.x.broadcasts#SendBroadcastChatRequest": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        },
+        "text": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The chat message text.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.broadcasts#SendBroadcastChatResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.broadcasts#SendBroadcastChatResponseData"
+        },
+        "errors": {
+          "target": "com.x.broadcasts#SendBroadcastChatResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#SendBroadcastChatResponseData": {
+      "type": "structure",
+      "members": {
+        "success": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Whether the chat message was sent.",
+            "smithy.api#required": {}
+          }
+        },
+        "timestamp": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Server timestamp of the message, in nanoseconds.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#SendBroadcastChatResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.broadcasts#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.broadcasts#SendBroadcastChat": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.broadcasts#SendBroadcastChatRequest"
+      },
+      "output": {
+        "target": "com.x.broadcasts#SendBroadcastChatResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/broadcasts/{id}/chat",
+          "code": 200
+        },
+        "smithy.api#documentation": "Send a chat message to a live broadcast\n\nPosts a chat message to a running broadcast, attributed to the authenticated user."
+      }
+    },
+    "com.x.broadcasts#Broadcasts": {
+      "type": "service",
+      "version": "2.167",
+      "operations": [
+        {
+          "target": "com.x.broadcasts#ListScheduledBroadcasts"
+        },
+        {
+          "target": "com.x.broadcasts#CreateScheduledBroadcast"
+        },
+        {
+          "target": "com.x.broadcasts#GetScheduledBroadcast"
+        },
+        {
+          "target": "com.x.broadcasts#UpdateScheduledBroadcast"
+        },
+        {
+          "target": "com.x.broadcasts#DeleteScheduledBroadcast"
+        },
+        {
+          "target": "com.x.broadcasts#GoLiveScheduledBroadcast"
+        },
+        {
+          "target": "com.x.broadcasts#SendBroadcastChat"
+        }
+      ],
+      "traits": {
+        "smithy.api#title": "X API v2",
+        "smithy.api#documentation": "X API v2 core endpoints"
+      }
+    }
+  }
+}

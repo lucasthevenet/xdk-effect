@@ -1,0 +1,1383 @@
+{
+  "smithy": "2.0",
+  "metadata": {
+    "suppressions": [
+      {
+        "id": "HttpUriConflict",
+        "namespace": "*"
+      },
+      {
+        "id": "HttpMethodSemantics",
+        "namespace": "*"
+      },
+      {
+        "id": "UnreferencedShape",
+        "namespace": "*"
+      }
+    ]
+  },
+  "shapes": {
+    "com.x.activity#GetActivitySubscriptionsRequest": {
+      "type": "structure",
+      "members": {
+        "max_results": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#httpQuery": "max_results"
+          }
+        },
+        "pagination_token": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpQuery": "pagination_token",
+            "smithy.api#documentation": "A base32hex-encoded pagination token."
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.activity#GetActivitySubscriptionsResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.activity#GetActivitySubscriptionsResponseDataList"
+        },
+        "errors": {
+          "target": "com.x.activity#GetActivitySubscriptionsResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#GetActivitySubscriptionsResponseData": {
+      "type": "structure",
+      "members": {
+        "created_at": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Subscription creation time."
+          }
+        },
+        "event_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Activity event type in dot notation."
+          }
+        },
+        "filter": {
+          "target": "com.x.activity#GetActivitySubscriptionsResponseDataFilter"
+        },
+        "subscription_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of the subscription."
+          }
+        },
+        "tag": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional caller-defined tag."
+          }
+        },
+        "updated_at": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Subscription last-update time."
+          }
+        },
+        "webhook_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Webhook receiving the subscription events."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#GetActivitySubscriptionsResponseDataFilter": {
+      "type": "structure",
+      "members": {
+        "direction": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional direction filter for directional events. Not present for mute.* or block.* events."
+          }
+        },
+        "keyword": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional keyword filter."
+          }
+        },
+        "user_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "User the subscription is scoped to."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#GetActivitySubscriptionsResponseDataList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.activity#GetActivitySubscriptionsResponseData"
+      },
+      "traits": {}
+    },
+    "com.x.activity#Problem": {
+      "type": "union",
+      "members": {
+        "ResourceNotFoundProblem": {
+          "target": "com.x.activity#ResourceNotFoundProblem"
+        },
+        "InvalidRequestProblem": {
+          "target": "com.x.activity#InvalidRequestProblem"
+        },
+        "NotAuthorizedForResourceProblem": {
+          "target": "com.x.activity#NotAuthorizedForResourceProblem"
+        },
+        "NotAuthorizedForFieldProblem": {
+          "target": "com.x.activity#NotAuthorizedForFieldProblem"
+        },
+        "FieldUnauthorizedProblem": {
+          "target": "com.x.activity#FieldUnauthorizedProblem"
+        },
+        "FieldHydrationFailureProblem": {
+          "target": "com.x.activity#FieldHydrationFailureProblem"
+        },
+        "ResourceUnavailableProblem": {
+          "target": "com.x.activity#ResourceUnavailableProblem"
+        },
+        "DisallowedResourceProblem": {
+          "target": "com.x.activity#DisallowedResourceProblem"
+        },
+        "InternalErrorProblem": {
+          "target": "com.x.activity#InternalErrorProblem"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#ResourceNotFoundProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.activity#ResourceNotFoundProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#ResourceNotFoundProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_RESOURCE_NOT_FOUND": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/resource-not-found"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#InvalidRequestProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.activity#InvalidRequestProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#InvalidRequestProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_INVALID_REQUEST": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/invalid-request"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#NotAuthorizedForResourceProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.activity#NotAuthorizedForResourceProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#NotAuthorizedForResourceProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_NOT_AUTHORIZED_FOR_RESOURCE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/not-authorized-for-resource"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#NotAuthorizedForFieldProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.activity#NotAuthorizedForFieldProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#NotAuthorizedForFieldProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_NOT_AUTHORIZED_FOR_FIELD": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/not-authorized-for-field"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#FieldUnauthorizedProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.activity#FieldUnauthorizedProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#FieldUnauthorizedProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_FIELD_UNAUTHORIZED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/field-unauthorized"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#FieldHydrationFailureProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.activity#FieldHydrationFailureProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#FieldHydrationFailureProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_FIELD_HYDRATION_FAILURE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/field-hydration-failure"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#ResourceUnavailableProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.activity#ResourceUnavailableProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#ResourceUnavailableProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_RESOURCE_UNAVAILABLE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/resource-unavailable"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#DisallowedResourceProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.activity#DisallowedResourceProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#DisallowedResourceProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_DISALLOWED_RESOURCE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/disallowed-resource"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#InternalErrorProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.activity#InternalErrorProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#InternalErrorProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_INTERNAL_ERROR": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/internal-error"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#GetActivitySubscriptionsResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.activity#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.activity#GetActivitySubscriptions": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.activity#GetActivitySubscriptionsRequest"
+      },
+      "output": {
+        "target": "com.x.activity#GetActivitySubscriptionsResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "GET",
+          "uri": "/2/activity/subscriptions",
+          "code": 200
+        },
+        "smithy.api#documentation": "Get X activity subscriptions\n\nGet a list of active subscriptions for XAA"
+      }
+    },
+    "com.x.activity#CreateActivitySubscriptionRequestEventType": {
+      "type": "enum",
+      "members": {
+        "PROFILE_UPDATE_BIO": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "profile.update.bio"
+          }
+        },
+        "PROFILE_UPDATE_PROFILE_PICTURE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "profile.update.profile_picture"
+          }
+        },
+        "PROFILE_UPDATE_BANNER_PICTURE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "profile.update.banner_picture"
+          }
+        },
+        "PROFILE_UPDATE_SCREENNAME": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "profile.update.screenname"
+          }
+        },
+        "PROFILE_UPDATE_GEO": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "profile.update.geo"
+          }
+        },
+        "PROFILE_UPDATE_URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "profile.update.url"
+          }
+        },
+        "PROFILE_UPDATE_VERIFIED_BADGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "profile.update.verified_badge"
+          }
+        },
+        "PROFILE_UPDATE_AFFILIATE_BADGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "profile.update.affiliate_badge"
+          }
+        },
+        "PROFILE_UPDATE_HANDLE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "profile.update.handle"
+          }
+        },
+        "NEWS_NEW": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "news.new"
+          }
+        },
+        "FOLLOW_FOLLOW": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "follow.follow"
+          }
+        },
+        "FOLLOW_UNFOLLOW": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "follow.unfollow"
+          }
+        },
+        "SPACES_START": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "spaces.start"
+          }
+        },
+        "SPACES_END": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "spaces.end"
+          }
+        },
+        "CHAT_RECEIVED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "chat.received"
+          }
+        },
+        "CHAT_SENT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "chat.sent"
+          }
+        },
+        "CHAT_CONVERSATION_JOIN": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "chat.conversation_join"
+          }
+        },
+        "DM_SENT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "dm.sent"
+          }
+        },
+        "DM_RECEIVED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "dm.received"
+          }
+        },
+        "DM_INDICATE_TYPING": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "dm.indicate_typing"
+          }
+        },
+        "DM_READ": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "dm.read"
+          }
+        },
+        "POST_CREATE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "post.create"
+          }
+        },
+        "POST_DELETE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "post.delete"
+          }
+        },
+        "POST_MENTION_CREATE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "post.mention.create"
+          }
+        },
+        "LIKE_CREATE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "like.create"
+          }
+        },
+        "MUTE_MUTE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "mute.mute"
+          }
+        },
+        "MUTE_UNMUTE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "mute.unmute"
+          }
+        },
+        "BLOCK_BLOCK": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "block.block"
+          }
+        },
+        "BLOCK_UNBLOCK": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "block.unblock"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Activity event type in dot notation."
+      }
+    },
+    "com.x.activity#CreateActivitySubscriptionFilter": {
+      "type": "structure",
+      "members": {
+        "direction": {
+          "target": "com.x.activity#CreateActivitySubscriptionFilterDirection",
+          "traits": {
+            "smithy.api#documentation": "Optional direction filter for directional events. Not supported for mute.* or block.* events."
+          }
+        },
+        "keyword": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional keyword filter."
+          }
+        },
+        "user_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "User the subscription is scoped to. For mute.* and block.* events, this must be the authenticated source user."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#CreateActivitySubscriptionFilterDirection": {
+      "type": "enum",
+      "members": {
+        "INBOUND": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "inbound"
+          }
+        },
+        "OUTBOUND": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "outbound"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Optional direction filter for directional events. Not supported for mute.* or block.* events."
+      }
+    },
+    "com.x.activity#CreateActivitySubscriptionRequest": {
+      "type": "structure",
+      "members": {
+        "event_type": {
+          "target": "com.x.activity#CreateActivitySubscriptionRequestEventType",
+          "traits": {
+            "smithy.api#documentation": "Activity event type in dot notation.",
+            "smithy.api#required": {}
+          }
+        },
+        "filter": {
+          "target": "com.x.activity#CreateActivitySubscriptionFilter",
+          "traits": {
+            "smithy.api#documentation": "Subscription filter.",
+            "smithy.api#required": {}
+          }
+        },
+        "tag": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional caller-defined tag."
+          }
+        },
+        "webhook_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Webhook to deliver the subscription events to."
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.activity#CreateActivitySubscriptionResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.activity#CreateActivitySubscriptionResponseData"
+        },
+        "errors": {
+          "target": "com.x.activity#CreateActivitySubscriptionResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#CreateActivitySubscriptionResponseData": {
+      "type": "structure",
+      "members": {
+        "subscription": {
+          "target": "com.x.activity#CreateActivitySubscriptionResponseDataSubscription"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#CreateActivitySubscriptionResponseDataSubscription": {
+      "type": "structure",
+      "members": {
+        "created_at": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Subscription creation time."
+          }
+        },
+        "event_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Activity event type in dot notation."
+          }
+        },
+        "filter": {
+          "target": "com.x.activity#CreateActivitySubscriptionResponseDataSubscriptionFilter",
+          "traits": {
+            "smithy.api#documentation": "Subscription filter."
+          }
+        },
+        "subscription_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of the subscription."
+          }
+        },
+        "tag": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional caller-defined tag."
+          }
+        },
+        "updated_at": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Subscription last-update time."
+          }
+        },
+        "webhook_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Webhook receiving the subscription events."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#CreateActivitySubscriptionResponseDataSubscriptionFilter": {
+      "type": "structure",
+      "members": {
+        "direction": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional direction filter for directional events. Not present for mute.* or block.* events."
+          }
+        },
+        "keyword": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional keyword filter."
+          }
+        },
+        "user_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "User the subscription is scoped to."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#CreateActivitySubscriptionResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.activity#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.activity#CreateActivitySubscription": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.activity#CreateActivitySubscriptionRequest"
+      },
+      "output": {
+        "target": "com.x.activity#CreateActivitySubscriptionResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/activity/subscriptions",
+          "code": 200
+        },
+        "smithy.api#documentation": "Create X activity subscription\n\nCreates a subscription for an X activity event. OAuth2 user-context tokens must hold the scope matching the requested event_type: dm.read for chat.* and dm.* events, like.read for like.* events, mute.read for mute.* events, block.read for block.* events, and tweet.read for all other event types. Mute and block subscriptions are actor-only: filter.user_id must identify the authenticated user and direction is not supported."
+      }
+    },
+    "com.x.activity#DeleteActivitySubscriptionsByIdsRequestIdsList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {}
+    },
+    "com.x.activity#DeleteActivitySubscriptionsByIdsRequest": {
+      "type": "structure",
+      "members": {
+        "ids": {
+          "target": "com.x.activity#DeleteActivitySubscriptionsByIdsRequestIdsList",
+          "traits": {
+            "smithy.api#httpQuery": "ids",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.activity#DeleteActivitySubscriptionsByIdsResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.activity#DeleteActivitySubscriptionsByIdsResponseDataList"
+        },
+        "errors": {
+          "target": "com.x.activity#DeleteActivitySubscriptionsByIdsResponseErrorsList",
+          "traits": {
+            "smithy.api#documentation": "Per-id failures; deletion continues for the remaining ids."
+          }
+        },
+        "meta": {
+          "target": "com.x.activity#DeleteActivitySubscriptionsByIdsResponseMeta"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#DeleteActivitySubscriptionsByIdsResponseDataItem": {
+      "type": "structure",
+      "members": {
+        "deleted": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Whether the subscription was deleted."
+          }
+        },
+        "subscription_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Id of the deleted subscription."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#DeleteActivitySubscriptionsByIdsResponseDataList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.activity#DeleteActivitySubscriptionsByIdsResponseDataItem"
+      },
+      "traits": {}
+    },
+    "com.x.activity#DeleteActivitySubscriptionsByIdsResponseErrorsItem": {
+      "type": "structure",
+      "members": {
+        "message": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Human-readable failure detail."
+          }
+        },
+        "reason": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Machine-readable failure reason."
+          }
+        },
+        "subscription_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Id the failure applies to."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#DeleteActivitySubscriptionsByIdsResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.activity#DeleteActivitySubscriptionsByIdsResponseErrorsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "Per-id failures; deletion continues for the remaining ids."
+      }
+    },
+    "com.x.activity#DeleteActivitySubscriptionsByIdsResponseMeta": {
+      "type": "structure",
+      "members": {
+        "total_subscriptions": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Subscriptions remaining after deletion."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#DeleteActivitySubscriptionsByIds": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.activity#DeleteActivitySubscriptionsByIdsRequest"
+      },
+      "output": {
+        "target": "com.x.activity#DeleteActivitySubscriptionsByIdsResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "DELETE",
+          "uri": "/2/activity/subscriptions",
+          "code": 200
+        },
+        "smithy.api#documentation": "Delete X activity subscriptions by IDs\n\nDeletes multiple subscriptions for X activity events by their IDs"
+      }
+    },
+    "com.x.activity#UpdateActivitySubscriptionRequest": {
+      "type": "structure",
+      "members": {
+        "subscription_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        },
+        "tag": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional caller-defined tag."
+          }
+        },
+        "webhook_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Webhook to deliver the subscription events to."
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.activity#UpdateActivitySubscriptionResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.activity#UpdateActivitySubscriptionResponseData"
+        },
+        "errors": {
+          "target": "com.x.activity#UpdateActivitySubscriptionResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#UpdateActivitySubscriptionResponseData": {
+      "type": "structure",
+      "members": {
+        "subscription": {
+          "target": "com.x.activity#UpdateActivitySubscriptionResponseDataSubscription"
+        },
+        "total_subscriptions": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Total active subscriptions for the instance."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#UpdateActivitySubscriptionResponseDataSubscription": {
+      "type": "structure",
+      "members": {
+        "created_at": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Subscription creation time."
+          }
+        },
+        "event_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Activity event type in dot notation."
+          }
+        },
+        "filter": {
+          "target": "com.x.activity#UpdateActivitySubscriptionResponseDataSubscriptionFilter",
+          "traits": {
+            "smithy.api#documentation": "Subscription filter."
+          }
+        },
+        "subscription_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of the subscription."
+          }
+        },
+        "tag": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional caller-defined tag."
+          }
+        },
+        "updated_at": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Subscription last-update time."
+          }
+        },
+        "webhook_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Webhook receiving the subscription events."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#UpdateActivitySubscriptionResponseDataSubscriptionFilter": {
+      "type": "structure",
+      "members": {
+        "direction": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional direction filter for directional events. Not present for mute.* or block.* events."
+          }
+        },
+        "keyword": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional keyword filter."
+          }
+        },
+        "user_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "User the subscription is scoped to."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#UpdateActivitySubscriptionResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.activity#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.activity#UpdateActivitySubscription": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.activity#UpdateActivitySubscriptionRequest"
+      },
+      "output": {
+        "target": "com.x.activity#UpdateActivitySubscriptionResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "PUT",
+          "uri": "/2/activity/subscriptions/{subscription_id}",
+          "code": 200
+        },
+        "smithy.api#documentation": "Update X activity subscription\n\nUpdates a subscription for an X activity event"
+      }
+    },
+    "com.x.activity#DeleteActivitySubscriptionRequest": {
+      "type": "structure",
+      "members": {
+        "subscription_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.activity#DeleteActivitySubscriptionResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.activity#DeleteActivitySubscriptionResponseData"
+        },
+        "errors": {
+          "target": "com.x.activity#DeleteActivitySubscriptionResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#DeleteActivitySubscriptionResponseData": {
+      "type": "structure",
+      "members": {
+        "deleted": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Whether the subscription was deleted.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.activity#DeleteActivitySubscriptionResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.activity#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.activity#DeleteActivitySubscription": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.activity#DeleteActivitySubscriptionRequest"
+      },
+      "output": {
+        "target": "com.x.activity#DeleteActivitySubscriptionResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "DELETE",
+          "uri": "/2/activity/subscriptions/{subscription_id}",
+          "code": 200
+        },
+        "smithy.api#documentation": "Deletes X activity subscription\n\nDeletes a subscription for an X activity event"
+      }
+    },
+    "com.x.activity#Activity": {
+      "type": "service",
+      "version": "2.167",
+      "operations": [
+        {
+          "target": "com.x.activity#GetActivitySubscriptions"
+        },
+        {
+          "target": "com.x.activity#CreateActivitySubscription"
+        },
+        {
+          "target": "com.x.activity#DeleteActivitySubscriptionsByIds"
+        },
+        {
+          "target": "com.x.activity#UpdateActivitySubscription"
+        },
+        {
+          "target": "com.x.activity#DeleteActivitySubscription"
+        }
+      ],
+      "traits": {
+        "smithy.api#title": "X API v2",
+        "smithy.api#documentation": "X API v2 core endpoints"
+      }
+    }
+  }
+}

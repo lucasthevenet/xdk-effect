@@ -1,7 +1,7 @@
 {
   "name": "distilled-x",
   "version": "0.1.0",
-  "description": "Portable client for X OAuth, webhooks, and activity subscriptions.",
+  "description": "Spec-generated, Effect-native X API SDK with OAuth, streaming, and webhook primitives.",
   "keywords": [
     "api",
     "effect",
@@ -46,9 +46,20 @@
     "provenance": true
   },
   "scripts": {
+    "specs:fetch": "bun scripts/specs.ts",
+    "specs:update": "bun scripts/specs.ts --update",
+    "generate": "bun scripts/generate.ts",
+    "generate:check": "bun scripts/generate.ts --check",
     "build": "tsc -b",
     "prepack": "bun run build",
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck:test": "tsc -p tsconfig.test.json",
     "test": "bun test"
+  },
+  "dependencies": {
+    "@distilled.cloud/core": "1.0.0-rc.8"
+  },
+  "peerDependencies": {
+    "effect": ">=4.0.0-rc.112 <5"
   }
 }

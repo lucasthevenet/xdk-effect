@@ -78,8 +78,8 @@ describe("OAuth 2.0 PKCE", () => {
     });
     const refreshed = await oauth.refreshToken({ refreshToken: "refresh-1" });
 
-    expect(exchanged).toEqual(responses[0]);
-    expect(refreshed).toEqual(responses[1]);
+    expect(exchanged).toEqual(responses[0]!);
+    expect(refreshed).toEqual(responses[1]!);
     expect(requests.map((request) => request.url)).toEqual([
       "https://api.x.com/2/oauth2/token",
       "https://api.x.com/2/oauth2/token",

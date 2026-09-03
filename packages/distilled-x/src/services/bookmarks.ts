@@ -1,0 +1,386 @@
+// AUTO-GENERATED from xdevplatform/xdk@84c26540df30c0b798e50e34151c56d5d262ba1c; do not edit.
+import * as S from "@distilled.cloud/core/schema";
+import * as T from "../traits.ts";
+import {
+  makeOperation,
+  makeBinaryOperation,
+  makeStreamOperation,
+} from "../operation.ts";
+import { operations } from "../operations.ts";
+export interface CreateUsersBookmarkFolderRequest {
+  id: string;
+  /** Name of the Bookmark folder (1-25 characters). */
+  name: string;
+}
+export const CreateUsersBookmarkFolderRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    id: S.String.pipe(T.Label()),
+    name: S.String,
+  }).pipe(
+    T.Http({
+      method: "POST",
+      uri: "/2/users/{id}/bookmarks/folders",
+      code: 200,
+    }),
+  ),
+).annotate({
+  identifier: "CreateUsersBookmarkFolderRequest",
+}) as any as S.Schema<CreateUsersBookmarkFolderRequest>;
+
+export interface CreateUsersBookmarkFolderResponseData {
+  /** Unique identifier of the created Bookmark folder. */
+  id: string;
+  /** The name of the created Bookmark folder. */
+  name: string;
+}
+export const CreateUsersBookmarkFolderResponseData = /*@__PURE__*/ S.suspend(
+  () =>
+    S.Struct({
+      id: S.String,
+      name: S.String,
+    }),
+).annotate({
+  identifier: "CreateUsersBookmarkFolderResponseData",
+}) as any as S.Schema<CreateUsersBookmarkFolderResponseData>;
+
+export type ResourceNotFoundProblemType =
+  "https://api.x.com/2/problems/resource-not-found";
+export const ResourceNotFoundProblemType = /*@__PURE__*/ S.String;
+
+export interface ResourceNotFoundProblem {
+  detail: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type: string;
+  status?: number;
+  title: string;
+  type: ResourceNotFoundProblemType;
+  value?: string;
+}
+export const ResourceNotFoundProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: ResourceNotFoundProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "ResourceNotFoundProblem",
+}) as any as S.Schema<ResourceNotFoundProblem>;
+
+export type InvalidRequestProblemType =
+  "https://api.x.com/2/problems/invalid-request";
+export const InvalidRequestProblemType = /*@__PURE__*/ S.String;
+
+export interface InvalidRequestProblem {
+  detail: string;
+  parameter?: string;
+  status?: number;
+  title: string;
+  type: InvalidRequestProblemType;
+  value?: string;
+}
+export const InvalidRequestProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: InvalidRequestProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "InvalidRequestProblem",
+}) as any as S.Schema<InvalidRequestProblem>;
+
+export type NotAuthorizedForResourceProblemType =
+  "https://api.x.com/2/problems/not-authorized-for-resource";
+export const NotAuthorizedForResourceProblemType = /*@__PURE__*/ S.String;
+
+export interface NotAuthorizedForResourceProblem {
+  detail: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: NotAuthorizedForResourceProblemType;
+  value?: string;
+}
+export const NotAuthorizedForResourceProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: NotAuthorizedForResourceProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "NotAuthorizedForResourceProblem",
+}) as any as S.Schema<NotAuthorizedForResourceProblem>;
+
+export type NotAuthorizedForFieldProblemType =
+  "https://api.x.com/2/problems/not-authorized-for-field";
+export const NotAuthorizedForFieldProblemType = /*@__PURE__*/ S.String;
+
+export interface NotAuthorizedForFieldProblem {
+  detail: string;
+  field: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: NotAuthorizedForFieldProblemType;
+  value?: string;
+}
+export const NotAuthorizedForFieldProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: NotAuthorizedForFieldProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "NotAuthorizedForFieldProblem",
+}) as any as S.Schema<NotAuthorizedForFieldProblem>;
+
+export type FieldUnauthorizedProblemType =
+  "https://api.x.com/2/problems/field-unauthorized";
+export const FieldUnauthorizedProblemType = /*@__PURE__*/ S.String;
+
+export interface FieldUnauthorizedProblem {
+  detail: string;
+  field: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: FieldUnauthorizedProblemType;
+}
+export const FieldUnauthorizedProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: FieldUnauthorizedProblemType,
+  }),
+).annotate({
+  identifier: "FieldUnauthorizedProblem",
+}) as any as S.Schema<FieldUnauthorizedProblem>;
+
+export type FieldHydrationFailureProblemType =
+  "https://api.x.com/2/problems/field-hydration-failure";
+export const FieldHydrationFailureProblemType = /*@__PURE__*/ S.String;
+
+export interface FieldHydrationFailureProblem {
+  detail: string;
+  field: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: FieldHydrationFailureProblemType;
+}
+export const FieldHydrationFailureProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: FieldHydrationFailureProblemType,
+  }),
+).annotate({
+  identifier: "FieldHydrationFailureProblem",
+}) as any as S.Schema<FieldHydrationFailureProblem>;
+
+export type ResourceUnavailableProblemType =
+  "https://api.x.com/2/problems/resource-unavailable";
+export const ResourceUnavailableProblemType = /*@__PURE__*/ S.String;
+
+export interface ResourceUnavailableProblem {
+  detail: string;
+  resource_id?: string;
+  resource_type: string;
+  status?: number;
+  title: string;
+  type: ResourceUnavailableProblemType;
+}
+export const ResourceUnavailableProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: ResourceUnavailableProblemType,
+  }),
+).annotate({
+  identifier: "ResourceUnavailableProblem",
+}) as any as S.Schema<ResourceUnavailableProblem>;
+
+export type DisallowedResourceProblemType =
+  "https://api.x.com/2/problems/disallowed-resource";
+export const DisallowedResourceProblemType = /*@__PURE__*/ S.String;
+
+export interface DisallowedResourceProblem {
+  detail: string;
+  resource_id?: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: DisallowedResourceProblemType;
+}
+export const DisallowedResourceProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    resource_id: S.optional(S.String),
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: DisallowedResourceProblemType,
+  }),
+).annotate({
+  identifier: "DisallowedResourceProblem",
+}) as any as S.Schema<DisallowedResourceProblem>;
+
+export type InternalErrorProblemType =
+  "https://api.x.com/2/problems/internal-error";
+export const InternalErrorProblemType = /*@__PURE__*/ S.String;
+
+export interface InternalErrorProblem {
+  detail: string;
+  status?: number;
+  title: string;
+  type: InternalErrorProblemType;
+}
+export const InternalErrorProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: InternalErrorProblemType,
+  }),
+).annotate({
+  identifier: "InternalErrorProblem",
+}) as any as S.Schema<InternalErrorProblem>;
+
+export type Problem =
+  | ResourceNotFoundProblem
+  | InvalidRequestProblem
+  | NotAuthorizedForResourceProblem
+  | NotAuthorizedForFieldProblem
+  | FieldUnauthorizedProblem
+  | FieldHydrationFailureProblem
+  | ResourceUnavailableProblem
+  | DisallowedResourceProblem
+  | InternalErrorProblem;
+export const Problem = /*@__PURE__*/ S.Unknown as any as S.Schema<Problem>;
+export type CreateUsersBookmarkFolderResponseErrorsList = Array<Problem>;
+export const CreateUsersBookmarkFolderResponseErrorsList =
+  /*@__PURE__*/ S.Array(
+    Problem,
+  ) as any as S.Schema<CreateUsersBookmarkFolderResponseErrorsList>;
+
+export interface CreateUsersBookmarkFolderResponse {
+  data?: CreateUsersBookmarkFolderResponseData;
+  errors?: CreateUsersBookmarkFolderResponseErrorsList;
+}
+export const CreateUsersBookmarkFolderResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(CreateUsersBookmarkFolderResponseData),
+    errors: S.optional(CreateUsersBookmarkFolderResponseErrorsList),
+  }),
+).annotate({
+  identifier: "CreateUsersBookmarkFolderResponse",
+}) as any as S.Schema<CreateUsersBookmarkFolderResponse>;
+
+export interface DeleteUsersBookmarkRequest {
+  id: string;
+  tweet_id: string;
+}
+export const DeleteUsersBookmarkRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    id: S.String.pipe(T.Label()),
+    tweet_id: S.String.pipe(T.Label()),
+  }).pipe(
+    T.Http({
+      method: "DELETE",
+      uri: "/2/users/{id}/bookmarks/{tweet_id}",
+      code: 200,
+    }),
+  ),
+).annotate({
+  identifier: "DeleteUsersBookmarkRequest",
+}) as any as S.Schema<DeleteUsersBookmarkRequest>;
+
+export interface DeleteUsersBookmarkResponseData {
+  /** Whether the Post is bookmarked. */
+  bookmarked: boolean;
+}
+export const DeleteUsersBookmarkResponseData = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    bookmarked: S.Boolean,
+  }),
+).annotate({
+  identifier: "DeleteUsersBookmarkResponseData",
+}) as any as S.Schema<DeleteUsersBookmarkResponseData>;
+
+export type DeleteUsersBookmarkResponseErrorsList = Array<Problem>;
+export const DeleteUsersBookmarkResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<DeleteUsersBookmarkResponseErrorsList>;
+
+export interface DeleteUsersBookmarkResponse {
+  data?: DeleteUsersBookmarkResponseData;
+  errors?: DeleteUsersBookmarkResponseErrorsList;
+}
+export const DeleteUsersBookmarkResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(DeleteUsersBookmarkResponseData),
+    errors: S.optional(DeleteUsersBookmarkResponseErrorsList),
+  }),
+).annotate({
+  identifier: "DeleteUsersBookmarkResponse",
+}) as any as S.Schema<DeleteUsersBookmarkResponse>;
+
+export const createUsersBookmarkFolder = /*@__PURE__*/ makeOperation<
+  CreateUsersBookmarkFolderRequest,
+  CreateUsersBookmarkFolderResponse
+>(
+  operations.createUsersBookmarkFolder,
+  () => CreateUsersBookmarkFolderRequest,
+  () => CreateUsersBookmarkFolderResponse,
+);
+
+export const deleteUsersBookmark = /*@__PURE__*/ makeOperation<
+  DeleteUsersBookmarkRequest,
+  DeleteUsersBookmarkResponse
+>(
+  operations.deleteUsersBookmark,
+  () => DeleteUsersBookmarkRequest,
+  () => DeleteUsersBookmarkResponse,
+);

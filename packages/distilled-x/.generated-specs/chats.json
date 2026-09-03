@@ -1,0 +1,5788 @@
+{
+  "smithy": "2.0",
+  "metadata": {
+    "suppressions": [
+      {
+        "id": "HttpUriConflict",
+        "namespace": "*"
+      },
+      {
+        "id": "HttpMethodSemantics",
+        "namespace": "*"
+      },
+      {
+        "id": "UnreferencedShape",
+        "namespace": "*"
+      }
+    ]
+  },
+  "shapes": {
+    "com.x.chats#GetChatConversationsRequestChatConversationFieldsItem": {
+      "type": "enum",
+      "members": {
+        "CREATED_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "created_at"
+          }
+        },
+        "GROUP_AVATAR_URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "group_avatar_url"
+          }
+        },
+        "GROUP_NAME": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "group_name"
+          }
+        },
+        "ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "id"
+          }
+        },
+        "IS_MUTED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "is_muted"
+          }
+        },
+        "MESSAGE_TTL_MS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "message_ttl_ms"
+          }
+        },
+        "SCREEN_CAPTURE_BLOCKING_ENABLED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "screen_capture_blocking_enabled"
+          }
+        },
+        "SCREEN_CAPTURE_DETECTION_ENABLED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "screen_capture_detection_enabled"
+          }
+        },
+        "TYPE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "type"
+          }
+        },
+        "UPDATED_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "updated_at"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetChatConversationsRequestChatConversationFieldsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#GetChatConversationsRequestChatConversationFieldsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "The fields available for a ChatConversation object."
+      }
+    },
+    "com.x.chats#GetChatConversationsRequestExpansionsItem": {
+      "type": "enum",
+      "members": {
+        "ADMIN_IDS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "admin_ids"
+          }
+        },
+        "MEMBER_IDS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "member_ids"
+          }
+        },
+        "PARTICIPANT_IDS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "participant_ids"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetChatConversationsRequestExpansionsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#GetChatConversationsRequestExpansionsItem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetChatConversationsRequestUserFieldsItem": {
+      "type": "enum",
+      "members": {
+        "CONFIRMED_EMAIL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "confirmed_email"
+          }
+        },
+        "CONNECTION_STATUS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "connection_status"
+          }
+        },
+        "CREATED_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "created_at"
+          }
+        },
+        "DESCRIPTION": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "description"
+          }
+        },
+        "ENTITIES": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "entities"
+          }
+        },
+        "ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "id"
+          }
+        },
+        "IS_IDENTITY_VERIFIED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "is_identity_verified"
+          }
+        },
+        "LOCATION": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "location"
+          }
+        },
+        "NAME": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "name"
+          }
+        },
+        "PARODY": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "parody"
+          }
+        },
+        "PROFILE_BANNER_URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "profile_banner_url"
+          }
+        },
+        "PROFILE_IMAGE_URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "profile_image_url"
+          }
+        },
+        "PROTECTED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "protected"
+          }
+        },
+        "PUBLIC_METRICS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "public_metrics"
+          }
+        },
+        "RECEIVES_YOUR_DM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "receives_your_dm"
+          }
+        },
+        "SUBSCRIBES_TO_YOU": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "subscribes_to_you"
+          }
+        },
+        "SUBSCRIPTION": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "subscription"
+          }
+        },
+        "SUBSCRIPTION_TYPE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "subscription_type"
+          }
+        },
+        "URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "url"
+          }
+        },
+        "USERNAME": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "username"
+          }
+        },
+        "VERIFIED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "verified"
+          }
+        },
+        "VERIFIED_FOLLOWERS_COUNT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "verified_followers_count"
+          }
+        },
+        "VERIFIED_TYPE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "verified_type"
+          }
+        },
+        "WITHHELD": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "withheld"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetChatConversationsRequestUserFieldsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#GetChatConversationsRequestUserFieldsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "The fields available for a User object."
+      }
+    },
+    "com.x.chats#GetChatConversationsRequest": {
+      "type": "structure",
+      "members": {
+        "max_results": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#httpQuery": "max_results"
+          }
+        },
+        "pagination_token": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpQuery": "pagination_token"
+          }
+        },
+        "chat_conversation_fields": {
+          "target": "com.x.chats#GetChatConversationsRequestChatConversationFieldsList",
+          "traits": {
+            "smithy.api#httpQuery": "chat_conversation.fields",
+            "smithy.api#documentation": "A comma separated list of ChatConversation fields to display."
+          }
+        },
+        "expansions": {
+          "target": "com.x.chats#GetChatConversationsRequestExpansionsList",
+          "traits": {
+            "smithy.api#httpQuery": "expansions",
+            "smithy.api#documentation": "A comma separated list of fields to expand."
+          }
+        },
+        "user_fields": {
+          "target": "com.x.chats#GetChatConversationsRequestUserFieldsList",
+          "traits": {
+            "smithy.api#httpQuery": "user.fields",
+            "smithy.api#documentation": "A comma separated list of User fields to display."
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.chats#GetChatConversationsResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.chats#GetChatConversationsResponseDataList"
+        },
+        "errors": {
+          "target": "com.x.chats#GetChatConversationsResponseErrorsList"
+        },
+        "includes": {
+          "target": "com.x.chats#Expansions"
+        },
+        "meta": {
+          "target": "com.x.chats#GetChatConversationsResponseMeta"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#ChatConversation": {
+      "type": "structure",
+      "members": {
+        "admin_ids": {
+          "target": "com.x.chats#ChatConversationAdminIdsList"
+        },
+        "created_at": {
+          "target": "smithy.api#String"
+        },
+        "group_avatar_url": {
+          "target": "smithy.api#String"
+        },
+        "group_name": {
+          "target": "smithy.api#String"
+        },
+        "id": {
+          "target": "smithy.api#String"
+        },
+        "is_muted": {
+          "target": "smithy.api#Boolean"
+        },
+        "member_ids": {
+          "target": "com.x.chats#ChatConversationMemberIdsList"
+        },
+        "message_ttl_ms": {
+          "target": "smithy.api#Integer"
+        },
+        "participant_ids": {
+          "target": "com.x.chats#ChatConversationParticipantIdsList"
+        },
+        "screen_capture_blocking_enabled": {
+          "target": "smithy.api#Boolean"
+        },
+        "screen_capture_detection_enabled": {
+          "target": "smithy.api#Boolean"
+        },
+        "type": {
+          "target": "smithy.api#String"
+        },
+        "updated_at": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#ChatConversationAdminIdsList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {}
+    },
+    "com.x.chats#ChatConversationMemberIdsList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {}
+    },
+    "com.x.chats#ChatConversationParticipantIdsList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetChatConversationsResponseDataList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#ChatConversation"
+      },
+      "traits": {}
+    },
+    "com.x.chats#Problem": {
+      "type": "union",
+      "members": {
+        "ResourceNotFoundProblem": {
+          "target": "com.x.chats#ResourceNotFoundProblem"
+        },
+        "InvalidRequestProblem": {
+          "target": "com.x.chats#InvalidRequestProblem"
+        },
+        "NotAuthorizedForResourceProblem": {
+          "target": "com.x.chats#NotAuthorizedForResourceProblem"
+        },
+        "NotAuthorizedForFieldProblem": {
+          "target": "com.x.chats#NotAuthorizedForFieldProblem"
+        },
+        "FieldUnauthorizedProblem": {
+          "target": "com.x.chats#FieldUnauthorizedProblem"
+        },
+        "FieldHydrationFailureProblem": {
+          "target": "com.x.chats#FieldHydrationFailureProblem"
+        },
+        "ResourceUnavailableProblem": {
+          "target": "com.x.chats#ResourceUnavailableProblem"
+        },
+        "DisallowedResourceProblem": {
+          "target": "com.x.chats#DisallowedResourceProblem"
+        },
+        "InternalErrorProblem": {
+          "target": "com.x.chats#InternalErrorProblem"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#ResourceNotFoundProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.chats#ResourceNotFoundProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#ResourceNotFoundProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_RESOURCE_NOT_FOUND": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/resource-not-found"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#InvalidRequestProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.chats#InvalidRequestProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#InvalidRequestProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_INVALID_REQUEST": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/invalid-request"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#NotAuthorizedForResourceProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.chats#NotAuthorizedForResourceProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#NotAuthorizedForResourceProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_NOT_AUTHORIZED_FOR_RESOURCE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/not-authorized-for-resource"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#NotAuthorizedForFieldProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.chats#NotAuthorizedForFieldProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#NotAuthorizedForFieldProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_NOT_AUTHORIZED_FOR_FIELD": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/not-authorized-for-field"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#FieldUnauthorizedProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.chats#FieldUnauthorizedProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#FieldUnauthorizedProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_FIELD_UNAUTHORIZED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/field-unauthorized"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#FieldHydrationFailureProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.chats#FieldHydrationFailureProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#FieldHydrationFailureProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_FIELD_HYDRATION_FAILURE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/field-hydration-failure"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#ResourceUnavailableProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.chats#ResourceUnavailableProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#ResourceUnavailableProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_RESOURCE_UNAVAILABLE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/resource-unavailable"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#DisallowedResourceProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.chats#DisallowedResourceProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#DisallowedResourceProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_DISALLOWED_RESOURCE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/disallowed-resource"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#InternalErrorProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.chats#InternalErrorProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#InternalErrorProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_INTERNAL_ERROR": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/internal-error"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetChatConversationsResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#Expansions": {
+      "type": "structure",
+      "members": {
+        "media": {
+          "target": "com.x.chats#ExpansionsMediaList"
+        },
+        "places": {
+          "target": "com.x.chats#ExpansionsPlacesList"
+        },
+        "polls": {
+          "target": "com.x.chats#ExpansionsPollsList"
+        },
+        "posts": {
+          "target": "com.x.chats#ExpansionsPostsList"
+        },
+        "topics": {
+          "target": "com.x.chats#ExpansionsTopicsList"
+        },
+        "users": {
+          "target": "com.x.chats#ExpansionsUsersList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#Media": {
+      "type": "structure",
+      "members": {
+        "alt_text": {
+          "target": "smithy.api#String"
+        },
+        "duration_ms": {
+          "target": "smithy.api#Integer"
+        },
+        "height": {
+          "target": "smithy.api#Integer"
+        },
+        "media_key": {
+          "target": "smithy.api#String"
+        },
+        "non_public_metrics": {
+          "target": "com.x.chats#MediaNonPublicMetrics"
+        },
+        "organic_metrics": {
+          "target": "com.x.chats#MediaOrganicMetrics"
+        },
+        "preview_image_url": {
+          "target": "smithy.api#String"
+        },
+        "promoted_metrics": {
+          "target": "com.x.chats#MediaPromotedMetrics"
+        },
+        "public_metrics": {
+          "target": "com.x.chats#MediaPublicMetrics"
+        },
+        "type": {
+          "target": "smithy.api#String"
+        },
+        "url": {
+          "target": "smithy.api#String"
+        },
+        "variants": {
+          "target": "com.x.chats#MediaVariants"
+        },
+        "width": {
+          "target": "smithy.api#Integer"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#MediaNonPublicMetrics": {
+      "type": "structure",
+      "members": {
+        "playback_0_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who started playback (0% quartile) of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_100_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who completed playback (100% quartile) of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_25_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who watched at least 25% of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_50_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who watched at least 50% of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_75_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who watched at least 75% of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Nonpublic engagement metrics for the media at the time of the request."
+      }
+    },
+    "com.x.chats#MediaOrganicMetrics": {
+      "type": "structure",
+      "members": {
+        "playback_0_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who started playback (0% quartile) of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_100_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who completed playback (100% quartile) of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_25_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who watched at least 25% of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_50_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who watched at least 50% of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_75_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who watched at least 75% of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "view_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "The number of organic views of this video. Null when the backend returns quartile data without a view count.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Organic nonpublic engagement metrics for the media at the time of the request."
+      }
+    },
+    "com.x.chats#MediaPromotedMetrics": {
+      "type": "structure",
+      "members": {
+        "playback_0_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who started playback (0% quartile) of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_100_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who completed playback (100% quartile) of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_25_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who watched at least 25% of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_50_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who watched at least 50% of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "playback_75_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of users who watched at least 75% of this video.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "view_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "The number of promoted views of this video. Null when the backend returns quartile data without a view count.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Promoted nonpublic engagement metrics for the media at the time of the request."
+      }
+    },
+    "com.x.chats#MediaPublicMetrics": {
+      "type": "structure",
+      "members": {
+        "view_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "The number of times this video has been viewed.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Public engagement metrics for the media at the time of the request."
+      }
+    },
+    "com.x.chats#MediaVariants": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#MediaVariantsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "Each media object may have multiple display or playback variants, with different resolutions or formats."
+      }
+    },
+    "com.x.chats#MediaVariantsItem": {
+      "type": "structure",
+      "members": {
+        "bit_rate": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "The bit rate of this variant, in bits per second. Absent for playlist variants.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "content_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The MIME type of this variant, for example \"video/mp4\" or \"application/x-mpegURL\".",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The URL to this media variant.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A single playback or display variant of a media object."
+      }
+    },
+    "com.x.chats#ExpansionsMediaList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Media"
+      },
+      "traits": {}
+    },
+    "com.x.chats#Place": {
+      "type": "structure",
+      "members": {
+        "contained_within": {
+          "target": "com.x.chats#PlaceContainedWithin"
+        },
+        "country": {
+          "target": "smithy.api#String"
+        },
+        "country_code": {
+          "target": "smithy.api#String"
+        },
+        "full_name": {
+          "target": "smithy.api#String"
+        },
+        "geo": {
+          "target": "com.x.chats#PlaceGeo"
+        },
+        "id": {
+          "target": "smithy.api#String"
+        },
+        "name": {
+          "target": "smithy.api#String"
+        },
+        "place_type": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#PlaceContainedWithin": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "A list of unique identifiers of the Places that contain this place."
+      }
+    },
+    "com.x.chats#PlaceGeo": {
+      "type": "structure",
+      "members": {
+        "bbox": {
+          "target": "com.x.chats#PlaceGeoBboxList",
+          "traits": {
+            "smithy.api#documentation": "The bounding box as [southwest_longitude, southwest_latitude, northeast_longitude, northeast_latitude].",
+            "smithy.api#required": {}
+          }
+        },
+        "properties": {
+          "target": "smithy.api#Document",
+          "traits": {
+            "smithy.api#documentation": "Additional GeoJSON feature properties.",
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.chats#PlaceGeoType",
+          "traits": {
+            "smithy.api#documentation": "The GeoJSON feature type.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "The geographic location of this place, expressed as a GeoJSON Feature."
+      }
+    },
+    "com.x.chats#PlaceGeoBboxList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#Double"
+      },
+      "traits": {
+        "smithy.api#documentation": "The bounding box as [southwest_longitude, southwest_latitude, northeast_longitude, northeast_latitude]."
+      }
+    },
+    "com.x.chats#PlaceGeoType": {
+      "type": "enum",
+      "members": {
+        "FEATURE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "Feature"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#ExpansionsPlacesList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Place"
+      },
+      "traits": {}
+    },
+    "com.x.chats#Poll": {
+      "type": "structure",
+      "members": {
+        "duration_minutes": {
+          "target": "smithy.api#Integer"
+        },
+        "end_datetime": {
+          "target": "smithy.api#String"
+        },
+        "id": {
+          "target": "smithy.api#String"
+        },
+        "options": {
+          "target": "com.x.chats#PollOptions"
+        },
+        "voting_status": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#PollOptions": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#PollOptionsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "The list of options (choices) available in this poll."
+      }
+    },
+    "com.x.chats#PollOptionsItem": {
+      "type": "structure",
+      "members": {
+        "label": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The text label of this poll option.",
+            "smithy.api#required": {}
+          }
+        },
+        "position": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "The 1-based position of this option within the poll.",
+            "smithy.api#required": {}
+          }
+        },
+        "votes": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "The number of votes this option has received.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A single option (choice) available in a poll."
+      }
+    },
+    "com.x.chats#ExpansionsPollsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Poll"
+      },
+      "traits": {}
+    },
+    "com.x.chats#Post": {
+      "type": "structure",
+      "members": {
+        "article": {
+          "target": "smithy.api#Document"
+        },
+        "article_title": {
+          "target": "smithy.api#Document",
+          "traits": {
+            "smithy.api#documentation": "Metadata about the long-form Article attached to this Post, if any."
+          }
+        },
+        "attachments": {
+          "target": "com.x.chats#PostAttachments"
+        },
+        "author_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of the author of this Post."
+          }
+        },
+        "card_uri": {
+          "target": "smithy.api#String"
+        },
+        "community_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The unique identifier of the Community this Post belongs to, if any."
+          }
+        },
+        "context_annotations": {
+          "target": "com.x.chats#PostContextAnnotations"
+        },
+        "conversation_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The ID of the conversation this Post belongs to (matches the root Post's ID)."
+          }
+        },
+        "created_at": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Creation time of the Post."
+          }
+        },
+        "display_text_range": {
+          "target": "com.x.chats#PostDisplayTextRange"
+        },
+        "edit_controls": {
+          "target": "com.x.chats#PostEditControls"
+        },
+        "edit_history_post_ids": {
+          "target": "com.x.chats#PostEditHistoryPostIdsList",
+          "traits": {
+            "smithy.api#documentation": "A list of Post IDs in this Post's edit history chain."
+          }
+        },
+        "entities": {
+          "target": "com.x.chats#PostEntities"
+        },
+        "geo": {
+          "target": "com.x.chats#PostGeo"
+        },
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of this Post."
+          }
+        },
+        "in_reply_to_user_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of the User this Post is replying to."
+          }
+        },
+        "lang": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Language of the Post, if detected by X. Returned as a BCP47 language tag."
+          }
+        },
+        "matched_media_notes": {
+          "target": "com.x.chats#PostMatchedMediaNotes"
+        },
+        "media_metadata": {
+          "target": "com.x.chats#PostMediaMetadata"
+        },
+        "non_public_metrics": {
+          "target": "smithy.api#Document",
+          "traits": {
+            "smithy.api#documentation": "Nonpublic engagement metrics for the Post at the time of the request."
+          }
+        },
+        "note_post": {
+          "target": "com.x.chats#PostNotePost"
+        },
+        "note_request_suggestions": {
+          "target": "com.x.chats#PostNoteRequestSuggestions"
+        },
+        "organic_metrics": {
+          "target": "smithy.api#Document",
+          "traits": {
+            "smithy.api#documentation": "Organic nonpublic engagement metrics for the Post at the time of the request."
+          }
+        },
+        "paid_partnership": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates if this Post is a paid partnership, i.e. it has been disclosed by the author as containing paid promotion."
+          }
+        },
+        "possibly_sensitive": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates if this Post contains URLs marked as sensitive, for example content suitable for mature audiences."
+          }
+        },
+        "promoted_metrics": {
+          "target": "smithy.api#Document",
+          "traits": {
+            "smithy.api#documentation": "Promoted nonpublic engagement metrics for the Post at the time of the request."
+          }
+        },
+        "public_metrics": {
+          "target": "com.x.chats#PostPublicMetrics"
+        },
+        "referenced_posts": {
+          "target": "com.x.chats#PostReferencedPosts"
+        },
+        "reply_settings": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Shows who can reply to this Post."
+          }
+        },
+        "scopes": {
+          "target": "com.x.chats#PostScopes"
+        },
+        "source": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The name of the app the user posted from. This is deprecated."
+          }
+        },
+        "suggested_source_links": {
+          "target": "com.x.chats#PostSuggestedSourceLinks"
+        },
+        "suggested_source_links_with_counts": {
+          "target": "com.x.chats#PostSuggestedSourceLinksWithCounts"
+        },
+        "text": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The content of the Post."
+          }
+        },
+        "username": {
+          "target": "smithy.api#String"
+        },
+        "withheld": {
+          "target": "com.x.chats#PostWithheld"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#PostAttachments": {
+      "type": "structure",
+      "members": {
+        "media_keys": {
+          "target": "com.x.chats#PostAttachmentsMediaKeysList",
+          "traits": {
+            "smithy.api#documentation": "Media keys of media attached to this Post.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "media_source_tweet_id": {
+          "target": "com.x.chats#PostAttachmentsMediaSourceTweetIdList",
+          "traits": {
+            "smithy.api#documentation": "IDs of the source Posts the attached media originated from.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "poll_ids": {
+          "target": "com.x.chats#PostAttachmentsPollIdsList",
+          "traits": {
+            "smithy.api#documentation": "IDs of polls attached to this Post.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Specifies the type of attachments (if any) present in this Post."
+      }
+    },
+    "com.x.chats#PostAttachmentsMediaKeysList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "Media keys of media attached to this Post."
+      }
+    },
+    "com.x.chats#PostAttachmentsMediaSourceTweetIdList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "IDs of the source Posts the attached media originated from."
+      }
+    },
+    "com.x.chats#PostAttachmentsPollIdsList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "IDs of polls attached to this Post."
+      }
+    },
+    "com.x.chats#PostContextAnnotations": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#PostContextAnnotationsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "Annotations inferred about the Post (domain and entity context)."
+      }
+    },
+    "com.x.chats#PostContextAnnotationsItemDomain": {
+      "type": "structure",
+      "members": {
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "name": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A domain or entity referenced by a context annotation."
+      }
+    },
+    "com.x.chats#PostContextAnnotationsItemEntity": {
+      "type": "structure",
+      "members": {
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "name": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A domain or entity referenced by a context annotation."
+      }
+    },
+    "com.x.chats#PostContextAnnotationsItem": {
+      "type": "structure",
+      "members": {
+        "domain": {
+          "target": "com.x.chats#PostContextAnnotationsItemDomain",
+          "traits": {
+            "smithy.api#documentation": "The domain (broad category) this annotation belongs to.",
+            "smithy.api#required": {}
+          }
+        },
+        "entity": {
+          "target": "com.x.chats#PostContextAnnotationsItemEntity",
+          "traits": {
+            "smithy.api#documentation": "The specific entity recognized within the domain.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A single inferred annotation about the Post (domain and entity context)."
+      }
+    },
+    "com.x.chats#PostDisplayTextRange": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#Integer"
+      },
+      "traits": {
+        "smithy.api#documentation": "The inclusive start and exclusive end indices of the displayable content of the Post."
+      }
+    },
+    "com.x.chats#PostEditControls": {
+      "type": "structure",
+      "members": {
+        "editable_until": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The time until which this Post can be edited.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "edits_remaining": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of edits still allowed for this Post.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "is_edit_eligible": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates whether this Post is eligible to be edited.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Indicates how much longer (if at all) this Post can be edited."
+      }
+    },
+    "com.x.chats#PostEditHistoryPostIdsList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "A list of Post IDs in this Post's edit history chain."
+      }
+    },
+    "com.x.chats#PostEntities": {
+      "type": "structure",
+      "members": {
+        "cashtags": {
+          "target": "com.x.chats#PostEntitiesCashtagsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "hashtags": {
+          "target": "com.x.chats#PostEntitiesHashtagsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "mentions": {
+          "target": "com.x.chats#PostEntitiesMentionsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "urls": {
+          "target": "com.x.chats#PostEntitiesUrlsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A list of metadata entities (hashtags, mentions, URLs) found in the Post text."
+      }
+    },
+    "com.x.chats#PostEntitiesCashtagsItem": {
+      "type": "structure",
+      "members": {
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "End index in the text (exclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Start index in the text (inclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "tag": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A hashtag or cashtag entity."
+      }
+    },
+    "com.x.chats#PostEntitiesCashtagsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#PostEntitiesCashtagsItem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#PostEntitiesHashtagsItem": {
+      "type": "structure",
+      "members": {
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "End index in the text (exclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Start index in the text (inclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "tag": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A hashtag or cashtag entity."
+      }
+    },
+    "com.x.chats#PostEntitiesHashtagsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#PostEntitiesHashtagsItem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#PostEntitiesMentionsItem": {
+      "type": "structure",
+      "members": {
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "username": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A user mention entity."
+      }
+    },
+    "com.x.chats#PostEntitiesMentionsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#PostEntitiesMentionsItem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#PostEntitiesUrlsItemImagesItem": {
+      "type": "structure",
+      "members": {
+        "height": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "width": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A preview image for a linked page."
+      }
+    },
+    "com.x.chats#PostEntitiesUrlsItemImagesList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#PostEntitiesUrlsItemImagesItem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#PostEntitiesUrlsItem": {
+      "type": "structure",
+      "members": {
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Description of the linked page, when available.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "display_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The URL as displayed in the Post text.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "expanded_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The fully resolved URL.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "images": {
+          "target": "com.x.chats#PostEntitiesUrlsItemImagesList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "media_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "HTTP status from resolving the URL.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Title of the linked page, when available.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "unwound_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The final destination after following redirects.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The t.co shortened URL.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A URL entity found in the Post text, enriched with link metadata."
+      }
+    },
+    "com.x.chats#PostEntitiesUrlsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#PostEntitiesUrlsItem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#PostGeo": {
+      "type": "structure",
+      "members": {
+        "coordinates": {
+          "target": "com.x.chats#PostGeoCoordinates",
+          "traits": {
+            "smithy.api#documentation": "A GeoJSON Point geometry.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "place_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The unique identifier of the tagged place.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "The location tagged on the Post, if the user provided one."
+      }
+    },
+    "com.x.chats#PostGeoCoordinatesCoordinatesList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#Double"
+      },
+      "traits": {
+        "smithy.api#documentation": "[longitude, latitude]."
+      }
+    },
+    "com.x.chats#PostGeoCoordinatesType": {
+      "type": "enum",
+      "members": {
+        "POINT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "Point"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "The GeoJSON geometry type."
+      }
+    },
+    "com.x.chats#PostGeoCoordinates": {
+      "type": "structure",
+      "members": {
+        "coordinates": {
+          "target": "com.x.chats#PostGeoCoordinatesCoordinatesList",
+          "traits": {
+            "smithy.api#documentation": "[longitude, latitude].",
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.chats#PostGeoCoordinatesType",
+          "traits": {
+            "smithy.api#documentation": "The GeoJSON geometry type.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A GeoJSON Point geometry."
+      }
+    },
+    "com.x.chats#PostMatchedMediaNotes": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#PostMatchedMediaNotesItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "Community-Notes media matches for this Post."
+      }
+    },
+    "com.x.chats#PostMatchedMediaNotesItem": {
+      "type": "structure",
+      "members": {
+        "match_status": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The status of the media note match.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "note_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The matched note's unique identifier.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A Community-Notes media match for this Post."
+      }
+    },
+    "com.x.chats#PostMediaMetadata": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#PostMediaMetadataItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "Metadata for media attached to this Post."
+      }
+    },
+    "com.x.chats#PostMediaMetadataItem": {
+      "type": "structure",
+      "members": {
+        "alt_text": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Alternative text describing the media for accessibility.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Description of the media.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "media_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The unique identifier of the media.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Title of the media.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Metadata for one media item attached to this Post."
+      }
+    },
+    "com.x.chats#PostNotePost": {
+      "type": "structure",
+      "members": {
+        "entities": {
+          "target": "com.x.chats#PostNotePostEntities",
+          "traits": {
+            "smithy.api#documentation": "Metadata entities (hashtags, cashtags, mentions, URLs) found in the note Post text.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "text": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The full note text of the Post.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "The full content of the Post, including text beyond 280 characters."
+      }
+    },
+    "com.x.chats#PostNotePostEntitiesCashtagsItem": {
+      "type": "structure",
+      "members": {
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "End index in the text (exclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Start index in the text (inclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "tag": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A hashtag or cashtag entity."
+      }
+    },
+    "com.x.chats#PostNotePostEntitiesCashtagsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#PostNotePostEntitiesCashtagsItem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#PostNotePostEntitiesHashtagsItem": {
+      "type": "structure",
+      "members": {
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "End index in the text (exclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Start index in the text (inclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "tag": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A hashtag or cashtag entity."
+      }
+    },
+    "com.x.chats#PostNotePostEntitiesHashtagsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#PostNotePostEntitiesHashtagsItem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#PostNotePostEntitiesMentionsItem": {
+      "type": "structure",
+      "members": {
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "username": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A user mention entity."
+      }
+    },
+    "com.x.chats#PostNotePostEntitiesMentionsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#PostNotePostEntitiesMentionsItem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#PostNotePostEntitiesUrlsItem": {
+      "type": "structure",
+      "members": {
+        "display_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "expanded_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A URL entity found in note Post text."
+      }
+    },
+    "com.x.chats#PostNotePostEntitiesUrlsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#PostNotePostEntitiesUrlsItem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#PostNotePostEntities": {
+      "type": "structure",
+      "members": {
+        "cashtags": {
+          "target": "com.x.chats#PostNotePostEntitiesCashtagsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "hashtags": {
+          "target": "com.x.chats#PostNotePostEntitiesHashtagsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "mentions": {
+          "target": "com.x.chats#PostNotePostEntitiesMentionsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "urls": {
+          "target": "com.x.chats#PostNotePostEntitiesUrlsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Metadata entities (hashtags, cashtags, mentions, URLs) found in the note Post text."
+      }
+    },
+    "com.x.chats#PostNoteRequestSuggestions": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#PostNoteRequestSuggestionsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "Community-Notes request suggestions for this Post."
+      }
+    },
+    "com.x.chats#PostNoteRequestSuggestionsItem": {
+      "type": "structure",
+      "members": {
+        "source_link": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "A suggested source link supporting the note request.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "suggestion": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The text of the note request suggestion.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "suggestion_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The unique identifier of the note request suggestion.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A Community-Notes request suggestion for this Post."
+      }
+    },
+    "com.x.chats#PostPublicMetrics": {
+      "type": "structure",
+      "members": {
+        "bookmark_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of times this Post has been bookmarked.",
+            "smithy.api#required": {}
+          }
+        },
+        "impression_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of times this Post has been viewed.",
+            "smithy.api#required": {}
+          }
+        },
+        "like_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of likes on this Post.",
+            "smithy.api#required": {}
+          }
+        },
+        "quote_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of quote Posts of this Post.",
+            "smithy.api#required": {}
+          }
+        },
+        "reply_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of replies to this Post.",
+            "smithy.api#required": {}
+          }
+        },
+        "repost_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of times this Post has been reposted.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Engagement metrics for the Post at the time of the request."
+      }
+    },
+    "com.x.chats#PostReferencedPosts": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#PostReferencedPostsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "A list of Posts this Post refers to. If the Post is a Retweet, Quote or Reply, it includes the referenced Post's type and ID."
+      }
+    },
+    "com.x.chats#PostReferencedPostsItemType": {
+      "type": "enum",
+      "members": {
+        "RETWEETED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "retweeted"
+          }
+        },
+        "QUOTED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "quoted"
+          }
+        },
+        "REPLIED_TO": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "replied_to"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "The kind of Post-to-Post reference."
+      }
+    },
+    "com.x.chats#PostReferencedPostsItem": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of the referenced Post.",
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.chats#PostReferencedPostsItemType",
+          "traits": {
+            "smithy.api#documentation": "How this Post references the other Post.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A reference from this Post to another Post (repost, quote, or reply)."
+      }
+    },
+    "com.x.chats#PostScopes": {
+      "type": "structure",
+      "members": {
+        "followers": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates whether visibility of this Post is limited to the author's followers.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "The scopes for this Post."
+      }
+    },
+    "com.x.chats#PostSuggestedSourceLinks": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "URLs suggested as sources for this Post."
+      }
+    },
+    "com.x.chats#PostSuggestedSourceLinksWithCounts": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#PostSuggestedSourceLinksWithCountsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "Suggested source URLs for this Post, each with the number of times it was suggested."
+      }
+    },
+    "com.x.chats#PostSuggestedSourceLinksWithCountsItem": {
+      "type": "structure",
+      "members": {
+        "count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of times this source link was suggested.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The suggested source URL.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A suggested source URL for this Post with the number of times it was suggested."
+      }
+    },
+    "com.x.chats#PostWithheld": {
+      "type": "structure",
+      "members": {
+        "copyright": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates whether this content is withheld due to a copyright claim.",
+            "smithy.api#required": {}
+          }
+        },
+        "country_codes": {
+          "target": "com.x.chats#PostWithheldCountryCodesList",
+          "traits": {
+            "smithy.api#documentation": "Uppercase ISO 3166-1 alpha-2 country codes where this content is withheld.",
+            "smithy.api#required": {}
+          }
+        },
+        "scope": {
+          "target": "com.x.chats#PostWithheldScope",
+          "traits": {
+            "smithy.api#documentation": "Whether the withholding applies to a Post or a User.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Withholding details for withheld content."
+      }
+    },
+    "com.x.chats#PostWithheldCountryCodesList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "Uppercase ISO 3166-1 alpha-2 country codes where this content is withheld."
+      }
+    },
+    "com.x.chats#PostWithheldScope": {
+      "type": "enum",
+      "members": {
+        "POST": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "post"
+          }
+        },
+        "USER": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "user"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Whether the withholding applies to a Post or a User."
+      }
+    },
+    "com.x.chats#ExpansionsPostsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Post"
+      },
+      "traits": {}
+    },
+    "com.x.chats#Topic": {
+      "type": "structure",
+      "members": {
+        "description": {
+          "target": "smithy.api#String"
+        },
+        "id": {
+          "target": "smithy.api#String"
+        },
+        "name": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#ExpansionsTopicsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Topic"
+      },
+      "traits": {}
+    },
+    "com.x.chats#User": {
+      "type": "structure",
+      "members": {
+        "affiliation": {
+          "target": "com.x.chats#UserAffiliation"
+        },
+        "confirmed_email": {
+          "target": "smithy.api#String"
+        },
+        "connection_status": {
+          "target": "com.x.chats#UserConnectionStatus"
+        },
+        "created_at": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Creation time of this User."
+          }
+        },
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The text of this User's profile description (also known as bio), if the User provided one."
+          }
+        },
+        "entities": {
+          "target": "com.x.chats#UserEntities"
+        },
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of this User."
+          }
+        },
+        "is_identity_verified": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates if this User has completed identity verification."
+          }
+        },
+        "location": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The location specified in the User's profile, if the User provided one. As this is a freeform value, it may not indicate a valid location."
+          }
+        },
+        "most_recent_post_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of this User's most recent Post."
+          }
+        },
+        "name": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The friendly name of this User, as shown on their profile."
+          }
+        },
+        "parody": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates if this User is a parody account."
+          }
+        },
+        "pinned_post_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of this User's pinned Post."
+          }
+        },
+        "profile_banner_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The URL to the profile banner for this User."
+          }
+        },
+        "profile_image_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The URL to the profile image for this User."
+          }
+        },
+        "protected": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates if this User has chosen to protect their Posts (in other words, if this User's Posts are private)."
+          }
+        },
+        "public_metrics": {
+          "target": "com.x.chats#UserPublicMetrics"
+        },
+        "receives_your_dm": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates if you can send a DM to this User."
+          }
+        },
+        "subscribes_to_you": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates if this User subscribes to you."
+          }
+        },
+        "subscription": {
+          "target": "com.x.chats#UserSubscription"
+        },
+        "subscription_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The X Blue subscription type of the user, e.g.: Basic, Premium, PremiumPlus or None."
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The URL specified in the User's profile."
+          }
+        },
+        "username": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The X handle (screen name) of this User."
+          }
+        },
+        "verified": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates if this User is a verified X User."
+          }
+        },
+        "verified_followers_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "The number of verified followers of this User."
+          }
+        },
+        "verified_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The X Blue verified type of the user, e.g.: blue, government, business or none."
+          }
+        },
+        "withheld": {
+          "target": "com.x.chats#UserWithheld"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#UserAffiliation": {
+      "type": "structure",
+      "members": {
+        "badge_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "URL of the affiliation badge image shown on the User's profile.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Description of the affiliation.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "URL associated with the affiliation.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "user_id": {
+          "target": "com.x.chats#UserAffiliationUserIdList",
+          "traits": {
+            "smithy.api#documentation": "A list of unique identifiers of the accounts this User is affiliated with.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Metadata about a user's affiliation."
+      }
+    },
+    "com.x.chats#UserAffiliationUserIdList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "A list of unique identifiers of the accounts this User is affiliated with."
+      }
+    },
+    "com.x.chats#UserConnectionStatus": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#UserConnectionStatusItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "Returns detailed information about the relationship between two users."
+      }
+    },
+    "com.x.chats#UserConnectionStatusItem": {
+      "type": "enum",
+      "members": {
+        "BLOCKING": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "blocking"
+          }
+        },
+        "FOLLOW_REQUEST_RECEIVED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "follow_request_received"
+          }
+        },
+        "FOLLOW_REQUEST_SENT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "follow_request_sent"
+          }
+        },
+        "FOLLOWED_BY": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "followed_by"
+          }
+        },
+        "FOLLOWING": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "following"
+          }
+        },
+        "MUTING": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "muting"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A connection between the authenticated User and this User."
+      }
+    },
+    "com.x.chats#UserEntities": {
+      "type": "structure",
+      "members": {
+        "description": {
+          "target": "com.x.chats#UserEntitiesDescription",
+          "traits": {
+            "smithy.api#documentation": "Entities found in the User's bio.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "url": {
+          "target": "com.x.chats#UserEntitiesUrl",
+          "traits": {
+            "smithy.api#documentation": "Entities for the User's profile website URL.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A list of metadata found in the User's profile description."
+      }
+    },
+    "com.x.chats#UserEntitiesDescriptionCashtagsItem": {
+      "type": "structure",
+      "members": {
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "End index in the text (exclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Start index in the text (inclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "tag": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A hashtag or cashtag entity."
+      }
+    },
+    "com.x.chats#UserEntitiesDescriptionCashtagsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#UserEntitiesDescriptionCashtagsItem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#UserEntitiesDescriptionHashtagsItem": {
+      "type": "structure",
+      "members": {
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "End index in the text (exclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Start index in the text (inclusive).",
+            "smithy.api#required": {}
+          }
+        },
+        "tag": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A hashtag or cashtag entity."
+      }
+    },
+    "com.x.chats#UserEntitiesDescriptionHashtagsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#UserEntitiesDescriptionHashtagsItem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#UserEntitiesDescriptionMentionsItem": {
+      "type": "structure",
+      "members": {
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "username": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A user mention entity."
+      }
+    },
+    "com.x.chats#UserEntitiesDescriptionMentionsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#UserEntitiesDescriptionMentionsItem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#UserEntitiesDescriptionUrlsItemImagesItem": {
+      "type": "structure",
+      "members": {
+        "height": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "width": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A preview image for a linked page."
+      }
+    },
+    "com.x.chats#UserEntitiesDescriptionUrlsItemImagesList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#UserEntitiesDescriptionUrlsItemImagesItem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#UserEntitiesDescriptionUrlsItem": {
+      "type": "structure",
+      "members": {
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Description of the linked page, when available.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "display_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The URL as displayed in the Post text.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "expanded_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The fully resolved URL.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "images": {
+          "target": "com.x.chats#UserEntitiesDescriptionUrlsItemImagesList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "media_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "HTTP status from resolving the URL.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Title of the linked page, when available.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "unwound_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The final destination after following redirects.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The t.co shortened URL.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A URL entity found in profile text."
+      }
+    },
+    "com.x.chats#UserEntitiesDescriptionUrlsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#UserEntitiesDescriptionUrlsItem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#UserEntitiesDescription": {
+      "type": "structure",
+      "members": {
+        "cashtags": {
+          "target": "com.x.chats#UserEntitiesDescriptionCashtagsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "hashtags": {
+          "target": "com.x.chats#UserEntitiesDescriptionHashtagsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "mentions": {
+          "target": "com.x.chats#UserEntitiesDescriptionMentionsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "urls": {
+          "target": "com.x.chats#UserEntitiesDescriptionUrlsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Entities found in the User's bio."
+      }
+    },
+    "com.x.chats#UserEntitiesUrlUrlsItemImagesItem": {
+      "type": "structure",
+      "members": {
+        "height": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "width": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A preview image for a linked page."
+      }
+    },
+    "com.x.chats#UserEntitiesUrlUrlsItemImagesList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#UserEntitiesUrlUrlsItemImagesItem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#UserEntitiesUrlUrlsItem": {
+      "type": "structure",
+      "members": {
+        "description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Description of the linked page, when available.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "display_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The URL as displayed in the Post text.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "end": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "expanded_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The fully resolved URL.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "images": {
+          "target": "com.x.chats#UserEntitiesUrlUrlsItemImagesList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "media_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "start": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "HTTP status from resolving the URL.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Title of the linked page, when available.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "unwound_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The final destination after following redirects.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The t.co shortened URL.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A URL entity found in profile text."
+      }
+    },
+    "com.x.chats#UserEntitiesUrlUrlsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#UserEntitiesUrlUrlsItem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#UserEntitiesUrl": {
+      "type": "structure",
+      "members": {
+        "urls": {
+          "target": "com.x.chats#UserEntitiesUrlUrlsList",
+          "traits": {
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Entities for the User's profile website URL."
+      }
+    },
+    "com.x.chats#UserPublicMetrics": {
+      "type": "structure",
+      "members": {
+        "followers_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of Users who follow this User.",
+            "smithy.api#required": {}
+          }
+        },
+        "following_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of Users this User follows.",
+            "smithy.api#required": {}
+          }
+        },
+        "like_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of Posts this User has liked.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "listed_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of Lists that include this User.",
+            "smithy.api#required": {}
+          }
+        },
+        "media_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of media items posted by this User.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "post_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of Posts (including Reposts) created by this User.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "A list of metrics for this User."
+      }
+    },
+    "com.x.chats#UserSubscription": {
+      "type": "structure",
+      "members": {
+        "subscribes_to_you": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Indicates if this User subscribes to you.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "The subscription relationship between this User and you."
+      }
+    },
+    "com.x.chats#UserWithheld": {
+      "type": "structure",
+      "members": {
+        "country_codes": {
+          "target": "com.x.chats#UserWithheldCountryCodesList",
+          "traits": {
+            "smithy.api#documentation": "A list of countries (as ISO 3166-1 alpha-2 codes) where this content is withheld.",
+            "com.distilled.openapi#nullable": {}
+          }
+        },
+        "scope": {
+          "target": "com.x.chats#UserWithheldScope",
+          "traits": {
+            "smithy.api#documentation": "The scope of the withholding. Only present, with the value \"user\", when the entire User is withheld.",
+            "com.distilled.openapi#nullable": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Withholding details for withheld content."
+      }
+    },
+    "com.x.chats#UserWithheldCountryCodesList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "A list of countries (as ISO 3166-1 alpha-2 codes) where this content is withheld."
+      }
+    },
+    "com.x.chats#UserWithheldScope": {
+      "type": "enum",
+      "members": {
+        "USER": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "user"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "The scope of the withholding. Only present, with the value \"user\", when the entire User is withheld."
+      }
+    },
+    "com.x.chats#ExpansionsUsersList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#User"
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetChatConversationsResponseMeta": {
+      "type": "structure",
+      "members": {
+        "has_message_requests": {
+          "target": "smithy.api#Boolean"
+        },
+        "has_more": {
+          "target": "smithy.api#Boolean"
+        },
+        "next_token": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Pagination token for the next page of results."
+          }
+        },
+        "result_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of items in the data array."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetChatConversations": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.chats#GetChatConversationsRequest"
+      },
+      "output": {
+        "target": "com.x.chats#GetChatConversationsResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "GET",
+          "uri": "/2/chat/conversations",
+          "code": 200
+        },
+        "smithy.api#documentation": "Get Chat Conversations\n\nRetrieves a list of Chat conversations for the authenticated user's inbox."
+      }
+    },
+    "com.x.chats#CreateChatConversationActionSignatures": {
+      "type": "structure",
+      "members": {
+        "encoded_message_event_detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Base64-encoded message event detail.",
+            "smithy.api#required": {}
+          }
+        },
+        "message_event_signature": {
+          "target": "com.x.chats#CreateChatConversationActionSignaturesMessageEventSignature",
+          "traits": {
+            "smithy.api#documentation": "Message event signature supplied with an action signature.",
+            "smithy.api#required": {}
+          }
+        },
+        "message_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Client-generated ID of the message being signed.",
+            "smithy.api#required": {}
+          }
+        },
+        "signature_payload": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Payload string the client signed; used only in server-side failure logs."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#CreateChatConversationActionSignaturesMessageEventSignature": {
+      "type": "structure",
+      "members": {
+        "message_signing_key_info_list": {
+          "target": "com.x.chats#CreateChatConversationActionSignaturesMessageEventSignatureMessageSigningKeyInfoListList",
+          "traits": {
+            "smithy.api#documentation": "List of signing key information for message verification."
+          }
+        },
+        "public_key_version": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The version of the public key used for signing.",
+            "smithy.api#required": {}
+          }
+        },
+        "signature": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The signature of the message event.",
+            "smithy.api#required": {}
+          }
+        },
+        "signature_version": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The version of the signature algorithm.",
+            "smithy.api#required": {}
+          }
+        },
+        "signing_public_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The public key used for signing."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#CreateChatConversationActionSignaturesMessageEventSignatureMessageSigningKeyInfoList": {
+      "type": "structure",
+      "members": {
+        "member_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The member ID associated with this signing key."
+          }
+        },
+        "public_key_version": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The version of the public key."
+          }
+        },
+        "signing_public_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The signing public key."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#CreateChatConversationActionSignaturesMessageEventSignatureMessageSigningKeyInfoListList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#CreateChatConversationActionSignaturesMessageEventSignatureMessageSigningKeyInfoList"
+      },
+      "traits": {
+        "smithy.api#documentation": "List of signing key information for message verification."
+      }
+    },
+    "com.x.chats#CreateChatConversationRequestActionSignaturesList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#CreateChatConversationActionSignatures"
+      },
+      "traits": {
+        "smithy.api#documentation": "Cryptographic signatures for the action."
+      }
+    },
+    "com.x.chats#CreateChatConversationConversationParticipantKeys": {
+      "type": "structure",
+      "members": {
+        "encrypted_conversation_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Conversation key encrypted with this participant's public key."
+          }
+        },
+        "public_key_version": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Version of the participant's public key used for encryption."
+          }
+        },
+        "user_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Participant user ID."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#CreateChatConversationRequestConversationParticipantKeysList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#CreateChatConversationConversationParticipantKeys"
+      },
+      "traits": {
+        "smithy.api#documentation": "Encrypted conversation keys for each participant."
+      }
+    },
+    "com.x.chats#CreateChatConversationRequestGroupAdminsList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "User IDs of group admins. Defaults to the creator if omitted."
+      }
+    },
+    "com.x.chats#CreateChatConversationRequestGroupMembersList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "User IDs of group members to include in the conversation."
+      }
+    },
+    "com.x.chats#CreateChatConversationRequest": {
+      "type": "structure",
+      "members": {
+        "action_signatures": {
+          "target": "com.x.chats#CreateChatConversationRequestActionSignaturesList",
+          "traits": {
+            "smithy.api#documentation": "Cryptographic signatures for the action."
+          }
+        },
+        "base64_encoded_key_rotation": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Base64-encoded key rotation payload."
+          }
+        },
+        "conversation_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Client-generated conversation ID.",
+            "smithy.api#required": {}
+          }
+        },
+        "conversation_key_version": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Version of the conversation encryption key.",
+            "smithy.api#required": {}
+          }
+        },
+        "conversation_participant_keys": {
+          "target": "com.x.chats#CreateChatConversationRequestConversationParticipantKeysList",
+          "traits": {
+            "smithy.api#documentation": "Encrypted conversation keys for each participant.",
+            "smithy.api#required": {}
+          }
+        },
+        "group_admins": {
+          "target": "com.x.chats#CreateChatConversationRequestGroupAdminsList",
+          "traits": {
+            "smithy.api#documentation": "User IDs of group admins. Defaults to the creator if omitted."
+          }
+        },
+        "group_avatar_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "URL of the avatar image for the group conversation."
+          }
+        },
+        "group_description": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Description for the group conversation."
+          }
+        },
+        "group_members": {
+          "target": "com.x.chats#CreateChatConversationRequestGroupMembersList",
+          "traits": {
+            "smithy.api#documentation": "User IDs of group members to include in the conversation.",
+            "smithy.api#required": {}
+          }
+        },
+        "group_name": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Display name for the group conversation."
+          }
+        },
+        "ttl_msec": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Message time-to-live in milliseconds. Messages expire after this duration."
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.chats#CreateChatConversationResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.chats#CreateChatConversationResponseData"
+        },
+        "errors": {
+          "target": "com.x.chats#CreateChatConversationResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#CreateChatConversationResponseData": {
+      "type": "structure",
+      "members": {
+        "conversation_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Canonical ID of the created conversation.",
+            "smithy.api#required": {}
+          }
+        },
+        "conversation_key_change_sequence_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Sequence ID of the conversation key change."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#CreateChatConversationResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#CreateChatConversation": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.chats#CreateChatConversationRequest"
+      },
+      "output": {
+        "target": "com.x.chats#CreateChatConversationResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/chat/conversations/group",
+          "code": 200
+        },
+        "smithy.api#documentation": "Create Chat Group Conversation\n\nCreates a new encrypted Chat group conversation on behalf of the authenticated user."
+      }
+    },
+    "com.x.chats#InitializeChatGroupResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.chats#InitializeChatGroupResponseData"
+        },
+        "errors": {
+          "target": "com.x.chats#InitializeChatGroupResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#InitializeChatGroupResponseData": {
+      "type": "structure",
+      "members": {
+        "conversation_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique ID for the new group conversation.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#InitializeChatGroupResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#InitializeChatGroup": {
+      "type": "operation",
+      "input": {
+        "target": "smithy.api#Unit"
+      },
+      "output": {
+        "target": "com.x.chats#InitializeChatGroupResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/chat/conversations/group/initialize",
+          "code": 200
+        },
+        "smithy.api#documentation": "Initialize Chat Group\n\nInitializes a new Chat group conversation and returns a unique conversation ID. Use the returned conversation_id in a subsequent POST /chat/conversations/group call to fully create and configure the group."
+      }
+    },
+    "com.x.chats#GetChatConversationRequestChatConversationFieldsItem": {
+      "type": "enum",
+      "members": {
+        "CREATED_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "created_at"
+          }
+        },
+        "GROUP_AVATAR_URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "group_avatar_url"
+          }
+        },
+        "GROUP_NAME": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "group_name"
+          }
+        },
+        "ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "id"
+          }
+        },
+        "IS_MUTED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "is_muted"
+          }
+        },
+        "MESSAGE_TTL_MS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "message_ttl_ms"
+          }
+        },
+        "SCREEN_CAPTURE_BLOCKING_ENABLED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "screen_capture_blocking_enabled"
+          }
+        },
+        "SCREEN_CAPTURE_DETECTION_ENABLED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "screen_capture_detection_enabled"
+          }
+        },
+        "TYPE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "type"
+          }
+        },
+        "UPDATED_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "updated_at"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetChatConversationRequestChatConversationFieldsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#GetChatConversationRequestChatConversationFieldsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "The fields available for a ChatConversation object."
+      }
+    },
+    "com.x.chats#GetChatConversationRequestExpansionsItem": {
+      "type": "enum",
+      "members": {
+        "ADMIN_IDS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "admin_ids"
+          }
+        },
+        "MEMBER_IDS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "member_ids"
+          }
+        },
+        "PARTICIPANT_IDS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "participant_ids"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetChatConversationRequestExpansionsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#GetChatConversationRequestExpansionsItem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetChatConversationRequestUserFieldsItem": {
+      "type": "enum",
+      "members": {
+        "CONFIRMED_EMAIL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "confirmed_email"
+          }
+        },
+        "CONNECTION_STATUS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "connection_status"
+          }
+        },
+        "CREATED_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "created_at"
+          }
+        },
+        "DESCRIPTION": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "description"
+          }
+        },
+        "ENTITIES": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "entities"
+          }
+        },
+        "ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "id"
+          }
+        },
+        "IS_IDENTITY_VERIFIED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "is_identity_verified"
+          }
+        },
+        "LOCATION": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "location"
+          }
+        },
+        "NAME": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "name"
+          }
+        },
+        "PARODY": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "parody"
+          }
+        },
+        "PROFILE_BANNER_URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "profile_banner_url"
+          }
+        },
+        "PROFILE_IMAGE_URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "profile_image_url"
+          }
+        },
+        "PROTECTED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "protected"
+          }
+        },
+        "PUBLIC_METRICS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "public_metrics"
+          }
+        },
+        "RECEIVES_YOUR_DM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "receives_your_dm"
+          }
+        },
+        "SUBSCRIBES_TO_YOU": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "subscribes_to_you"
+          }
+        },
+        "SUBSCRIPTION": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "subscription"
+          }
+        },
+        "SUBSCRIPTION_TYPE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "subscription_type"
+          }
+        },
+        "URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "url"
+          }
+        },
+        "USERNAME": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "username"
+          }
+        },
+        "VERIFIED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "verified"
+          }
+        },
+        "VERIFIED_FOLLOWERS_COUNT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "verified_followers_count"
+          }
+        },
+        "VERIFIED_TYPE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "verified_type"
+          }
+        },
+        "WITHHELD": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "withheld"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetChatConversationRequestUserFieldsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#GetChatConversationRequestUserFieldsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "The fields available for a User object."
+      }
+    },
+    "com.x.chats#GetChatConversationRequest": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        },
+        "chat_conversation_fields": {
+          "target": "com.x.chats#GetChatConversationRequestChatConversationFieldsList",
+          "traits": {
+            "smithy.api#httpQuery": "chat_conversation.fields",
+            "smithy.api#documentation": "A comma separated list of ChatConversation fields to display."
+          }
+        },
+        "expansions": {
+          "target": "com.x.chats#GetChatConversationRequestExpansionsList",
+          "traits": {
+            "smithy.api#httpQuery": "expansions",
+            "smithy.api#documentation": "A comma separated list of fields to expand."
+          }
+        },
+        "user_fields": {
+          "target": "com.x.chats#GetChatConversationRequestUserFieldsList",
+          "traits": {
+            "smithy.api#httpQuery": "user.fields",
+            "smithy.api#documentation": "A comma separated list of User fields to display."
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.chats#GetChatConversationResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.chats#ChatConversation"
+        },
+        "errors": {
+          "target": "com.x.chats#GetChatConversationResponseErrorsList"
+        },
+        "includes": {
+          "target": "com.x.chats#Expansions"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetChatConversationResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetChatConversation": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.chats#GetChatConversationRequest"
+      },
+      "output": {
+        "target": "com.x.chats#GetChatConversationResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "GET",
+          "uri": "/2/chat/conversations/{id}",
+          "code": 200
+        },
+        "smithy.api#documentation": "Get Chat Conversation\n\nReturns metadata for a Chat conversation including type, muted status, and group details. Use chat_conversation.fields to select which fields are returned. Use expansions to hydrate member, admin, or participant user objects. Use user.fields to control which profile fields are returned for expanded users."
+      }
+    },
+    "com.x.chats#GetChatConversationEventsRequestChatMessageEventFieldsItem": {
+      "type": "enum",
+      "members": {
+        "CONVERSATION_ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "conversation_id"
+          }
+        },
+        "CONVERSATION_TOKEN": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "conversation_token"
+          }
+        },
+        "CREATED_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "created_at"
+          }
+        },
+        "ENCODED_EVENT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "encoded_event"
+          }
+        },
+        "ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "id"
+          }
+        },
+        "IS_TRUSTED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "is_trusted"
+          }
+        },
+        "MESSAGE_EVENT_SIGNATURE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "message_event_signature"
+          }
+        },
+        "PREVIOUS_ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "previous_id"
+          }
+        },
+        "SENDER_ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "sender_id"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetChatConversationEventsRequestChatMessageEventFieldsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#GetChatConversationEventsRequestChatMessageEventFieldsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "The fields available for a ChatMessageEvent object."
+      }
+    },
+    "com.x.chats#GetChatConversationEventsRequest": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        },
+        "max_results": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#httpQuery": "max_results"
+          }
+        },
+        "pagination_token": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpQuery": "pagination_token"
+          }
+        },
+        "chat_message_event_fields": {
+          "target": "com.x.chats#GetChatConversationEventsRequestChatMessageEventFieldsList",
+          "traits": {
+            "smithy.api#httpQuery": "chat_message_event.fields",
+            "smithy.api#documentation": "A comma separated list of ChatMessageEvent fields to display."
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.chats#GetChatConversationEventsResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.chats#GetChatConversationEventsResponseDataList"
+        },
+        "errors": {
+          "target": "com.x.chats#GetChatConversationEventsResponseErrorsList"
+        },
+        "meta": {
+          "target": "com.x.chats#GetChatConversationEventsResponseMeta"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#ChatMessageEvent": {
+      "type": "structure",
+      "members": {
+        "conversation_id": {
+          "target": "smithy.api#String"
+        },
+        "conversation_token": {
+          "target": "smithy.api#String"
+        },
+        "created_at": {
+          "target": "smithy.api#String"
+        },
+        "encoded_event": {
+          "target": "smithy.api#String"
+        },
+        "id": {
+          "target": "smithy.api#String"
+        },
+        "is_trusted": {
+          "target": "smithy.api#Boolean"
+        },
+        "message_event_signature": {
+          "target": "smithy.api#Document"
+        },
+        "previous_id": {
+          "target": "smithy.api#String"
+        },
+        "sender_id": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetChatConversationEventsResponseDataList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#ChatMessageEvent"
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetChatConversationEventsResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetChatConversationEventsResponseMetaConversationKeyEventsList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetChatConversationEventsResponseMeta": {
+      "type": "structure",
+      "members": {
+        "conversation_key_events": {
+          "target": "com.x.chats#GetChatConversationEventsResponseMetaConversationKeyEventsList"
+        },
+        "has_more": {
+          "target": "smithy.api#Boolean"
+        },
+        "next_token": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Pagination token for the next page of results."
+          }
+        },
+        "result_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of items in the data array."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetChatConversationEvents": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.chats#GetChatConversationEventsRequest"
+      },
+      "output": {
+        "target": "com.x.chats#GetChatConversationEventsResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "GET",
+          "uri": "/2/chat/conversations/{id}/events",
+          "code": 200
+        },
+        "smithy.api#documentation": "Get Chat Conversation Events\n\nRetrieves messages and key change events for a specific Chat conversation with pagination support. For 1:1 conversations, provide the recipient's user ID; the server constructs the canonical conversation ID from the authenticated user and recipient."
+      }
+    },
+    "com.x.chats#AddConversationKeysActionSignatures": {
+      "type": "structure",
+      "members": {
+        "encoded_message_event_detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Base64-encoded message event detail.",
+            "smithy.api#required": {}
+          }
+        },
+        "message_event_signature": {
+          "target": "com.x.chats#AddConversationKeysActionSignaturesMessageEventSignature",
+          "traits": {
+            "smithy.api#documentation": "Message event signature supplied with an action signature.",
+            "smithy.api#required": {}
+          }
+        },
+        "message_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Client-generated ID of the message being signed.",
+            "smithy.api#required": {}
+          }
+        },
+        "signature_payload": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Payload string the client signed; used only in server-side failure logs."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#AddConversationKeysActionSignaturesMessageEventSignature": {
+      "type": "structure",
+      "members": {
+        "message_signing_key_info_list": {
+          "target": "com.x.chats#AddConversationKeysActionSignaturesMessageEventSignatureMessageSigningKeyInfoListList",
+          "traits": {
+            "smithy.api#documentation": "List of signing key information for message verification."
+          }
+        },
+        "public_key_version": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The version of the public key used for signing.",
+            "smithy.api#required": {}
+          }
+        },
+        "signature": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The signature of the message event.",
+            "smithy.api#required": {}
+          }
+        },
+        "signature_version": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The version of the signature algorithm.",
+            "smithy.api#required": {}
+          }
+        },
+        "signing_public_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The public key used for signing."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#AddConversationKeysActionSignaturesMessageEventSignatureMessageSigningKeyInfoList": {
+      "type": "structure",
+      "members": {
+        "member_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The member ID associated with this signing key."
+          }
+        },
+        "public_key_version": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The version of the public key."
+          }
+        },
+        "signing_public_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The signing public key."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#AddConversationKeysActionSignaturesMessageEventSignatureMessageSigningKeyInfoListList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#AddConversationKeysActionSignaturesMessageEventSignatureMessageSigningKeyInfoList"
+      },
+      "traits": {
+        "smithy.api#documentation": "List of signing key information for message verification."
+      }
+    },
+    "com.x.chats#AddConversationKeysRequestActionSignaturesList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#AddConversationKeysActionSignatures"
+      },
+      "traits": {
+        "smithy.api#documentation": "Cryptographic signatures for the action."
+      }
+    },
+    "com.x.chats#AddConversationKeysConversationParticipantKeys": {
+      "type": "structure",
+      "members": {
+        "encrypted_conversation_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Conversation key encrypted with this participant's public key."
+          }
+        },
+        "public_key_version": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Version of the participant's public key used for encryption."
+          }
+        },
+        "user_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Participant user ID."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#AddConversationKeysRequestConversationParticipantKeysList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#AddConversationKeysConversationParticipantKeys"
+      },
+      "traits": {
+        "smithy.api#documentation": "Encrypted conversation keys for each participant."
+      }
+    },
+    "com.x.chats#AddConversationKeysRequest": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        },
+        "action_signatures": {
+          "target": "com.x.chats#AddConversationKeysRequestActionSignaturesList",
+          "traits": {
+            "smithy.api#documentation": "Cryptographic signatures for the action."
+          }
+        },
+        "base64_encoded_key_rotation": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Base64-encoded key rotation payload for ratchet tree key management."
+          }
+        },
+        "conversation_key_version": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Version of the conversation encryption key (typically a timestamp in milliseconds).",
+            "smithy.api#required": {}
+          }
+        },
+        "conversation_participant_keys": {
+          "target": "com.x.chats#AddConversationKeysRequestConversationParticipantKeysList",
+          "traits": {
+            "smithy.api#documentation": "Encrypted conversation keys for each participant.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.chats#AddConversationKeysResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.chats#AddConversationKeysResponseData"
+        },
+        "errors": {
+          "target": "com.x.chats#AddConversationKeysResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#AddConversationKeysResponseData": {
+      "type": "structure",
+      "members": {
+        "conversation_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Canonical ID of the conversation."
+          }
+        },
+        "sequence_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Sequence ID of the key change."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#AddConversationKeysResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#AddConversationKeys": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.chats#AddConversationKeysRequest"
+      },
+      "output": {
+        "target": "com.x.chats#AddConversationKeysResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/chat/conversations/{id}/keys",
+          "code": 200
+        },
+        "smithy.api#documentation": "Add Conversation Keys\n\nAdds (initializes or rotates) the encryption keys for a Chat conversation. Call this before sending messages in a new 1:1 conversation, and again with a newer key version to rotate the conversation key. For 1:1 conversations, provide the recipient's user ID as the conversation id; the server constructs the canonical conversation ID from the authenticated user and recipient. The request body must contain the conversation key version and participant keys (the conversation key encrypted for each participant using their public key)."
+      }
+    },
+    "com.x.chats#AddChatGroupMembersActionSignatures": {
+      "type": "structure",
+      "members": {
+        "encoded_message_event_detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Base64-encoded message event detail.",
+            "smithy.api#required": {}
+          }
+        },
+        "message_event_signature": {
+          "target": "com.x.chats#AddChatGroupMembersActionSignaturesMessageEventSignature",
+          "traits": {
+            "smithy.api#documentation": "Message event signature supplied with an action signature.",
+            "smithy.api#required": {}
+          }
+        },
+        "message_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Client-generated ID of the message being signed.",
+            "smithy.api#required": {}
+          }
+        },
+        "signature_payload": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Payload string the client signed; used only in server-side failure logs."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#AddChatGroupMembersActionSignaturesMessageEventSignature": {
+      "type": "structure",
+      "members": {
+        "message_signing_key_info_list": {
+          "target": "com.x.chats#AddChatGroupMembersActionSignaturesMessageEventSignatureMessageSigningKeyInfoListList",
+          "traits": {
+            "smithy.api#documentation": "List of signing key information for message verification."
+          }
+        },
+        "public_key_version": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The version of the public key used for signing.",
+            "smithy.api#required": {}
+          }
+        },
+        "signature": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The signature of the message event.",
+            "smithy.api#required": {}
+          }
+        },
+        "signature_version": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The version of the signature algorithm.",
+            "smithy.api#required": {}
+          }
+        },
+        "signing_public_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The public key used for signing."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#AddChatGroupMembersActionSignaturesMessageEventSignatureMessageSigningKeyInfoList": {
+      "type": "structure",
+      "members": {
+        "member_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The member ID associated with this signing key."
+          }
+        },
+        "public_key_version": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The version of the public key."
+          }
+        },
+        "signing_public_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The signing public key."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#AddChatGroupMembersActionSignaturesMessageEventSignatureMessageSigningKeyInfoListList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#AddChatGroupMembersActionSignaturesMessageEventSignatureMessageSigningKeyInfoList"
+      },
+      "traits": {
+        "smithy.api#documentation": "List of signing key information for message verification."
+      }
+    },
+    "com.x.chats#AddChatGroupMembersRequestActionSignaturesList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#AddChatGroupMembersActionSignatures"
+      },
+      "traits": {
+        "smithy.api#documentation": "Cryptographic signatures for the action."
+      }
+    },
+    "com.x.chats#AddChatGroupMembersConversationParticipantKeys": {
+      "type": "structure",
+      "members": {
+        "encrypted_conversation_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Conversation key encrypted with this participant's public key."
+          }
+        },
+        "public_key_version": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Version of the participant's public key used for encryption."
+          }
+        },
+        "user_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Participant user ID."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#AddChatGroupMembersRequestConversationParticipantKeysList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#AddChatGroupMembersConversationParticipantKeys"
+      },
+      "traits": {
+        "smithy.api#documentation": "Encrypted conversation keys for each participant."
+      }
+    },
+    "com.x.chats#AddChatGroupMembersRequestUserIdsList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {
+        "smithy.api#documentation": "List of user IDs to add to the group conversation."
+      }
+    },
+    "com.x.chats#AddChatGroupMembersRequest": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        },
+        "action_signatures": {
+          "target": "com.x.chats#AddChatGroupMembersRequestActionSignaturesList",
+          "traits": {
+            "smithy.api#documentation": "Cryptographic signatures for the action."
+          }
+        },
+        "conversation_key_version": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Version of the new rotated conversation key."
+          }
+        },
+        "conversation_participant_keys": {
+          "target": "com.x.chats#AddChatGroupMembersRequestConversationParticipantKeysList",
+          "traits": {
+            "smithy.api#documentation": "Encrypted conversation keys for each participant."
+          }
+        },
+        "encrypted_avatar_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Re-encrypted group avatar URL with new conversation key."
+          }
+        },
+        "encrypted_title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Re-encrypted group title with new conversation key."
+          }
+        },
+        "user_ids": {
+          "target": "com.x.chats#AddChatGroupMembersRequestUserIdsList",
+          "traits": {
+            "smithy.api#documentation": "List of user IDs to add to the group conversation.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.chats#AddChatGroupMembersResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.chats#Post"
+        },
+        "errors": {
+          "target": "com.x.chats#AddChatGroupMembersResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#AddChatGroupMembersResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#AddChatGroupMembers": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.chats#AddChatGroupMembersRequest"
+      },
+      "output": {
+        "target": "com.x.chats#AddChatGroupMembersResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/chat/conversations/{id}/members",
+          "code": 200
+        },
+        "smithy.api#documentation": "Add members to a Chat group conversation\n\nAdds one or more members to an existing encrypted Chat group conversation, rotating the conversation key."
+      }
+    },
+    "com.x.chats#SendChatMessageRequest": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        },
+        "conversation_token": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional conversation token."
+          }
+        },
+        "encoded_message_create_event": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Base64-encoded Thrift MessageCreateEvent containing encrypted message contents.",
+            "smithy.api#required": {}
+          }
+        },
+        "encoded_message_event_signature": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Base64-encoded Thrift MessageEventSignature for message verification."
+          }
+        },
+        "message_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier for this message.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.chats#SendChatMessageResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.chats#SendChatMessageResponseData"
+        },
+        "errors": {
+          "target": "com.x.chats#SendChatMessageResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#SendChatMessageResponseData": {
+      "type": "structure",
+      "members": {
+        "encoded_message_event": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Base64-encoded Thrift message event for the sent message.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#SendChatMessageResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#SendChatMessage": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.chats#SendChatMessageRequest"
+      },
+      "output": {
+        "target": "com.x.chats#SendChatMessageResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/chat/conversations/{id}/messages",
+          "code": 200
+        },
+        "smithy.api#documentation": "Send Chat Message\n\nSends an encrypted message to a specific Chat conversation. For 1:1 conversations, provide the recipient's user ID; the server constructs the canonical conversation ID from the authenticated user and recipient."
+      }
+    },
+    "com.x.chats#MarkChatConversationReadRequest": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        },
+        "seen_until_sequence_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The sequence ID of the last message to mark as read up to.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.chats#MarkChatConversationReadResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.chats#MarkChatConversationReadResponseData"
+        },
+        "errors": {
+          "target": "com.x.chats#MarkChatConversationReadResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#MarkChatConversationReadResponseData": {
+      "type": "structure",
+      "members": {
+        "success": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Whether the conversation was marked read.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#MarkChatConversationReadResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#MarkChatConversationRead": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.chats#MarkChatConversationReadRequest"
+      },
+      "output": {
+        "target": "com.x.chats#MarkChatConversationReadResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/chat/conversations/{id}/read",
+          "code": 200
+        },
+        "smithy.api#documentation": "Mark Conversation as Read\n\nMarks a specific Chat conversation as read on behalf of the authenticated user. For 1:1 conversations, provide the recipient's user ID; the server constructs the canonical conversation ID from the authenticated user and recipient."
+      }
+    },
+    "com.x.chats#SendChatTypingIndicatorRequest": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.chats#SendChatTypingIndicatorResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.chats#SendChatTypingIndicatorResponseData"
+        },
+        "errors": {
+          "target": "com.x.chats#SendChatTypingIndicatorResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#SendChatTypingIndicatorResponseData": {
+      "type": "structure",
+      "members": {
+        "success": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Whether the typing indicator was sent.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#SendChatTypingIndicatorResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#SendChatTypingIndicator": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.chats#SendChatTypingIndicatorRequest"
+      },
+      "output": {
+        "target": "com.x.chats#SendChatTypingIndicatorResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/chat/conversations/{id}/typing",
+          "code": 200
+        },
+        "smithy.api#documentation": "Send Typing Indicator\n\nSends a typing indicator to a specific Chat conversation on behalf of the authenticated user. For 1:1 conversations, provide the recipient's user ID; the server constructs the canonical conversation ID from the authenticated user and recipient."
+      }
+    },
+    "com.x.chats#ChatMediaUploadInitializeRequest": {
+      "type": "structure",
+      "members": {
+        "conversation_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The XChat conversation the upload belongs to.",
+            "smithy.api#required": {}
+          }
+        },
+        "total_bytes": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Total size of the media upload in bytes.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.chats#ChatMediaUploadInitializeResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.chats#ChatMediaUploadInitializeResponseData"
+        },
+        "errors": {
+          "target": "com.x.chats#ChatMediaUploadInitializeResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#ChatMediaUploadInitializeResponseData": {
+      "type": "structure",
+      "members": {
+        "conversation_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Canonical ID of the conversation.",
+            "smithy.api#required": {}
+          }
+        },
+        "media_hash_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Hash key addressing the uploaded media.",
+            "smithy.api#required": {}
+          }
+        },
+        "session_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Upload session ID.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#ChatMediaUploadInitializeResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#ChatMediaUploadInitialize": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.chats#ChatMediaUploadInitializeRequest"
+      },
+      "output": {
+        "target": "com.x.chats#ChatMediaUploadInitializeResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/chat/media/upload/initialize",
+          "code": 200
+        },
+        "smithy.api#documentation": "Initialize Chat Media Upload\n\nInitializes an XChat media upload session."
+      }
+    },
+    "com.x.chats#ChatMediaUploadAppendRequest": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        },
+        "conversation_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The XChat conversation the upload belongs to.",
+            "smithy.api#required": {}
+          }
+        },
+        "media": {
+          "target": "com.x.chats#MediaData",
+          "traits": {
+            "smithy.api#documentation": "The media segment bytes: base64-encoded in JSON bodies, raw bytes in multipart bodies.",
+            "smithy.api#required": {}
+          }
+        },
+        "media_hash_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The media hash key returned by the initialize step.",
+            "smithy.api#required": {}
+          }
+        },
+        "segment_index": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "The index of this segment in the upload sequence.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.chats#ChatMediaUploadAppendResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.chats#ChatMediaUploadAppendResponseData"
+        },
+        "errors": {
+          "target": "com.x.chats#ChatMediaUploadAppendResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#ChatMediaUploadAppendResponseData": {
+      "type": "structure",
+      "members": {
+        "expires_at": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Epoch seconds when the upload session expires."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#ChatMediaUploadAppendResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#ChatMediaUploadAppend": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.chats#ChatMediaUploadAppendRequest"
+      },
+      "output": {
+        "target": "com.x.chats#ChatMediaUploadAppendResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/chat/media/upload/{id}/append",
+          "code": 200
+        },
+        "smithy.api#documentation": "Append Chat Media Upload\n\nAppends media data to an XChat upload session."
+      }
+    },
+    "com.x.chats#ChatMediaUploadFinalizeRequest": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        },
+        "conversation_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The XChat conversation the upload belongs to.",
+            "smithy.api#required": {}
+          }
+        },
+        "media_hash_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The media hash key returned by the initialize step.",
+            "smithy.api#required": {}
+          }
+        },
+        "message_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional message identifier associated with the upload."
+          }
+        },
+        "num_parts": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Total number of uploaded parts, as a numeric string.",
+            "smithy.api#required": {}
+          }
+        },
+        "ttl_msec": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional TTL for the media in milliseconds, as a numeric string."
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.chats#ChatMediaUploadFinalizeResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.chats#ChatMediaUploadFinalizeResponseData"
+        },
+        "errors": {
+          "target": "com.x.chats#ChatMediaUploadFinalizeResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#ChatMediaUploadFinalizeResponseData": {
+      "type": "structure",
+      "members": {
+        "success": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Whether the upload was finalized.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#ChatMediaUploadFinalizeResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#ChatMediaUploadFinalize": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.chats#ChatMediaUploadFinalizeRequest"
+      },
+      "output": {
+        "target": "com.x.chats#ChatMediaUploadFinalizeResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/chat/media/upload/{id}/finalize",
+          "code": 200
+        },
+        "smithy.api#documentation": "Finalize Chat Media Upload\n\nFinalizes an XChat media upload session."
+      }
+    },
+    "com.x.chats#ChatMediaDownloadRequest": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        },
+        "media_hash_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.chats#ChatMediaDownload": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.chats#ChatMediaDownloadRequest"
+      },
+      "output": {
+        "target": "com.x.chats#ChatMediaDownloadResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "GET",
+          "uri": "/2/chat/media/{id}/{media_hash_key}",
+          "code": 200
+        },
+        "smithy.api#documentation": "Download Chat Media\n\nDownloads encrypted media bytes from an XChat conversation. The response body contains raw binary bytes."
+      }
+    },
+    "com.x.chats#GetUsersPublicKeysRequestIdsList": {
+      "type": "list",
+      "member": {
+        "target": "smithy.api#String"
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetUsersPublicKeysRequestPublicKeyFieldsItem": {
+      "type": "enum",
+      "members": {
+        "IDENTITY_PUBLIC_KEY_SIGNATURE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "identity_public_key_signature"
+          }
+        },
+        "JUICEBOX_CONFIG": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "juicebox_config"
+          }
+        },
+        "PUBLIC_KEY": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "public_key"
+          }
+        },
+        "PUBLIC_KEY_VERSION": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "public_key_version"
+          }
+        },
+        "SIGNING_PUBLIC_KEY": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "signing_public_key"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetUsersPublicKeysRequestPublicKeyFieldsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#GetUsersPublicKeysRequestPublicKeyFieldsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "The fields available for a PublicKey object."
+      }
+    },
+    "com.x.chats#GetUsersPublicKeysRequest": {
+      "type": "structure",
+      "members": {
+        "ids": {
+          "target": "com.x.chats#GetUsersPublicKeysRequestIdsList",
+          "traits": {
+            "smithy.api#httpQuery": "ids",
+            "smithy.api#required": {}
+          }
+        },
+        "public_key_fields": {
+          "target": "com.x.chats#GetUsersPublicKeysRequestPublicKeyFieldsList",
+          "traits": {
+            "smithy.api#httpQuery": "public_key.fields",
+            "smithy.api#documentation": "A comma separated list of PublicKey fields to display."
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.chats#GetUsersPublicKeysResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.chats#GetUsersPublicKeysResponseDataList"
+        },
+        "errors": {
+          "target": "com.x.chats#GetUsersPublicKeysResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#PublicKey": {
+      "type": "structure",
+      "members": {
+        "identity_public_key_signature": {
+          "target": "smithy.api#String"
+        },
+        "juicebox_config": {
+          "target": "smithy.api#Document"
+        },
+        "public_key": {
+          "target": "smithy.api#String"
+        },
+        "public_key_version": {
+          "target": "smithy.api#String"
+        },
+        "signing_public_key": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetUsersPublicKeysResponseDataList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#PublicKey"
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetUsersPublicKeysResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetUsersPublicKeys": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.chats#GetUsersPublicKeysRequest"
+      },
+      "output": {
+        "target": "com.x.chats#GetUsersPublicKeysResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "GET",
+          "uri": "/2/users/public_keys",
+          "code": 200
+        },
+        "smithy.api#documentation": "Get public keys\n\nReturns registered public keys for X Chat encryption for the specified users."
+      }
+    },
+    "com.x.chats#GetUsersPublicKeyRequestPublicKeyFieldsItem": {
+      "type": "enum",
+      "members": {
+        "IDENTITY_PUBLIC_KEY_SIGNATURE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "identity_public_key_signature"
+          }
+        },
+        "JUICEBOX_CONFIG": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "juicebox_config"
+          }
+        },
+        "PUBLIC_KEY": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "public_key"
+          }
+        },
+        "PUBLIC_KEY_VERSION": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "public_key_version"
+          }
+        },
+        "SIGNING_PUBLIC_KEY": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "signing_public_key"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetUsersPublicKeyRequestPublicKeyFieldsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#GetUsersPublicKeyRequestPublicKeyFieldsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "The fields available for a PublicKey object."
+      }
+    },
+    "com.x.chats#GetUsersPublicKeyRequest": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        },
+        "public_key_fields": {
+          "target": "com.x.chats#GetUsersPublicKeyRequestPublicKeyFieldsList",
+          "traits": {
+            "smithy.api#httpQuery": "public_key.fields",
+            "smithy.api#documentation": "A comma separated list of PublicKey fields to display."
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.chats#GetUsersPublicKeyResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.chats#GetUsersPublicKeyResponseDataList"
+        },
+        "errors": {
+          "target": "com.x.chats#GetUsersPublicKeyResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetUsersPublicKeyResponseDataList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#PublicKey"
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetUsersPublicKeyResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#GetUsersPublicKey": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.chats#GetUsersPublicKeyRequest"
+      },
+      "output": {
+        "target": "com.x.chats#GetUsersPublicKeyResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "GET",
+          "uri": "/2/users/{id}/public_keys",
+          "code": 200
+        },
+        "smithy.api#documentation": "Get public keys\n\nReturns a user's registered public keys for X Chat encryption."
+      }
+    },
+    "com.x.chats#AddUserPublicKeyPublicKey": {
+      "type": "structure",
+      "members": {
+        "identity_public_key_signature": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Signature over the identity public key."
+          }
+        },
+        "public_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Identity public key (base64 encoded)."
+          }
+        },
+        "public_key_fingerprint": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Fingerprint of the identity public key."
+          }
+        },
+        "registration_method": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Registration method for the public key."
+          }
+        },
+        "signing_public_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Signing public key (base64 encoded)."
+          }
+        },
+        "signing_public_key_signature": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Signature over the signing public key."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#AddUserPublicKeyRequest": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        },
+        "generate_version": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "When true, the server generates a new version."
+          }
+        },
+        "public_key": {
+          "target": "com.x.chats#AddUserPublicKeyPublicKey",
+          "traits": {
+            "smithy.api#documentation": "Public key registration payload.",
+            "smithy.api#required": {}
+          }
+        },
+        "version": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Public key version.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.chats#AddUserPublicKeyResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.chats#AddUserPublicKeyResponseData"
+        },
+        "errors": {
+          "target": "com.x.chats#AddUserPublicKeyResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#AddUserPublicKeyResponseData": {
+      "type": "structure",
+      "members": {
+        "juicebox_config": {
+          "target": "smithy.api#Document",
+          "traits": {
+            "smithy.api#documentation": "Juicebox recovery-service configuration for this key."
+          }
+        },
+        "public_key_version": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Version assigned to the registered public key."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.chats#AddUserPublicKeyResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.chats#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.chats#AddUserPublicKey": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.chats#AddUserPublicKeyRequest"
+      },
+      "output": {
+        "target": "com.x.chats#AddUserPublicKeyResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/users/{id}/public_keys",
+          "code": 200
+        },
+        "smithy.api#documentation": "Add public key\n\nRegisters a user's public key for X Chat encryption."
+      }
+    },
+    "com.x.chats#Chats": {
+      "type": "service",
+      "version": "2.167",
+      "operations": [
+        {
+          "target": "com.x.chats#GetChatConversations"
+        },
+        {
+          "target": "com.x.chats#CreateChatConversation"
+        },
+        {
+          "target": "com.x.chats#InitializeChatGroup"
+        },
+        {
+          "target": "com.x.chats#GetChatConversation"
+        },
+        {
+          "target": "com.x.chats#GetChatConversationEvents"
+        },
+        {
+          "target": "com.x.chats#AddConversationKeys"
+        },
+        {
+          "target": "com.x.chats#AddChatGroupMembers"
+        },
+        {
+          "target": "com.x.chats#SendChatMessage"
+        },
+        {
+          "target": "com.x.chats#MarkChatConversationRead"
+        },
+        {
+          "target": "com.x.chats#SendChatTypingIndicator"
+        },
+        {
+          "target": "com.x.chats#ChatMediaUploadInitialize"
+        },
+        {
+          "target": "com.x.chats#ChatMediaUploadAppend"
+        },
+        {
+          "target": "com.x.chats#ChatMediaUploadFinalize"
+        },
+        {
+          "target": "com.x.chats#ChatMediaDownload"
+        },
+        {
+          "target": "com.x.chats#GetUsersPublicKeys"
+        },
+        {
+          "target": "com.x.chats#GetUsersPublicKey"
+        },
+        {
+          "target": "com.x.chats#AddUserPublicKey"
+        }
+      ],
+      "traits": {
+        "smithy.api#title": "X API v2",
+        "smithy.api#documentation": "X API v2 core endpoints"
+      }
+    },
+    "com.x.chats#MediaData": {
+      "type": "document"
+    },
+    "com.x.chats#ChatMediaDownloadResponse": {
+      "type": "structure",
+      "members": {}
+    }
+  }
+}

@@ -1,16 +1,81 @@
 # `distilled-x`
 
-Portable TypeScript primitives for the X API: OAuth1-signed requests with automatic app-token exchange, explicit app/user Bearer requests, OAuth 2.0 Authorization Code + PKCE, webhook lifecycle calls, X Activity subscriptions, Account Activity subscriptions, CRC responses, and delivery-signature verification.
+An Effect-native TypeScript SDK generated from the official [X OpenAPI spec](https://github.com/xdevplatform/xdk/blob/main/specs/openapi.json). The pinned spec currently generates **171 operations across 27 services**, including posts, users, media, streams, webhooks, and activity subscriptions.
 
-The package has no runtime dependencies. It uses the standard Fetch and Web Crypto APIs, so it works in Bun, modern Node.js, browsers, and worker runtimes that provide both APIs.
+Generation uses [Distilled's](https://github.com/alchemy-run/distilled) shared OpenAPI-to-Smithy converter and SDK compiler. Runtime schemas use Effect and `@distilled.cloud/core`; HTTP and cryptography use standard Fetch and Web Crypto APIs, including in Workers. All authentication implementations stay in this package: OAuth1 signing, automatic app-token exchange, explicit app/user Bearer tokens, and OAuth2/PKCE helpers.
 
 ## Install
 
 ```sh
-bun add distilled-x
+bun add distilled-x effect
 ```
 
-## Client
+## Effect client
+
+```ts
+import { Client } from "distilled-x";
+import { getUsersMe } from "distilled-x/services/users";
+import { createPosts } from "distilled-x/services/posts";
+import * as Effect from "effect/Effect";
+
+const program = Effect.gen(function* () {
+  const me = yield* getUsersMe({ user_fields: ["id", "username"] });
+  const post = yield* createPosts({ text: "Hello from Alchemy" });
+  return { me, post };
+});
+
+await Effect.runPromise(program.pipe(Effect.provide(Client.layer({
+  apiKey: () => process.env.X_API_KEY!,
+  apiSecret: () => process.env.X_API_SECRET!,
+  accessToken: () => process.env.X_ACCESS_TOKEN!,
+  accessTokenSecret: () => process.env.X_ACCESS_TOKEN_SECRET!,
+}))));
+```
+
+Operations are lazy Effects with typed `XError` failures, schema-decoded outputs, and request cancellation on interruption. `Client.layer` scopes the transport and app-token cache to the provided program; it accepts the same credentials and runtime/retry options as `createXClient`. It does not perform network I/O during construction. For dependency injection with an existing client, use `Effect.provideService(Client, client)`.
+
+Import individual services using `distilled-x/services/<tag>` or use the root `Services` namespace (`Services.posts.createPosts`). Names come from OpenAPI `operationId`; services follow the first OpenAPI tag. Request bodies are flattened into the input alongside path/query fields. Dotted parameter names become underscores (`user_fields` encodes as `user.fields`), and array encoding follows the spec. Types and schemas are exported alongside each operation.
+
+JSON operations return the response envelope directly. Use `getUsersMe.withResponse({})` to also obtain HTTP status, headers, and parsed rate-limit metadata. Errors have `_tag` discriminants for `Effect.catchTag`, including `XApiError`, `XAuthenticationError`, `XInputError`, `XDecodeError`, and `XTransportError`. Partial-success envelopes retain X's `errors` field; callers must inspect it.
+
+Authentication is chosen from each operation's declared security alternatives. App context is preferred when supported and available; pass `{ auth: "user" }` as the second argument to request user context. OAuth2-only operations fail locally with OAuth1 credentials—an automatically obtained app token cannot substitute for OAuth2 user authorization. Standalone SDK users can provide `userAccessToken`/`appBearerToken` to `Client.layer`; Alchemy still accepts only the four OAuth1 credentials.
+
+### Streaming and media
+
+```ts
+import { streamPostsSample } from "distilled-x/services/stream";
+import * as Stream from "effect/Stream";
+
+// Provide Client to the resulting Effect, just as above.
+const firstTen = streamPostsSample({}).pipe(Stream.take(10), Stream.runCollect);
+```
+
+Streaming endpoints return `Stream`, decode newline-delimited JSON incrementally, ignore blank keepalives, and cancel the response reader when consumption ends. They do not automatically reconnect or resume. Binary downloads return `Effect<Uint8Array, ...>`. Media upload operations accept `Blob` for multipart bytes or a base64 string for JSON uploads.
+
+### Generate or update the SDK
+
+From the repository root:
+
+```sh
+bun run generate        # offline: regenerate from the checked-in spec
+bun run generate:check  # offline: fail if generated files differ (also runs in CI)
+
+# Restore the exact pinned upstream file and verify its SHA-256:
+bun run --cwd packages/distilled-x specs:fetch
+
+# Deliberately advance to upstream main, then review the generated diff:
+bun run --cwd packages/distilled-x specs:update
+bun run generate
+bun run check
+```
+
+`specs/source.json` records the upstream commit and checksum. `specs/openapi.json` is the unmodified source; `.generated-specs/` contains Distilled's intermediate Smithy models; `src/services/` and `src/operations.ts` are generated. Never edit generated files manually. Auth, transport, lifecycle helpers, and webhook cryptography remain hand-maintained. Generated source is excluded from custom lint rules but is formatted, typechecked, and checked for reproducibility.
+
+The generator explicitly adapts the spec's JSON-labelled streaming endpoints and binary/multipart media operations. As in Distilled's shared compiler, schemas are forward-compatible: enums are open strings and opaque unions preserve their values; not every OpenAPI constraint is enforced locally. X remains authoritative for permissions and request semantics. The source spec identifies the [X Developer Agreement and Policy](https://developer.x.com/en/developer-terms/agreement-and-policy.html) as its license.
+
+## Compatibility client and authentication helpers
+
+The existing Promise-based `createXClient` lifecycle helpers remain available for Alchemy and existing callers. Their endpoint paths, bindings, and supported auth schemes now come from the generated operation metadata. New API integrations should use the generated Effect operations above.
 
 ### OAuth1 credentials with automatic app authentication
 
@@ -151,7 +216,7 @@ const authentic = await verifyWebhookRequest(request, consumerSecret);
 
 ## Errors
 
-The package exposes structured `XApiError`, `XAuthenticationError`, `XTransportError`, `XDecodeError`, `XOAuthError`, and `XOAuthStateError` classes. `XApiError` preserves X problem details, the response body, status, method, URL, and rate-limit information.
+The package exposes structured `XApiError`, `XAuthenticationError`, `XInputError`, `XTransportError`, `XDecodeError`, `XOAuthError`, and `XOAuthStateError` classes. `XApiError` preserves X problem details, the response body, status, method, URL, and rate-limit information. OAuth2/PKCE and cryptographic helpers retain their existing Promise interfaces independently of the generated Effect operations.
 
 ## Tests
 

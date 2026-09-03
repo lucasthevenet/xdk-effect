@@ -1,0 +1,445 @@
+// AUTO-GENERATED from xdevplatform/xdk@84c26540df30c0b798e50e34151c56d5d262ba1c; do not edit.
+import * as S from "@distilled.cloud/core/schema";
+import * as T from "../traits.ts";
+import {
+  makeOperation,
+  makeBinaryOperation,
+  makeStreamOperation,
+} from "../operation.ts";
+import { operations } from "../operations.ts";
+export type GetPostsCountsAllRequestGranularity = "minute" | "hour" | "day";
+export const GetPostsCountsAllRequestGranularity = /*@__PURE__*/ S.String;
+
+export interface GetPostsCountsAllRequest {
+  query: string;
+  start_time?: string;
+  end_time?: string;
+  since_id?: string;
+  until_id?: string;
+  /** A base32hex-encoded pagination token. */
+  next_token?: string;
+  /** A base32hex-encoded pagination token. */
+  pagination_token?: string;
+  granularity?: GetPostsCountsAllRequestGranularity | (string & {});
+  search_count_fields?: string;
+}
+export const GetPostsCountsAllRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    query: S.String.pipe(T.Query()),
+    start_time: S.optional(S.String.pipe(T.Query())),
+    end_time: S.optional(S.String.pipe(T.Query())),
+    since_id: S.optional(S.String.pipe(T.Query())),
+    until_id: S.optional(S.String.pipe(T.Query())),
+    next_token: S.optional(S.String.pipe(T.Query())),
+    pagination_token: S.optional(S.String.pipe(T.Query())),
+    granularity: S.optional(
+      GetPostsCountsAllRequestGranularity.pipe(T.Query()),
+    ),
+    search_count_fields: S.optional(
+      S.String.pipe(T.Query("search_count.fields")),
+    ),
+  }).pipe(T.Http({ method: "GET", uri: "/2/tweets/counts/all", code: 200 })),
+).annotate({
+  identifier: "GetPostsCountsAllRequest",
+}) as any as S.Schema<GetPostsCountsAllRequest>;
+
+export interface GetPostsCountsAllResponseData {
+  /** End of the count bucket (exclusive), RFC 3339. */
+  end: string;
+  /** Number of Posts in the bucket. */
+  post_count: number;
+  /** Start of the count bucket (inclusive), RFC 3339. */
+  start: string;
+}
+export const GetPostsCountsAllResponseData = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    end: S.String,
+    post_count: S.Number,
+    start: S.String,
+  }),
+).annotate({
+  identifier: "GetPostsCountsAllResponseData",
+}) as any as S.Schema<GetPostsCountsAllResponseData>;
+
+export type GetPostsCountsAllResponseDataList =
+  Array<GetPostsCountsAllResponseData>;
+export const GetPostsCountsAllResponseDataList = /*@__PURE__*/ S.Array(
+  GetPostsCountsAllResponseData,
+) as any as S.Schema<GetPostsCountsAllResponseDataList>;
+
+export type ResourceNotFoundProblemType =
+  "https://api.x.com/2/problems/resource-not-found";
+export const ResourceNotFoundProblemType = /*@__PURE__*/ S.String;
+
+export interface ResourceNotFoundProblem {
+  detail: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type: string;
+  status?: number;
+  title: string;
+  type: ResourceNotFoundProblemType;
+  value?: string;
+}
+export const ResourceNotFoundProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: ResourceNotFoundProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "ResourceNotFoundProblem",
+}) as any as S.Schema<ResourceNotFoundProblem>;
+
+export type InvalidRequestProblemType =
+  "https://api.x.com/2/problems/invalid-request";
+export const InvalidRequestProblemType = /*@__PURE__*/ S.String;
+
+export interface InvalidRequestProblem {
+  detail: string;
+  parameter?: string;
+  status?: number;
+  title: string;
+  type: InvalidRequestProblemType;
+  value?: string;
+}
+export const InvalidRequestProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: InvalidRequestProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "InvalidRequestProblem",
+}) as any as S.Schema<InvalidRequestProblem>;
+
+export type NotAuthorizedForResourceProblemType =
+  "https://api.x.com/2/problems/not-authorized-for-resource";
+export const NotAuthorizedForResourceProblemType = /*@__PURE__*/ S.String;
+
+export interface NotAuthorizedForResourceProblem {
+  detail: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: NotAuthorizedForResourceProblemType;
+  value?: string;
+}
+export const NotAuthorizedForResourceProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: NotAuthorizedForResourceProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "NotAuthorizedForResourceProblem",
+}) as any as S.Schema<NotAuthorizedForResourceProblem>;
+
+export type NotAuthorizedForFieldProblemType =
+  "https://api.x.com/2/problems/not-authorized-for-field";
+export const NotAuthorizedForFieldProblemType = /*@__PURE__*/ S.String;
+
+export interface NotAuthorizedForFieldProblem {
+  detail: string;
+  field: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: NotAuthorizedForFieldProblemType;
+  value?: string;
+}
+export const NotAuthorizedForFieldProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: NotAuthorizedForFieldProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "NotAuthorizedForFieldProblem",
+}) as any as S.Schema<NotAuthorizedForFieldProblem>;
+
+export type FieldUnauthorizedProblemType =
+  "https://api.x.com/2/problems/field-unauthorized";
+export const FieldUnauthorizedProblemType = /*@__PURE__*/ S.String;
+
+export interface FieldUnauthorizedProblem {
+  detail: string;
+  field: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: FieldUnauthorizedProblemType;
+}
+export const FieldUnauthorizedProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: FieldUnauthorizedProblemType,
+  }),
+).annotate({
+  identifier: "FieldUnauthorizedProblem",
+}) as any as S.Schema<FieldUnauthorizedProblem>;
+
+export type FieldHydrationFailureProblemType =
+  "https://api.x.com/2/problems/field-hydration-failure";
+export const FieldHydrationFailureProblemType = /*@__PURE__*/ S.String;
+
+export interface FieldHydrationFailureProblem {
+  detail: string;
+  field: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: FieldHydrationFailureProblemType;
+}
+export const FieldHydrationFailureProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: FieldHydrationFailureProblemType,
+  }),
+).annotate({
+  identifier: "FieldHydrationFailureProblem",
+}) as any as S.Schema<FieldHydrationFailureProblem>;
+
+export type ResourceUnavailableProblemType =
+  "https://api.x.com/2/problems/resource-unavailable";
+export const ResourceUnavailableProblemType = /*@__PURE__*/ S.String;
+
+export interface ResourceUnavailableProblem {
+  detail: string;
+  resource_id?: string;
+  resource_type: string;
+  status?: number;
+  title: string;
+  type: ResourceUnavailableProblemType;
+}
+export const ResourceUnavailableProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: ResourceUnavailableProblemType,
+  }),
+).annotate({
+  identifier: "ResourceUnavailableProblem",
+}) as any as S.Schema<ResourceUnavailableProblem>;
+
+export type DisallowedResourceProblemType =
+  "https://api.x.com/2/problems/disallowed-resource";
+export const DisallowedResourceProblemType = /*@__PURE__*/ S.String;
+
+export interface DisallowedResourceProblem {
+  detail: string;
+  resource_id?: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: DisallowedResourceProblemType;
+}
+export const DisallowedResourceProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    resource_id: S.optional(S.String),
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: DisallowedResourceProblemType,
+  }),
+).annotate({
+  identifier: "DisallowedResourceProblem",
+}) as any as S.Schema<DisallowedResourceProblem>;
+
+export type InternalErrorProblemType =
+  "https://api.x.com/2/problems/internal-error";
+export const InternalErrorProblemType = /*@__PURE__*/ S.String;
+
+export interface InternalErrorProblem {
+  detail: string;
+  status?: number;
+  title: string;
+  type: InternalErrorProblemType;
+}
+export const InternalErrorProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: InternalErrorProblemType,
+  }),
+).annotate({
+  identifier: "InternalErrorProblem",
+}) as any as S.Schema<InternalErrorProblem>;
+
+export type Problem =
+  | ResourceNotFoundProblem
+  | InvalidRequestProblem
+  | NotAuthorizedForResourceProblem
+  | NotAuthorizedForFieldProblem
+  | FieldUnauthorizedProblem
+  | FieldHydrationFailureProblem
+  | ResourceUnavailableProblem
+  | DisallowedResourceProblem
+  | InternalErrorProblem;
+export const Problem = /*@__PURE__*/ S.Unknown as any as S.Schema<Problem>;
+export type GetPostsCountsAllResponseErrorsList = Array<Problem>;
+export const GetPostsCountsAllResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<GetPostsCountsAllResponseErrorsList>;
+
+export interface GetPostsCountsAllResponseMeta {
+  /** Pagination token for the next page of results. */
+  next_token?: string;
+  total_post_count?: number;
+}
+export const GetPostsCountsAllResponseMeta = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    next_token: S.optional(S.String),
+    total_post_count: S.optional(S.Number),
+  }),
+).annotate({
+  identifier: "GetPostsCountsAllResponseMeta",
+}) as any as S.Schema<GetPostsCountsAllResponseMeta>;
+
+export interface GetPostsCountsAllResponse {
+  data?: GetPostsCountsAllResponseDataList;
+  errors?: GetPostsCountsAllResponseErrorsList;
+  meta?: GetPostsCountsAllResponseMeta;
+}
+export const GetPostsCountsAllResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(GetPostsCountsAllResponseDataList),
+    errors: S.optional(GetPostsCountsAllResponseErrorsList),
+    meta: S.optional(GetPostsCountsAllResponseMeta),
+  }),
+).annotate({
+  identifier: "GetPostsCountsAllResponse",
+}) as any as S.Schema<GetPostsCountsAllResponse>;
+
+export type GetPostsCountsRecentRequestGranularity = "minute" | "hour" | "day";
+export const GetPostsCountsRecentRequestGranularity = /*@__PURE__*/ S.String;
+
+export interface GetPostsCountsRecentRequest {
+  query: string;
+  /** Must be within the last 7 days. */
+  start_time?: string;
+  end_time?: string;
+  since_id?: string;
+  until_id?: string;
+  /** A base32hex-encoded pagination token. */
+  next_token?: string;
+  /** A base32hex-encoded pagination token. */
+  pagination_token?: string;
+  granularity?: GetPostsCountsRecentRequestGranularity | (string & {});
+  search_count_fields?: string;
+}
+export const GetPostsCountsRecentRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    query: S.String.pipe(T.Query()),
+    start_time: S.optional(S.String.pipe(T.Query())),
+    end_time: S.optional(S.String.pipe(T.Query())),
+    since_id: S.optional(S.String.pipe(T.Query())),
+    until_id: S.optional(S.String.pipe(T.Query())),
+    next_token: S.optional(S.String.pipe(T.Query())),
+    pagination_token: S.optional(S.String.pipe(T.Query())),
+    granularity: S.optional(
+      GetPostsCountsRecentRequestGranularity.pipe(T.Query()),
+    ),
+    search_count_fields: S.optional(
+      S.String.pipe(T.Query("search_count.fields")),
+    ),
+  }).pipe(T.Http({ method: "GET", uri: "/2/tweets/counts/recent", code: 200 })),
+).annotate({
+  identifier: "GetPostsCountsRecentRequest",
+}) as any as S.Schema<GetPostsCountsRecentRequest>;
+
+export type GetPostsCountsRecentResponseData = GetPostsCountsAllResponseData;
+export const GetPostsCountsRecentResponseData = GetPostsCountsAllResponseData;
+
+export type GetPostsCountsRecentResponseDataList =
+  Array<GetPostsCountsAllResponseData>;
+export const GetPostsCountsRecentResponseDataList = /*@__PURE__*/ S.Array(
+  GetPostsCountsAllResponseData,
+) as any as S.Schema<GetPostsCountsRecentResponseDataList>;
+
+export type GetPostsCountsRecentResponseErrorsList = Array<Problem>;
+export const GetPostsCountsRecentResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<GetPostsCountsRecentResponseErrorsList>;
+
+export type GetPostsCountsRecentResponseMeta = GetPostsCountsAllResponseMeta;
+export const GetPostsCountsRecentResponseMeta = GetPostsCountsAllResponseMeta;
+
+export interface GetPostsCountsRecentResponse {
+  data?: GetPostsCountsRecentResponseDataList;
+  errors?: GetPostsCountsRecentResponseErrorsList;
+  meta?: GetPostsCountsAllResponseMeta;
+}
+export const GetPostsCountsRecentResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(GetPostsCountsRecentResponseDataList),
+    errors: S.optional(GetPostsCountsRecentResponseErrorsList),
+    meta: S.optional(GetPostsCountsAllResponseMeta),
+  }),
+).annotate({
+  identifier: "GetPostsCountsRecentResponse",
+}) as any as S.Schema<GetPostsCountsRecentResponse>;
+
+export const getPostsCountsAll = /*@__PURE__*/ makeOperation<
+  GetPostsCountsAllRequest,
+  GetPostsCountsAllResponse
+>(
+  operations.getPostsCountsAll,
+  () => GetPostsCountsAllRequest,
+  () => GetPostsCountsAllResponse,
+);
+
+export const getPostsCountsRecent = /*@__PURE__*/ makeOperation<
+  GetPostsCountsRecentRequest,
+  GetPostsCountsRecentResponse
+>(
+  operations.getPostsCountsRecent,
+  () => GetPostsCountsRecentRequest,
+  () => GetPostsCountsRecentResponse,
+);

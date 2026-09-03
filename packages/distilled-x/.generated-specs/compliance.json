@@ -1,0 +1,1069 @@
+{
+  "smithy": "2.0",
+  "metadata": {
+    "suppressions": [
+      {
+        "id": "HttpUriConflict",
+        "namespace": "*"
+      },
+      {
+        "id": "HttpMethodSemantics",
+        "namespace": "*"
+      },
+      {
+        "id": "UnreferencedShape",
+        "namespace": "*"
+      }
+    ]
+  },
+  "shapes": {
+    "com.x.compliance#GetComplianceJobsRequestType": {
+      "type": "enum",
+      "members": {
+        "TWEETS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "tweets"
+          }
+        },
+        "USERS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "users"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#GetComplianceJobsRequestStatus": {
+      "type": "enum",
+      "members": {
+        "CREATED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "created"
+          }
+        },
+        "IN_PROGRESS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "in_progress"
+          }
+        },
+        "FAILED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "failed"
+          }
+        },
+        "COMPLETE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "complete"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#GetComplianceJobsRequestComplianceJobFieldsItem": {
+      "type": "enum",
+      "members": {
+        "CREATED_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "created_at"
+          }
+        },
+        "DOWNLOAD_EXPIRES_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "download_expires_at"
+          }
+        },
+        "DOWNLOAD_URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "download_url"
+          }
+        },
+        "ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "id"
+          }
+        },
+        "NAME": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "name"
+          }
+        },
+        "RESUMABLE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "resumable"
+          }
+        },
+        "STATUS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "status"
+          }
+        },
+        "TYPE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "type"
+          }
+        },
+        "UPLOAD_EXPIRES_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "upload_expires_at"
+          }
+        },
+        "UPLOAD_URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "upload_url"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#GetComplianceJobsRequestComplianceJobFieldsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.compliance#GetComplianceJobsRequestComplianceJobFieldsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "The fields available for a ComplianceJob object."
+      }
+    },
+    "com.x.compliance#GetComplianceJobsRequest": {
+      "type": "structure",
+      "members": {
+        "type": {
+          "target": "com.x.compliance#GetComplianceJobsRequestType",
+          "traits": {
+            "smithy.api#httpQuery": "type",
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "com.x.compliance#GetComplianceJobsRequestStatus",
+          "traits": {
+            "smithy.api#httpQuery": "status"
+          }
+        },
+        "compliance_job_fields": {
+          "target": "com.x.compliance#GetComplianceJobsRequestComplianceJobFieldsList",
+          "traits": {
+            "smithy.api#httpQuery": "compliance_job.fields",
+            "smithy.api#documentation": "A comma separated list of ComplianceJob fields to display."
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.compliance#GetComplianceJobsResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.compliance#GetComplianceJobsResponseDataList"
+        },
+        "errors": {
+          "target": "com.x.compliance#GetComplianceJobsResponseErrorsList"
+        },
+        "meta": {
+          "target": "com.x.compliance#GetComplianceJobsResponseMeta"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#ComplianceJob": {
+      "type": "structure",
+      "members": {
+        "created_at": {
+          "target": "smithy.api#String"
+        },
+        "download_expires_at": {
+          "target": "smithy.api#String"
+        },
+        "download_url": {
+          "target": "smithy.api#String"
+        },
+        "id": {
+          "target": "smithy.api#String"
+        },
+        "name": {
+          "target": "smithy.api#String"
+        },
+        "resumable": {
+          "target": "smithy.api#Boolean"
+        },
+        "status": {
+          "target": "smithy.api#String"
+        },
+        "type": {
+          "target": "smithy.api#String"
+        },
+        "upload_expires_at": {
+          "target": "smithy.api#String"
+        },
+        "upload_url": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#GetComplianceJobsResponseDataList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.compliance#ComplianceJob"
+      },
+      "traits": {}
+    },
+    "com.x.compliance#Problem": {
+      "type": "union",
+      "members": {
+        "ResourceNotFoundProblem": {
+          "target": "com.x.compliance#ResourceNotFoundProblem"
+        },
+        "InvalidRequestProblem": {
+          "target": "com.x.compliance#InvalidRequestProblem"
+        },
+        "NotAuthorizedForResourceProblem": {
+          "target": "com.x.compliance#NotAuthorizedForResourceProblem"
+        },
+        "NotAuthorizedForFieldProblem": {
+          "target": "com.x.compliance#NotAuthorizedForFieldProblem"
+        },
+        "FieldUnauthorizedProblem": {
+          "target": "com.x.compliance#FieldUnauthorizedProblem"
+        },
+        "FieldHydrationFailureProblem": {
+          "target": "com.x.compliance#FieldHydrationFailureProblem"
+        },
+        "ResourceUnavailableProblem": {
+          "target": "com.x.compliance#ResourceUnavailableProblem"
+        },
+        "DisallowedResourceProblem": {
+          "target": "com.x.compliance#DisallowedResourceProblem"
+        },
+        "InternalErrorProblem": {
+          "target": "com.x.compliance#InternalErrorProblem"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#ResourceNotFoundProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.compliance#ResourceNotFoundProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#ResourceNotFoundProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_RESOURCE_NOT_FOUND": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/resource-not-found"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#InvalidRequestProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.compliance#InvalidRequestProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#InvalidRequestProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_INVALID_REQUEST": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/invalid-request"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#NotAuthorizedForResourceProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.compliance#NotAuthorizedForResourceProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#NotAuthorizedForResourceProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_NOT_AUTHORIZED_FOR_RESOURCE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/not-authorized-for-resource"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#NotAuthorizedForFieldProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.compliance#NotAuthorizedForFieldProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#NotAuthorizedForFieldProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_NOT_AUTHORIZED_FOR_FIELD": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/not-authorized-for-field"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#FieldUnauthorizedProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.compliance#FieldUnauthorizedProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#FieldUnauthorizedProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_FIELD_UNAUTHORIZED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/field-unauthorized"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#FieldHydrationFailureProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.compliance#FieldHydrationFailureProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#FieldHydrationFailureProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_FIELD_HYDRATION_FAILURE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/field-hydration-failure"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#ResourceUnavailableProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.compliance#ResourceUnavailableProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#ResourceUnavailableProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_RESOURCE_UNAVAILABLE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/resource-unavailable"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#DisallowedResourceProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.compliance#DisallowedResourceProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#DisallowedResourceProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_DISALLOWED_RESOURCE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/disallowed-resource"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#InternalErrorProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.compliance#InternalErrorProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#InternalErrorProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_INTERNAL_ERROR": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/internal-error"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#GetComplianceJobsResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.compliance#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.compliance#GetComplianceJobsResponseMeta": {
+      "type": "structure",
+      "members": {
+        "result_count": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Number of items in the data array."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#GetComplianceJobs": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.compliance#GetComplianceJobsRequest"
+      },
+      "output": {
+        "target": "com.x.compliance#GetComplianceJobsResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "GET",
+          "uri": "/2/compliance/jobs",
+          "code": 200
+        },
+        "smithy.api#documentation": "Get Compliance Jobs\n\nRetrieves a list of Compliance Jobs filtered by job type and optional status."
+      }
+    },
+    "com.x.compliance#CreateComplianceJobsRequestComplianceJobFieldsItem": {
+      "type": "enum",
+      "members": {
+        "CREATED_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "created_at"
+          }
+        },
+        "DOWNLOAD_EXPIRES_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "download_expires_at"
+          }
+        },
+        "DOWNLOAD_URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "download_url"
+          }
+        },
+        "ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "id"
+          }
+        },
+        "NAME": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "name"
+          }
+        },
+        "RESUMABLE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "resumable"
+          }
+        },
+        "STATUS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "status"
+          }
+        },
+        "TYPE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "type"
+          }
+        },
+        "UPLOAD_EXPIRES_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "upload_expires_at"
+          }
+        },
+        "UPLOAD_URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "upload_url"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#CreateComplianceJobsRequestComplianceJobFieldsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.compliance#CreateComplianceJobsRequestComplianceJobFieldsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "The fields available for a ComplianceJob object."
+      }
+    },
+    "com.x.compliance#CreateComplianceJobsRequestType": {
+      "type": "enum",
+      "members": {
+        "TWEETS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "tweets"
+          }
+        },
+        "USERS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "users"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Type of compliance job to list."
+      }
+    },
+    "com.x.compliance#CreateComplianceJobsRequest": {
+      "type": "structure",
+      "members": {
+        "compliance_job_fields": {
+          "target": "com.x.compliance#CreateComplianceJobsRequestComplianceJobFieldsList",
+          "traits": {
+            "smithy.api#httpQuery": "compliance_job.fields",
+            "smithy.api#documentation": "A comma separated list of ComplianceJob fields to display."
+          }
+        },
+        "name": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "A user-provided name for this job."
+          }
+        },
+        "resumable": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Whether to enable the upload URL with support for resumable uploads."
+          }
+        },
+        "type": {
+          "target": "com.x.compliance#CreateComplianceJobsRequestType",
+          "traits": {
+            "smithy.api#documentation": "Type of compliance job to list.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.compliance#CreateComplianceJobsResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.compliance#ComplianceJob"
+        },
+        "errors": {
+          "target": "com.x.compliance#CreateComplianceJobsResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#CreateComplianceJobsResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.compliance#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.compliance#CreateComplianceJobs": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.compliance#CreateComplianceJobsRequest"
+      },
+      "output": {
+        "target": "com.x.compliance#CreateComplianceJobsResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/compliance/jobs",
+          "code": 200
+        },
+        "smithy.api#documentation": "Create Compliance Job\n\nCreates a new Compliance Job for the specified job type."
+      }
+    },
+    "com.x.compliance#GetComplianceJobsByIdRequestComplianceJobFieldsItem": {
+      "type": "enum",
+      "members": {
+        "CREATED_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "created_at"
+          }
+        },
+        "DOWNLOAD_EXPIRES_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "download_expires_at"
+          }
+        },
+        "DOWNLOAD_URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "download_url"
+          }
+        },
+        "ID": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "id"
+          }
+        },
+        "NAME": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "name"
+          }
+        },
+        "RESUMABLE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "resumable"
+          }
+        },
+        "STATUS": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "status"
+          }
+        },
+        "TYPE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "type"
+          }
+        },
+        "UPLOAD_EXPIRES_AT": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "upload_expires_at"
+          }
+        },
+        "UPLOAD_URL": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "upload_url"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#GetComplianceJobsByIdRequestComplianceJobFieldsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.compliance#GetComplianceJobsByIdRequestComplianceJobFieldsItem"
+      },
+      "traits": {
+        "smithy.api#documentation": "The fields available for a ComplianceJob object."
+      }
+    },
+    "com.x.compliance#GetComplianceJobsByIdRequest": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        },
+        "compliance_job_fields": {
+          "target": "com.x.compliance#GetComplianceJobsByIdRequestComplianceJobFieldsList",
+          "traits": {
+            "smithy.api#httpQuery": "compliance_job.fields",
+            "smithy.api#documentation": "A comma separated list of ComplianceJob fields to display."
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.compliance#GetComplianceJobsByIdResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.compliance#ComplianceJob"
+        },
+        "errors": {
+          "target": "com.x.compliance#GetComplianceJobsByIdResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.compliance#GetComplianceJobsByIdResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.compliance#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.compliance#GetComplianceJobsById": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.compliance#GetComplianceJobsByIdRequest"
+      },
+      "output": {
+        "target": "com.x.compliance#GetComplianceJobsByIdResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "GET",
+          "uri": "/2/compliance/jobs/{id}",
+          "code": 200
+        },
+        "smithy.api#documentation": "Get Compliance Job by ID\n\nRetrieves details of a specific Compliance Job by its ID."
+      }
+    },
+    "com.x.compliance#Compliance": {
+      "type": "service",
+      "version": "2.167",
+      "operations": [
+        {
+          "target": "com.x.compliance#GetComplianceJobs"
+        },
+        {
+          "target": "com.x.compliance#CreateComplianceJobs"
+        },
+        {
+          "target": "com.x.compliance#GetComplianceJobsById"
+        }
+      ],
+      "traits": {
+        "smithy.api#title": "X API v2",
+        "smithy.api#documentation": "X API v2 core endpoints"
+      }
+    }
+  }
+}

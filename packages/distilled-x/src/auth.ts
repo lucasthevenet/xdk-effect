@@ -1,5 +1,6 @@
 import { XAuthenticationError, XTransportError } from "./errors.ts";
 import type { XJsonObject, XJsonValue } from "./types.ts";
+import type { OperationDefinition } from "./operation-types.ts";
 import {
   bytesToBase64,
   bytesToBase64Url,
@@ -24,6 +25,27 @@ export interface XBearerCredentials {
 }
 
 export type XAuthentication = XCredentials | XBearerCredentials;
+
+/** Select only authentication schemes declared by this operation's spec. */
+export const selectAuthentication = (
+  credentials: XAuthentication,
+  security: OperationDefinition["security"],
+  preferred?: "app" | "user",
+): "app" | "user" | undefined => {
+  if (security.length === 0) return undefined;
+  const oauth1 = "apiKey" in credentials;
+  const app =
+    security.includes("app") &&
+    (oauth1 || credentials.appBearerToken !== undefined);
+  const user = oauth1
+    ? security.includes("oauth1")
+    : security.includes("oauth2") && credentials.userAccessToken !== undefined;
+  if (preferred !== "user" && app) return "app";
+  if (preferred !== "app" && user) return "user";
+  throw new XAuthenticationError(
+    `This X operation requires ${security.join(" or ")} credentials${preferred ? ` in ${preferred} context` : ""}`,
+  );
+};
 
 const encode = (value: string): string =>
   encodeURIComponent(value).replace(
@@ -190,8 +212,7 @@ export const createAuthentication = (
       oauth_token: accessToken,
       oauth_version: "1.0",
     };
-    // JSON request bodies are not OAuth1 signature parameters. The client only
-    // accepts JSON bodies, so query and OAuth header parameters are sufficient.
+    // Neither JSON nor multipart bodies contribute OAuth1 signature parameters.
     const parameters = [...url.searchParams, ...Object.entries(oauth)]
       .filter(([key]) => key !== "oauth_signature")
       .map(([key, value]) => [encode(key), encode(value)] as const)

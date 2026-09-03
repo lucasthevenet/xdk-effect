@@ -10,6 +10,8 @@
     "suspicious": "warn"
   },
   "ignorePatterns": [
+    "packages/distilled-x/src/services/**",
+    "packages/distilled-x/src/operations.ts",
     ".agent/**",
     ".agents/**",
     ".claude/**",

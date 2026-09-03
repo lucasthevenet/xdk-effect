@@ -1,6 +1,7 @@
 import type { XJsonValue, XProblem, XRateLimit } from "./types.ts";
 
 export class XTransportError extends Error {
+  readonly _tag = "XTransportError";
   override readonly name = "XTransportError";
 
   constructor(
@@ -14,6 +15,7 @@ export class XTransportError extends Error {
 }
 
 export class XDecodeError extends Error {
+  readonly _tag = "XDecodeError";
   override readonly name = "XDecodeError";
 
   constructor(
@@ -27,6 +29,7 @@ export class XDecodeError extends Error {
 }
 
 export class XApiError extends Error {
+  readonly _tag = "XApiError";
   override readonly name = "XApiError";
 
   constructor(
@@ -43,8 +46,21 @@ export class XApiError extends Error {
 }
 
 export class XAuthenticationError extends Error {
+  readonly _tag = "XAuthenticationError";
   override readonly name = "XAuthenticationError";
 }
+
+export class XInputError extends Error {
+  readonly _tag = "XInputError";
+  override readonly name = "XInputError";
+}
+
+export type XError =
+  | XApiError
+  | XAuthenticationError
+  | XDecodeError
+  | XInputError
+  | XTransportError;
 
 export class XOAuthError extends Error {
   override readonly name = "XOAuthError";

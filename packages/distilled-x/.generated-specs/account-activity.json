@@ -1,0 +1,894 @@
+{
+  "smithy": "2.0",
+  "metadata": {
+    "suppressions": [
+      {
+        "id": "HttpUriConflict",
+        "namespace": "*"
+      },
+      {
+        "id": "HttpMethodSemantics",
+        "namespace": "*"
+      },
+      {
+        "id": "UnreferencedShape",
+        "namespace": "*"
+      }
+    ]
+  },
+  "shapes": {
+    "com.x.accountActivity#GetAccountActivitySubscriptionCountResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.accountActivity#GetAccountActivitySubscriptionCountResponseData"
+        },
+        "errors": {
+          "target": "com.x.accountActivity#GetAccountActivitySubscriptionCountResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#GetAccountActivitySubscriptionCountResponseData": {
+      "type": "structure",
+      "members": {
+        "account_name": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Name of the subscribing account."
+          }
+        },
+        "provisioned_count": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Number of subscriptions provisioned for the app."
+          }
+        },
+        "subscriptions_count_all": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Number of active subscriptions across all event types."
+          }
+        },
+        "subscriptions_count_direct_messages": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Number of active Direct Message subscriptions."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#Problem": {
+      "type": "union",
+      "members": {
+        "ResourceNotFoundProblem": {
+          "target": "com.x.accountActivity#ResourceNotFoundProblem"
+        },
+        "InvalidRequestProblem": {
+          "target": "com.x.accountActivity#InvalidRequestProblem"
+        },
+        "NotAuthorizedForResourceProblem": {
+          "target": "com.x.accountActivity#NotAuthorizedForResourceProblem"
+        },
+        "NotAuthorizedForFieldProblem": {
+          "target": "com.x.accountActivity#NotAuthorizedForFieldProblem"
+        },
+        "FieldUnauthorizedProblem": {
+          "target": "com.x.accountActivity#FieldUnauthorizedProblem"
+        },
+        "FieldHydrationFailureProblem": {
+          "target": "com.x.accountActivity#FieldHydrationFailureProblem"
+        },
+        "ResourceUnavailableProblem": {
+          "target": "com.x.accountActivity#ResourceUnavailableProblem"
+        },
+        "DisallowedResourceProblem": {
+          "target": "com.x.accountActivity#DisallowedResourceProblem"
+        },
+        "InternalErrorProblem": {
+          "target": "com.x.accountActivity#InternalErrorProblem"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#ResourceNotFoundProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.accountActivity#ResourceNotFoundProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#ResourceNotFoundProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_RESOURCE_NOT_FOUND": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/resource-not-found"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#InvalidRequestProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.accountActivity#InvalidRequestProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#InvalidRequestProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_INVALID_REQUEST": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/invalid-request"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#NotAuthorizedForResourceProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.accountActivity#NotAuthorizedForResourceProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#NotAuthorizedForResourceProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_NOT_AUTHORIZED_FOR_RESOURCE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/not-authorized-for-resource"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#NotAuthorizedForFieldProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.accountActivity#NotAuthorizedForFieldProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#NotAuthorizedForFieldProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_NOT_AUTHORIZED_FOR_FIELD": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/not-authorized-for-field"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#FieldUnauthorizedProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.accountActivity#FieldUnauthorizedProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#FieldUnauthorizedProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_FIELD_UNAUTHORIZED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/field-unauthorized"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#FieldHydrationFailureProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.accountActivity#FieldHydrationFailureProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#FieldHydrationFailureProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_FIELD_HYDRATION_FAILURE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/field-hydration-failure"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#ResourceUnavailableProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.accountActivity#ResourceUnavailableProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#ResourceUnavailableProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_RESOURCE_UNAVAILABLE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/resource-unavailable"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#DisallowedResourceProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.accountActivity#DisallowedResourceProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#DisallowedResourceProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_DISALLOWED_RESOURCE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/disallowed-resource"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#InternalErrorProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.accountActivity#InternalErrorProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#InternalErrorProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_INTERNAL_ERROR": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/internal-error"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#GetAccountActivitySubscriptionCountResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.accountActivity#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#GetAccountActivitySubscriptionCount": {
+      "type": "operation",
+      "input": {
+        "target": "smithy.api#Unit"
+      },
+      "output": {
+        "target": "com.x.accountActivity#GetAccountActivitySubscriptionCountResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "GET",
+          "uri": "/2/account_activity/subscriptions/count",
+          "code": 200
+        },
+        "smithy.api#documentation": "Get Account Activity Subscription Count"
+      }
+    },
+    "com.x.accountActivity#ValidateAccountActivitySubscriptionRequest": {
+      "type": "structure",
+      "members": {
+        "webhook_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.accountActivity#ValidateAccountActivitySubscriptionResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.accountActivity#ValidateAccountActivitySubscriptionResponseData"
+        },
+        "errors": {
+          "target": "com.x.accountActivity#ValidateAccountActivitySubscriptionResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#ValidateAccountActivitySubscriptionResponseData": {
+      "type": "structure",
+      "members": {
+        "subscribed": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Whether the user has an active subscription.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#ValidateAccountActivitySubscriptionResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.accountActivity#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#ValidateAccountActivitySubscription": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.accountActivity#ValidateAccountActivitySubscriptionRequest"
+      },
+      "output": {
+        "target": "com.x.accountActivity#ValidateAccountActivitySubscriptionResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "GET",
+          "uri": "/2/account_activity/webhooks/{webhook_id}/subscriptions/all",
+          "code": 200
+        },
+        "smithy.api#documentation": "Validate Account Activity Subscription"
+      }
+    },
+    "com.x.accountActivity#CreateAccountActivitySubscriptionRequest2": {
+      "type": "structure",
+      "members": {
+        "webhook_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.accountActivity#CreateAccountActivitySubscriptionResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.accountActivity#CreateAccountActivitySubscriptionResponseData"
+        },
+        "errors": {
+          "target": "com.x.accountActivity#CreateAccountActivitySubscriptionResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#CreateAccountActivitySubscriptionResponseData": {
+      "type": "structure",
+      "members": {
+        "subscribed": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Whether the subscription is active.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#CreateAccountActivitySubscriptionResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.accountActivity#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#CreateAccountActivitySubscription": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.accountActivity#CreateAccountActivitySubscriptionRequest2"
+      },
+      "output": {
+        "target": "com.x.accountActivity#CreateAccountActivitySubscriptionResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/account_activity/webhooks/{webhook_id}/subscriptions/all",
+          "code": 200
+        },
+        "smithy.api#documentation": "Create subscription\n\nCreates an Account Activity subscription for the user and the given webhook."
+      }
+    },
+    "com.x.accountActivity#GetAccountActivitySubscriptionsRequest": {
+      "type": "structure",
+      "members": {
+        "webhook_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.accountActivity#GetAccountActivitySubscriptionsResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.accountActivity#GetAccountActivitySubscriptionsResponseData"
+        },
+        "errors": {
+          "target": "com.x.accountActivity#GetAccountActivitySubscriptionsResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#GetAccountActivitySubscriptionsResponseData": {
+      "type": "structure",
+      "members": {
+        "application_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "App the subscriptions belong to."
+          }
+        },
+        "subscriptions": {
+          "target": "com.x.accountActivity#GetAccountActivitySubscriptionsResponseDataSubscriptionsList"
+        },
+        "webhook_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Webhook receiving the subscription events."
+          }
+        },
+        "webhook_url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "URL the webhook delivers events to."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#GetAccountActivitySubscriptionsResponseDataSubscriptions": {
+      "type": "structure",
+      "members": {
+        "user_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Subscribed user."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#GetAccountActivitySubscriptionsResponseDataSubscriptionsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.accountActivity#GetAccountActivitySubscriptionsResponseDataSubscriptions"
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#GetAccountActivitySubscriptionsResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.accountActivity#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#GetAccountActivitySubscriptions": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.accountActivity#GetAccountActivitySubscriptionsRequest"
+      },
+      "output": {
+        "target": "com.x.accountActivity#GetAccountActivitySubscriptionsResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "GET",
+          "uri": "/2/account_activity/webhooks/{webhook_id}/subscriptions/all/list",
+          "code": 200
+        },
+        "smithy.api#documentation": "Get Account Activity Subscriptions"
+      }
+    },
+    "com.x.accountActivity#DeleteAccountActivitySubscriptionRequest": {
+      "type": "structure",
+      "members": {
+        "webhook_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        },
+        "user_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.accountActivity#DeleteAccountActivitySubscriptionResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.accountActivity#DeleteAccountActivitySubscriptionResponseData"
+        },
+        "errors": {
+          "target": "com.x.accountActivity#DeleteAccountActivitySubscriptionResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#DeleteAccountActivitySubscriptionResponseData": {
+      "type": "structure",
+      "members": {
+        "subscribed": {
+          "target": "smithy.api#Boolean",
+          "traits": {
+            "smithy.api#documentation": "Whether the user has an active subscription.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#DeleteAccountActivitySubscriptionResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.accountActivity#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.accountActivity#DeleteAccountActivitySubscription": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.accountActivity#DeleteAccountActivitySubscriptionRequest"
+      },
+      "output": {
+        "target": "com.x.accountActivity#DeleteAccountActivitySubscriptionResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "DELETE",
+          "uri": "/2/account_activity/webhooks/{webhook_id}/subscriptions/{user_id}/all",
+          "code": 200
+        },
+        "smithy.api#documentation": "Delete subscription\n\nDeletes an Account Activity subscription for the given webhook and user ID."
+      }
+    },
+    "com.x.accountActivity#AccountActivity": {
+      "type": "service",
+      "version": "2.167",
+      "operations": [
+        {
+          "target": "com.x.accountActivity#GetAccountActivitySubscriptionCount"
+        },
+        {
+          "target": "com.x.accountActivity#ValidateAccountActivitySubscription"
+        },
+        {
+          "target": "com.x.accountActivity#CreateAccountActivitySubscription"
+        },
+        {
+          "target": "com.x.accountActivity#GetAccountActivitySubscriptions"
+        },
+        {
+          "target": "com.x.accountActivity#DeleteAccountActivitySubscription"
+        }
+      ],
+      "traits": {
+        "smithy.api#title": "X API v2",
+        "smithy.api#documentation": "X API v2 core endpoints"
+      }
+    }
+  }
+}

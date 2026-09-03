@@ -1,0 +1,471 @@
+// AUTO-GENERATED from xdevplatform/xdk@84c26540df30c0b798e50e34151c56d5d262ba1c; do not edit.
+import * as S from "@distilled.cloud/core/schema";
+import * as T from "../traits.ts";
+import {
+  makeOperation,
+  makeBinaryOperation,
+  makeStreamOperation,
+} from "../operation.ts";
+import { operations } from "../operations.ts";
+export type GetRulesRequestIdsList = Array<string>;
+export const GetRulesRequestIdsList = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<GetRulesRequestIdsList>;
+
+export interface GetRulesRequest {
+  ids?: GetRulesRequestIdsList;
+  max_results?: number;
+  /** A base32hex-encoded pagination token. */
+  pagination_token?: string;
+}
+export const GetRulesRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    ids: S.optional(GetRulesRequestIdsList.pipe(T.Query())),
+    max_results: S.optional(S.Number.pipe(T.Query())),
+    pagination_token: S.optional(S.String.pipe(T.Query())),
+  }).pipe(
+    T.Http({ method: "GET", uri: "/2/tweets/search/stream/rules", code: 200 }),
+  ),
+).annotate({
+  identifier: "GetRulesRequest",
+}) as any as S.Schema<GetRulesRequest>;
+
+export interface GetRulesResponseData {
+  /** Unique identifier of the rule. */
+  id?: string;
+  /** Optional caller-defined label for the rule. */
+  tag?: string;
+  /** The rule's filter expression. */
+  value?: string;
+}
+export const GetRulesResponseData = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    id: S.optional(S.String),
+    tag: S.optional(S.String),
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "GetRulesResponseData",
+}) as any as S.Schema<GetRulesResponseData>;
+
+export type GetRulesResponseDataList = Array<GetRulesResponseData>;
+export const GetRulesResponseDataList = /*@__PURE__*/ S.Array(
+  GetRulesResponseData,
+) as any as S.Schema<GetRulesResponseDataList>;
+
+export type ResourceNotFoundProblemType =
+  "https://api.x.com/2/problems/resource-not-found";
+export const ResourceNotFoundProblemType = /*@__PURE__*/ S.String;
+
+export interface ResourceNotFoundProblem {
+  detail: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type: string;
+  status?: number;
+  title: string;
+  type: ResourceNotFoundProblemType;
+  value?: string;
+}
+export const ResourceNotFoundProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: ResourceNotFoundProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "ResourceNotFoundProblem",
+}) as any as S.Schema<ResourceNotFoundProblem>;
+
+export type InvalidRequestProblemType =
+  "https://api.x.com/2/problems/invalid-request";
+export const InvalidRequestProblemType = /*@__PURE__*/ S.String;
+
+export interface InvalidRequestProblem {
+  detail: string;
+  parameter?: string;
+  status?: number;
+  title: string;
+  type: InvalidRequestProblemType;
+  value?: string;
+}
+export const InvalidRequestProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: InvalidRequestProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "InvalidRequestProblem",
+}) as any as S.Schema<InvalidRequestProblem>;
+
+export type NotAuthorizedForResourceProblemType =
+  "https://api.x.com/2/problems/not-authorized-for-resource";
+export const NotAuthorizedForResourceProblemType = /*@__PURE__*/ S.String;
+
+export interface NotAuthorizedForResourceProblem {
+  detail: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: NotAuthorizedForResourceProblemType;
+  value?: string;
+}
+export const NotAuthorizedForResourceProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: NotAuthorizedForResourceProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "NotAuthorizedForResourceProblem",
+}) as any as S.Schema<NotAuthorizedForResourceProblem>;
+
+export type NotAuthorizedForFieldProblemType =
+  "https://api.x.com/2/problems/not-authorized-for-field";
+export const NotAuthorizedForFieldProblemType = /*@__PURE__*/ S.String;
+
+export interface NotAuthorizedForFieldProblem {
+  detail: string;
+  field: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: NotAuthorizedForFieldProblemType;
+  value?: string;
+}
+export const NotAuthorizedForFieldProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: NotAuthorizedForFieldProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "NotAuthorizedForFieldProblem",
+}) as any as S.Schema<NotAuthorizedForFieldProblem>;
+
+export type FieldUnauthorizedProblemType =
+  "https://api.x.com/2/problems/field-unauthorized";
+export const FieldUnauthorizedProblemType = /*@__PURE__*/ S.String;
+
+export interface FieldUnauthorizedProblem {
+  detail: string;
+  field: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: FieldUnauthorizedProblemType;
+}
+export const FieldUnauthorizedProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: FieldUnauthorizedProblemType,
+  }),
+).annotate({
+  identifier: "FieldUnauthorizedProblem",
+}) as any as S.Schema<FieldUnauthorizedProblem>;
+
+export type FieldHydrationFailureProblemType =
+  "https://api.x.com/2/problems/field-hydration-failure";
+export const FieldHydrationFailureProblemType = /*@__PURE__*/ S.String;
+
+export interface FieldHydrationFailureProblem {
+  detail: string;
+  field: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: FieldHydrationFailureProblemType;
+}
+export const FieldHydrationFailureProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: FieldHydrationFailureProblemType,
+  }),
+).annotate({
+  identifier: "FieldHydrationFailureProblem",
+}) as any as S.Schema<FieldHydrationFailureProblem>;
+
+export type ResourceUnavailableProblemType =
+  "https://api.x.com/2/problems/resource-unavailable";
+export const ResourceUnavailableProblemType = /*@__PURE__*/ S.String;
+
+export interface ResourceUnavailableProblem {
+  detail: string;
+  resource_id?: string;
+  resource_type: string;
+  status?: number;
+  title: string;
+  type: ResourceUnavailableProblemType;
+}
+export const ResourceUnavailableProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: ResourceUnavailableProblemType,
+  }),
+).annotate({
+  identifier: "ResourceUnavailableProblem",
+}) as any as S.Schema<ResourceUnavailableProblem>;
+
+export type DisallowedResourceProblemType =
+  "https://api.x.com/2/problems/disallowed-resource";
+export const DisallowedResourceProblemType = /*@__PURE__*/ S.String;
+
+export interface DisallowedResourceProblem {
+  detail: string;
+  resource_id?: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: DisallowedResourceProblemType;
+}
+export const DisallowedResourceProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    resource_id: S.optional(S.String),
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: DisallowedResourceProblemType,
+  }),
+).annotate({
+  identifier: "DisallowedResourceProblem",
+}) as any as S.Schema<DisallowedResourceProblem>;
+
+export type InternalErrorProblemType =
+  "https://api.x.com/2/problems/internal-error";
+export const InternalErrorProblemType = /*@__PURE__*/ S.String;
+
+export interface InternalErrorProblem {
+  detail: string;
+  status?: number;
+  title: string;
+  type: InternalErrorProblemType;
+}
+export const InternalErrorProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: InternalErrorProblemType,
+  }),
+).annotate({
+  identifier: "InternalErrorProblem",
+}) as any as S.Schema<InternalErrorProblem>;
+
+export type Problem =
+  | ResourceNotFoundProblem
+  | InvalidRequestProblem
+  | NotAuthorizedForResourceProblem
+  | NotAuthorizedForFieldProblem
+  | FieldUnauthorizedProblem
+  | FieldHydrationFailureProblem
+  | ResourceUnavailableProblem
+  | DisallowedResourceProblem
+  | InternalErrorProblem;
+export const Problem = /*@__PURE__*/ S.Unknown as any as S.Schema<Problem>;
+export type GetRulesResponseErrorsList = Array<Problem>;
+export const GetRulesResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<GetRulesResponseErrorsList>;
+
+export interface GetRulesResponseMeta {
+  /** Pagination token for the next page of results. */
+  next_token?: string;
+  /** Number of items in the data array. */
+  result_count?: number;
+}
+export const GetRulesResponseMeta = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    next_token: S.optional(S.String),
+    result_count: S.optional(S.Number),
+  }),
+).annotate({
+  identifier: "GetRulesResponseMeta",
+}) as any as S.Schema<GetRulesResponseMeta>;
+
+export interface GetRulesResponse {
+  data?: GetRulesResponseDataList;
+  errors?: GetRulesResponseErrorsList;
+  meta?: GetRulesResponseMeta;
+}
+export const GetRulesResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(GetRulesResponseDataList),
+    errors: S.optional(GetRulesResponseErrorsList),
+    meta: S.optional(GetRulesResponseMeta),
+  }),
+).annotate({
+  identifier: "GetRulesResponse",
+}) as any as S.Schema<GetRulesResponse>;
+
+export interface UpdateRulesAdd {
+  /** Optional caller-defined label for the rule. */
+  tag?: string;
+  /** Rule filter expression. */
+  value: string;
+}
+export const UpdateRulesAdd = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    tag: S.optional(S.String),
+    value: S.String,
+  }),
+).annotate({ identifier: "UpdateRulesAdd" }) as any as S.Schema<UpdateRulesAdd>;
+
+/** Rules to add. */
+export type UpdateRulesRequestAddList = Array<UpdateRulesAdd>;
+export const UpdateRulesRequestAddList = /*@__PURE__*/ S.Array(
+  UpdateRulesAdd,
+) as any as S.Schema<UpdateRulesRequestAddList>;
+
+/** Rule ids (Snowflake external ids) to delete. */
+export type UpdateRulesDeleteIdsList = Array<string>;
+export const UpdateRulesDeleteIdsList = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<UpdateRulesDeleteIdsList>;
+
+/** Rule values to delete. */
+export type UpdateRulesDeleteValuesList = Array<string>;
+export const UpdateRulesDeleteValuesList = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<UpdateRulesDeleteValuesList>;
+
+export interface UpdateRulesDelete {
+  /** Rule ids (Snowflake external ids) to delete. */
+  ids?: UpdateRulesDeleteIdsList;
+  /** Rule values to delete. */
+  values?: UpdateRulesDeleteValuesList;
+}
+export const UpdateRulesDelete = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    ids: S.optional(UpdateRulesDeleteIdsList),
+    values: S.optional(UpdateRulesDeleteValuesList),
+  }),
+).annotate({
+  identifier: "UpdateRulesDelete",
+}) as any as S.Schema<UpdateRulesDelete>;
+
+export interface UpdateRulesRequest {
+  dry_run?: boolean;
+  delete_all?: boolean;
+  /** Rules to add. */
+  add?: UpdateRulesRequestAddList;
+  /** Rules to delete by id or by value. */
+  delete?: UpdateRulesDelete;
+}
+export const UpdateRulesRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    dry_run: S.optional(S.Boolean.pipe(T.Query())),
+    delete_all: S.optional(S.Boolean.pipe(T.Query())),
+    add: S.optional(UpdateRulesRequestAddList),
+    delete: S.optional(UpdateRulesDelete),
+  }).pipe(
+    T.Http({ method: "POST", uri: "/2/tweets/search/stream/rules", code: 200 }),
+  ),
+).annotate({
+  identifier: "UpdateRulesRequest",
+}) as any as S.Schema<UpdateRulesRequest>;
+
+export type UpdateRulesResponseData = GetRulesResponseData;
+export const UpdateRulesResponseData = GetRulesResponseData;
+
+export type UpdateRulesResponseDataList = Array<GetRulesResponseData>;
+export const UpdateRulesResponseDataList = /*@__PURE__*/ S.Array(
+  GetRulesResponseData,
+) as any as S.Schema<UpdateRulesResponseDataList>;
+
+export type UpdateRulesResponseErrorsList = Array<Problem>;
+export const UpdateRulesResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<UpdateRulesResponseErrorsList>;
+
+export interface UpdateRulesResponseMeta {
+  sent?: string;
+  summary?: unknown;
+}
+export const UpdateRulesResponseMeta = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    sent: S.optional(S.String),
+    summary: S.optional(S.Unknown),
+  }),
+).annotate({
+  identifier: "UpdateRulesResponseMeta",
+}) as any as S.Schema<UpdateRulesResponseMeta>;
+
+export interface UpdateRulesResponse {
+  data?: UpdateRulesResponseDataList;
+  errors?: UpdateRulesResponseErrorsList;
+  meta?: UpdateRulesResponseMeta;
+}
+export const UpdateRulesResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(UpdateRulesResponseDataList),
+    errors: S.optional(UpdateRulesResponseErrorsList),
+    meta: S.optional(UpdateRulesResponseMeta),
+  }),
+).annotate({
+  identifier: "UpdateRulesResponse",
+}) as any as S.Schema<UpdateRulesResponse>;
+
+export const getRules = /*@__PURE__*/ makeOperation<
+  GetRulesRequest,
+  GetRulesResponse
+>(
+  operations.getRules,
+  () => GetRulesRequest,
+  () => GetRulesResponse,
+);
+
+export const updateRules = /*@__PURE__*/ makeOperation<
+  UpdateRulesRequest,
+  UpdateRulesResponse
+>(
+  operations.updateRules,
+  () => UpdateRulesRequest,
+  () => UpdateRulesResponse,
+);

@@ -46,7 +46,7 @@ describe("OAuth1 signing", () => {
         now: () => 1_318_622_958_000,
         crypto: {
           subtle: crypto.subtle,
-          getRandomValues: (array) => {
+          getRandomValues: <T extends ArrayBufferView | null>(array: T): T => {
             if (array)
               new Uint8Array(
                 array.buffer,

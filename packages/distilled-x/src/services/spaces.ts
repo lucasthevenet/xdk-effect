@@ -1,0 +1,2762 @@
+// AUTO-GENERATED from xdevplatform/xdk@84c26540df30c0b798e50e34151c56d5d262ba1c; do not edit.
+import * as S from "@distilled.cloud/core/schema";
+import * as T from "../traits.ts";
+import {
+  makeOperation,
+  makeBinaryOperation,
+  makeStreamOperation,
+} from "../operation.ts";
+import { operations } from "../operations.ts";
+export type GetSpacesBuyersRequestUserFieldsItem =
+  | "confirmed_email"
+  | "connection_status"
+  | "created_at"
+  | "description"
+  | "entities"
+  | "id"
+  | "is_identity_verified"
+  | "location"
+  | "name"
+  | "parody"
+  | "profile_banner_url"
+  | "profile_image_url"
+  | "protected"
+  | "public_metrics"
+  | "receives_your_dm"
+  | "subscribes_to_you"
+  | "subscription"
+  | "subscription_type"
+  | "url"
+  | "username"
+  | "verified"
+  | "verified_followers_count"
+  | "verified_type"
+  | "withheld";
+export const GetSpacesBuyersRequestUserFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a User object. */
+export type GetSpacesBuyersRequestUserFieldsList = Array<
+  GetSpacesBuyersRequestUserFieldsItem | (string & {})
+>;
+export const GetSpacesBuyersRequestUserFieldsList = /*@__PURE__*/ S.Array(
+  GetSpacesBuyersRequestUserFieldsItem,
+) as any as S.Schema<GetSpacesBuyersRequestUserFieldsList>;
+
+export type GetSpacesBuyersRequestExpansionsItem =
+  | "affiliation"
+  | "most_recent_post_id"
+  | "pinned_post_id";
+export const GetSpacesBuyersRequestExpansionsItem = /*@__PURE__*/ S.String;
+
+export type GetSpacesBuyersRequestExpansionsList = Array<
+  GetSpacesBuyersRequestExpansionsItem | (string & {})
+>;
+export const GetSpacesBuyersRequestExpansionsList = /*@__PURE__*/ S.Array(
+  GetSpacesBuyersRequestExpansionsItem,
+) as any as S.Schema<GetSpacesBuyersRequestExpansionsList>;
+
+export type GetSpacesBuyersRequestPostFieldsItem =
+  | "article"
+  | "article_title"
+  | "attachments"
+  | "card_uri"
+  | "community_id"
+  | "context_annotations"
+  | "conversation_id"
+  | "created_at"
+  | "display_text_range"
+  | "edit_controls"
+  | "entities"
+  | "geo"
+  | "id"
+  | "lang"
+  | "matched_media_notes"
+  | "media_metadata"
+  | "non_public_metrics"
+  | "note_post"
+  | "note_request_suggestions"
+  | "organic_metrics"
+  | "paid_partnership"
+  | "possibly_sensitive"
+  | "promoted_metrics"
+  | "public_metrics"
+  | "reply_settings"
+  | "scopes"
+  | "source"
+  | "suggested_source_links"
+  | "suggested_source_links_with_counts"
+  | "text"
+  | "withheld";
+export const GetSpacesBuyersRequestPostFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a Post object. */
+export type GetSpacesBuyersRequestPostFieldsList = Array<
+  GetSpacesBuyersRequestPostFieldsItem | (string & {})
+>;
+export const GetSpacesBuyersRequestPostFieldsList = /*@__PURE__*/ S.Array(
+  GetSpacesBuyersRequestPostFieldsItem,
+) as any as S.Schema<GetSpacesBuyersRequestPostFieldsList>;
+
+export interface GetSpacesBuyersRequest {
+  id: string;
+  max_results?: number;
+  /** A base32hex-encoded pagination token. */
+  pagination_token?: string;
+  /** A comma separated list of User fields to display. */
+  user_fields?: GetSpacesBuyersRequestUserFieldsList;
+  /** A comma separated list of fields to expand. */
+  expansions?: GetSpacesBuyersRequestExpansionsList;
+  /** A comma separated list of Post fields to display. */
+  post_fields?: GetSpacesBuyersRequestPostFieldsList;
+}
+export const GetSpacesBuyersRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    id: S.String.pipe(T.Label()),
+    max_results: S.optional(S.Number.pipe(T.Query())),
+    pagination_token: S.optional(S.String.pipe(T.Query())),
+    user_fields: S.optional(
+      GetSpacesBuyersRequestUserFieldsList.pipe(T.Query("user.fields")),
+    ),
+    expansions: S.optional(
+      GetSpacesBuyersRequestExpansionsList.pipe(T.Query()),
+    ),
+    post_fields: S.optional(
+      GetSpacesBuyersRequestPostFieldsList.pipe(T.Query("post.fields")),
+    ),
+  }).pipe(T.Http({ method: "GET", uri: "/2/spaces/{id}/buyers", code: 200 })),
+).annotate({
+  identifier: "GetSpacesBuyersRequest",
+}) as any as S.Schema<GetSpacesBuyersRequest>;
+
+/** A list of unique identifiers of the accounts this User is affiliated with. */
+export type UserAffiliationUserIdList = Array<string>;
+export const UserAffiliationUserIdList = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<UserAffiliationUserIdList>;
+
+/** Metadata about a user's affiliation. */
+export interface UserAffiliation {
+  /** URL of the affiliation badge image shown on the User's profile. */
+  badge_url?: string | null;
+  /** Description of the affiliation. */
+  description?: string | null;
+  /** URL associated with the affiliation. */
+  url?: string | null;
+  /** A list of unique identifiers of the accounts this User is affiliated with. */
+  user_id?: UserAffiliationUserIdList | null;
+}
+export const UserAffiliation = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    badge_url: S.optional(S.NullOr(S.String)),
+    description: S.optional(S.NullOr(S.String)),
+    url: S.optional(S.NullOr(S.String)),
+    user_id: S.optional(S.NullOr(UserAffiliationUserIdList)),
+  }),
+).annotate({
+  identifier: "UserAffiliation",
+}) as any as S.Schema<UserAffiliation>;
+
+/** A connection between the authenticated User and this User. */
+export type UserConnectionStatusItem =
+  | "blocking"
+  | "follow_request_received"
+  | "follow_request_sent"
+  | "followed_by"
+  | "following"
+  | "muting";
+export const UserConnectionStatusItem = /*@__PURE__*/ S.String;
+
+/** Returns detailed information about the relationship between two users. */
+export type UserConnectionStatus = Array<UserConnectionStatusItem>;
+export const UserConnectionStatus = /*@__PURE__*/ S.Array(
+  UserConnectionStatusItem,
+) as any as S.Schema<UserConnectionStatus>;
+
+/** A hashtag or cashtag entity. */
+export interface UserEntitiesDescriptionCashtagsItem {
+  /** End index in the text (exclusive). */
+  end: number;
+  /** Start index in the text (inclusive). */
+  start: number;
+  tag: string;
+}
+export const UserEntitiesDescriptionCashtagsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    end: S.Number,
+    start: S.Number,
+    tag: S.String,
+  }),
+).annotate({
+  identifier: "UserEntitiesDescriptionCashtagsItem",
+}) as any as S.Schema<UserEntitiesDescriptionCashtagsItem>;
+
+export type UserEntitiesDescriptionCashtagsList =
+  Array<UserEntitiesDescriptionCashtagsItem>;
+export const UserEntitiesDescriptionCashtagsList = /*@__PURE__*/ S.Array(
+  UserEntitiesDescriptionCashtagsItem,
+) as any as S.Schema<UserEntitiesDescriptionCashtagsList>;
+
+/** A hashtag or cashtag entity. */
+export type UserEntitiesDescriptionHashtagsItem =
+  UserEntitiesDescriptionCashtagsItem;
+export const UserEntitiesDescriptionHashtagsItem =
+  UserEntitiesDescriptionCashtagsItem;
+
+export type UserEntitiesDescriptionHashtagsList =
+  Array<UserEntitiesDescriptionCashtagsItem>;
+export const UserEntitiesDescriptionHashtagsList = /*@__PURE__*/ S.Array(
+  UserEntitiesDescriptionCashtagsItem,
+) as any as S.Schema<UserEntitiesDescriptionHashtagsList>;
+
+/** A user mention entity. */
+export interface UserEntitiesDescriptionMentionsItem {
+  end: number;
+  id?: string | null;
+  start: number;
+  username: string;
+}
+export const UserEntitiesDescriptionMentionsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    end: S.Number,
+    id: S.optional(S.NullOr(S.String)),
+    start: S.Number,
+    username: S.String,
+  }),
+).annotate({
+  identifier: "UserEntitiesDescriptionMentionsItem",
+}) as any as S.Schema<UserEntitiesDescriptionMentionsItem>;
+
+export type UserEntitiesDescriptionMentionsList =
+  Array<UserEntitiesDescriptionMentionsItem>;
+export const UserEntitiesDescriptionMentionsList = /*@__PURE__*/ S.Array(
+  UserEntitiesDescriptionMentionsItem,
+) as any as S.Schema<UserEntitiesDescriptionMentionsList>;
+
+/** A preview image for a linked page. */
+export interface UserEntitiesDescriptionUrlsItemImagesItem {
+  height?: number | null;
+  url?: string | null;
+  width?: number | null;
+}
+export const UserEntitiesDescriptionUrlsItemImagesItem =
+  /*@__PURE__*/ S.suspend(() =>
+    S.Struct({
+      height: S.optional(S.NullOr(S.Number)),
+      url: S.optional(S.NullOr(S.String)),
+      width: S.optional(S.NullOr(S.Number)),
+    }),
+  ).annotate({
+    identifier: "UserEntitiesDescriptionUrlsItemImagesItem",
+  }) as any as S.Schema<UserEntitiesDescriptionUrlsItemImagesItem>;
+
+export type UserEntitiesDescriptionUrlsItemImagesList =
+  Array<UserEntitiesDescriptionUrlsItemImagesItem>;
+export const UserEntitiesDescriptionUrlsItemImagesList = /*@__PURE__*/ S.Array(
+  UserEntitiesDescriptionUrlsItemImagesItem,
+) as any as S.Schema<UserEntitiesDescriptionUrlsItemImagesList>;
+
+/** A URL entity found in profile text. */
+export interface UserEntitiesDescriptionUrlsItem {
+  /** Description of the linked page, when available. */
+  description?: string | null;
+  /** The URL as displayed in the Post text. */
+  display_url?: string | null;
+  end: number;
+  /** The fully resolved URL. */
+  expanded_url?: string | null;
+  images?: UserEntitiesDescriptionUrlsItemImagesList | null;
+  media_key?: string | null;
+  start: number;
+  /** HTTP status from resolving the URL. */
+  status?: number | null;
+  /** Title of the linked page, when available. */
+  title?: string | null;
+  /** The final destination after following redirects. */
+  unwound_url?: string | null;
+  /** The t.co shortened URL. */
+  url: string;
+}
+export const UserEntitiesDescriptionUrlsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    description: S.optional(S.NullOr(S.String)),
+    display_url: S.optional(S.NullOr(S.String)),
+    end: S.Number,
+    expanded_url: S.optional(S.NullOr(S.String)),
+    images: S.optional(S.NullOr(UserEntitiesDescriptionUrlsItemImagesList)),
+    media_key: S.optional(S.NullOr(S.String)),
+    start: S.Number,
+    status: S.optional(S.NullOr(S.Number)),
+    title: S.optional(S.NullOr(S.String)),
+    unwound_url: S.optional(S.NullOr(S.String)),
+    url: S.String,
+  }),
+).annotate({
+  identifier: "UserEntitiesDescriptionUrlsItem",
+}) as any as S.Schema<UserEntitiesDescriptionUrlsItem>;
+
+export type UserEntitiesDescriptionUrlsList =
+  Array<UserEntitiesDescriptionUrlsItem>;
+export const UserEntitiesDescriptionUrlsList = /*@__PURE__*/ S.Array(
+  UserEntitiesDescriptionUrlsItem,
+) as any as S.Schema<UserEntitiesDescriptionUrlsList>;
+
+/** Entities found in the User's bio. */
+export interface UserEntitiesDescription {
+  cashtags?: UserEntitiesDescriptionCashtagsList | null;
+  hashtags?: UserEntitiesDescriptionHashtagsList | null;
+  mentions?: UserEntitiesDescriptionMentionsList | null;
+  urls?: UserEntitiesDescriptionUrlsList | null;
+}
+export const UserEntitiesDescription = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    cashtags: S.optional(S.NullOr(UserEntitiesDescriptionCashtagsList)),
+    hashtags: S.optional(S.NullOr(UserEntitiesDescriptionHashtagsList)),
+    mentions: S.optional(S.NullOr(UserEntitiesDescriptionMentionsList)),
+    urls: S.optional(S.NullOr(UserEntitiesDescriptionUrlsList)),
+  }),
+).annotate({
+  identifier: "UserEntitiesDescription",
+}) as any as S.Schema<UserEntitiesDescription>;
+
+/** A preview image for a linked page. */
+export type UserEntitiesUrlUrlsItemImagesItem =
+  UserEntitiesDescriptionUrlsItemImagesItem;
+export const UserEntitiesUrlUrlsItemImagesItem =
+  UserEntitiesDescriptionUrlsItemImagesItem;
+
+export type UserEntitiesUrlUrlsItemImagesList =
+  Array<UserEntitiesDescriptionUrlsItemImagesItem>;
+export const UserEntitiesUrlUrlsItemImagesList = /*@__PURE__*/ S.Array(
+  UserEntitiesDescriptionUrlsItemImagesItem,
+) as any as S.Schema<UserEntitiesUrlUrlsItemImagesList>;
+
+/** A URL entity found in profile text. */
+export interface UserEntitiesUrlUrlsItem {
+  /** Description of the linked page, when available. */
+  description?: string | null;
+  /** The URL as displayed in the Post text. */
+  display_url?: string | null;
+  end: number;
+  /** The fully resolved URL. */
+  expanded_url?: string | null;
+  images?: UserEntitiesUrlUrlsItemImagesList | null;
+  media_key?: string | null;
+  start: number;
+  /** HTTP status from resolving the URL. */
+  status?: number | null;
+  /** Title of the linked page, when available. */
+  title?: string | null;
+  /** The final destination after following redirects. */
+  unwound_url?: string | null;
+  /** The t.co shortened URL. */
+  url: string;
+}
+export const UserEntitiesUrlUrlsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    description: S.optional(S.NullOr(S.String)),
+    display_url: S.optional(S.NullOr(S.String)),
+    end: S.Number,
+    expanded_url: S.optional(S.NullOr(S.String)),
+    images: S.optional(S.NullOr(UserEntitiesUrlUrlsItemImagesList)),
+    media_key: S.optional(S.NullOr(S.String)),
+    start: S.Number,
+    status: S.optional(S.NullOr(S.Number)),
+    title: S.optional(S.NullOr(S.String)),
+    unwound_url: S.optional(S.NullOr(S.String)),
+    url: S.String,
+  }),
+).annotate({
+  identifier: "UserEntitiesUrlUrlsItem",
+}) as any as S.Schema<UserEntitiesUrlUrlsItem>;
+
+export type UserEntitiesUrlUrlsList = Array<UserEntitiesUrlUrlsItem>;
+export const UserEntitiesUrlUrlsList = /*@__PURE__*/ S.Array(
+  UserEntitiesUrlUrlsItem,
+) as any as S.Schema<UserEntitiesUrlUrlsList>;
+
+/** Entities for the User's profile website URL. */
+export interface UserEntitiesUrl {
+  urls?: UserEntitiesUrlUrlsList | null;
+}
+export const UserEntitiesUrl = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    urls: S.optional(S.NullOr(UserEntitiesUrlUrlsList)),
+  }),
+).annotate({
+  identifier: "UserEntitiesUrl",
+}) as any as S.Schema<UserEntitiesUrl>;
+
+/** A list of metadata found in the User's profile description. */
+export interface UserEntities {
+  /** Entities found in the User's bio. */
+  description?: UserEntitiesDescription | null;
+  /** Entities for the User's profile website URL. */
+  url?: UserEntitiesUrl | null;
+}
+export const UserEntities = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    description: S.optional(S.NullOr(UserEntitiesDescription)),
+    url: S.optional(S.NullOr(UserEntitiesUrl)),
+  }),
+).annotate({ identifier: "UserEntities" }) as any as S.Schema<UserEntities>;
+
+/** A list of metrics for this User. */
+export interface UserPublicMetrics {
+  /** Number of Users who follow this User. */
+  followers_count: number;
+  /** Number of Users this User follows. */
+  following_count: number;
+  /** Number of Posts this User has liked. */
+  like_count?: number | null;
+  /** Number of Lists that include this User. */
+  listed_count: number;
+  /** Number of media items posted by this User. */
+  media_count?: number | null;
+  /** Number of Posts (including Reposts) created by this User. */
+  post_count: number;
+}
+export const UserPublicMetrics = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    followers_count: S.Number,
+    following_count: S.Number,
+    like_count: S.optional(S.NullOr(S.Number)),
+    listed_count: S.Number,
+    media_count: S.optional(S.NullOr(S.Number)),
+    post_count: S.Number,
+  }),
+).annotate({
+  identifier: "UserPublicMetrics",
+}) as any as S.Schema<UserPublicMetrics>;
+
+/** The subscription relationship between this User and you. */
+export interface UserSubscription {
+  /** Indicates if this User subscribes to you. */
+  subscribes_to_you: boolean;
+}
+export const UserSubscription = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    subscribes_to_you: S.Boolean,
+  }),
+).annotate({
+  identifier: "UserSubscription",
+}) as any as S.Schema<UserSubscription>;
+
+/** A list of countries (as ISO 3166-1 alpha-2 codes) where this content is withheld. */
+export type UserWithheldCountryCodesList = Array<string>;
+export const UserWithheldCountryCodesList = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<UserWithheldCountryCodesList>;
+
+/** The scope of the withholding. Only present, with the value "user", when the entire User is withheld. */
+export type UserWithheldScope = "user";
+export const UserWithheldScope = /*@__PURE__*/ S.String;
+
+/** Withholding details for withheld content. */
+export interface UserWithheld {
+  /** A list of countries (as ISO 3166-1 alpha-2 codes) where this content is withheld. */
+  country_codes?: UserWithheldCountryCodesList | null;
+  /** The scope of the withholding. Only present, with the value "user", when the entire User is withheld. */
+  scope?: UserWithheldScope | null;
+}
+export const UserWithheld = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    country_codes: S.optional(S.NullOr(UserWithheldCountryCodesList)),
+    scope: S.optional(S.NullOr(UserWithheldScope)),
+  }),
+).annotate({ identifier: "UserWithheld" }) as any as S.Schema<UserWithheld>;
+
+export interface User {
+  affiliation?: UserAffiliation;
+  confirmed_email?: string;
+  connection_status?: UserConnectionStatus;
+  /** Creation time of this User. */
+  created_at?: string;
+  /** The text of this User's profile description (also known as bio), if the User provided one. */
+  description?: string;
+  entities?: UserEntities;
+  /** Unique identifier of this User. */
+  id?: string;
+  /** Indicates if this User has completed identity verification. */
+  is_identity_verified?: boolean;
+  /** The location specified in the User's profile, if the User provided one. As this is a freeform value, it may not indicate a valid location. */
+  location?: string;
+  /** Unique identifier of this User's most recent Post. */
+  most_recent_post_id?: string;
+  /** The friendly name of this User, as shown on their profile. */
+  name?: string;
+  /** Indicates if this User is a parody account. */
+  parody?: boolean;
+  /** Unique identifier of this User's pinned Post. */
+  pinned_post_id?: string;
+  /** The URL to the profile banner for this User. */
+  profile_banner_url?: string;
+  /** The URL to the profile image for this User. */
+  profile_image_url?: string;
+  /** Indicates if this User has chosen to protect their Posts (in other words, if this User's Posts are private). */
+  protected?: boolean;
+  public_metrics?: UserPublicMetrics;
+  /** Indicates if you can send a DM to this User. */
+  receives_your_dm?: boolean;
+  /** Indicates if this User subscribes to you. */
+  subscribes_to_you?: boolean;
+  subscription?: UserSubscription;
+  /** The X Blue subscription type of the user, e.g.: Basic, Premium, PremiumPlus or None. */
+  subscription_type?: string;
+  /** The URL specified in the User's profile. */
+  url?: string;
+  /** The X handle (screen name) of this User. */
+  username?: string;
+  /** Indicates if this User is a verified X User. */
+  verified?: boolean;
+  /** The number of verified followers of this User. */
+  verified_followers_count?: number;
+  /** The X Blue verified type of the user, e.g.: blue, government, business or none. */
+  verified_type?: string;
+  withheld?: UserWithheld;
+}
+export const User = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    affiliation: S.optional(UserAffiliation),
+    confirmed_email: S.optional(S.String),
+    connection_status: S.optional(UserConnectionStatus),
+    created_at: S.optional(S.String),
+    description: S.optional(S.String),
+    entities: S.optional(UserEntities),
+    id: S.optional(S.String),
+    is_identity_verified: S.optional(S.Boolean),
+    location: S.optional(S.String),
+    most_recent_post_id: S.optional(S.String),
+    name: S.optional(S.String),
+    parody: S.optional(S.Boolean),
+    pinned_post_id: S.optional(S.String),
+    profile_banner_url: S.optional(S.String),
+    profile_image_url: S.optional(S.String),
+    protected: S.optional(S.Boolean),
+    public_metrics: S.optional(UserPublicMetrics),
+    receives_your_dm: S.optional(S.Boolean),
+    subscribes_to_you: S.optional(S.Boolean),
+    subscription: S.optional(UserSubscription),
+    subscription_type: S.optional(S.String),
+    url: S.optional(S.String),
+    username: S.optional(S.String),
+    verified: S.optional(S.Boolean),
+    verified_followers_count: S.optional(S.Number),
+    verified_type: S.optional(S.String),
+    withheld: S.optional(UserWithheld),
+  }),
+).annotate({ identifier: "User" }) as any as S.Schema<User>;
+
+export type GetSpacesBuyersResponseDataList = Array<User>;
+export const GetSpacesBuyersResponseDataList = /*@__PURE__*/ S.Array(
+  User,
+) as any as S.Schema<GetSpacesBuyersResponseDataList>;
+
+export type ResourceNotFoundProblemType =
+  "https://api.x.com/2/problems/resource-not-found";
+export const ResourceNotFoundProblemType = /*@__PURE__*/ S.String;
+
+export interface ResourceNotFoundProblem {
+  detail: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type: string;
+  status?: number;
+  title: string;
+  type: ResourceNotFoundProblemType;
+  value?: string;
+}
+export const ResourceNotFoundProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: ResourceNotFoundProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "ResourceNotFoundProblem",
+}) as any as S.Schema<ResourceNotFoundProblem>;
+
+export type InvalidRequestProblemType =
+  "https://api.x.com/2/problems/invalid-request";
+export const InvalidRequestProblemType = /*@__PURE__*/ S.String;
+
+export interface InvalidRequestProblem {
+  detail: string;
+  parameter?: string;
+  status?: number;
+  title: string;
+  type: InvalidRequestProblemType;
+  value?: string;
+}
+export const InvalidRequestProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: InvalidRequestProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "InvalidRequestProblem",
+}) as any as S.Schema<InvalidRequestProblem>;
+
+export type NotAuthorizedForResourceProblemType =
+  "https://api.x.com/2/problems/not-authorized-for-resource";
+export const NotAuthorizedForResourceProblemType = /*@__PURE__*/ S.String;
+
+export interface NotAuthorizedForResourceProblem {
+  detail: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: NotAuthorizedForResourceProblemType;
+  value?: string;
+}
+export const NotAuthorizedForResourceProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: NotAuthorizedForResourceProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "NotAuthorizedForResourceProblem",
+}) as any as S.Schema<NotAuthorizedForResourceProblem>;
+
+export type NotAuthorizedForFieldProblemType =
+  "https://api.x.com/2/problems/not-authorized-for-field";
+export const NotAuthorizedForFieldProblemType = /*@__PURE__*/ S.String;
+
+export interface NotAuthorizedForFieldProblem {
+  detail: string;
+  field: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: NotAuthorizedForFieldProblemType;
+  value?: string;
+}
+export const NotAuthorizedForFieldProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: NotAuthorizedForFieldProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "NotAuthorizedForFieldProblem",
+}) as any as S.Schema<NotAuthorizedForFieldProblem>;
+
+export type FieldUnauthorizedProblemType =
+  "https://api.x.com/2/problems/field-unauthorized";
+export const FieldUnauthorizedProblemType = /*@__PURE__*/ S.String;
+
+export interface FieldUnauthorizedProblem {
+  detail: string;
+  field: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: FieldUnauthorizedProblemType;
+}
+export const FieldUnauthorizedProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: FieldUnauthorizedProblemType,
+  }),
+).annotate({
+  identifier: "FieldUnauthorizedProblem",
+}) as any as S.Schema<FieldUnauthorizedProblem>;
+
+export type FieldHydrationFailureProblemType =
+  "https://api.x.com/2/problems/field-hydration-failure";
+export const FieldHydrationFailureProblemType = /*@__PURE__*/ S.String;
+
+export interface FieldHydrationFailureProblem {
+  detail: string;
+  field: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: FieldHydrationFailureProblemType;
+}
+export const FieldHydrationFailureProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: FieldHydrationFailureProblemType,
+  }),
+).annotate({
+  identifier: "FieldHydrationFailureProblem",
+}) as any as S.Schema<FieldHydrationFailureProblem>;
+
+export type ResourceUnavailableProblemType =
+  "https://api.x.com/2/problems/resource-unavailable";
+export const ResourceUnavailableProblemType = /*@__PURE__*/ S.String;
+
+export interface ResourceUnavailableProblem {
+  detail: string;
+  resource_id?: string;
+  resource_type: string;
+  status?: number;
+  title: string;
+  type: ResourceUnavailableProblemType;
+}
+export const ResourceUnavailableProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: ResourceUnavailableProblemType,
+  }),
+).annotate({
+  identifier: "ResourceUnavailableProblem",
+}) as any as S.Schema<ResourceUnavailableProblem>;
+
+export type DisallowedResourceProblemType =
+  "https://api.x.com/2/problems/disallowed-resource";
+export const DisallowedResourceProblemType = /*@__PURE__*/ S.String;
+
+export interface DisallowedResourceProblem {
+  detail: string;
+  resource_id?: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: DisallowedResourceProblemType;
+}
+export const DisallowedResourceProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    resource_id: S.optional(S.String),
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: DisallowedResourceProblemType,
+  }),
+).annotate({
+  identifier: "DisallowedResourceProblem",
+}) as any as S.Schema<DisallowedResourceProblem>;
+
+export type InternalErrorProblemType =
+  "https://api.x.com/2/problems/internal-error";
+export const InternalErrorProblemType = /*@__PURE__*/ S.String;
+
+export interface InternalErrorProblem {
+  detail: string;
+  status?: number;
+  title: string;
+  type: InternalErrorProblemType;
+}
+export const InternalErrorProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: InternalErrorProblemType,
+  }),
+).annotate({
+  identifier: "InternalErrorProblem",
+}) as any as S.Schema<InternalErrorProblem>;
+
+export type Problem =
+  | ResourceNotFoundProblem
+  | InvalidRequestProblem
+  | NotAuthorizedForResourceProblem
+  | NotAuthorizedForFieldProblem
+  | FieldUnauthorizedProblem
+  | FieldHydrationFailureProblem
+  | ResourceUnavailableProblem
+  | DisallowedResourceProblem
+  | InternalErrorProblem;
+export const Problem = /*@__PURE__*/ S.Unknown as any as S.Schema<Problem>;
+export type GetSpacesBuyersResponseErrorsList = Array<Problem>;
+export const GetSpacesBuyersResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<GetSpacesBuyersResponseErrorsList>;
+
+/** Nonpublic engagement metrics for the media at the time of the request. */
+export interface MediaNonPublicMetrics {
+  /** Number of users who started playback (0% quartile) of this video. */
+  playback_0_count?: number | null;
+  /** Number of users who completed playback (100% quartile) of this video. */
+  playback_100_count?: number | null;
+  /** Number of users who watched at least 25% of this video. */
+  playback_25_count?: number | null;
+  /** Number of users who watched at least 50% of this video. */
+  playback_50_count?: number | null;
+  /** Number of users who watched at least 75% of this video. */
+  playback_75_count?: number | null;
+}
+export const MediaNonPublicMetrics = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    playback_0_count: S.optional(S.NullOr(S.Number)),
+    playback_100_count: S.optional(S.NullOr(S.Number)),
+    playback_25_count: S.optional(S.NullOr(S.Number)),
+    playback_50_count: S.optional(S.NullOr(S.Number)),
+    playback_75_count: S.optional(S.NullOr(S.Number)),
+  }),
+).annotate({
+  identifier: "MediaNonPublicMetrics",
+}) as any as S.Schema<MediaNonPublicMetrics>;
+
+/** Organic nonpublic engagement metrics for the media at the time of the request. */
+export interface MediaOrganicMetrics {
+  /** Number of users who started playback (0% quartile) of this video. */
+  playback_0_count?: number | null;
+  /** Number of users who completed playback (100% quartile) of this video. */
+  playback_100_count?: number | null;
+  /** Number of users who watched at least 25% of this video. */
+  playback_25_count?: number | null;
+  /** Number of users who watched at least 50% of this video. */
+  playback_50_count?: number | null;
+  /** Number of users who watched at least 75% of this video. */
+  playback_75_count?: number | null;
+  /** The number of organic views of this video. Null when the backend returns quartile data without a view count. */
+  view_count?: number | null;
+}
+export const MediaOrganicMetrics = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    playback_0_count: S.optional(S.NullOr(S.Number)),
+    playback_100_count: S.optional(S.NullOr(S.Number)),
+    playback_25_count: S.optional(S.NullOr(S.Number)),
+    playback_50_count: S.optional(S.NullOr(S.Number)),
+    playback_75_count: S.optional(S.NullOr(S.Number)),
+    view_count: S.optional(S.NullOr(S.Number)),
+  }),
+).annotate({
+  identifier: "MediaOrganicMetrics",
+}) as any as S.Schema<MediaOrganicMetrics>;
+
+/** Promoted nonpublic engagement metrics for the media at the time of the request. */
+export interface MediaPromotedMetrics {
+  /** Number of users who started playback (0% quartile) of this video. */
+  playback_0_count?: number | null;
+  /** Number of users who completed playback (100% quartile) of this video. */
+  playback_100_count?: number | null;
+  /** Number of users who watched at least 25% of this video. */
+  playback_25_count?: number | null;
+  /** Number of users who watched at least 50% of this video. */
+  playback_50_count?: number | null;
+  /** Number of users who watched at least 75% of this video. */
+  playback_75_count?: number | null;
+  /** The number of promoted views of this video. Null when the backend returns quartile data without a view count. */
+  view_count?: number | null;
+}
+export const MediaPromotedMetrics = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    playback_0_count: S.optional(S.NullOr(S.Number)),
+    playback_100_count: S.optional(S.NullOr(S.Number)),
+    playback_25_count: S.optional(S.NullOr(S.Number)),
+    playback_50_count: S.optional(S.NullOr(S.Number)),
+    playback_75_count: S.optional(S.NullOr(S.Number)),
+    view_count: S.optional(S.NullOr(S.Number)),
+  }),
+).annotate({
+  identifier: "MediaPromotedMetrics",
+}) as any as S.Schema<MediaPromotedMetrics>;
+
+/** Public engagement metrics for the media at the time of the request. */
+export interface MediaPublicMetrics {
+  /** The number of times this video has been viewed. */
+  view_count: number;
+}
+export const MediaPublicMetrics = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    view_count: S.Number,
+  }),
+).annotate({
+  identifier: "MediaPublicMetrics",
+}) as any as S.Schema<MediaPublicMetrics>;
+
+/** A single playback or display variant of a media object. */
+export interface MediaVariantsItem {
+  /** The bit rate of this variant, in bits per second. Absent for playlist variants. */
+  bit_rate?: number | null;
+  /** The MIME type of this variant, for example "video/mp4" or "application/x-mpegURL". */
+  content_type?: string | null;
+  /** The URL to this media variant. */
+  url?: string | null;
+}
+export const MediaVariantsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    bit_rate: S.optional(S.NullOr(S.Number)),
+    content_type: S.optional(S.NullOr(S.String)),
+    url: S.optional(S.NullOr(S.String)),
+  }),
+).annotate({
+  identifier: "MediaVariantsItem",
+}) as any as S.Schema<MediaVariantsItem>;
+
+/** Each media object may have multiple display or playback variants, with different resolutions or formats. */
+export type MediaVariants = Array<MediaVariantsItem>;
+export const MediaVariants = /*@__PURE__*/ S.Array(
+  MediaVariantsItem,
+) as any as S.Schema<MediaVariants>;
+
+export interface Media {
+  alt_text?: string;
+  duration_ms?: number;
+  height?: number;
+  media_key?: string;
+  non_public_metrics?: MediaNonPublicMetrics;
+  organic_metrics?: MediaOrganicMetrics;
+  preview_image_url?: string;
+  promoted_metrics?: MediaPromotedMetrics;
+  public_metrics?: MediaPublicMetrics;
+  type?: string;
+  url?: string;
+  variants?: MediaVariants;
+  width?: number;
+}
+export const Media = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    alt_text: S.optional(S.String),
+    duration_ms: S.optional(S.Number),
+    height: S.optional(S.Number),
+    media_key: S.optional(S.String),
+    non_public_metrics: S.optional(MediaNonPublicMetrics),
+    organic_metrics: S.optional(MediaOrganicMetrics),
+    preview_image_url: S.optional(S.String),
+    promoted_metrics: S.optional(MediaPromotedMetrics),
+    public_metrics: S.optional(MediaPublicMetrics),
+    type: S.optional(S.String),
+    url: S.optional(S.String),
+    variants: S.optional(MediaVariants),
+    width: S.optional(S.Number),
+  }),
+).annotate({ identifier: "Media" }) as any as S.Schema<Media>;
+
+export type ExpansionsMediaList = Array<Media>;
+export const ExpansionsMediaList = /*@__PURE__*/ S.Array(
+  Media,
+) as any as S.Schema<ExpansionsMediaList>;
+
+/** A list of unique identifiers of the Places that contain this place. */
+export type PlaceContainedWithin = Array<string>;
+export const PlaceContainedWithin = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<PlaceContainedWithin>;
+
+/** The bounding box as [southwest_longitude, southwest_latitude, northeast_longitude, northeast_latitude]. */
+export type PlaceGeoBboxList = Array<number>;
+export const PlaceGeoBboxList = /*@__PURE__*/ S.Array(
+  S.Number,
+) as any as S.Schema<PlaceGeoBboxList>;
+
+export type PlaceGeoType = "Feature";
+export const PlaceGeoType = /*@__PURE__*/ S.String;
+
+/** The geographic location of this place, expressed as a GeoJSON Feature. */
+export interface PlaceGeo {
+  /** The bounding box as [southwest_longitude, southwest_latitude, northeast_longitude, northeast_latitude]. */
+  bbox: PlaceGeoBboxList;
+  /** Additional GeoJSON feature properties. */
+  properties: unknown;
+  /** The GeoJSON feature type. */
+  type: PlaceGeoType;
+}
+export const PlaceGeo = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    bbox: PlaceGeoBboxList,
+    properties: S.Unknown,
+    type: PlaceGeoType,
+  }),
+).annotate({ identifier: "PlaceGeo" }) as any as S.Schema<PlaceGeo>;
+
+export interface Place {
+  contained_within?: PlaceContainedWithin;
+  country?: string;
+  country_code?: string;
+  full_name?: string;
+  geo?: PlaceGeo;
+  id?: string;
+  name?: string;
+  place_type?: string;
+}
+export const Place = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    contained_within: S.optional(PlaceContainedWithin),
+    country: S.optional(S.String),
+    country_code: S.optional(S.String),
+    full_name: S.optional(S.String),
+    geo: S.optional(PlaceGeo),
+    id: S.optional(S.String),
+    name: S.optional(S.String),
+    place_type: S.optional(S.String),
+  }),
+).annotate({ identifier: "Place" }) as any as S.Schema<Place>;
+
+export type ExpansionsPlacesList = Array<Place>;
+export const ExpansionsPlacesList = /*@__PURE__*/ S.Array(
+  Place,
+) as any as S.Schema<ExpansionsPlacesList>;
+
+/** A single option (choice) available in a poll. */
+export interface PollOptionsItem {
+  /** The text label of this poll option. */
+  label: string;
+  /** The 1-based position of this option within the poll. */
+  position: number;
+  /** The number of votes this option has received. */
+  votes: number;
+}
+export const PollOptionsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    label: S.String,
+    position: S.Number,
+    votes: S.Number,
+  }),
+).annotate({
+  identifier: "PollOptionsItem",
+}) as any as S.Schema<PollOptionsItem>;
+
+/** The list of options (choices) available in this poll. */
+export type PollOptions = Array<PollOptionsItem>;
+export const PollOptions = /*@__PURE__*/ S.Array(
+  PollOptionsItem,
+) as any as S.Schema<PollOptions>;
+
+export interface Poll {
+  duration_minutes?: number;
+  end_datetime?: string;
+  id?: string;
+  options?: PollOptions;
+  voting_status?: string;
+}
+export const Poll = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    duration_minutes: S.optional(S.Number),
+    end_datetime: S.optional(S.String),
+    id: S.optional(S.String),
+    options: S.optional(PollOptions),
+    voting_status: S.optional(S.String),
+  }),
+).annotate({ identifier: "Poll" }) as any as S.Schema<Poll>;
+
+export type ExpansionsPollsList = Array<Poll>;
+export const ExpansionsPollsList = /*@__PURE__*/ S.Array(
+  Poll,
+) as any as S.Schema<ExpansionsPollsList>;
+
+/** Media keys of media attached to this Post. */
+export type PostAttachmentsMediaKeysList = Array<string>;
+export const PostAttachmentsMediaKeysList = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<PostAttachmentsMediaKeysList>;
+
+/** IDs of the source Posts the attached media originated from. */
+export type PostAttachmentsMediaSourceTweetIdList = Array<string>;
+export const PostAttachmentsMediaSourceTweetIdList = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<PostAttachmentsMediaSourceTweetIdList>;
+
+/** IDs of polls attached to this Post. */
+export type PostAttachmentsPollIdsList = Array<string>;
+export const PostAttachmentsPollIdsList = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<PostAttachmentsPollIdsList>;
+
+/** Specifies the type of attachments (if any) present in this Post. */
+export interface PostAttachments {
+  /** Media keys of media attached to this Post. */
+  media_keys?: PostAttachmentsMediaKeysList | null;
+  /** IDs of the source Posts the attached media originated from. */
+  media_source_tweet_id?: PostAttachmentsMediaSourceTweetIdList | null;
+  /** IDs of polls attached to this Post. */
+  poll_ids?: PostAttachmentsPollIdsList | null;
+}
+export const PostAttachments = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    media_keys: S.optional(S.NullOr(PostAttachmentsMediaKeysList)),
+    media_source_tweet_id: S.optional(
+      S.NullOr(PostAttachmentsMediaSourceTweetIdList),
+    ),
+    poll_ids: S.optional(S.NullOr(PostAttachmentsPollIdsList)),
+  }),
+).annotate({
+  identifier: "PostAttachments",
+}) as any as S.Schema<PostAttachments>;
+
+/** A domain or entity referenced by a context annotation. */
+export interface PostContextAnnotationsItemDomain {
+  description?: string | null;
+  id?: string | null;
+  name?: string | null;
+}
+export const PostContextAnnotationsItemDomain = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    description: S.optional(S.NullOr(S.String)),
+    id: S.optional(S.NullOr(S.String)),
+    name: S.optional(S.NullOr(S.String)),
+  }),
+).annotate({
+  identifier: "PostContextAnnotationsItemDomain",
+}) as any as S.Schema<PostContextAnnotationsItemDomain>;
+
+/** A domain or entity referenced by a context annotation. */
+export type PostContextAnnotationsItemEntity = PostContextAnnotationsItemDomain;
+export const PostContextAnnotationsItemEntity =
+  PostContextAnnotationsItemDomain;
+
+/** A single inferred annotation about the Post (domain and entity context). */
+export interface PostContextAnnotationsItem {
+  /** The domain (broad category) this annotation belongs to. */
+  domain: PostContextAnnotationsItemDomain;
+  /** The specific entity recognized within the domain. */
+  entity: PostContextAnnotationsItemDomain;
+}
+export const PostContextAnnotationsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    domain: PostContextAnnotationsItemDomain,
+    entity: PostContextAnnotationsItemDomain,
+  }),
+).annotate({
+  identifier: "PostContextAnnotationsItem",
+}) as any as S.Schema<PostContextAnnotationsItem>;
+
+/** Annotations inferred about the Post (domain and entity context). */
+export type PostContextAnnotations = Array<PostContextAnnotationsItem>;
+export const PostContextAnnotations = /*@__PURE__*/ S.Array(
+  PostContextAnnotationsItem,
+) as any as S.Schema<PostContextAnnotations>;
+
+/** The inclusive start and exclusive end indices of the displayable content of the Post. */
+export type PostDisplayTextRange = Array<number>;
+export const PostDisplayTextRange = /*@__PURE__*/ S.Array(
+  S.Number,
+) as any as S.Schema<PostDisplayTextRange>;
+
+/** Indicates how much longer (if at all) this Post can be edited. */
+export interface PostEditControls {
+  /** The time until which this Post can be edited. */
+  editable_until?: string | null;
+  /** Number of edits still allowed for this Post. */
+  edits_remaining?: number | null;
+  /** Indicates whether this Post is eligible to be edited. */
+  is_edit_eligible?: boolean | null;
+}
+export const PostEditControls = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    editable_until: S.optional(S.NullOr(S.String)),
+    edits_remaining: S.optional(S.NullOr(S.Number)),
+    is_edit_eligible: S.optional(S.NullOr(S.Boolean)),
+  }),
+).annotate({
+  identifier: "PostEditControls",
+}) as any as S.Schema<PostEditControls>;
+
+/** A list of Post IDs in this Post's edit history chain. */
+export type PostEditHistoryPostIdsList = Array<string>;
+export const PostEditHistoryPostIdsList = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<PostEditHistoryPostIdsList>;
+
+/** A hashtag or cashtag entity. */
+export type PostEntitiesCashtagsItem = UserEntitiesDescriptionCashtagsItem;
+export const PostEntitiesCashtagsItem = UserEntitiesDescriptionCashtagsItem;
+
+export type PostEntitiesCashtagsList =
+  Array<UserEntitiesDescriptionCashtagsItem>;
+export const PostEntitiesCashtagsList = /*@__PURE__*/ S.Array(
+  UserEntitiesDescriptionCashtagsItem,
+) as any as S.Schema<PostEntitiesCashtagsList>;
+
+/** A hashtag or cashtag entity. */
+export type PostEntitiesHashtagsItem = UserEntitiesDescriptionCashtagsItem;
+export const PostEntitiesHashtagsItem = UserEntitiesDescriptionCashtagsItem;
+
+export type PostEntitiesHashtagsList =
+  Array<UserEntitiesDescriptionCashtagsItem>;
+export const PostEntitiesHashtagsList = /*@__PURE__*/ S.Array(
+  UserEntitiesDescriptionCashtagsItem,
+) as any as S.Schema<PostEntitiesHashtagsList>;
+
+/** A user mention entity. */
+export interface PostEntitiesMentionsItem {
+  end: number;
+  id?: string | null;
+  start: number;
+  username?: string | null;
+}
+export const PostEntitiesMentionsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    end: S.Number,
+    id: S.optional(S.NullOr(S.String)),
+    start: S.Number,
+    username: S.optional(S.NullOr(S.String)),
+  }),
+).annotate({
+  identifier: "PostEntitiesMentionsItem",
+}) as any as S.Schema<PostEntitiesMentionsItem>;
+
+export type PostEntitiesMentionsList = Array<PostEntitiesMentionsItem>;
+export const PostEntitiesMentionsList = /*@__PURE__*/ S.Array(
+  PostEntitiesMentionsItem,
+) as any as S.Schema<PostEntitiesMentionsList>;
+
+/** A preview image for a linked page. */
+export type PostEntitiesUrlsItemImagesItem =
+  UserEntitiesDescriptionUrlsItemImagesItem;
+export const PostEntitiesUrlsItemImagesItem =
+  UserEntitiesDescriptionUrlsItemImagesItem;
+
+export type PostEntitiesUrlsItemImagesList =
+  Array<UserEntitiesDescriptionUrlsItemImagesItem>;
+export const PostEntitiesUrlsItemImagesList = /*@__PURE__*/ S.Array(
+  UserEntitiesDescriptionUrlsItemImagesItem,
+) as any as S.Schema<PostEntitiesUrlsItemImagesList>;
+
+/** A URL entity found in the Post text, enriched with link metadata. */
+export interface PostEntitiesUrlsItem {
+  /** Description of the linked page, when available. */
+  description?: string | null;
+  /** The URL as displayed in the Post text. */
+  display_url?: string | null;
+  end: number;
+  /** The fully resolved URL. */
+  expanded_url?: string | null;
+  images?: PostEntitiesUrlsItemImagesList | null;
+  media_key?: string | null;
+  start: number;
+  /** HTTP status from resolving the URL. */
+  status?: number | null;
+  /** Title of the linked page, when available. */
+  title?: string | null;
+  /** The final destination after following redirects. */
+  unwound_url?: string | null;
+  /** The t.co shortened URL. */
+  url?: string | null;
+}
+export const PostEntitiesUrlsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    description: S.optional(S.NullOr(S.String)),
+    display_url: S.optional(S.NullOr(S.String)),
+    end: S.Number,
+    expanded_url: S.optional(S.NullOr(S.String)),
+    images: S.optional(S.NullOr(PostEntitiesUrlsItemImagesList)),
+    media_key: S.optional(S.NullOr(S.String)),
+    start: S.Number,
+    status: S.optional(S.NullOr(S.Number)),
+    title: S.optional(S.NullOr(S.String)),
+    unwound_url: S.optional(S.NullOr(S.String)),
+    url: S.optional(S.NullOr(S.String)),
+  }),
+).annotate({
+  identifier: "PostEntitiesUrlsItem",
+}) as any as S.Schema<PostEntitiesUrlsItem>;
+
+export type PostEntitiesUrlsList = Array<PostEntitiesUrlsItem>;
+export const PostEntitiesUrlsList = /*@__PURE__*/ S.Array(
+  PostEntitiesUrlsItem,
+) as any as S.Schema<PostEntitiesUrlsList>;
+
+/** A list of metadata entities (hashtags, mentions, URLs) found in the Post text. */
+export interface PostEntities {
+  cashtags?: PostEntitiesCashtagsList | null;
+  hashtags?: PostEntitiesHashtagsList | null;
+  mentions?: PostEntitiesMentionsList | null;
+  urls?: PostEntitiesUrlsList | null;
+}
+export const PostEntities = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    cashtags: S.optional(S.NullOr(PostEntitiesCashtagsList)),
+    hashtags: S.optional(S.NullOr(PostEntitiesHashtagsList)),
+    mentions: S.optional(S.NullOr(PostEntitiesMentionsList)),
+    urls: S.optional(S.NullOr(PostEntitiesUrlsList)),
+  }),
+).annotate({ identifier: "PostEntities" }) as any as S.Schema<PostEntities>;
+
+/** [longitude, latitude]. */
+export type PostGeoCoordinatesCoordinatesList = Array<number>;
+export const PostGeoCoordinatesCoordinatesList = /*@__PURE__*/ S.Array(
+  S.Number,
+) as any as S.Schema<PostGeoCoordinatesCoordinatesList>;
+
+/** The GeoJSON geometry type. */
+export type PostGeoCoordinatesType = "Point";
+export const PostGeoCoordinatesType = /*@__PURE__*/ S.String;
+
+/** A GeoJSON Point geometry. */
+export interface PostGeoCoordinates {
+  /** [longitude, latitude]. */
+  coordinates: PostGeoCoordinatesCoordinatesList;
+  /** The GeoJSON geometry type. */
+  type: PostGeoCoordinatesType;
+}
+export const PostGeoCoordinates = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    coordinates: PostGeoCoordinatesCoordinatesList,
+    type: PostGeoCoordinatesType,
+  }),
+).annotate({
+  identifier: "PostGeoCoordinates",
+}) as any as S.Schema<PostGeoCoordinates>;
+
+/** The location tagged on the Post, if the user provided one. */
+export interface PostGeo {
+  /** A GeoJSON Point geometry. */
+  coordinates?: PostGeoCoordinates | null;
+  /** The unique identifier of the tagged place. */
+  place_id?: string | null;
+}
+export const PostGeo = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    coordinates: S.optional(S.NullOr(PostGeoCoordinates)),
+    place_id: S.optional(S.NullOr(S.String)),
+  }),
+).annotate({ identifier: "PostGeo" }) as any as S.Schema<PostGeo>;
+
+/** A Community-Notes media match for this Post. */
+export interface PostMatchedMediaNotesItem {
+  /** The status of the media note match. */
+  match_status?: string | null;
+  /** The matched note's unique identifier. */
+  note_id?: string | null;
+}
+export const PostMatchedMediaNotesItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    match_status: S.optional(S.NullOr(S.String)),
+    note_id: S.optional(S.NullOr(S.String)),
+  }),
+).annotate({
+  identifier: "PostMatchedMediaNotesItem",
+}) as any as S.Schema<PostMatchedMediaNotesItem>;
+
+/** Community-Notes media matches for this Post. */
+export type PostMatchedMediaNotes = Array<PostMatchedMediaNotesItem>;
+export const PostMatchedMediaNotes = /*@__PURE__*/ S.Array(
+  PostMatchedMediaNotesItem,
+) as any as S.Schema<PostMatchedMediaNotes>;
+
+/** Metadata for one media item attached to this Post. */
+export interface PostMediaMetadataItem {
+  /** Alternative text describing the media for accessibility. */
+  alt_text?: string | null;
+  /** Description of the media. */
+  description?: string | null;
+  /** The unique identifier of the media. */
+  media_key?: string | null;
+  /** Title of the media. */
+  title?: string | null;
+}
+export const PostMediaMetadataItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    alt_text: S.optional(S.NullOr(S.String)),
+    description: S.optional(S.NullOr(S.String)),
+    media_key: S.optional(S.NullOr(S.String)),
+    title: S.optional(S.NullOr(S.String)),
+  }),
+).annotate({
+  identifier: "PostMediaMetadataItem",
+}) as any as S.Schema<PostMediaMetadataItem>;
+
+/** Metadata for media attached to this Post. */
+export type PostMediaMetadata = Array<PostMediaMetadataItem>;
+export const PostMediaMetadata = /*@__PURE__*/ S.Array(
+  PostMediaMetadataItem,
+) as any as S.Schema<PostMediaMetadata>;
+
+/** A hashtag or cashtag entity. */
+export type PostNotePostEntitiesCashtagsItem =
+  UserEntitiesDescriptionCashtagsItem;
+export const PostNotePostEntitiesCashtagsItem =
+  UserEntitiesDescriptionCashtagsItem;
+
+export type PostNotePostEntitiesCashtagsList =
+  Array<UserEntitiesDescriptionCashtagsItem>;
+export const PostNotePostEntitiesCashtagsList = /*@__PURE__*/ S.Array(
+  UserEntitiesDescriptionCashtagsItem,
+) as any as S.Schema<PostNotePostEntitiesCashtagsList>;
+
+/** A hashtag or cashtag entity. */
+export type PostNotePostEntitiesHashtagsItem =
+  UserEntitiesDescriptionCashtagsItem;
+export const PostNotePostEntitiesHashtagsItem =
+  UserEntitiesDescriptionCashtagsItem;
+
+export type PostNotePostEntitiesHashtagsList =
+  Array<UserEntitiesDescriptionCashtagsItem>;
+export const PostNotePostEntitiesHashtagsList = /*@__PURE__*/ S.Array(
+  UserEntitiesDescriptionCashtagsItem,
+) as any as S.Schema<PostNotePostEntitiesHashtagsList>;
+
+/** A user mention entity. */
+export type PostNotePostEntitiesMentionsItem = PostEntitiesMentionsItem;
+export const PostNotePostEntitiesMentionsItem = PostEntitiesMentionsItem;
+
+export type PostNotePostEntitiesMentionsList = Array<PostEntitiesMentionsItem>;
+export const PostNotePostEntitiesMentionsList = /*@__PURE__*/ S.Array(
+  PostEntitiesMentionsItem,
+) as any as S.Schema<PostNotePostEntitiesMentionsList>;
+
+/** A URL entity found in note Post text. */
+export interface PostNotePostEntitiesUrlsItem {
+  display_url?: string | null;
+  end: number;
+  expanded_url?: string | null;
+  start: number;
+  url?: string | null;
+}
+export const PostNotePostEntitiesUrlsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    display_url: S.optional(S.NullOr(S.String)),
+    end: S.Number,
+    expanded_url: S.optional(S.NullOr(S.String)),
+    start: S.Number,
+    url: S.optional(S.NullOr(S.String)),
+  }),
+).annotate({
+  identifier: "PostNotePostEntitiesUrlsItem",
+}) as any as S.Schema<PostNotePostEntitiesUrlsItem>;
+
+export type PostNotePostEntitiesUrlsList = Array<PostNotePostEntitiesUrlsItem>;
+export const PostNotePostEntitiesUrlsList = /*@__PURE__*/ S.Array(
+  PostNotePostEntitiesUrlsItem,
+) as any as S.Schema<PostNotePostEntitiesUrlsList>;
+
+/** Metadata entities (hashtags, cashtags, mentions, URLs) found in the note Post text. */
+export interface PostNotePostEntities {
+  cashtags?: PostNotePostEntitiesCashtagsList | null;
+  hashtags?: PostNotePostEntitiesHashtagsList | null;
+  mentions?: PostNotePostEntitiesMentionsList | null;
+  urls?: PostNotePostEntitiesUrlsList | null;
+}
+export const PostNotePostEntities = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    cashtags: S.optional(S.NullOr(PostNotePostEntitiesCashtagsList)),
+    hashtags: S.optional(S.NullOr(PostNotePostEntitiesHashtagsList)),
+    mentions: S.optional(S.NullOr(PostNotePostEntitiesMentionsList)),
+    urls: S.optional(S.NullOr(PostNotePostEntitiesUrlsList)),
+  }),
+).annotate({
+  identifier: "PostNotePostEntities",
+}) as any as S.Schema<PostNotePostEntities>;
+
+/** The full content of the Post, including text beyond 280 characters. */
+export interface PostNotePost {
+  /** Metadata entities (hashtags, cashtags, mentions, URLs) found in the note Post text. */
+  entities?: PostNotePostEntities | null;
+  /** The full note text of the Post. */
+  text: string;
+}
+export const PostNotePost = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    entities: S.optional(S.NullOr(PostNotePostEntities)),
+    text: S.String,
+  }),
+).annotate({ identifier: "PostNotePost" }) as any as S.Schema<PostNotePost>;
+
+/** A Community-Notes request suggestion for this Post. */
+export interface PostNoteRequestSuggestionsItem {
+  /** A suggested source link supporting the note request. */
+  source_link?: string | null;
+  /** The text of the note request suggestion. */
+  suggestion?: string | null;
+  /** The unique identifier of the note request suggestion. */
+  suggestion_id?: string | null;
+}
+export const PostNoteRequestSuggestionsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    source_link: S.optional(S.NullOr(S.String)),
+    suggestion: S.optional(S.NullOr(S.String)),
+    suggestion_id: S.optional(S.NullOr(S.String)),
+  }),
+).annotate({
+  identifier: "PostNoteRequestSuggestionsItem",
+}) as any as S.Schema<PostNoteRequestSuggestionsItem>;
+
+/** Community-Notes request suggestions for this Post. */
+export type PostNoteRequestSuggestions = Array<PostNoteRequestSuggestionsItem>;
+export const PostNoteRequestSuggestions = /*@__PURE__*/ S.Array(
+  PostNoteRequestSuggestionsItem,
+) as any as S.Schema<PostNoteRequestSuggestions>;
+
+/** Engagement metrics for the Post at the time of the request. */
+export interface PostPublicMetrics {
+  /** Number of times this Post has been bookmarked. */
+  bookmark_count: number;
+  /** Number of times this Post has been viewed. */
+  impression_count: number;
+  /** Number of likes on this Post. */
+  like_count: number;
+  /** Number of quote Posts of this Post. */
+  quote_count: number;
+  /** Number of replies to this Post. */
+  reply_count: number;
+  /** Number of times this Post has been reposted. */
+  repost_count: number;
+}
+export const PostPublicMetrics = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    bookmark_count: S.Number,
+    impression_count: S.Number,
+    like_count: S.Number,
+    quote_count: S.Number,
+    reply_count: S.Number,
+    repost_count: S.Number,
+  }),
+).annotate({
+  identifier: "PostPublicMetrics",
+}) as any as S.Schema<PostPublicMetrics>;
+
+/** The kind of Post-to-Post reference. */
+export type PostReferencedPostsItemType = "retweeted" | "quoted" | "replied_to";
+export const PostReferencedPostsItemType = /*@__PURE__*/ S.String;
+
+/** A reference from this Post to another Post (repost, quote, or reply). */
+export interface PostReferencedPostsItem {
+  /** Unique identifier of the referenced Post. */
+  id: string;
+  /** How this Post references the other Post. */
+  type: PostReferencedPostsItemType;
+}
+export const PostReferencedPostsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    id: S.String,
+    type: PostReferencedPostsItemType,
+  }),
+).annotate({
+  identifier: "PostReferencedPostsItem",
+}) as any as S.Schema<PostReferencedPostsItem>;
+
+/** A list of Posts this Post refers to. If the Post is a Retweet, Quote or Reply, it includes the referenced Post's type and ID. */
+export type PostReferencedPosts = Array<PostReferencedPostsItem>;
+export const PostReferencedPosts = /*@__PURE__*/ S.Array(
+  PostReferencedPostsItem,
+) as any as S.Schema<PostReferencedPosts>;
+
+/** The scopes for this Post. */
+export interface PostScopes {
+  /** Indicates whether visibility of this Post is limited to the author's followers. */
+  followers: boolean;
+}
+export const PostScopes = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    followers: S.Boolean,
+  }),
+).annotate({ identifier: "PostScopes" }) as any as S.Schema<PostScopes>;
+
+/** URLs suggested as sources for this Post. */
+export type PostSuggestedSourceLinks = Array<string>;
+export const PostSuggestedSourceLinks = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<PostSuggestedSourceLinks>;
+
+/** A suggested source URL for this Post with the number of times it was suggested. */
+export interface PostSuggestedSourceLinksWithCountsItem {
+  /** Number of times this source link was suggested. */
+  count?: number | null;
+  /** The suggested source URL. */
+  url?: string | null;
+}
+export const PostSuggestedSourceLinksWithCountsItem = /*@__PURE__*/ S.suspend(
+  () =>
+    S.Struct({
+      count: S.optional(S.NullOr(S.Number)),
+      url: S.optional(S.NullOr(S.String)),
+    }),
+).annotate({
+  identifier: "PostSuggestedSourceLinksWithCountsItem",
+}) as any as S.Schema<PostSuggestedSourceLinksWithCountsItem>;
+
+/** Suggested source URLs for this Post, each with the number of times it was suggested. */
+export type PostSuggestedSourceLinksWithCounts =
+  Array<PostSuggestedSourceLinksWithCountsItem>;
+export const PostSuggestedSourceLinksWithCounts = /*@__PURE__*/ S.Array(
+  PostSuggestedSourceLinksWithCountsItem,
+) as any as S.Schema<PostSuggestedSourceLinksWithCounts>;
+
+/** Uppercase ISO 3166-1 alpha-2 country codes where this content is withheld. */
+export type PostWithheldCountryCodesList = Array<string>;
+export const PostWithheldCountryCodesList = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<PostWithheldCountryCodesList>;
+
+/** Whether the withholding applies to a Post or a User. */
+export type PostWithheldScope = "post" | "user";
+export const PostWithheldScope = /*@__PURE__*/ S.String;
+
+/** Withholding details for withheld content. */
+export interface PostWithheld {
+  /** Indicates whether this content is withheld due to a copyright claim. */
+  copyright: boolean;
+  /** Uppercase ISO 3166-1 alpha-2 country codes where this content is withheld. */
+  country_codes: PostWithheldCountryCodesList;
+  /** Whether the withholding applies to a Post or a User. */
+  scope?: PostWithheldScope | null;
+}
+export const PostWithheld = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    copyright: S.Boolean,
+    country_codes: PostWithheldCountryCodesList,
+    scope: S.optional(S.NullOr(PostWithheldScope)),
+  }),
+).annotate({ identifier: "PostWithheld" }) as any as S.Schema<PostWithheld>;
+
+export interface Post {
+  article?: unknown;
+  /** Metadata about the long-form Article attached to this Post, if any. */
+  article_title?: unknown;
+  attachments?: PostAttachments;
+  /** Unique identifier of the author of this Post. */
+  author_id?: string;
+  card_uri?: string;
+  /** The unique identifier of the Community this Post belongs to, if any. */
+  community_id?: string;
+  context_annotations?: PostContextAnnotations;
+  /** The ID of the conversation this Post belongs to (matches the root Post's ID). */
+  conversation_id?: string;
+  /** Creation time of the Post. */
+  created_at?: string;
+  display_text_range?: PostDisplayTextRange;
+  edit_controls?: PostEditControls;
+  /** A list of Post IDs in this Post's edit history chain. */
+  edit_history_post_ids?: PostEditHistoryPostIdsList;
+  entities?: PostEntities;
+  geo?: PostGeo;
+  /** Unique identifier of this Post. */
+  id?: string;
+  /** Unique identifier of the User this Post is replying to. */
+  in_reply_to_user_id?: string;
+  /** Language of the Post, if detected by X. Returned as a BCP47 language tag. */
+  lang?: string;
+  matched_media_notes?: PostMatchedMediaNotes;
+  media_metadata?: PostMediaMetadata;
+  /** Nonpublic engagement metrics for the Post at the time of the request. */
+  non_public_metrics?: unknown;
+  note_post?: PostNotePost;
+  note_request_suggestions?: PostNoteRequestSuggestions;
+  /** Organic nonpublic engagement metrics for the Post at the time of the request. */
+  organic_metrics?: unknown;
+  /** Indicates if this Post is a paid partnership, i.e. it has been disclosed by the author as containing paid promotion. */
+  paid_partnership?: boolean;
+  /** Indicates if this Post contains URLs marked as sensitive, for example content suitable for mature audiences. */
+  possibly_sensitive?: boolean;
+  /** Promoted nonpublic engagement metrics for the Post at the time of the request. */
+  promoted_metrics?: unknown;
+  public_metrics?: PostPublicMetrics;
+  referenced_posts?: PostReferencedPosts;
+  /** Shows who can reply to this Post. */
+  reply_settings?: string;
+  scopes?: PostScopes;
+  /** The name of the app the user posted from. This is deprecated. */
+  source?: string;
+  suggested_source_links?: PostSuggestedSourceLinks;
+  suggested_source_links_with_counts?: PostSuggestedSourceLinksWithCounts;
+  /** The content of the Post. */
+  text?: string;
+  username?: string;
+  withheld?: PostWithheld;
+}
+export const Post = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    article: S.optional(S.Unknown),
+    article_title: S.optional(S.Unknown),
+    attachments: S.optional(PostAttachments),
+    author_id: S.optional(S.String),
+    card_uri: S.optional(S.String),
+    community_id: S.optional(S.String),
+    context_annotations: S.optional(PostContextAnnotations),
+    conversation_id: S.optional(S.String),
+    created_at: S.optional(S.String),
+    display_text_range: S.optional(PostDisplayTextRange),
+    edit_controls: S.optional(PostEditControls),
+    edit_history_post_ids: S.optional(PostEditHistoryPostIdsList),
+    entities: S.optional(PostEntities),
+    geo: S.optional(PostGeo),
+    id: S.optional(S.String),
+    in_reply_to_user_id: S.optional(S.String),
+    lang: S.optional(S.String),
+    matched_media_notes: S.optional(PostMatchedMediaNotes),
+    media_metadata: S.optional(PostMediaMetadata),
+    non_public_metrics: S.optional(S.Unknown),
+    note_post: S.optional(PostNotePost),
+    note_request_suggestions: S.optional(PostNoteRequestSuggestions),
+    organic_metrics: S.optional(S.Unknown),
+    paid_partnership: S.optional(S.Boolean),
+    possibly_sensitive: S.optional(S.Boolean),
+    promoted_metrics: S.optional(S.Unknown),
+    public_metrics: S.optional(PostPublicMetrics),
+    referenced_posts: S.optional(PostReferencedPosts),
+    reply_settings: S.optional(S.String),
+    scopes: S.optional(PostScopes),
+    source: S.optional(S.String),
+    suggested_source_links: S.optional(PostSuggestedSourceLinks),
+    suggested_source_links_with_counts: S.optional(
+      PostSuggestedSourceLinksWithCounts,
+    ),
+    text: S.optional(S.String),
+    username: S.optional(S.String),
+    withheld: S.optional(PostWithheld),
+  }),
+).annotate({ identifier: "Post" }) as any as S.Schema<Post>;
+
+export type ExpansionsPostsList = Array<Post>;
+export const ExpansionsPostsList = /*@__PURE__*/ S.Array(
+  Post,
+) as any as S.Schema<ExpansionsPostsList>;
+
+export interface Topic {
+  description?: string;
+  id?: string;
+  name?: string;
+}
+export const Topic = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    description: S.optional(S.String),
+    id: S.optional(S.String),
+    name: S.optional(S.String),
+  }),
+).annotate({ identifier: "Topic" }) as any as S.Schema<Topic>;
+
+export type ExpansionsTopicsList = Array<Topic>;
+export const ExpansionsTopicsList = /*@__PURE__*/ S.Array(
+  Topic,
+) as any as S.Schema<ExpansionsTopicsList>;
+
+export type ExpansionsUsersList = Array<User>;
+export const ExpansionsUsersList = /*@__PURE__*/ S.Array(
+  User,
+) as any as S.Schema<ExpansionsUsersList>;
+
+export interface Expansions {
+  media?: ExpansionsMediaList;
+  places?: ExpansionsPlacesList;
+  polls?: ExpansionsPollsList;
+  posts?: ExpansionsPostsList;
+  topics?: ExpansionsTopicsList;
+  users?: ExpansionsUsersList;
+}
+export const Expansions = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    media: S.optional(ExpansionsMediaList),
+    places: S.optional(ExpansionsPlacesList),
+    polls: S.optional(ExpansionsPollsList),
+    posts: S.optional(ExpansionsPostsList),
+    topics: S.optional(ExpansionsTopicsList),
+    users: S.optional(ExpansionsUsersList),
+  }),
+).annotate({ identifier: "Expansions" }) as any as S.Schema<Expansions>;
+
+export interface GetSpacesBuyersResponseMeta {
+  /** Pagination token for the next page of results. */
+  next_token?: string;
+  /** Pagination token for the previous page of results. */
+  previous_token?: string;
+  /** Number of items in the data array. */
+  result_count?: number;
+}
+export const GetSpacesBuyersResponseMeta = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    next_token: S.optional(S.String),
+    previous_token: S.optional(S.String),
+    result_count: S.optional(S.Number),
+  }),
+).annotate({
+  identifier: "GetSpacesBuyersResponseMeta",
+}) as any as S.Schema<GetSpacesBuyersResponseMeta>;
+
+export interface GetSpacesBuyersResponse {
+  data?: GetSpacesBuyersResponseDataList;
+  errors?: GetSpacesBuyersResponseErrorsList;
+  includes?: Expansions;
+  meta?: GetSpacesBuyersResponseMeta;
+}
+export const GetSpacesBuyersResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(GetSpacesBuyersResponseDataList),
+    errors: S.optional(GetSpacesBuyersResponseErrorsList),
+    includes: S.optional(Expansions),
+    meta: S.optional(GetSpacesBuyersResponseMeta),
+  }),
+).annotate({
+  identifier: "GetSpacesBuyersResponse",
+}) as any as S.Schema<GetSpacesBuyersResponse>;
+
+export type GetSpacesByCreatorIdsRequestUserIdsList = Array<string>;
+export const GetSpacesByCreatorIdsRequestUserIdsList = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<GetSpacesByCreatorIdsRequestUserIdsList>;
+
+export type GetSpacesByCreatorIdsRequestSpaceFieldsItem =
+  | "created_at"
+  | "ended_at"
+  | "id"
+  | "is_ticketed"
+  | "lang"
+  | "participant_count"
+  | "scheduled_start"
+  | "started_at"
+  | "state"
+  | "subscriber_count"
+  | "title"
+  | "updated_at";
+export const GetSpacesByCreatorIdsRequestSpaceFieldsItem =
+  /*@__PURE__*/ S.String;
+
+/** The fields available for a Space object. */
+export type GetSpacesByCreatorIdsRequestSpaceFieldsList = Array<
+  GetSpacesByCreatorIdsRequestSpaceFieldsItem | (string & {})
+>;
+export const GetSpacesByCreatorIdsRequestSpaceFieldsList =
+  /*@__PURE__*/ S.Array(
+    GetSpacesByCreatorIdsRequestSpaceFieldsItem,
+  ) as any as S.Schema<GetSpacesByCreatorIdsRequestSpaceFieldsList>;
+
+export type GetSpacesByCreatorIdsRequestExpansionsItem =
+  | "creator_id"
+  | "host_ids"
+  | "invited_user_ids"
+  | "speaker_ids"
+  | "topic_ids";
+export const GetSpacesByCreatorIdsRequestExpansionsItem =
+  /*@__PURE__*/ S.String;
+
+export type GetSpacesByCreatorIdsRequestExpansionsList = Array<
+  GetSpacesByCreatorIdsRequestExpansionsItem | (string & {})
+>;
+export const GetSpacesByCreatorIdsRequestExpansionsList = /*@__PURE__*/ S.Array(
+  GetSpacesByCreatorIdsRequestExpansionsItem,
+) as any as S.Schema<GetSpacesByCreatorIdsRequestExpansionsList>;
+
+export type GetSpacesByCreatorIdsRequestUserFieldsItem =
+  | "confirmed_email"
+  | "connection_status"
+  | "created_at"
+  | "description"
+  | "entities"
+  | "id"
+  | "is_identity_verified"
+  | "location"
+  | "name"
+  | "parody"
+  | "profile_banner_url"
+  | "profile_image_url"
+  | "protected"
+  | "public_metrics"
+  | "receives_your_dm"
+  | "subscribes_to_you"
+  | "subscription"
+  | "subscription_type"
+  | "url"
+  | "username"
+  | "verified"
+  | "verified_followers_count"
+  | "verified_type"
+  | "withheld";
+export const GetSpacesByCreatorIdsRequestUserFieldsItem =
+  /*@__PURE__*/ S.String;
+
+/** The fields available for a User object. */
+export type GetSpacesByCreatorIdsRequestUserFieldsList = Array<
+  GetSpacesByCreatorIdsRequestUserFieldsItem | (string & {})
+>;
+export const GetSpacesByCreatorIdsRequestUserFieldsList = /*@__PURE__*/ S.Array(
+  GetSpacesByCreatorIdsRequestUserFieldsItem,
+) as any as S.Schema<GetSpacesByCreatorIdsRequestUserFieldsList>;
+
+export type GetSpacesByCreatorIdsRequestTopicFieldsItem =
+  | "description"
+  | "id"
+  | "name";
+export const GetSpacesByCreatorIdsRequestTopicFieldsItem =
+  /*@__PURE__*/ S.String;
+
+/** The fields available for a Topic object. */
+export type GetSpacesByCreatorIdsRequestTopicFieldsList = Array<
+  GetSpacesByCreatorIdsRequestTopicFieldsItem | (string & {})
+>;
+export const GetSpacesByCreatorIdsRequestTopicFieldsList =
+  /*@__PURE__*/ S.Array(
+    GetSpacesByCreatorIdsRequestTopicFieldsItem,
+  ) as any as S.Schema<GetSpacesByCreatorIdsRequestTopicFieldsList>;
+
+export interface GetSpacesByCreatorIdsRequest {
+  user_ids: GetSpacesByCreatorIdsRequestUserIdsList;
+  /** A comma separated list of Space fields to display. */
+  space_fields?: GetSpacesByCreatorIdsRequestSpaceFieldsList;
+  /** A comma separated list of fields to expand. */
+  expansions?: GetSpacesByCreatorIdsRequestExpansionsList;
+  /** A comma separated list of User fields to display. */
+  user_fields?: GetSpacesByCreatorIdsRequestUserFieldsList;
+  /** A comma separated list of Topic fields to display. */
+  topic_fields?: GetSpacesByCreatorIdsRequestTopicFieldsList;
+}
+export const GetSpacesByCreatorIdsRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    user_ids: GetSpacesByCreatorIdsRequestUserIdsList.pipe(T.Query()),
+    space_fields: S.optional(
+      GetSpacesByCreatorIdsRequestSpaceFieldsList.pipe(T.Query("space.fields")),
+    ),
+    expansions: S.optional(
+      GetSpacesByCreatorIdsRequestExpansionsList.pipe(T.Query()),
+    ),
+    user_fields: S.optional(
+      GetSpacesByCreatorIdsRequestUserFieldsList.pipe(T.Query("user.fields")),
+    ),
+    topic_fields: S.optional(
+      GetSpacesByCreatorIdsRequestTopicFieldsList.pipe(T.Query("topic.fields")),
+    ),
+  }).pipe(
+    T.Http({ method: "GET", uri: "/2/spaces/by/creator_ids", code: 200 }),
+  ),
+).annotate({
+  identifier: "GetSpacesByCreatorIdsRequest",
+}) as any as S.Schema<GetSpacesByCreatorIdsRequest>;
+
+/** A list of unique identifiers of the Users who host this Space. */
+export type SpaceHostIds = Array<string>;
+export const SpaceHostIds = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<SpaceHostIds>;
+
+/** A list of unique identifiers of the Users invited to this Space. */
+export type SpaceInvitedUserIds = Array<string>;
+export const SpaceInvitedUserIds = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<SpaceInvitedUserIds>;
+
+/** A list of unique identifiers of the Users who are speakers in this Space. */
+export type SpaceSpeakerIds = Array<string>;
+export const SpaceSpeakerIds = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<SpaceSpeakerIds>;
+
+/** A list of unique identifiers of the Topics associated with this Space. */
+export type SpaceTopicIds = Array<string>;
+export const SpaceTopicIds = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<SpaceTopicIds>;
+
+export interface Space {
+  created_at?: string;
+  creator_id?: string;
+  ended_at?: string;
+  host_ids?: SpaceHostIds;
+  id?: string;
+  invited_user_ids?: SpaceInvitedUserIds;
+  is_ticketed?: boolean;
+  lang?: string;
+  participant_count?: number;
+  scheduled_start?: string;
+  speaker_ids?: SpaceSpeakerIds;
+  started_at?: string;
+  state?: string;
+  subscriber_count?: number;
+  title?: string;
+  topic_ids?: SpaceTopicIds;
+  updated_at?: string;
+}
+export const Space = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    created_at: S.optional(S.String),
+    creator_id: S.optional(S.String),
+    ended_at: S.optional(S.String),
+    host_ids: S.optional(SpaceHostIds),
+    id: S.optional(S.String),
+    invited_user_ids: S.optional(SpaceInvitedUserIds),
+    is_ticketed: S.optional(S.Boolean),
+    lang: S.optional(S.String),
+    participant_count: S.optional(S.Number),
+    scheduled_start: S.optional(S.String),
+    speaker_ids: S.optional(SpaceSpeakerIds),
+    started_at: S.optional(S.String),
+    state: S.optional(S.String),
+    subscriber_count: S.optional(S.Number),
+    title: S.optional(S.String),
+    topic_ids: S.optional(SpaceTopicIds),
+    updated_at: S.optional(S.String),
+  }),
+).annotate({ identifier: "Space" }) as any as S.Schema<Space>;
+
+export type GetSpacesByCreatorIdsResponseDataList = Array<Space>;
+export const GetSpacesByCreatorIdsResponseDataList = /*@__PURE__*/ S.Array(
+  Space,
+) as any as S.Schema<GetSpacesByCreatorIdsResponseDataList>;
+
+export type GetSpacesByCreatorIdsResponseErrorsList = Array<Problem>;
+export const GetSpacesByCreatorIdsResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<GetSpacesByCreatorIdsResponseErrorsList>;
+
+export interface GetSpacesByCreatorIdsResponseMeta {
+  /** Number of items in the data array. */
+  result_count?: number;
+}
+export const GetSpacesByCreatorIdsResponseMeta = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    result_count: S.optional(S.Number),
+  }),
+).annotate({
+  identifier: "GetSpacesByCreatorIdsResponseMeta",
+}) as any as S.Schema<GetSpacesByCreatorIdsResponseMeta>;
+
+export interface GetSpacesByCreatorIdsResponse {
+  data?: GetSpacesByCreatorIdsResponseDataList;
+  errors?: GetSpacesByCreatorIdsResponseErrorsList;
+  includes?: Expansions;
+  meta?: GetSpacesByCreatorIdsResponseMeta;
+}
+export const GetSpacesByCreatorIdsResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(GetSpacesByCreatorIdsResponseDataList),
+    errors: S.optional(GetSpacesByCreatorIdsResponseErrorsList),
+    includes: S.optional(Expansions),
+    meta: S.optional(GetSpacesByCreatorIdsResponseMeta),
+  }),
+).annotate({
+  identifier: "GetSpacesByCreatorIdsResponse",
+}) as any as S.Schema<GetSpacesByCreatorIdsResponse>;
+
+export type GetSpacesByIdRequestSpaceFieldsItem =
+  | "created_at"
+  | "ended_at"
+  | "id"
+  | "is_ticketed"
+  | "lang"
+  | "participant_count"
+  | "scheduled_start"
+  | "started_at"
+  | "state"
+  | "subscriber_count"
+  | "title"
+  | "updated_at";
+export const GetSpacesByIdRequestSpaceFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a Space object. */
+export type GetSpacesByIdRequestSpaceFieldsList = Array<
+  GetSpacesByIdRequestSpaceFieldsItem | (string & {})
+>;
+export const GetSpacesByIdRequestSpaceFieldsList = /*@__PURE__*/ S.Array(
+  GetSpacesByIdRequestSpaceFieldsItem,
+) as any as S.Schema<GetSpacesByIdRequestSpaceFieldsList>;
+
+export type GetSpacesByIdRequestExpansionsItem =
+  | "creator_id"
+  | "host_ids"
+  | "invited_user_ids"
+  | "speaker_ids"
+  | "topic_ids";
+export const GetSpacesByIdRequestExpansionsItem = /*@__PURE__*/ S.String;
+
+export type GetSpacesByIdRequestExpansionsList = Array<
+  GetSpacesByIdRequestExpansionsItem | (string & {})
+>;
+export const GetSpacesByIdRequestExpansionsList = /*@__PURE__*/ S.Array(
+  GetSpacesByIdRequestExpansionsItem,
+) as any as S.Schema<GetSpacesByIdRequestExpansionsList>;
+
+export type GetSpacesByIdRequestUserFieldsItem =
+  | "confirmed_email"
+  | "connection_status"
+  | "created_at"
+  | "description"
+  | "entities"
+  | "id"
+  | "is_identity_verified"
+  | "location"
+  | "name"
+  | "parody"
+  | "profile_banner_url"
+  | "profile_image_url"
+  | "protected"
+  | "public_metrics"
+  | "receives_your_dm"
+  | "subscribes_to_you"
+  | "subscription"
+  | "subscription_type"
+  | "url"
+  | "username"
+  | "verified"
+  | "verified_followers_count"
+  | "verified_type"
+  | "withheld";
+export const GetSpacesByIdRequestUserFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a User object. */
+export type GetSpacesByIdRequestUserFieldsList = Array<
+  GetSpacesByIdRequestUserFieldsItem | (string & {})
+>;
+export const GetSpacesByIdRequestUserFieldsList = /*@__PURE__*/ S.Array(
+  GetSpacesByIdRequestUserFieldsItem,
+) as any as S.Schema<GetSpacesByIdRequestUserFieldsList>;
+
+export type GetSpacesByIdRequestTopicFieldsItem = "description" | "id" | "name";
+export const GetSpacesByIdRequestTopicFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a Topic object. */
+export type GetSpacesByIdRequestTopicFieldsList = Array<
+  GetSpacesByIdRequestTopicFieldsItem | (string & {})
+>;
+export const GetSpacesByIdRequestTopicFieldsList = /*@__PURE__*/ S.Array(
+  GetSpacesByIdRequestTopicFieldsItem,
+) as any as S.Schema<GetSpacesByIdRequestTopicFieldsList>;
+
+export interface GetSpacesByIdRequest {
+  id: string;
+  /** A comma separated list of Space fields to display. */
+  space_fields?: GetSpacesByIdRequestSpaceFieldsList;
+  /** A comma separated list of fields to expand. */
+  expansions?: GetSpacesByIdRequestExpansionsList;
+  /** A comma separated list of User fields to display. */
+  user_fields?: GetSpacesByIdRequestUserFieldsList;
+  /** A comma separated list of Topic fields to display. */
+  topic_fields?: GetSpacesByIdRequestTopicFieldsList;
+}
+export const GetSpacesByIdRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    id: S.String.pipe(T.Label()),
+    space_fields: S.optional(
+      GetSpacesByIdRequestSpaceFieldsList.pipe(T.Query("space.fields")),
+    ),
+    expansions: S.optional(GetSpacesByIdRequestExpansionsList.pipe(T.Query())),
+    user_fields: S.optional(
+      GetSpacesByIdRequestUserFieldsList.pipe(T.Query("user.fields")),
+    ),
+    topic_fields: S.optional(
+      GetSpacesByIdRequestTopicFieldsList.pipe(T.Query("topic.fields")),
+    ),
+  }).pipe(T.Http({ method: "GET", uri: "/2/spaces/{id}", code: 200 })),
+).annotate({
+  identifier: "GetSpacesByIdRequest",
+}) as any as S.Schema<GetSpacesByIdRequest>;
+
+export type GetSpacesByIdResponseErrorsList = Array<Problem>;
+export const GetSpacesByIdResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<GetSpacesByIdResponseErrorsList>;
+
+export interface GetSpacesByIdResponse {
+  data?: Space;
+  errors?: GetSpacesByIdResponseErrorsList;
+  includes?: Expansions;
+}
+export const GetSpacesByIdResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(Space),
+    errors: S.optional(GetSpacesByIdResponseErrorsList),
+    includes: S.optional(Expansions),
+  }),
+).annotate({
+  identifier: "GetSpacesByIdResponse",
+}) as any as S.Schema<GetSpacesByIdResponse>;
+
+export type GetSpacesByIdsRequestIdsList = Array<string>;
+export const GetSpacesByIdsRequestIdsList = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<GetSpacesByIdsRequestIdsList>;
+
+export type GetSpacesByIdsRequestSpaceFieldsItem =
+  | "created_at"
+  | "ended_at"
+  | "id"
+  | "is_ticketed"
+  | "lang"
+  | "participant_count"
+  | "scheduled_start"
+  | "started_at"
+  | "state"
+  | "subscriber_count"
+  | "title"
+  | "updated_at";
+export const GetSpacesByIdsRequestSpaceFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a Space object. */
+export type GetSpacesByIdsRequestSpaceFieldsList = Array<
+  GetSpacesByIdsRequestSpaceFieldsItem | (string & {})
+>;
+export const GetSpacesByIdsRequestSpaceFieldsList = /*@__PURE__*/ S.Array(
+  GetSpacesByIdsRequestSpaceFieldsItem,
+) as any as S.Schema<GetSpacesByIdsRequestSpaceFieldsList>;
+
+export type GetSpacesByIdsRequestExpansionsItem =
+  | "creator_id"
+  | "host_ids"
+  | "invited_user_ids"
+  | "speaker_ids"
+  | "topic_ids";
+export const GetSpacesByIdsRequestExpansionsItem = /*@__PURE__*/ S.String;
+
+export type GetSpacesByIdsRequestExpansionsList = Array<
+  GetSpacesByIdsRequestExpansionsItem | (string & {})
+>;
+export const GetSpacesByIdsRequestExpansionsList = /*@__PURE__*/ S.Array(
+  GetSpacesByIdsRequestExpansionsItem,
+) as any as S.Schema<GetSpacesByIdsRequestExpansionsList>;
+
+export type GetSpacesByIdsRequestUserFieldsItem =
+  | "confirmed_email"
+  | "connection_status"
+  | "created_at"
+  | "description"
+  | "entities"
+  | "id"
+  | "is_identity_verified"
+  | "location"
+  | "name"
+  | "parody"
+  | "profile_banner_url"
+  | "profile_image_url"
+  | "protected"
+  | "public_metrics"
+  | "receives_your_dm"
+  | "subscribes_to_you"
+  | "subscription"
+  | "subscription_type"
+  | "url"
+  | "username"
+  | "verified"
+  | "verified_followers_count"
+  | "verified_type"
+  | "withheld";
+export const GetSpacesByIdsRequestUserFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a User object. */
+export type GetSpacesByIdsRequestUserFieldsList = Array<
+  GetSpacesByIdsRequestUserFieldsItem | (string & {})
+>;
+export const GetSpacesByIdsRequestUserFieldsList = /*@__PURE__*/ S.Array(
+  GetSpacesByIdsRequestUserFieldsItem,
+) as any as S.Schema<GetSpacesByIdsRequestUserFieldsList>;
+
+export type GetSpacesByIdsRequestTopicFieldsItem =
+  | "description"
+  | "id"
+  | "name";
+export const GetSpacesByIdsRequestTopicFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a Topic object. */
+export type GetSpacesByIdsRequestTopicFieldsList = Array<
+  GetSpacesByIdsRequestTopicFieldsItem | (string & {})
+>;
+export const GetSpacesByIdsRequestTopicFieldsList = /*@__PURE__*/ S.Array(
+  GetSpacesByIdsRequestTopicFieldsItem,
+) as any as S.Schema<GetSpacesByIdsRequestTopicFieldsList>;
+
+export interface GetSpacesByIdsRequest {
+  ids: GetSpacesByIdsRequestIdsList;
+  /** A comma separated list of Space fields to display. */
+  space_fields?: GetSpacesByIdsRequestSpaceFieldsList;
+  /** A comma separated list of fields to expand. */
+  expansions?: GetSpacesByIdsRequestExpansionsList;
+  /** A comma separated list of User fields to display. */
+  user_fields?: GetSpacesByIdsRequestUserFieldsList;
+  /** A comma separated list of Topic fields to display. */
+  topic_fields?: GetSpacesByIdsRequestTopicFieldsList;
+}
+export const GetSpacesByIdsRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    ids: GetSpacesByIdsRequestIdsList.pipe(T.Query()),
+    space_fields: S.optional(
+      GetSpacesByIdsRequestSpaceFieldsList.pipe(T.Query("space.fields")),
+    ),
+    expansions: S.optional(GetSpacesByIdsRequestExpansionsList.pipe(T.Query())),
+    user_fields: S.optional(
+      GetSpacesByIdsRequestUserFieldsList.pipe(T.Query("user.fields")),
+    ),
+    topic_fields: S.optional(
+      GetSpacesByIdsRequestTopicFieldsList.pipe(T.Query("topic.fields")),
+    ),
+  }).pipe(T.Http({ method: "GET", uri: "/2/spaces", code: 200 })),
+).annotate({
+  identifier: "GetSpacesByIdsRequest",
+}) as any as S.Schema<GetSpacesByIdsRequest>;
+
+export type GetSpacesByIdsResponseDataList = Array<Space>;
+export const GetSpacesByIdsResponseDataList = /*@__PURE__*/ S.Array(
+  Space,
+) as any as S.Schema<GetSpacesByIdsResponseDataList>;
+
+export type GetSpacesByIdsResponseErrorsList = Array<Problem>;
+export const GetSpacesByIdsResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<GetSpacesByIdsResponseErrorsList>;
+
+export interface GetSpacesByIdsResponse {
+  data?: GetSpacesByIdsResponseDataList;
+  errors?: GetSpacesByIdsResponseErrorsList;
+  includes?: Expansions;
+}
+export const GetSpacesByIdsResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(GetSpacesByIdsResponseDataList),
+    errors: S.optional(GetSpacesByIdsResponseErrorsList),
+    includes: S.optional(Expansions),
+  }),
+).annotate({
+  identifier: "GetSpacesByIdsResponse",
+}) as any as S.Schema<GetSpacesByIdsResponse>;
+
+export type GetSpacesPostsRequestPostFieldsItem =
+  | "article"
+  | "article_title"
+  | "attachments"
+  | "card_uri"
+  | "community_id"
+  | "context_annotations"
+  | "conversation_id"
+  | "created_at"
+  | "display_text_range"
+  | "edit_controls"
+  | "entities"
+  | "geo"
+  | "id"
+  | "lang"
+  | "matched_media_notes"
+  | "media_metadata"
+  | "non_public_metrics"
+  | "note_post"
+  | "note_request_suggestions"
+  | "organic_metrics"
+  | "paid_partnership"
+  | "possibly_sensitive"
+  | "promoted_metrics"
+  | "public_metrics"
+  | "reply_settings"
+  | "scopes"
+  | "source"
+  | "suggested_source_links"
+  | "suggested_source_links_with_counts"
+  | "text"
+  | "withheld";
+export const GetSpacesPostsRequestPostFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a Post object. */
+export type GetSpacesPostsRequestPostFieldsList = Array<
+  GetSpacesPostsRequestPostFieldsItem | (string & {})
+>;
+export const GetSpacesPostsRequestPostFieldsList = /*@__PURE__*/ S.Array(
+  GetSpacesPostsRequestPostFieldsItem,
+) as any as S.Schema<GetSpacesPostsRequestPostFieldsList>;
+
+export type GetSpacesPostsRequestExpansionsItem =
+  | "article.cover_media"
+  | "article.media_entities"
+  | "attachments.media_keys"
+  | "attachments.media_source_tweet"
+  | "attachments.poll_ids"
+  | "author_id"
+  | "edit_history_post_ids"
+  | "entities.mentions.username"
+  | "geo.place_id"
+  | "in_reply_to_user_id"
+  | "referenced_posts"
+  | "username";
+export const GetSpacesPostsRequestExpansionsItem = /*@__PURE__*/ S.String;
+
+export type GetSpacesPostsRequestExpansionsList = Array<
+  GetSpacesPostsRequestExpansionsItem | (string & {})
+>;
+export const GetSpacesPostsRequestExpansionsList = /*@__PURE__*/ S.Array(
+  GetSpacesPostsRequestExpansionsItem,
+) as any as S.Schema<GetSpacesPostsRequestExpansionsList>;
+
+export type GetSpacesPostsRequestUserFieldsItem =
+  | "confirmed_email"
+  | "connection_status"
+  | "created_at"
+  | "description"
+  | "entities"
+  | "id"
+  | "is_identity_verified"
+  | "location"
+  | "name"
+  | "parody"
+  | "profile_banner_url"
+  | "profile_image_url"
+  | "protected"
+  | "public_metrics"
+  | "receives_your_dm"
+  | "subscribes_to_you"
+  | "subscription"
+  | "subscription_type"
+  | "url"
+  | "username"
+  | "verified"
+  | "verified_followers_count"
+  | "verified_type"
+  | "withheld";
+export const GetSpacesPostsRequestUserFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a User object. */
+export type GetSpacesPostsRequestUserFieldsList = Array<
+  GetSpacesPostsRequestUserFieldsItem | (string & {})
+>;
+export const GetSpacesPostsRequestUserFieldsList = /*@__PURE__*/ S.Array(
+  GetSpacesPostsRequestUserFieldsItem,
+) as any as S.Schema<GetSpacesPostsRequestUserFieldsList>;
+
+export type GetSpacesPostsRequestMediaFieldsItem =
+  | "alt_text"
+  | "duration_ms"
+  | "height"
+  | "media_key"
+  | "non_public_metrics"
+  | "organic_metrics"
+  | "preview_image_url"
+  | "promoted_metrics"
+  | "public_metrics"
+  | "type"
+  | "url"
+  | "variants"
+  | "width";
+export const GetSpacesPostsRequestMediaFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a Media object. */
+export type GetSpacesPostsRequestMediaFieldsList = Array<
+  GetSpacesPostsRequestMediaFieldsItem | (string & {})
+>;
+export const GetSpacesPostsRequestMediaFieldsList = /*@__PURE__*/ S.Array(
+  GetSpacesPostsRequestMediaFieldsItem,
+) as any as S.Schema<GetSpacesPostsRequestMediaFieldsList>;
+
+export type GetSpacesPostsRequestPollFieldsItem =
+  | "duration_minutes"
+  | "end_datetime"
+  | "id"
+  | "options"
+  | "voting_status";
+export const GetSpacesPostsRequestPollFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a Poll object. */
+export type GetSpacesPostsRequestPollFieldsList = Array<
+  GetSpacesPostsRequestPollFieldsItem | (string & {})
+>;
+export const GetSpacesPostsRequestPollFieldsList = /*@__PURE__*/ S.Array(
+  GetSpacesPostsRequestPollFieldsItem,
+) as any as S.Schema<GetSpacesPostsRequestPollFieldsList>;
+
+export type GetSpacesPostsRequestPlaceFieldsItem =
+  | "contained_within"
+  | "country"
+  | "country_code"
+  | "full_name"
+  | "geo"
+  | "id"
+  | "name"
+  | "place_type";
+export const GetSpacesPostsRequestPlaceFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a Place object. */
+export type GetSpacesPostsRequestPlaceFieldsList = Array<
+  GetSpacesPostsRequestPlaceFieldsItem | (string & {})
+>;
+export const GetSpacesPostsRequestPlaceFieldsList = /*@__PURE__*/ S.Array(
+  GetSpacesPostsRequestPlaceFieldsItem,
+) as any as S.Schema<GetSpacesPostsRequestPlaceFieldsList>;
+
+export interface GetSpacesPostsRequest {
+  id: string;
+  max_results?: number;
+  /** A base32hex-encoded pagination token. */
+  pagination_token?: string;
+  /** A comma separated list of Post fields to display. */
+  post_fields?: GetSpacesPostsRequestPostFieldsList;
+  /** A comma separated list of fields to expand. */
+  expansions?: GetSpacesPostsRequestExpansionsList;
+  /** A comma separated list of User fields to display. */
+  user_fields?: GetSpacesPostsRequestUserFieldsList;
+  /** A comma separated list of Media fields to display. */
+  media_fields?: GetSpacesPostsRequestMediaFieldsList;
+  /** A comma separated list of Poll fields to display. */
+  poll_fields?: GetSpacesPostsRequestPollFieldsList;
+  /** A comma separated list of Place fields to display. */
+  place_fields?: GetSpacesPostsRequestPlaceFieldsList;
+}
+export const GetSpacesPostsRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    id: S.String.pipe(T.Label()),
+    max_results: S.optional(S.Number.pipe(T.Query())),
+    pagination_token: S.optional(S.String.pipe(T.Query())),
+    post_fields: S.optional(
+      GetSpacesPostsRequestPostFieldsList.pipe(T.Query("post.fields")),
+    ),
+    expansions: S.optional(GetSpacesPostsRequestExpansionsList.pipe(T.Query())),
+    user_fields: S.optional(
+      GetSpacesPostsRequestUserFieldsList.pipe(T.Query("user.fields")),
+    ),
+    media_fields: S.optional(
+      GetSpacesPostsRequestMediaFieldsList.pipe(T.Query("media.fields")),
+    ),
+    poll_fields: S.optional(
+      GetSpacesPostsRequestPollFieldsList.pipe(T.Query("poll.fields")),
+    ),
+    place_fields: S.optional(
+      GetSpacesPostsRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+    ),
+  }).pipe(T.Http({ method: "GET", uri: "/2/spaces/{id}/tweets", code: 200 })),
+).annotate({
+  identifier: "GetSpacesPostsRequest",
+}) as any as S.Schema<GetSpacesPostsRequest>;
+
+export type GetSpacesPostsResponseDataList = Array<Post>;
+export const GetSpacesPostsResponseDataList = /*@__PURE__*/ S.Array(
+  Post,
+) as any as S.Schema<GetSpacesPostsResponseDataList>;
+
+export type GetSpacesPostsResponseErrorsList = Array<Problem>;
+export const GetSpacesPostsResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<GetSpacesPostsResponseErrorsList>;
+
+export type GetSpacesPostsResponseMeta = GetSpacesBuyersResponseMeta;
+export const GetSpacesPostsResponseMeta = GetSpacesBuyersResponseMeta;
+
+export interface GetSpacesPostsResponse {
+  data?: GetSpacesPostsResponseDataList;
+  errors?: GetSpacesPostsResponseErrorsList;
+  includes?: Expansions;
+  meta?: GetSpacesBuyersResponseMeta;
+}
+export const GetSpacesPostsResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(GetSpacesPostsResponseDataList),
+    errors: S.optional(GetSpacesPostsResponseErrorsList),
+    includes: S.optional(Expansions),
+    meta: S.optional(GetSpacesBuyersResponseMeta),
+  }),
+).annotate({
+  identifier: "GetSpacesPostsResponse",
+}) as any as S.Schema<GetSpacesPostsResponse>;
+
+export type SearchSpacesRequestState = "live" | "scheduled" | "all";
+export const SearchSpacesRequestState = /*@__PURE__*/ S.String;
+
+export type SearchSpacesRequestSpaceFieldsItem =
+  | "created_at"
+  | "ended_at"
+  | "id"
+  | "is_ticketed"
+  | "lang"
+  | "participant_count"
+  | "scheduled_start"
+  | "started_at"
+  | "state"
+  | "subscriber_count"
+  | "title"
+  | "updated_at";
+export const SearchSpacesRequestSpaceFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a Space object. */
+export type SearchSpacesRequestSpaceFieldsList = Array<
+  SearchSpacesRequestSpaceFieldsItem | (string & {})
+>;
+export const SearchSpacesRequestSpaceFieldsList = /*@__PURE__*/ S.Array(
+  SearchSpacesRequestSpaceFieldsItem,
+) as any as S.Schema<SearchSpacesRequestSpaceFieldsList>;
+
+export type SearchSpacesRequestExpansionsItem =
+  | "creator_id"
+  | "host_ids"
+  | "invited_user_ids"
+  | "speaker_ids"
+  | "topic_ids";
+export const SearchSpacesRequestExpansionsItem = /*@__PURE__*/ S.String;
+
+export type SearchSpacesRequestExpansionsList = Array<
+  SearchSpacesRequestExpansionsItem | (string & {})
+>;
+export const SearchSpacesRequestExpansionsList = /*@__PURE__*/ S.Array(
+  SearchSpacesRequestExpansionsItem,
+) as any as S.Schema<SearchSpacesRequestExpansionsList>;
+
+export type SearchSpacesRequestUserFieldsItem =
+  | "confirmed_email"
+  | "connection_status"
+  | "created_at"
+  | "description"
+  | "entities"
+  | "id"
+  | "is_identity_verified"
+  | "location"
+  | "name"
+  | "parody"
+  | "profile_banner_url"
+  | "profile_image_url"
+  | "protected"
+  | "public_metrics"
+  | "receives_your_dm"
+  | "subscribes_to_you"
+  | "subscription"
+  | "subscription_type"
+  | "url"
+  | "username"
+  | "verified"
+  | "verified_followers_count"
+  | "verified_type"
+  | "withheld";
+export const SearchSpacesRequestUserFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a User object. */
+export type SearchSpacesRequestUserFieldsList = Array<
+  SearchSpacesRequestUserFieldsItem | (string & {})
+>;
+export const SearchSpacesRequestUserFieldsList = /*@__PURE__*/ S.Array(
+  SearchSpacesRequestUserFieldsItem,
+) as any as S.Schema<SearchSpacesRequestUserFieldsList>;
+
+export type SearchSpacesRequestTopicFieldsItem = "description" | "id" | "name";
+export const SearchSpacesRequestTopicFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a Topic object. */
+export type SearchSpacesRequestTopicFieldsList = Array<
+  SearchSpacesRequestTopicFieldsItem | (string & {})
+>;
+export const SearchSpacesRequestTopicFieldsList = /*@__PURE__*/ S.Array(
+  SearchSpacesRequestTopicFieldsItem,
+) as any as S.Schema<SearchSpacesRequestTopicFieldsList>;
+
+export interface SearchSpacesRequest {
+  query: string;
+  state?: SearchSpacesRequestState | (string & {});
+  max_results?: number;
+  /** A comma separated list of Space fields to display. */
+  space_fields?: SearchSpacesRequestSpaceFieldsList;
+  /** A comma separated list of fields to expand. */
+  expansions?: SearchSpacesRequestExpansionsList;
+  /** A comma separated list of User fields to display. */
+  user_fields?: SearchSpacesRequestUserFieldsList;
+  /** A comma separated list of Topic fields to display. */
+  topic_fields?: SearchSpacesRequestTopicFieldsList;
+}
+export const SearchSpacesRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    query: S.String.pipe(T.Query()),
+    state: S.optional(SearchSpacesRequestState.pipe(T.Query())),
+    max_results: S.optional(S.Number.pipe(T.Query())),
+    space_fields: S.optional(
+      SearchSpacesRequestSpaceFieldsList.pipe(T.Query("space.fields")),
+    ),
+    expansions: S.optional(SearchSpacesRequestExpansionsList.pipe(T.Query())),
+    user_fields: S.optional(
+      SearchSpacesRequestUserFieldsList.pipe(T.Query("user.fields")),
+    ),
+    topic_fields: S.optional(
+      SearchSpacesRequestTopicFieldsList.pipe(T.Query("topic.fields")),
+    ),
+  }).pipe(T.Http({ method: "GET", uri: "/2/spaces/search", code: 200 })),
+).annotate({
+  identifier: "SearchSpacesRequest",
+}) as any as S.Schema<SearchSpacesRequest>;
+
+export type SearchSpacesResponseDataList = Array<Space>;
+export const SearchSpacesResponseDataList = /*@__PURE__*/ S.Array(
+  Space,
+) as any as S.Schema<SearchSpacesResponseDataList>;
+
+export type SearchSpacesResponseErrorsList = Array<Problem>;
+export const SearchSpacesResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<SearchSpacesResponseErrorsList>;
+
+export type SearchSpacesResponseMeta = GetSpacesByCreatorIdsResponseMeta;
+export const SearchSpacesResponseMeta = GetSpacesByCreatorIdsResponseMeta;
+
+export interface SearchSpacesResponse {
+  data?: SearchSpacesResponseDataList;
+  errors?: SearchSpacesResponseErrorsList;
+  includes?: Expansions;
+  meta?: GetSpacesByCreatorIdsResponseMeta;
+}
+export const SearchSpacesResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(SearchSpacesResponseDataList),
+    errors: S.optional(SearchSpacesResponseErrorsList),
+    includes: S.optional(Expansions),
+    meta: S.optional(GetSpacesByCreatorIdsResponseMeta),
+  }),
+).annotate({
+  identifier: "SearchSpacesResponse",
+}) as any as S.Schema<SearchSpacesResponse>;
+
+export const getSpacesBuyers = /*@__PURE__*/ makeOperation<
+  GetSpacesBuyersRequest,
+  GetSpacesBuyersResponse
+>(
+  operations.getSpacesBuyers,
+  () => GetSpacesBuyersRequest,
+  () => GetSpacesBuyersResponse,
+);
+
+export const getSpacesByCreatorIds = /*@__PURE__*/ makeOperation<
+  GetSpacesByCreatorIdsRequest,
+  GetSpacesByCreatorIdsResponse
+>(
+  operations.getSpacesByCreatorIds,
+  () => GetSpacesByCreatorIdsRequest,
+  () => GetSpacesByCreatorIdsResponse,
+);
+
+export const getSpacesById = /*@__PURE__*/ makeOperation<
+  GetSpacesByIdRequest,
+  GetSpacesByIdResponse
+>(
+  operations.getSpacesById,
+  () => GetSpacesByIdRequest,
+  () => GetSpacesByIdResponse,
+);
+
+export const getSpacesByIds = /*@__PURE__*/ makeOperation<
+  GetSpacesByIdsRequest,
+  GetSpacesByIdsResponse
+>(
+  operations.getSpacesByIds,
+  () => GetSpacesByIdsRequest,
+  () => GetSpacesByIdsResponse,
+);
+
+export const getSpacesPosts = /*@__PURE__*/ makeOperation<
+  GetSpacesPostsRequest,
+  GetSpacesPostsResponse
+>(
+  operations.getSpacesPosts,
+  () => GetSpacesPostsRequest,
+  () => GetSpacesPostsResponse,
+);
+
+export const searchSpaces = /*@__PURE__*/ makeOperation<
+  SearchSpacesRequest,
+  SearchSpacesResponse
+>(
+  operations.searchSpaces,
+  () => SearchSpacesRequest,
+  () => SearchSpacesResponse,
+);

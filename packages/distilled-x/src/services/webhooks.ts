@@ -1,0 +1,770 @@
+// AUTO-GENERATED from xdevplatform/xdk@84c26540df30c0b798e50e34151c56d5d262ba1c; do not edit.
+import * as S from "@distilled.cloud/core/schema";
+import * as T from "../traits.ts";
+import {
+  makeOperation,
+  makeBinaryOperation,
+  makeStreamOperation,
+} from "../operation.ts";
+import { operations } from "../operations.ts";
+export interface CreateWebhookReplayJobRequest {
+  /** The oldest (inclusive) UTC timestamp from which events are replayed, in yyyymmddhhmm format. */
+  from_date: string;
+  /** The newest (inclusive) UTC timestamp up to which events are replayed, in yyyymmddhhmm format. */
+  to_date: string;
+  /** The ID of the webhook to replay events to. */
+  webhook_id: string;
+}
+export const CreateWebhookReplayJobRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    from_date: S.String,
+    to_date: S.String,
+    webhook_id: S.String,
+  }).pipe(T.Http({ method: "POST", uri: "/2/webhooks/replay", code: 200 })),
+).annotate({
+  identifier: "CreateWebhookReplayJobRequest",
+}) as any as S.Schema<CreateWebhookReplayJobRequest>;
+
+export interface CreateWebhookReplayJobResponseData {
+  /** The UTC timestamp when the replay job was created. */
+  created_at: string;
+  /** The unique identifier for the initiated replay job. */
+  job_id: string;
+}
+export const CreateWebhookReplayJobResponseData = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    created_at: S.String,
+    job_id: S.String,
+  }),
+).annotate({
+  identifier: "CreateWebhookReplayJobResponseData",
+}) as any as S.Schema<CreateWebhookReplayJobResponseData>;
+
+export type ResourceNotFoundProblemType =
+  "https://api.x.com/2/problems/resource-not-found";
+export const ResourceNotFoundProblemType = /*@__PURE__*/ S.String;
+
+export interface ResourceNotFoundProblem {
+  detail: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type: string;
+  status?: number;
+  title: string;
+  type: ResourceNotFoundProblemType;
+  value?: string;
+}
+export const ResourceNotFoundProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: ResourceNotFoundProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "ResourceNotFoundProblem",
+}) as any as S.Schema<ResourceNotFoundProblem>;
+
+export type InvalidRequestProblemType =
+  "https://api.x.com/2/problems/invalid-request";
+export const InvalidRequestProblemType = /*@__PURE__*/ S.String;
+
+export interface InvalidRequestProblem {
+  detail: string;
+  parameter?: string;
+  status?: number;
+  title: string;
+  type: InvalidRequestProblemType;
+  value?: string;
+}
+export const InvalidRequestProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: InvalidRequestProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "InvalidRequestProblem",
+}) as any as S.Schema<InvalidRequestProblem>;
+
+export type NotAuthorizedForResourceProblemType =
+  "https://api.x.com/2/problems/not-authorized-for-resource";
+export const NotAuthorizedForResourceProblemType = /*@__PURE__*/ S.String;
+
+export interface NotAuthorizedForResourceProblem {
+  detail: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: NotAuthorizedForResourceProblemType;
+  value?: string;
+}
+export const NotAuthorizedForResourceProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: NotAuthorizedForResourceProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "NotAuthorizedForResourceProblem",
+}) as any as S.Schema<NotAuthorizedForResourceProblem>;
+
+export type NotAuthorizedForFieldProblemType =
+  "https://api.x.com/2/problems/not-authorized-for-field";
+export const NotAuthorizedForFieldProblemType = /*@__PURE__*/ S.String;
+
+export interface NotAuthorizedForFieldProblem {
+  detail: string;
+  field: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: NotAuthorizedForFieldProblemType;
+  value?: string;
+}
+export const NotAuthorizedForFieldProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: NotAuthorizedForFieldProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "NotAuthorizedForFieldProblem",
+}) as any as S.Schema<NotAuthorizedForFieldProblem>;
+
+export type FieldUnauthorizedProblemType =
+  "https://api.x.com/2/problems/field-unauthorized";
+export const FieldUnauthorizedProblemType = /*@__PURE__*/ S.String;
+
+export interface FieldUnauthorizedProblem {
+  detail: string;
+  field: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: FieldUnauthorizedProblemType;
+}
+export const FieldUnauthorizedProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: FieldUnauthorizedProblemType,
+  }),
+).annotate({
+  identifier: "FieldUnauthorizedProblem",
+}) as any as S.Schema<FieldUnauthorizedProblem>;
+
+export type FieldHydrationFailureProblemType =
+  "https://api.x.com/2/problems/field-hydration-failure";
+export const FieldHydrationFailureProblemType = /*@__PURE__*/ S.String;
+
+export interface FieldHydrationFailureProblem {
+  detail: string;
+  field: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: FieldHydrationFailureProblemType;
+}
+export const FieldHydrationFailureProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: FieldHydrationFailureProblemType,
+  }),
+).annotate({
+  identifier: "FieldHydrationFailureProblem",
+}) as any as S.Schema<FieldHydrationFailureProblem>;
+
+export type ResourceUnavailableProblemType =
+  "https://api.x.com/2/problems/resource-unavailable";
+export const ResourceUnavailableProblemType = /*@__PURE__*/ S.String;
+
+export interface ResourceUnavailableProblem {
+  detail: string;
+  resource_id?: string;
+  resource_type: string;
+  status?: number;
+  title: string;
+  type: ResourceUnavailableProblemType;
+}
+export const ResourceUnavailableProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: ResourceUnavailableProblemType,
+  }),
+).annotate({
+  identifier: "ResourceUnavailableProblem",
+}) as any as S.Schema<ResourceUnavailableProblem>;
+
+export type DisallowedResourceProblemType =
+  "https://api.x.com/2/problems/disallowed-resource";
+export const DisallowedResourceProblemType = /*@__PURE__*/ S.String;
+
+export interface DisallowedResourceProblem {
+  detail: string;
+  resource_id?: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: DisallowedResourceProblemType;
+}
+export const DisallowedResourceProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    resource_id: S.optional(S.String),
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: DisallowedResourceProblemType,
+  }),
+).annotate({
+  identifier: "DisallowedResourceProblem",
+}) as any as S.Schema<DisallowedResourceProblem>;
+
+export type InternalErrorProblemType =
+  "https://api.x.com/2/problems/internal-error";
+export const InternalErrorProblemType = /*@__PURE__*/ S.String;
+
+export interface InternalErrorProblem {
+  detail: string;
+  status?: number;
+  title: string;
+  type: InternalErrorProblemType;
+}
+export const InternalErrorProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: InternalErrorProblemType,
+  }),
+).annotate({
+  identifier: "InternalErrorProblem",
+}) as any as S.Schema<InternalErrorProblem>;
+
+export type Problem =
+  | ResourceNotFoundProblem
+  | InvalidRequestProblem
+  | NotAuthorizedForResourceProblem
+  | NotAuthorizedForFieldProblem
+  | FieldUnauthorizedProblem
+  | FieldHydrationFailureProblem
+  | ResourceUnavailableProblem
+  | DisallowedResourceProblem
+  | InternalErrorProblem;
+export const Problem = /*@__PURE__*/ S.Unknown as any as S.Schema<Problem>;
+export type CreateWebhookReplayJobResponseErrorsList = Array<Problem>;
+export const CreateWebhookReplayJobResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<CreateWebhookReplayJobResponseErrorsList>;
+
+export interface CreateWebhookReplayJobResponse {
+  data?: CreateWebhookReplayJobResponseData;
+  errors?: CreateWebhookReplayJobResponseErrorsList;
+}
+export const CreateWebhookReplayJobResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(CreateWebhookReplayJobResponseData),
+    errors: S.optional(CreateWebhookReplayJobResponseErrorsList),
+  }),
+).annotate({
+  identifier: "CreateWebhookReplayJobResponse",
+}) as any as S.Schema<CreateWebhookReplayJobResponse>;
+
+export interface CreateWebhooksRequest {
+  /** The URL the webhook delivers events to. */
+  url: string;
+}
+export const CreateWebhooksRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    url: S.String,
+  }).pipe(T.Http({ method: "POST", uri: "/2/webhooks", code: 200 })),
+).annotate({
+  identifier: "CreateWebhooksRequest",
+}) as any as S.Schema<CreateWebhooksRequest>;
+
+export interface CreateWebhooksResponseData {
+  /** Creation time of the webhook configuration. */
+  created_at: string;
+  /** Unique identifier of the webhook configuration. */
+  id: string;
+  /** The URL the webhook delivers events to. */
+  url: string;
+  /** Indicates whether the webhook URL passed validation. */
+  valid: boolean;
+}
+export const CreateWebhooksResponseData = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    created_at: S.String,
+    id: S.String,
+    url: S.String,
+    valid: S.Boolean,
+  }),
+).annotate({
+  identifier: "CreateWebhooksResponseData",
+}) as any as S.Schema<CreateWebhooksResponseData>;
+
+export type CreateWebhooksResponseErrorsList = Array<Problem>;
+export const CreateWebhooksResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<CreateWebhooksResponseErrorsList>;
+
+export interface CreateWebhooksResponse {
+  data?: CreateWebhooksResponseData;
+  errors?: CreateWebhooksResponseErrorsList;
+}
+export const CreateWebhooksResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(CreateWebhooksResponseData),
+    errors: S.optional(CreateWebhooksResponseErrorsList),
+  }),
+).annotate({
+  identifier: "CreateWebhooksResponse",
+}) as any as S.Schema<CreateWebhooksResponse>;
+
+export interface CreateWebhooksStreamLinkRequest {
+  webhook_id: string;
+}
+export const CreateWebhooksStreamLinkRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    webhook_id: S.String.pipe(T.Label()),
+  }).pipe(
+    T.Http({
+      method: "POST",
+      uri: "/2/tweets/search/webhooks/{webhook_id}",
+      code: 200,
+    }),
+  ),
+).annotate({
+  identifier: "CreateWebhooksStreamLinkRequest",
+}) as any as S.Schema<CreateWebhooksStreamLinkRequest>;
+
+export interface CreateWebhooksStreamLinkResponseData {
+  /** Indicates whether the stream link was provisioned. */
+  provisioned: boolean;
+}
+export const CreateWebhooksStreamLinkResponseData = /*@__PURE__*/ S.suspend(
+  () =>
+    S.Struct({
+      provisioned: S.Boolean,
+    }),
+).annotate({
+  identifier: "CreateWebhooksStreamLinkResponseData",
+}) as any as S.Schema<CreateWebhooksStreamLinkResponseData>;
+
+export type CreateWebhooksStreamLinkResponseErrorsList = Array<Problem>;
+export const CreateWebhooksStreamLinkResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<CreateWebhooksStreamLinkResponseErrorsList>;
+
+export interface CreateWebhooksStreamLinkResponse {
+  data?: CreateWebhooksStreamLinkResponseData;
+  errors?: CreateWebhooksStreamLinkResponseErrorsList;
+}
+export const CreateWebhooksStreamLinkResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(CreateWebhooksStreamLinkResponseData),
+    errors: S.optional(CreateWebhooksStreamLinkResponseErrorsList),
+  }),
+).annotate({
+  identifier: "CreateWebhooksStreamLinkResponse",
+}) as any as S.Schema<CreateWebhooksStreamLinkResponse>;
+
+export interface DeleteWebhooksRequest {
+  webhook_id: string;
+}
+export const DeleteWebhooksRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    webhook_id: S.String.pipe(T.Label()),
+  }).pipe(
+    T.Http({ method: "DELETE", uri: "/2/webhooks/{webhook_id}", code: 200 }),
+  ),
+).annotate({
+  identifier: "DeleteWebhooksRequest",
+}) as any as S.Schema<DeleteWebhooksRequest>;
+
+export interface DeleteWebhooksResponseData {
+  /** Indicates whether the webhook configuration was deleted. */
+  deleted: boolean;
+}
+export const DeleteWebhooksResponseData = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    deleted: S.Boolean,
+  }),
+).annotate({
+  identifier: "DeleteWebhooksResponseData",
+}) as any as S.Schema<DeleteWebhooksResponseData>;
+
+export type DeleteWebhooksResponseErrorsList = Array<Problem>;
+export const DeleteWebhooksResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<DeleteWebhooksResponseErrorsList>;
+
+export interface DeleteWebhooksResponse {
+  data?: DeleteWebhooksResponseData;
+  errors?: DeleteWebhooksResponseErrorsList;
+}
+export const DeleteWebhooksResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(DeleteWebhooksResponseData),
+    errors: S.optional(DeleteWebhooksResponseErrorsList),
+  }),
+).annotate({
+  identifier: "DeleteWebhooksResponse",
+}) as any as S.Schema<DeleteWebhooksResponse>;
+
+export interface DeleteWebhooksStreamLinkRequest {
+  webhook_id: string;
+}
+export const DeleteWebhooksStreamLinkRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    webhook_id: S.String.pipe(T.Label()),
+  }).pipe(
+    T.Http({
+      method: "DELETE",
+      uri: "/2/tweets/search/webhooks/{webhook_id}",
+      code: 200,
+    }),
+  ),
+).annotate({
+  identifier: "DeleteWebhooksStreamLinkRequest",
+}) as any as S.Schema<DeleteWebhooksStreamLinkRequest>;
+
+export interface DeleteWebhooksStreamLinkResponseData {
+  /** Indicates whether the stream link was deleted. */
+  deleted: boolean;
+}
+export const DeleteWebhooksStreamLinkResponseData = /*@__PURE__*/ S.suspend(
+  () =>
+    S.Struct({
+      deleted: S.Boolean,
+    }),
+).annotate({
+  identifier: "DeleteWebhooksStreamLinkResponseData",
+}) as any as S.Schema<DeleteWebhooksStreamLinkResponseData>;
+
+export type DeleteWebhooksStreamLinkResponseErrorsList = Array<Problem>;
+export const DeleteWebhooksStreamLinkResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<DeleteWebhooksStreamLinkResponseErrorsList>;
+
+export interface DeleteWebhooksStreamLinkResponse {
+  data?: DeleteWebhooksStreamLinkResponseData;
+  errors?: DeleteWebhooksStreamLinkResponseErrorsList;
+}
+export const DeleteWebhooksStreamLinkResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(DeleteWebhooksStreamLinkResponseData),
+    errors: S.optional(DeleteWebhooksStreamLinkResponseErrorsList),
+  }),
+).annotate({
+  identifier: "DeleteWebhooksStreamLinkResponse",
+}) as any as S.Schema<DeleteWebhooksStreamLinkResponse>;
+
+export type GetWebhooksRequestWebhookConfigFieldsItem =
+  | "created_at"
+  | "id"
+  | "url"
+  | "valid";
+export const GetWebhooksRequestWebhookConfigFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a WebhookConfig object. */
+export type GetWebhooksRequestWebhookConfigFieldsList = Array<
+  GetWebhooksRequestWebhookConfigFieldsItem | (string & {})
+>;
+export const GetWebhooksRequestWebhookConfigFieldsList = /*@__PURE__*/ S.Array(
+  GetWebhooksRequestWebhookConfigFieldsItem,
+) as any as S.Schema<GetWebhooksRequestWebhookConfigFieldsList>;
+
+export interface GetWebhooksRequest {
+  /** A comma separated list of WebhookConfig fields to display. */
+  webhook_config_fields?: GetWebhooksRequestWebhookConfigFieldsList;
+}
+export const GetWebhooksRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    webhook_config_fields: S.optional(
+      GetWebhooksRequestWebhookConfigFieldsList.pipe(
+        T.Query("webhook_config.fields"),
+      ),
+    ),
+  }).pipe(T.Http({ method: "GET", uri: "/2/webhooks", code: 200 })),
+).annotate({
+  identifier: "GetWebhooksRequest",
+}) as any as S.Schema<GetWebhooksRequest>;
+
+export interface WebhookConfig {
+  created_at?: string;
+  id?: string;
+  url?: string;
+  valid?: boolean;
+}
+export const WebhookConfig = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    created_at: S.optional(S.String),
+    id: S.optional(S.String),
+    url: S.optional(S.String),
+    valid: S.optional(S.Boolean),
+  }),
+).annotate({ identifier: "WebhookConfig" }) as any as S.Schema<WebhookConfig>;
+
+export type GetWebhooksResponseDataList = Array<WebhookConfig>;
+export const GetWebhooksResponseDataList = /*@__PURE__*/ S.Array(
+  WebhookConfig,
+) as any as S.Schema<GetWebhooksResponseDataList>;
+
+export type GetWebhooksResponseErrorsList = Array<Problem>;
+export const GetWebhooksResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<GetWebhooksResponseErrorsList>;
+
+export interface GetWebhooksResponseMeta {
+  /** Number of items in the data array. */
+  result_count?: number;
+}
+export const GetWebhooksResponseMeta = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    result_count: S.optional(S.Number),
+  }),
+).annotate({
+  identifier: "GetWebhooksResponseMeta",
+}) as any as S.Schema<GetWebhooksResponseMeta>;
+
+export interface GetWebhooksResponse {
+  data?: GetWebhooksResponseDataList;
+  errors?: GetWebhooksResponseErrorsList;
+  meta?: GetWebhooksResponseMeta;
+}
+export const GetWebhooksResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(GetWebhooksResponseDataList),
+    errors: S.optional(GetWebhooksResponseErrorsList),
+    meta: S.optional(GetWebhooksResponseMeta),
+  }),
+).annotate({
+  identifier: "GetWebhooksResponse",
+}) as any as S.Schema<GetWebhooksResponse>;
+
+export interface GetWebhooksStreamLinksRequest {}
+export const GetWebhooksStreamLinksRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({}).pipe(
+    T.Http({ method: "GET", uri: "/2/tweets/search/webhooks", code: 200 }),
+  ),
+).annotate({
+  identifier: "GetWebhooksStreamLinksRequest",
+}) as any as S.Schema<GetWebhooksStreamLinksRequest>;
+
+/** Requested fields to be rendered */
+export type GetWebhooksStreamLinksResponseDataFieldsList = Array<string>;
+export const GetWebhooksStreamLinksResponseDataFieldsList =
+  /*@__PURE__*/ S.Array(
+    S.String,
+  ) as any as S.Schema<GetWebhooksStreamLinksResponseDataFieldsList>;
+
+export interface GetWebhooksStreamLinksResponseData {
+  /** The application ID */
+  application_id?: string;
+  /** The user ID */
+  business_user_id?: string;
+  /** The datetime the webhook was linked to the stream */
+  created_at?: string;
+  /** Requested fields to be rendered */
+  fields?: GetWebhooksStreamLinksResponseDataFieldsList;
+  /** The stream ID associated with the FilteredStream instance */
+  instance_id?: string;
+  /** The unique identifier for the webhook */
+  webhook_id?: string;
+}
+export const GetWebhooksStreamLinksResponseData = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    application_id: S.optional(S.String),
+    business_user_id: S.optional(S.String),
+    created_at: S.optional(S.String),
+    fields: S.optional(GetWebhooksStreamLinksResponseDataFieldsList),
+    instance_id: S.optional(S.String),
+    webhook_id: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "GetWebhooksStreamLinksResponseData",
+}) as any as S.Schema<GetWebhooksStreamLinksResponseData>;
+
+export type GetWebhooksStreamLinksResponseDataList =
+  Array<GetWebhooksStreamLinksResponseData>;
+export const GetWebhooksStreamLinksResponseDataList = /*@__PURE__*/ S.Array(
+  GetWebhooksStreamLinksResponseData,
+) as any as S.Schema<GetWebhooksStreamLinksResponseDataList>;
+
+export type GetWebhooksStreamLinksResponseErrorsList = Array<Problem>;
+export const GetWebhooksStreamLinksResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<GetWebhooksStreamLinksResponseErrorsList>;
+
+export interface GetWebhooksStreamLinksResponse {
+  data?: GetWebhooksStreamLinksResponseDataList;
+  errors?: GetWebhooksStreamLinksResponseErrorsList;
+}
+export const GetWebhooksStreamLinksResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(GetWebhooksStreamLinksResponseDataList),
+    errors: S.optional(GetWebhooksStreamLinksResponseErrorsList),
+  }),
+).annotate({
+  identifier: "GetWebhooksStreamLinksResponse",
+}) as any as S.Schema<GetWebhooksStreamLinksResponse>;
+
+export interface ValidateWebhooksRequest {
+  webhook_id: string;
+}
+export const ValidateWebhooksRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    webhook_id: S.String.pipe(T.Label()),
+  }).pipe(
+    T.Http({ method: "PUT", uri: "/2/webhooks/{webhook_id}", code: 200 }),
+  ),
+).annotate({
+  identifier: "ValidateWebhooksRequest",
+}) as any as S.Schema<ValidateWebhooksRequest>;
+
+export interface ValidateWebhooksResponseData {
+  /** Indicates whether the CRC validation check was triggered. */
+  valid: boolean;
+}
+export const ValidateWebhooksResponseData = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    valid: S.Boolean,
+  }),
+).annotate({
+  identifier: "ValidateWebhooksResponseData",
+}) as any as S.Schema<ValidateWebhooksResponseData>;
+
+export type ValidateWebhooksResponseErrorsList = Array<Problem>;
+export const ValidateWebhooksResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<ValidateWebhooksResponseErrorsList>;
+
+export interface ValidateWebhooksResponse {
+  data?: ValidateWebhooksResponseData;
+  errors?: ValidateWebhooksResponseErrorsList;
+}
+export const ValidateWebhooksResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(ValidateWebhooksResponseData),
+    errors: S.optional(ValidateWebhooksResponseErrorsList),
+  }),
+).annotate({
+  identifier: "ValidateWebhooksResponse",
+}) as any as S.Schema<ValidateWebhooksResponse>;
+
+export const createWebhookReplayJob = /*@__PURE__*/ makeOperation<
+  CreateWebhookReplayJobRequest,
+  CreateWebhookReplayJobResponse
+>(
+  operations.createWebhookReplayJob,
+  () => CreateWebhookReplayJobRequest,
+  () => CreateWebhookReplayJobResponse,
+);
+
+export const createWebhooks = /*@__PURE__*/ makeOperation<
+  CreateWebhooksRequest,
+  CreateWebhooksResponse
+>(
+  operations.createWebhooks,
+  () => CreateWebhooksRequest,
+  () => CreateWebhooksResponse,
+);
+
+export const createWebhooksStreamLink = /*@__PURE__*/ makeOperation<
+  CreateWebhooksStreamLinkRequest,
+  CreateWebhooksStreamLinkResponse
+>(
+  operations.createWebhooksStreamLink,
+  () => CreateWebhooksStreamLinkRequest,
+  () => CreateWebhooksStreamLinkResponse,
+);
+
+export const deleteWebhooks = /*@__PURE__*/ makeOperation<
+  DeleteWebhooksRequest,
+  DeleteWebhooksResponse
+>(
+  operations.deleteWebhooks,
+  () => DeleteWebhooksRequest,
+  () => DeleteWebhooksResponse,
+);
+
+export const deleteWebhooksStreamLink = /*@__PURE__*/ makeOperation<
+  DeleteWebhooksStreamLinkRequest,
+  DeleteWebhooksStreamLinkResponse
+>(
+  operations.deleteWebhooksStreamLink,
+  () => DeleteWebhooksStreamLinkRequest,
+  () => DeleteWebhooksStreamLinkResponse,
+);
+
+export const getWebhooks = /*@__PURE__*/ makeOperation<
+  GetWebhooksRequest,
+  GetWebhooksResponse
+>(
+  operations.getWebhooks,
+  () => GetWebhooksRequest,
+  () => GetWebhooksResponse,
+);
+
+export const getWebhooksStreamLinks = /*@__PURE__*/ makeOperation<
+  GetWebhooksStreamLinksRequest,
+  GetWebhooksStreamLinksResponse
+>(
+  operations.getWebhooksStreamLinks,
+  () => GetWebhooksStreamLinksRequest,
+  () => GetWebhooksStreamLinksResponse,
+);
+
+export const validateWebhooks = /*@__PURE__*/ makeOperation<
+  ValidateWebhooksRequest,
+  ValidateWebhooksResponse
+>(
+  operations.validateWebhooks,
+  () => ValidateWebhooksRequest,
+  () => ValidateWebhooksResponse,
+);

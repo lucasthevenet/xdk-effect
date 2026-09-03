@@ -1,0 +1,537 @@
+// AUTO-GENERATED from xdevplatform/xdk@84c26540df30c0b798e50e34151c56d5d262ba1c; do not edit.
+import * as S from "@distilled.cloud/core/schema";
+import * as T from "../traits.ts";
+import {
+  makeOperation,
+  makeBinaryOperation,
+  makeStreamOperation,
+} from "../operation.ts";
+import { operations } from "../operations.ts";
+export type CreateComplianceJobsRequestComplianceJobFieldsItem =
+  | "created_at"
+  | "download_expires_at"
+  | "download_url"
+  | "id"
+  | "name"
+  | "resumable"
+  | "status"
+  | "type"
+  | "upload_expires_at"
+  | "upload_url";
+export const CreateComplianceJobsRequestComplianceJobFieldsItem =
+  /*@__PURE__*/ S.String;
+
+/** The fields available for a ComplianceJob object. */
+export type CreateComplianceJobsRequestComplianceJobFieldsList = Array<
+  CreateComplianceJobsRequestComplianceJobFieldsItem | (string & {})
+>;
+export const CreateComplianceJobsRequestComplianceJobFieldsList =
+  /*@__PURE__*/ S.Array(
+    CreateComplianceJobsRequestComplianceJobFieldsItem,
+  ) as any as S.Schema<CreateComplianceJobsRequestComplianceJobFieldsList>;
+
+/** Type of compliance job to list. */
+export type CreateComplianceJobsRequestType = "tweets" | "users";
+export const CreateComplianceJobsRequestType = /*@__PURE__*/ S.String;
+
+export interface CreateComplianceJobsRequest {
+  /** A comma separated list of ComplianceJob fields to display. */
+  compliance_job_fields?: CreateComplianceJobsRequestComplianceJobFieldsList;
+  /** A user-provided name for this job. */
+  name?: string;
+  /** Whether to enable the upload URL with support for resumable uploads. */
+  resumable?: boolean;
+  /** Type of compliance job to list. */
+  type: CreateComplianceJobsRequestType | (string & {});
+}
+export const CreateComplianceJobsRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    compliance_job_fields: S.optional(
+      CreateComplianceJobsRequestComplianceJobFieldsList.pipe(
+        T.Query("compliance_job.fields"),
+      ),
+    ),
+    name: S.optional(S.String),
+    resumable: S.optional(S.Boolean),
+    type: CreateComplianceJobsRequestType,
+  }).pipe(T.Http({ method: "POST", uri: "/2/compliance/jobs", code: 200 })),
+).annotate({
+  identifier: "CreateComplianceJobsRequest",
+}) as any as S.Schema<CreateComplianceJobsRequest>;
+
+export interface ComplianceJob {
+  created_at?: string;
+  download_expires_at?: string;
+  download_url?: string;
+  id?: string;
+  name?: string;
+  resumable?: boolean;
+  status?: string;
+  type?: string;
+  upload_expires_at?: string;
+  upload_url?: string;
+}
+export const ComplianceJob = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    created_at: S.optional(S.String),
+    download_expires_at: S.optional(S.String),
+    download_url: S.optional(S.String),
+    id: S.optional(S.String),
+    name: S.optional(S.String),
+    resumable: S.optional(S.Boolean),
+    status: S.optional(S.String),
+    type: S.optional(S.String),
+    upload_expires_at: S.optional(S.String),
+    upload_url: S.optional(S.String),
+  }),
+).annotate({ identifier: "ComplianceJob" }) as any as S.Schema<ComplianceJob>;
+
+export type ResourceNotFoundProblemType =
+  "https://api.x.com/2/problems/resource-not-found";
+export const ResourceNotFoundProblemType = /*@__PURE__*/ S.String;
+
+export interface ResourceNotFoundProblem {
+  detail: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type: string;
+  status?: number;
+  title: string;
+  type: ResourceNotFoundProblemType;
+  value?: string;
+}
+export const ResourceNotFoundProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: ResourceNotFoundProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "ResourceNotFoundProblem",
+}) as any as S.Schema<ResourceNotFoundProblem>;
+
+export type InvalidRequestProblemType =
+  "https://api.x.com/2/problems/invalid-request";
+export const InvalidRequestProblemType = /*@__PURE__*/ S.String;
+
+export interface InvalidRequestProblem {
+  detail: string;
+  parameter?: string;
+  status?: number;
+  title: string;
+  type: InvalidRequestProblemType;
+  value?: string;
+}
+export const InvalidRequestProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: InvalidRequestProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "InvalidRequestProblem",
+}) as any as S.Schema<InvalidRequestProblem>;
+
+export type NotAuthorizedForResourceProblemType =
+  "https://api.x.com/2/problems/not-authorized-for-resource";
+export const NotAuthorizedForResourceProblemType = /*@__PURE__*/ S.String;
+
+export interface NotAuthorizedForResourceProblem {
+  detail: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: NotAuthorizedForResourceProblemType;
+  value?: string;
+}
+export const NotAuthorizedForResourceProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: NotAuthorizedForResourceProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "NotAuthorizedForResourceProblem",
+}) as any as S.Schema<NotAuthorizedForResourceProblem>;
+
+export type NotAuthorizedForFieldProblemType =
+  "https://api.x.com/2/problems/not-authorized-for-field";
+export const NotAuthorizedForFieldProblemType = /*@__PURE__*/ S.String;
+
+export interface NotAuthorizedForFieldProblem {
+  detail: string;
+  field: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: NotAuthorizedForFieldProblemType;
+  value?: string;
+}
+export const NotAuthorizedForFieldProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: NotAuthorizedForFieldProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "NotAuthorizedForFieldProblem",
+}) as any as S.Schema<NotAuthorizedForFieldProblem>;
+
+export type FieldUnauthorizedProblemType =
+  "https://api.x.com/2/problems/field-unauthorized";
+export const FieldUnauthorizedProblemType = /*@__PURE__*/ S.String;
+
+export interface FieldUnauthorizedProblem {
+  detail: string;
+  field: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: FieldUnauthorizedProblemType;
+}
+export const FieldUnauthorizedProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: FieldUnauthorizedProblemType,
+  }),
+).annotate({
+  identifier: "FieldUnauthorizedProblem",
+}) as any as S.Schema<FieldUnauthorizedProblem>;
+
+export type FieldHydrationFailureProblemType =
+  "https://api.x.com/2/problems/field-hydration-failure";
+export const FieldHydrationFailureProblemType = /*@__PURE__*/ S.String;
+
+export interface FieldHydrationFailureProblem {
+  detail: string;
+  field: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: FieldHydrationFailureProblemType;
+}
+export const FieldHydrationFailureProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: FieldHydrationFailureProblemType,
+  }),
+).annotate({
+  identifier: "FieldHydrationFailureProblem",
+}) as any as S.Schema<FieldHydrationFailureProblem>;
+
+export type ResourceUnavailableProblemType =
+  "https://api.x.com/2/problems/resource-unavailable";
+export const ResourceUnavailableProblemType = /*@__PURE__*/ S.String;
+
+export interface ResourceUnavailableProblem {
+  detail: string;
+  resource_id?: string;
+  resource_type: string;
+  status?: number;
+  title: string;
+  type: ResourceUnavailableProblemType;
+}
+export const ResourceUnavailableProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: ResourceUnavailableProblemType,
+  }),
+).annotate({
+  identifier: "ResourceUnavailableProblem",
+}) as any as S.Schema<ResourceUnavailableProblem>;
+
+export type DisallowedResourceProblemType =
+  "https://api.x.com/2/problems/disallowed-resource";
+export const DisallowedResourceProblemType = /*@__PURE__*/ S.String;
+
+export interface DisallowedResourceProblem {
+  detail: string;
+  resource_id?: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: DisallowedResourceProblemType;
+}
+export const DisallowedResourceProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    resource_id: S.optional(S.String),
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: DisallowedResourceProblemType,
+  }),
+).annotate({
+  identifier: "DisallowedResourceProblem",
+}) as any as S.Schema<DisallowedResourceProblem>;
+
+export type InternalErrorProblemType =
+  "https://api.x.com/2/problems/internal-error";
+export const InternalErrorProblemType = /*@__PURE__*/ S.String;
+
+export interface InternalErrorProblem {
+  detail: string;
+  status?: number;
+  title: string;
+  type: InternalErrorProblemType;
+}
+export const InternalErrorProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: InternalErrorProblemType,
+  }),
+).annotate({
+  identifier: "InternalErrorProblem",
+}) as any as S.Schema<InternalErrorProblem>;
+
+export type Problem =
+  | ResourceNotFoundProblem
+  | InvalidRequestProblem
+  | NotAuthorizedForResourceProblem
+  | NotAuthorizedForFieldProblem
+  | FieldUnauthorizedProblem
+  | FieldHydrationFailureProblem
+  | ResourceUnavailableProblem
+  | DisallowedResourceProblem
+  | InternalErrorProblem;
+export const Problem = /*@__PURE__*/ S.Unknown as any as S.Schema<Problem>;
+export type CreateComplianceJobsResponseErrorsList = Array<Problem>;
+export const CreateComplianceJobsResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<CreateComplianceJobsResponseErrorsList>;
+
+export interface CreateComplianceJobsResponse {
+  data?: ComplianceJob;
+  errors?: CreateComplianceJobsResponseErrorsList;
+}
+export const CreateComplianceJobsResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(ComplianceJob),
+    errors: S.optional(CreateComplianceJobsResponseErrorsList),
+  }),
+).annotate({
+  identifier: "CreateComplianceJobsResponse",
+}) as any as S.Schema<CreateComplianceJobsResponse>;
+
+export type GetComplianceJobsRequestType = "tweets" | "users";
+export const GetComplianceJobsRequestType = /*@__PURE__*/ S.String;
+
+export type GetComplianceJobsRequestStatus =
+  | "created"
+  | "in_progress"
+  | "failed"
+  | "complete";
+export const GetComplianceJobsRequestStatus = /*@__PURE__*/ S.String;
+
+export type GetComplianceJobsRequestComplianceJobFieldsItem =
+  | "created_at"
+  | "download_expires_at"
+  | "download_url"
+  | "id"
+  | "name"
+  | "resumable"
+  | "status"
+  | "type"
+  | "upload_expires_at"
+  | "upload_url";
+export const GetComplianceJobsRequestComplianceJobFieldsItem =
+  /*@__PURE__*/ S.String;
+
+/** The fields available for a ComplianceJob object. */
+export type GetComplianceJobsRequestComplianceJobFieldsList = Array<
+  GetComplianceJobsRequestComplianceJobFieldsItem | (string & {})
+>;
+export const GetComplianceJobsRequestComplianceJobFieldsList =
+  /*@__PURE__*/ S.Array(
+    GetComplianceJobsRequestComplianceJobFieldsItem,
+  ) as any as S.Schema<GetComplianceJobsRequestComplianceJobFieldsList>;
+
+export interface GetComplianceJobsRequest {
+  type: GetComplianceJobsRequestType | (string & {});
+  status?: GetComplianceJobsRequestStatus | (string & {});
+  /** A comma separated list of ComplianceJob fields to display. */
+  compliance_job_fields?: GetComplianceJobsRequestComplianceJobFieldsList;
+}
+export const GetComplianceJobsRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    type: GetComplianceJobsRequestType.pipe(T.Query()),
+    status: S.optional(GetComplianceJobsRequestStatus.pipe(T.Query())),
+    compliance_job_fields: S.optional(
+      GetComplianceJobsRequestComplianceJobFieldsList.pipe(
+        T.Query("compliance_job.fields"),
+      ),
+    ),
+  }).pipe(T.Http({ method: "GET", uri: "/2/compliance/jobs", code: 200 })),
+).annotate({
+  identifier: "GetComplianceJobsRequest",
+}) as any as S.Schema<GetComplianceJobsRequest>;
+
+export type GetComplianceJobsResponseDataList = Array<ComplianceJob>;
+export const GetComplianceJobsResponseDataList = /*@__PURE__*/ S.Array(
+  ComplianceJob,
+) as any as S.Schema<GetComplianceJobsResponseDataList>;
+
+export type GetComplianceJobsResponseErrorsList = Array<Problem>;
+export const GetComplianceJobsResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<GetComplianceJobsResponseErrorsList>;
+
+export interface GetComplianceJobsResponseMeta {
+  /** Number of items in the data array. */
+  result_count?: number;
+}
+export const GetComplianceJobsResponseMeta = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    result_count: S.optional(S.Number),
+  }),
+).annotate({
+  identifier: "GetComplianceJobsResponseMeta",
+}) as any as S.Schema<GetComplianceJobsResponseMeta>;
+
+export interface GetComplianceJobsResponse {
+  data?: GetComplianceJobsResponseDataList;
+  errors?: GetComplianceJobsResponseErrorsList;
+  meta?: GetComplianceJobsResponseMeta;
+}
+export const GetComplianceJobsResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(GetComplianceJobsResponseDataList),
+    errors: S.optional(GetComplianceJobsResponseErrorsList),
+    meta: S.optional(GetComplianceJobsResponseMeta),
+  }),
+).annotate({
+  identifier: "GetComplianceJobsResponse",
+}) as any as S.Schema<GetComplianceJobsResponse>;
+
+export type GetComplianceJobsByIdRequestComplianceJobFieldsItem =
+  | "created_at"
+  | "download_expires_at"
+  | "download_url"
+  | "id"
+  | "name"
+  | "resumable"
+  | "status"
+  | "type"
+  | "upload_expires_at"
+  | "upload_url";
+export const GetComplianceJobsByIdRequestComplianceJobFieldsItem =
+  /*@__PURE__*/ S.String;
+
+/** The fields available for a ComplianceJob object. */
+export type GetComplianceJobsByIdRequestComplianceJobFieldsList = Array<
+  GetComplianceJobsByIdRequestComplianceJobFieldsItem | (string & {})
+>;
+export const GetComplianceJobsByIdRequestComplianceJobFieldsList =
+  /*@__PURE__*/ S.Array(
+    GetComplianceJobsByIdRequestComplianceJobFieldsItem,
+  ) as any as S.Schema<GetComplianceJobsByIdRequestComplianceJobFieldsList>;
+
+export interface GetComplianceJobsByIdRequest {
+  id: string;
+  /** A comma separated list of ComplianceJob fields to display. */
+  compliance_job_fields?: GetComplianceJobsByIdRequestComplianceJobFieldsList;
+}
+export const GetComplianceJobsByIdRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    id: S.String.pipe(T.Label()),
+    compliance_job_fields: S.optional(
+      GetComplianceJobsByIdRequestComplianceJobFieldsList.pipe(
+        T.Query("compliance_job.fields"),
+      ),
+    ),
+  }).pipe(T.Http({ method: "GET", uri: "/2/compliance/jobs/{id}", code: 200 })),
+).annotate({
+  identifier: "GetComplianceJobsByIdRequest",
+}) as any as S.Schema<GetComplianceJobsByIdRequest>;
+
+export type GetComplianceJobsByIdResponseErrorsList = Array<Problem>;
+export const GetComplianceJobsByIdResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<GetComplianceJobsByIdResponseErrorsList>;
+
+export interface GetComplianceJobsByIdResponse {
+  data?: ComplianceJob;
+  errors?: GetComplianceJobsByIdResponseErrorsList;
+}
+export const GetComplianceJobsByIdResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(ComplianceJob),
+    errors: S.optional(GetComplianceJobsByIdResponseErrorsList),
+  }),
+).annotate({
+  identifier: "GetComplianceJobsByIdResponse",
+}) as any as S.Schema<GetComplianceJobsByIdResponse>;
+
+export const createComplianceJobs = /*@__PURE__*/ makeOperation<
+  CreateComplianceJobsRequest,
+  CreateComplianceJobsResponse
+>(
+  operations.createComplianceJobs,
+  () => CreateComplianceJobsRequest,
+  () => CreateComplianceJobsResponse,
+);
+
+export const getComplianceJobs = /*@__PURE__*/ makeOperation<
+  GetComplianceJobsRequest,
+  GetComplianceJobsResponse
+>(
+  operations.getComplianceJobs,
+  () => GetComplianceJobsRequest,
+  () => GetComplianceJobsResponse,
+);
+
+export const getComplianceJobsById = /*@__PURE__*/ makeOperation<
+  GetComplianceJobsByIdRequest,
+  GetComplianceJobsByIdResponse
+>(
+  operations.getComplianceJobsById,
+  () => GetComplianceJobsByIdRequest,
+  () => GetComplianceJobsByIdResponse,
+);

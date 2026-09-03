@@ -1,0 +1,648 @@
+// AUTO-GENERATED from xdevplatform/xdk@84c26540df30c0b798e50e34151c56d5d262ba1c; do not edit.
+import * as S from "@distilled.cloud/core/schema";
+import * as T from "../traits.ts";
+import {
+  makeOperation,
+  makeBinaryOperation,
+  makeStreamOperation,
+} from "../operation.ts";
+import { operations } from "../operations.ts";
+export interface DeleteAllConnectionsRequest {}
+export const DeleteAllConnectionsRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({}).pipe(
+    T.Http({ method: "DELETE", uri: "/2/connections/all", code: 200 }),
+  ),
+).annotate({
+  identifier: "DeleteAllConnectionsRequest",
+}) as any as S.Schema<DeleteAllConnectionsRequest>;
+
+export interface DeleteAllConnectionsResponseDataResults {
+  error_message?: string;
+  success: boolean;
+  uuid: string;
+}
+export const DeleteAllConnectionsResponseDataResults = /*@__PURE__*/ S.suspend(
+  () =>
+    S.Struct({
+      error_message: S.optional(S.String),
+      success: S.Boolean,
+      uuid: S.String,
+    }),
+).annotate({
+  identifier: "DeleteAllConnectionsResponseDataResults",
+}) as any as S.Schema<DeleteAllConnectionsResponseDataResults>;
+
+export type DeleteAllConnectionsResponseDataResultsList =
+  Array<DeleteAllConnectionsResponseDataResults>;
+export const DeleteAllConnectionsResponseDataResultsList =
+  /*@__PURE__*/ S.Array(
+    DeleteAllConnectionsResponseDataResults,
+  ) as any as S.Schema<DeleteAllConnectionsResponseDataResultsList>;
+
+export interface DeleteAllConnectionsResponseData {
+  /** Number of connections that could not be terminated. */
+  failed_kills: number;
+  results?: DeleteAllConnectionsResponseDataResultsList;
+  /** Number of connections successfully terminated. */
+  successful_kills: number;
+}
+export const DeleteAllConnectionsResponseData = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    failed_kills: S.Number,
+    results: S.optional(DeleteAllConnectionsResponseDataResultsList),
+    successful_kills: S.Number,
+  }),
+).annotate({
+  identifier: "DeleteAllConnectionsResponseData",
+}) as any as S.Schema<DeleteAllConnectionsResponseData>;
+
+export type ResourceNotFoundProblemType =
+  "https://api.x.com/2/problems/resource-not-found";
+export const ResourceNotFoundProblemType = /*@__PURE__*/ S.String;
+
+export interface ResourceNotFoundProblem {
+  detail: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type: string;
+  status?: number;
+  title: string;
+  type: ResourceNotFoundProblemType;
+  value?: string;
+}
+export const ResourceNotFoundProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: ResourceNotFoundProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "ResourceNotFoundProblem",
+}) as any as S.Schema<ResourceNotFoundProblem>;
+
+export type InvalidRequestProblemType =
+  "https://api.x.com/2/problems/invalid-request";
+export const InvalidRequestProblemType = /*@__PURE__*/ S.String;
+
+export interface InvalidRequestProblem {
+  detail: string;
+  parameter?: string;
+  status?: number;
+  title: string;
+  type: InvalidRequestProblemType;
+  value?: string;
+}
+export const InvalidRequestProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: InvalidRequestProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "InvalidRequestProblem",
+}) as any as S.Schema<InvalidRequestProblem>;
+
+export type NotAuthorizedForResourceProblemType =
+  "https://api.x.com/2/problems/not-authorized-for-resource";
+export const NotAuthorizedForResourceProblemType = /*@__PURE__*/ S.String;
+
+export interface NotAuthorizedForResourceProblem {
+  detail: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: NotAuthorizedForResourceProblemType;
+  value?: string;
+}
+export const NotAuthorizedForResourceProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: NotAuthorizedForResourceProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "NotAuthorizedForResourceProblem",
+}) as any as S.Schema<NotAuthorizedForResourceProblem>;
+
+export type NotAuthorizedForFieldProblemType =
+  "https://api.x.com/2/problems/not-authorized-for-field";
+export const NotAuthorizedForFieldProblemType = /*@__PURE__*/ S.String;
+
+export interface NotAuthorizedForFieldProblem {
+  detail: string;
+  field: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: NotAuthorizedForFieldProblemType;
+  value?: string;
+}
+export const NotAuthorizedForFieldProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: NotAuthorizedForFieldProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "NotAuthorizedForFieldProblem",
+}) as any as S.Schema<NotAuthorizedForFieldProblem>;
+
+export type FieldUnauthorizedProblemType =
+  "https://api.x.com/2/problems/field-unauthorized";
+export const FieldUnauthorizedProblemType = /*@__PURE__*/ S.String;
+
+export interface FieldUnauthorizedProblem {
+  detail: string;
+  field: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: FieldUnauthorizedProblemType;
+}
+export const FieldUnauthorizedProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: FieldUnauthorizedProblemType,
+  }),
+).annotate({
+  identifier: "FieldUnauthorizedProblem",
+}) as any as S.Schema<FieldUnauthorizedProblem>;
+
+export type FieldHydrationFailureProblemType =
+  "https://api.x.com/2/problems/field-hydration-failure";
+export const FieldHydrationFailureProblemType = /*@__PURE__*/ S.String;
+
+export interface FieldHydrationFailureProblem {
+  detail: string;
+  field: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: FieldHydrationFailureProblemType;
+}
+export const FieldHydrationFailureProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: FieldHydrationFailureProblemType,
+  }),
+).annotate({
+  identifier: "FieldHydrationFailureProblem",
+}) as any as S.Schema<FieldHydrationFailureProblem>;
+
+export type ResourceUnavailableProblemType =
+  "https://api.x.com/2/problems/resource-unavailable";
+export const ResourceUnavailableProblemType = /*@__PURE__*/ S.String;
+
+export interface ResourceUnavailableProblem {
+  detail: string;
+  resource_id?: string;
+  resource_type: string;
+  status?: number;
+  title: string;
+  type: ResourceUnavailableProblemType;
+}
+export const ResourceUnavailableProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: ResourceUnavailableProblemType,
+  }),
+).annotate({
+  identifier: "ResourceUnavailableProblem",
+}) as any as S.Schema<ResourceUnavailableProblem>;
+
+export type DisallowedResourceProblemType =
+  "https://api.x.com/2/problems/disallowed-resource";
+export const DisallowedResourceProblemType = /*@__PURE__*/ S.String;
+
+export interface DisallowedResourceProblem {
+  detail: string;
+  resource_id?: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: DisallowedResourceProblemType;
+}
+export const DisallowedResourceProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    resource_id: S.optional(S.String),
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: DisallowedResourceProblemType,
+  }),
+).annotate({
+  identifier: "DisallowedResourceProblem",
+}) as any as S.Schema<DisallowedResourceProblem>;
+
+export type InternalErrorProblemType =
+  "https://api.x.com/2/problems/internal-error";
+export const InternalErrorProblemType = /*@__PURE__*/ S.String;
+
+export interface InternalErrorProblem {
+  detail: string;
+  status?: number;
+  title: string;
+  type: InternalErrorProblemType;
+}
+export const InternalErrorProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: InternalErrorProblemType,
+  }),
+).annotate({
+  identifier: "InternalErrorProblem",
+}) as any as S.Schema<InternalErrorProblem>;
+
+export type Problem =
+  | ResourceNotFoundProblem
+  | InvalidRequestProblem
+  | NotAuthorizedForResourceProblem
+  | NotAuthorizedForFieldProblem
+  | FieldUnauthorizedProblem
+  | FieldHydrationFailureProblem
+  | ResourceUnavailableProblem
+  | DisallowedResourceProblem
+  | InternalErrorProblem;
+export const Problem = /*@__PURE__*/ S.Unknown as any as S.Schema<Problem>;
+export type DeleteAllConnectionsResponseErrorsList = Array<Problem>;
+export const DeleteAllConnectionsResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<DeleteAllConnectionsResponseErrorsList>;
+
+export interface DeleteAllConnectionsResponse {
+  data?: DeleteAllConnectionsResponseData;
+  errors?: DeleteAllConnectionsResponseErrorsList;
+}
+export const DeleteAllConnectionsResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(DeleteAllConnectionsResponseData),
+    errors: S.optional(DeleteAllConnectionsResponseErrorsList),
+  }),
+).annotate({
+  identifier: "DeleteAllConnectionsResponse",
+}) as any as S.Schema<DeleteAllConnectionsResponse>;
+
+export type DeleteConnectionsByEndpointRequestEndpointId =
+  | "filtered_stream"
+  | "sample_stream"
+  | "sample10_stream"
+  | "firehose_stream"
+  | "tweets_compliance_stream"
+  | "users_compliance_stream"
+  | "tweet_label_stream"
+  | "firehose_stream_lang_en"
+  | "firehose_stream_lang_ja"
+  | "firehose_stream_lang_ko"
+  | "firehose_stream_lang_pt"
+  | "likes_firehose_stream"
+  | "likes_sample10_stream"
+  | "likes_compliance_stream";
+export const DeleteConnectionsByEndpointRequestEndpointId =
+  /*@__PURE__*/ S.String;
+
+export interface DeleteConnectionsByEndpointRequest {
+  endpoint_id: DeleteConnectionsByEndpointRequestEndpointId | (string & {});
+}
+export const DeleteConnectionsByEndpointRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    endpoint_id: DeleteConnectionsByEndpointRequestEndpointId.pipe(T.Label()),
+  }).pipe(
+    T.Http({
+      method: "DELETE",
+      uri: "/2/connections/{endpoint_id}",
+      code: 200,
+    }),
+  ),
+).annotate({
+  identifier: "DeleteConnectionsByEndpointRequest",
+}) as any as S.Schema<DeleteConnectionsByEndpointRequest>;
+
+export type DeleteConnectionsByEndpointResponseDataResults =
+  DeleteAllConnectionsResponseDataResults;
+export const DeleteConnectionsByEndpointResponseDataResults =
+  DeleteAllConnectionsResponseDataResults;
+
+export type DeleteConnectionsByEndpointResponseDataResultsList =
+  Array<DeleteAllConnectionsResponseDataResults>;
+export const DeleteConnectionsByEndpointResponseDataResultsList =
+  /*@__PURE__*/ S.Array(
+    DeleteAllConnectionsResponseDataResults,
+  ) as any as S.Schema<DeleteConnectionsByEndpointResponseDataResultsList>;
+
+export interface DeleteConnectionsByEndpointResponseData {
+  /** Number of connections that could not be terminated. */
+  failed_kills: number;
+  results?: DeleteConnectionsByEndpointResponseDataResultsList;
+  /** Number of connections successfully terminated. */
+  successful_kills: number;
+}
+export const DeleteConnectionsByEndpointResponseData = /*@__PURE__*/ S.suspend(
+  () =>
+    S.Struct({
+      failed_kills: S.Number,
+      results: S.optional(DeleteConnectionsByEndpointResponseDataResultsList),
+      successful_kills: S.Number,
+    }),
+).annotate({
+  identifier: "DeleteConnectionsByEndpointResponseData",
+}) as any as S.Schema<DeleteConnectionsByEndpointResponseData>;
+
+export type DeleteConnectionsByEndpointResponseErrorsList = Array<Problem>;
+export const DeleteConnectionsByEndpointResponseErrorsList =
+  /*@__PURE__*/ S.Array(
+    Problem,
+  ) as any as S.Schema<DeleteConnectionsByEndpointResponseErrorsList>;
+
+export interface DeleteConnectionsByEndpointResponse {
+  data?: DeleteConnectionsByEndpointResponseData;
+  errors?: DeleteConnectionsByEndpointResponseErrorsList;
+}
+export const DeleteConnectionsByEndpointResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(DeleteConnectionsByEndpointResponseData),
+    errors: S.optional(DeleteConnectionsByEndpointResponseErrorsList),
+  }),
+).annotate({
+  identifier: "DeleteConnectionsByEndpointResponse",
+}) as any as S.Schema<DeleteConnectionsByEndpointResponse>;
+
+/** Connection UUIDs to terminate (1-100). */
+export type DeleteConnectionsByUuidsRequestUuidsList = Array<string>;
+export const DeleteConnectionsByUuidsRequestUuidsList = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<DeleteConnectionsByUuidsRequestUuidsList>;
+
+export interface DeleteConnectionsByUuidsRequest {
+  /** Connection UUIDs to terminate (1-100). */
+  uuids: DeleteConnectionsByUuidsRequestUuidsList;
+}
+export const DeleteConnectionsByUuidsRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    uuids: DeleteConnectionsByUuidsRequestUuidsList,
+  }).pipe(T.Http({ method: "DELETE", uri: "/2/connections", code: 200 })),
+).annotate({
+  identifier: "DeleteConnectionsByUuidsRequest",
+}) as any as S.Schema<DeleteConnectionsByUuidsRequest>;
+
+export type DeleteConnectionsByUuidsResponseDataResults =
+  DeleteAllConnectionsResponseDataResults;
+export const DeleteConnectionsByUuidsResponseDataResults =
+  DeleteAllConnectionsResponseDataResults;
+
+export type DeleteConnectionsByUuidsResponseDataResultsList =
+  Array<DeleteAllConnectionsResponseDataResults>;
+export const DeleteConnectionsByUuidsResponseDataResultsList =
+  /*@__PURE__*/ S.Array(
+    DeleteAllConnectionsResponseDataResults,
+  ) as any as S.Schema<DeleteConnectionsByUuidsResponseDataResultsList>;
+
+export interface DeleteConnectionsByUuidsResponseData {
+  /** Number of connections that could not be terminated. */
+  failed_kills: number;
+  results?: DeleteConnectionsByUuidsResponseDataResultsList;
+  /** Number of connections successfully terminated. */
+  successful_kills: number;
+}
+export const DeleteConnectionsByUuidsResponseData = /*@__PURE__*/ S.suspend(
+  () =>
+    S.Struct({
+      failed_kills: S.Number,
+      results: S.optional(DeleteConnectionsByUuidsResponseDataResultsList),
+      successful_kills: S.Number,
+    }),
+).annotate({
+  identifier: "DeleteConnectionsByUuidsResponseData",
+}) as any as S.Schema<DeleteConnectionsByUuidsResponseData>;
+
+export type DeleteConnectionsByUuidsResponseErrorsList = Array<Problem>;
+export const DeleteConnectionsByUuidsResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<DeleteConnectionsByUuidsResponseErrorsList>;
+
+export interface DeleteConnectionsByUuidsResponse {
+  data?: DeleteConnectionsByUuidsResponseData;
+  errors?: DeleteConnectionsByUuidsResponseErrorsList;
+}
+export const DeleteConnectionsByUuidsResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(DeleteConnectionsByUuidsResponseData),
+    errors: S.optional(DeleteConnectionsByUuidsResponseErrorsList),
+  }),
+).annotate({
+  identifier: "DeleteConnectionsByUuidsResponse",
+}) as any as S.Schema<DeleteConnectionsByUuidsResponse>;
+
+export type GetConnectionHistoryRequestStatus = "active" | "inactive" | "all";
+export const GetConnectionHistoryRequestStatus = /*@__PURE__*/ S.String;
+
+export type GetConnectionHistoryRequestEndpointsItem =
+  | "filtered_stream"
+  | "sample_stream"
+  | "sample10_stream"
+  | "firehose_stream"
+  | "tweets_compliance_stream"
+  | "users_compliance_stream"
+  | "tweet_label_stream"
+  | "firehose_stream_lang_en"
+  | "firehose_stream_lang_ja"
+  | "firehose_stream_lang_ko"
+  | "firehose_stream_lang_pt"
+  | "likes_firehose_stream"
+  | "likes_sample10_stream"
+  | "likes_compliance_stream";
+export const GetConnectionHistoryRequestEndpointsItem = /*@__PURE__*/ S.String;
+
+export type GetConnectionHistoryRequestEndpointsList = Array<
+  GetConnectionHistoryRequestEndpointsItem | (string & {})
+>;
+export const GetConnectionHistoryRequestEndpointsList = /*@__PURE__*/ S.Array(
+  GetConnectionHistoryRequestEndpointsItem,
+) as any as S.Schema<GetConnectionHistoryRequestEndpointsList>;
+
+export type GetConnectionHistoryRequestConnectionFieldsItem =
+  | "client_ip"
+  | "connected_at"
+  | "disconnect_reason"
+  | "disconnected_at"
+  | "endpoint_name"
+  | "id";
+export const GetConnectionHistoryRequestConnectionFieldsItem =
+  /*@__PURE__*/ S.String;
+
+/** The fields available for a Connection object. */
+export type GetConnectionHistoryRequestConnectionFieldsList = Array<
+  GetConnectionHistoryRequestConnectionFieldsItem | (string & {})
+>;
+export const GetConnectionHistoryRequestConnectionFieldsList =
+  /*@__PURE__*/ S.Array(
+    GetConnectionHistoryRequestConnectionFieldsItem,
+  ) as any as S.Schema<GetConnectionHistoryRequestConnectionFieldsList>;
+
+export interface GetConnectionHistoryRequest {
+  status?: GetConnectionHistoryRequestStatus | (string & {});
+  endpoints?: GetConnectionHistoryRequestEndpointsList;
+  max_results?: number;
+  pagination_token?: string;
+  /** A comma separated list of Connection fields to display. */
+  connection_fields?: GetConnectionHistoryRequestConnectionFieldsList;
+}
+export const GetConnectionHistoryRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    status: S.optional(GetConnectionHistoryRequestStatus.pipe(T.Query())),
+    endpoints: S.optional(
+      GetConnectionHistoryRequestEndpointsList.pipe(T.Query()),
+    ),
+    max_results: S.optional(S.Number.pipe(T.Query())),
+    pagination_token: S.optional(S.String.pipe(T.Query())),
+    connection_fields: S.optional(
+      GetConnectionHistoryRequestConnectionFieldsList.pipe(
+        T.Query("connection.fields"),
+      ),
+    ),
+  }).pipe(T.Http({ method: "GET", uri: "/2/connections", code: 200 })),
+).annotate({
+  identifier: "GetConnectionHistoryRequest",
+}) as any as S.Schema<GetConnectionHistoryRequest>;
+
+export interface Connection {
+  client_ip?: string;
+  connected_at?: string;
+  disconnect_reason?: string;
+  disconnected_at?: string;
+  endpoint_name?: string;
+  id?: string;
+}
+export const Connection = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    client_ip: S.optional(S.String),
+    connected_at: S.optional(S.String),
+    disconnect_reason: S.optional(S.String),
+    disconnected_at: S.optional(S.String),
+    endpoint_name: S.optional(S.String),
+    id: S.optional(S.String),
+  }),
+).annotate({ identifier: "Connection" }) as any as S.Schema<Connection>;
+
+export type GetConnectionHistoryResponseDataList = Array<Connection>;
+export const GetConnectionHistoryResponseDataList = /*@__PURE__*/ S.Array(
+  Connection,
+) as any as S.Schema<GetConnectionHistoryResponseDataList>;
+
+export type GetConnectionHistoryResponseErrorsList = Array<Problem>;
+export const GetConnectionHistoryResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<GetConnectionHistoryResponseErrorsList>;
+
+export interface GetConnectionHistoryResponseMeta {
+  /** Pagination token for the next page of results. */
+  next_token?: string;
+  /** Number of items in the data array. */
+  result_count?: number;
+}
+export const GetConnectionHistoryResponseMeta = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    next_token: S.optional(S.String),
+    result_count: S.optional(S.Number),
+  }),
+).annotate({
+  identifier: "GetConnectionHistoryResponseMeta",
+}) as any as S.Schema<GetConnectionHistoryResponseMeta>;
+
+export interface GetConnectionHistoryResponse {
+  data?: GetConnectionHistoryResponseDataList;
+  errors?: GetConnectionHistoryResponseErrorsList;
+  meta?: GetConnectionHistoryResponseMeta;
+}
+export const GetConnectionHistoryResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(GetConnectionHistoryResponseDataList),
+    errors: S.optional(GetConnectionHistoryResponseErrorsList),
+    meta: S.optional(GetConnectionHistoryResponseMeta),
+  }),
+).annotate({
+  identifier: "GetConnectionHistoryResponse",
+}) as any as S.Schema<GetConnectionHistoryResponse>;
+
+export const deleteAllConnections = /*@__PURE__*/ makeOperation<
+  DeleteAllConnectionsRequest,
+  DeleteAllConnectionsResponse
+>(
+  operations.deleteAllConnections,
+  () => DeleteAllConnectionsRequest,
+  () => DeleteAllConnectionsResponse,
+);
+
+export const deleteConnectionsByEndpoint = /*@__PURE__*/ makeOperation<
+  DeleteConnectionsByEndpointRequest,
+  DeleteConnectionsByEndpointResponse
+>(
+  operations.deleteConnectionsByEndpoint,
+  () => DeleteConnectionsByEndpointRequest,
+  () => DeleteConnectionsByEndpointResponse,
+);
+
+export const deleteConnectionsByUuids = /*@__PURE__*/ makeOperation<
+  DeleteConnectionsByUuidsRequest,
+  DeleteConnectionsByUuidsResponse
+>(
+  operations.deleteConnectionsByUuids,
+  () => DeleteConnectionsByUuidsRequest,
+  () => DeleteConnectionsByUuidsResponse,
+);
+
+export const getConnectionHistory = /*@__PURE__*/ makeOperation<
+  GetConnectionHistoryRequest,
+  GetConnectionHistoryResponse
+>(
+  operations.getConnectionHistory,
+  () => GetConnectionHistoryRequest,
+  () => GetConnectionHistoryResponse,
+);

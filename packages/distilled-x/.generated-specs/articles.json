@@ -1,0 +1,1292 @@
+{
+  "smithy": "2.0",
+  "metadata": {
+    "suppressions": [
+      {
+        "id": "HttpUriConflict",
+        "namespace": "*"
+      },
+      {
+        "id": "HttpMethodSemantics",
+        "namespace": "*"
+      },
+      {
+        "id": "UnreferencedShape",
+        "namespace": "*"
+      }
+    ]
+  },
+  "shapes": {
+    "com.x.articles#ArticleCreateDraftContentState": {
+      "type": "structure",
+      "members": {
+        "blocks": {
+          "target": "com.x.articles#ArticleCreateDraftContentStateBlocksList",
+          "traits": {
+            "smithy.api#documentation": "The text blocks that make up the article body.",
+            "smithy.api#required": {}
+          }
+        },
+        "entities": {
+          "target": "com.x.articles#ArticleCreateDraftContentStateEntitiesList",
+          "traits": {
+            "smithy.api#documentation": "Non-text entities referenced by blocks (links, embedded posts, images, emoji,          markdown/code/tables, dividers, LaTeX). Full set matches article storage.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ArticleCreateDraftContentStateBlocks": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.articles#ArticleCreateDraftContentStateBlocksData",
+          "traits": {
+            "smithy.api#documentation": "Block-level metadata for mentions, hashtags, cashtags, and URLs."
+          }
+        },
+        "entity_ranges": {
+          "target": "com.x.articles#ArticleCreateDraftContentStateBlocksEntityRangesList",
+          "traits": {
+            "smithy.api#documentation": "References to entries in entities."
+          }
+        },
+        "inline_style_ranges": {
+          "target": "com.x.articles#ArticleCreateDraftContentStateBlocksInlineStyleRangesList",
+          "traits": {
+            "smithy.api#documentation": "Inline formatting ranges."
+          }
+        },
+        "key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Optional block key."
+          }
+        },
+        "text": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The text content of this block. For latex entities, this holds the LaTeX source;          for divider/markdown/image/post atomic placeholders, typically a single space.",
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.articles#ArticleCreateDraftContentStateBlocksType",
+          "traits": {
+            "smithy.api#documentation": "The block type. Use atomic for non-text embeds (image, post, markdown, divider, latex).",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ArticleCreateDraftContentStateBlocksData": {
+      "type": "structure",
+      "members": {
+        "cashtags": {
+          "target": "com.x.articles#ArticleCreateDraftContentStateBlocksDataCashtagsList",
+          "traits": {
+            "smithy.api#documentation": "Cashtag spans in this block."
+          }
+        },
+        "hashtags": {
+          "target": "com.x.articles#ArticleCreateDraftContentStateBlocksDataHashtagsList",
+          "traits": {
+            "smithy.api#documentation": "Hashtag spans in this block."
+          }
+        },
+        "mentions": {
+          "target": "com.x.articles#ArticleCreateDraftContentStateBlocksDataMentionsList",
+          "traits": {
+            "smithy.api#documentation": "Mention spans in this block."
+          }
+        },
+        "urls": {
+          "target": "com.x.articles#ArticleCreateDraftContentStateBlocksDataUrlsList",
+          "traits": {
+            "smithy.api#documentation": "URL spans in this block."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ArticleCreateDraftContentStateBlocksDataCashtags": {
+      "type": "structure",
+      "members": {
+        "from_index": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Start index of the tagged span.",
+            "smithy.api#required": {}
+          }
+        },
+        "text": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The tagged text.",
+            "smithy.api#required": {}
+          }
+        },
+        "to_index": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "End index of the tagged span.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ArticleCreateDraftContentStateBlocksDataCashtagsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.articles#ArticleCreateDraftContentStateBlocksDataCashtags"
+      },
+      "traits": {
+        "smithy.api#documentation": "Cashtag spans in this block."
+      }
+    },
+    "com.x.articles#ArticleCreateDraftContentStateBlocksDataHashtags": {
+      "type": "structure",
+      "members": {
+        "from_index": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Start index of the tagged span.",
+            "smithy.api#required": {}
+          }
+        },
+        "text": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The tagged text.",
+            "smithy.api#required": {}
+          }
+        },
+        "to_index": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "End index of the tagged span.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ArticleCreateDraftContentStateBlocksDataHashtagsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.articles#ArticleCreateDraftContentStateBlocksDataHashtags"
+      },
+      "traits": {
+        "smithy.api#documentation": "Hashtag spans in this block."
+      }
+    },
+    "com.x.articles#ArticleCreateDraftContentStateBlocksDataMentions": {
+      "type": "structure",
+      "members": {
+        "from_index": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Start index of the tagged span.",
+            "smithy.api#required": {}
+          }
+        },
+        "text": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The tagged text.",
+            "smithy.api#required": {}
+          }
+        },
+        "to_index": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "End index of the tagged span.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ArticleCreateDraftContentStateBlocksDataMentionsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.articles#ArticleCreateDraftContentStateBlocksDataMentions"
+      },
+      "traits": {
+        "smithy.api#documentation": "Mention spans in this block."
+      }
+    },
+    "com.x.articles#ArticleCreateDraftContentStateBlocksDataUrls": {
+      "type": "structure",
+      "members": {
+        "from_index": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Start index of the tagged span.",
+            "smithy.api#required": {}
+          }
+        },
+        "text": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The tagged text.",
+            "smithy.api#required": {}
+          }
+        },
+        "to_index": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "End index of the tagged span.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ArticleCreateDraftContentStateBlocksDataUrlsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.articles#ArticleCreateDraftContentStateBlocksDataUrls"
+      },
+      "traits": {
+        "smithy.api#documentation": "URL spans in this block."
+      }
+    },
+    "com.x.articles#ArticleCreateDraftContentStateBlocksEntityRanges": {
+      "type": "structure",
+      "members": {
+        "key": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Index into the entities array.",
+            "smithy.api#required": {}
+          }
+        },
+        "length": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Length of the entity range.",
+            "smithy.api#required": {}
+          }
+        },
+        "offset": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Start offset in the text.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ArticleCreateDraftContentStateBlocksEntityRangesList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.articles#ArticleCreateDraftContentStateBlocksEntityRanges"
+      },
+      "traits": {
+        "smithy.api#documentation": "References to entries in entities."
+      }
+    },
+    "com.x.articles#ArticleCreateDraftContentStateBlocksInlineStyleRanges": {
+      "type": "structure",
+      "members": {
+        "length": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Length of the styled range.",
+            "smithy.api#required": {}
+          }
+        },
+        "offset": {
+          "target": "smithy.api#Integer",
+          "traits": {
+            "smithy.api#documentation": "Start offset in the text.",
+            "smithy.api#required": {}
+          }
+        },
+        "style": {
+          "target": "com.x.articles#ArticleCreateDraftContentStateBlocksInlineStyleRangesStyle",
+          "traits": {
+            "smithy.api#documentation": "The inline style.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ArticleCreateDraftContentStateBlocksInlineStyleRangesStyle": {
+      "type": "enum",
+      "members": {
+        "BOLD": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "bold"
+          }
+        },
+        "ITALIC": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "italic"
+          }
+        },
+        "STRIKETHROUGH": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "strikethrough"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "The inline style."
+      }
+    },
+    "com.x.articles#ArticleCreateDraftContentStateBlocksInlineStyleRangesList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.articles#ArticleCreateDraftContentStateBlocksInlineStyleRanges"
+      },
+      "traits": {
+        "smithy.api#documentation": "Inline formatting ranges."
+      }
+    },
+    "com.x.articles#ArticleCreateDraftContentStateBlocksType": {
+      "type": "enum",
+      "members": {
+        "UNSTYLED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "unstyled"
+          }
+        },
+        "HEADER_ONE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "header-one"
+          }
+        },
+        "HEADER_TWO": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "header-two"
+          }
+        },
+        "HEADER_THREE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "header-three"
+          }
+        },
+        "UNORDERED_LIST_ITEM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "unordered-list-item"
+          }
+        },
+        "ORDERED_LIST_ITEM": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "ordered-list-item"
+          }
+        },
+        "BLOCKQUOTE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "blockquote"
+          }
+        },
+        "ATOMIC": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "atomic"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "The block type. Use atomic for non-text embeds (image, post, markdown, divider, latex)."
+      }
+    },
+    "com.x.articles#ArticleCreateDraftContentStateBlocksList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.articles#ArticleCreateDraftContentStateBlocks"
+      },
+      "traits": {
+        "smithy.api#documentation": "The text blocks that make up the article body."
+      }
+    },
+    "com.x.articles#ArticleCreateDraftContentStateEntities": {
+      "type": "structure",
+      "members": {
+        "key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The entity key referenced by entity_ranges.",
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "com.x.articles#ArticleCreateDraftContentStateEntitiesValue",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ArticleCreateDraftContentStateEntitiesValue": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.articles#ArticleCreateDraftContentStateEntitiesValueData",
+          "traits": {
+            "smithy.api#documentation": "Entity payload. Fields depend on the entity type: post_id (post), url (link),          media_items (image), entity_key (emoji and other opaque keys), markdown (markdown /          code blocks / GFM tables). divider and latex use an empty data object; latex source          is the block text; emoji uses block text for the character(s). There is no separate          table entity type in article storage; tables are markdown.",
+            "smithy.api#required": {}
+          }
+        },
+        "mutability": {
+          "target": "com.x.articles#ArticleCreateDraftContentStateEntitiesValueMutability",
+          "traits": {
+            "smithy.api#documentation": "Whether the entity can be edited. Recommended: immutable for post, image, divider, latex; mutable for link and markdown (matches the in-app Articles composer).",
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.articles#ArticleCreateDraftContentStateEntitiesValueType",
+          "traits": {
+            "smithy.api#documentation": "The entity type. markdown carries code blocks, GFM tables, and other Markdown;          emoji maps to backend TWEMOJI (Twemoji is internal); divider is a horizontal rule;          latex renders TeX from the block text. Tables are not a separate enum value — use          type markdown with a pipe table in data.markdown.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ArticleCreateDraftContentStateEntitiesValueData": {
+      "type": "structure",
+      "members": {
+        "caption": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Caption text."
+          }
+        },
+        "entity_key": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Opaque entity key. Used with type emoji (and reserved for other keyed embeds) to match in-app Articles composer payloads."
+          }
+        },
+        "markdown": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Markdown body for type markdown. Use fenced code blocks (```lang ... ```) for code. Max weighted length is enforced by the Articles backend (10,000 per article)."
+          }
+        },
+        "media_items": {
+          "target": "com.x.articles#ArticleCreateDraftContentStateEntitiesValueDataMediaItemsList",
+          "traits": {
+            "smithy.api#documentation": "Media keys. Used with type image."
+          }
+        },
+        "post_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The ID of the post to embed. Used with type post."
+          }
+        },
+        "url": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The URL. Used with type link."
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ArticleCreateDraftContentStateEntitiesValueDataMediaItems": {
+      "type": "structure",
+      "members": {
+        "media_category": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "media_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ArticleCreateDraftContentStateEntitiesValueDataMediaItemsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.articles#ArticleCreateDraftContentStateEntitiesValueDataMediaItems"
+      },
+      "traits": {
+        "smithy.api#documentation": "Media keys. Used with type image."
+      }
+    },
+    "com.x.articles#ArticleCreateDraftContentStateEntitiesValueMutability": {
+      "type": "enum",
+      "members": {
+        "IMMUTABLE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "immutable"
+          }
+        },
+        "MUTABLE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "mutable"
+          }
+        },
+        "SEGMENTED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "segmented"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "Whether the entity can be edited. Recommended: immutable for post, image, divider, latex; mutable for link and markdown (matches the in-app Articles composer)."
+      }
+    },
+    "com.x.articles#ArticleCreateDraftContentStateEntitiesValueType": {
+      "type": "enum",
+      "members": {
+        "POST": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "post"
+          }
+        },
+        "LINK": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "link"
+          }
+        },
+        "IMAGE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "image"
+          }
+        },
+        "EMOJI": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "emoji"
+          }
+        },
+        "MARKDOWN": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "markdown"
+          }
+        },
+        "DIVIDER": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "divider"
+          }
+        },
+        "LATEX": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "latex"
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#documentation": "The entity type. markdown carries code blocks, GFM tables, and other Markdown;          emoji maps to backend TWEMOJI (Twemoji is internal); divider is a horizontal rule;          latex renders TeX from the block text. Tables are not a separate enum value — use          type markdown with a pipe table in data.markdown."
+      }
+    },
+    "com.x.articles#ArticleCreateDraftContentStateEntitiesList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.articles#ArticleCreateDraftContentStateEntities"
+      },
+      "traits": {
+        "smithy.api#documentation": "Non-text entities referenced by blocks (links, embedded posts, images, emoji,          markdown/code/tables, dividers, LaTeX). Full set matches article storage."
+      }
+    },
+    "com.x.articles#ArticleCreateDraftCoverMedia": {
+      "type": "structure",
+      "members": {
+        "media_category": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The media category (e.g. tweet_image).",
+            "smithy.api#required": {}
+          }
+        },
+        "media_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The media ID from the media upload endpoint.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ArticleCreateDraftRequest": {
+      "type": "structure",
+      "members": {
+        "content_state": {
+          "target": "com.x.articles#ArticleCreateDraftContentState",
+          "traits": {
+            "smithy.api#documentation": "DraftJS content state representing the article body. Special formatting          (markdown/code/tables, dividers, LaTeX, emoji, images, embedded posts) uses atomic          blocks with entity_ranges pointing into entities.",
+            "smithy.api#required": {}
+          }
+        },
+        "cover_media": {
+          "target": "com.x.articles#ArticleCreateDraftCoverMedia",
+          "traits": {
+            "smithy.api#documentation": "Optional cover media for the Article."
+          }
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The title of the Article.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.articles#ArticleCreateDraftResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.articles#ArticleCreateDraftResponseData"
+        },
+        "errors": {
+          "target": "com.x.articles#ArticleCreateDraftResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ArticleCreateDraftResponseData": {
+      "type": "structure",
+      "members": {
+        "id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "Unique identifier of the created draft Article.",
+            "smithy.api#required": {}
+          }
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The title of the draft Article.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#Problem": {
+      "type": "union",
+      "members": {
+        "ResourceNotFoundProblem": {
+          "target": "com.x.articles#ResourceNotFoundProblem"
+        },
+        "InvalidRequestProblem": {
+          "target": "com.x.articles#InvalidRequestProblem"
+        },
+        "NotAuthorizedForResourceProblem": {
+          "target": "com.x.articles#NotAuthorizedForResourceProblem"
+        },
+        "NotAuthorizedForFieldProblem": {
+          "target": "com.x.articles#NotAuthorizedForFieldProblem"
+        },
+        "FieldUnauthorizedProblem": {
+          "target": "com.x.articles#FieldUnauthorizedProblem"
+        },
+        "FieldHydrationFailureProblem": {
+          "target": "com.x.articles#FieldHydrationFailureProblem"
+        },
+        "ResourceUnavailableProblem": {
+          "target": "com.x.articles#ResourceUnavailableProblem"
+        },
+        "DisallowedResourceProblem": {
+          "target": "com.x.articles#DisallowedResourceProblem"
+        },
+        "InternalErrorProblem": {
+          "target": "com.x.articles#InternalErrorProblem"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ResourceNotFoundProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.articles#ResourceNotFoundProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ResourceNotFoundProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_RESOURCE_NOT_FOUND": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/resource-not-found"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#InvalidRequestProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.articles#InvalidRequestProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#InvalidRequestProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_INVALID_REQUEST": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/invalid-request"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#NotAuthorizedForResourceProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.articles#NotAuthorizedForResourceProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#NotAuthorizedForResourceProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_NOT_AUTHORIZED_FOR_RESOURCE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/not-authorized-for-resource"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#NotAuthorizedForFieldProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "parameter": {
+          "target": "smithy.api#String"
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.articles#NotAuthorizedForFieldProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "value": {
+          "target": "smithy.api#String"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#NotAuthorizedForFieldProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_NOT_AUTHORIZED_FOR_FIELD": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/not-authorized-for-field"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#FieldUnauthorizedProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.articles#FieldUnauthorizedProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#FieldUnauthorizedProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_FIELD_UNAUTHORIZED": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/field-unauthorized"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#FieldHydrationFailureProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "field": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.articles#FieldHydrationFailureProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#FieldHydrationFailureProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_FIELD_HYDRATION_FAILURE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/field-hydration-failure"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ResourceUnavailableProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.articles#ResourceUnavailableProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ResourceUnavailableProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_RESOURCE_UNAVAILABLE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/resource-unavailable"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#DisallowedResourceProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "resource_id": {
+          "target": "smithy.api#String"
+        },
+        "resource_type": {
+          "target": "smithy.api#String"
+        },
+        "section": {
+          "target": "smithy.api#String"
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.articles#DisallowedResourceProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#DisallowedResourceProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_DISALLOWED_RESOURCE": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/disallowed-resource"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#InternalErrorProblem": {
+      "type": "structure",
+      "members": {
+        "detail": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "status": {
+          "target": "smithy.api#Integer"
+        },
+        "title": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        },
+        "type": {
+          "target": "com.x.articles#InternalErrorProblemType",
+          "traits": {
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#InternalErrorProblemType": {
+      "type": "enum",
+      "members": {
+        "HTTPS_API_X_COM_2_PROBLEMS_INTERNAL_ERROR": {
+          "target": "smithy.api#Unit",
+          "traits": {
+            "smithy.api#enumValue": "https://api.x.com/2/problems/internal-error"
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ArticleCreateDraftResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.articles#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.articles#ArticleCreateDraft": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.articles#ArticleCreateDraftRequest"
+      },
+      "output": {
+        "target": "com.x.articles#ArticleCreateDraftResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/articles/draft",
+          "code": 200
+        },
+        "smithy.api#documentation": "Create draft Article\n\nCreates a new Article draft that can later be published."
+      }
+    },
+    "com.x.articles#ArticlePublishRequest": {
+      "type": "structure",
+      "members": {
+        "article_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#httpLabel": {},
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {
+        "smithy.api#input": {}
+      }
+    },
+    "com.x.articles#ArticlePublishResponse": {
+      "type": "structure",
+      "members": {
+        "data": {
+          "target": "com.x.articles#ArticlePublishResponseData"
+        },
+        "errors": {
+          "target": "com.x.articles#ArticlePublishResponseErrorsList"
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ArticlePublishResponseData": {
+      "type": "structure",
+      "members": {
+        "post_id": {
+          "target": "smithy.api#String",
+          "traits": {
+            "smithy.api#documentation": "The ID of the post created for the published Article.",
+            "smithy.api#required": {}
+          }
+        }
+      },
+      "traits": {}
+    },
+    "com.x.articles#ArticlePublishResponseErrorsList": {
+      "type": "list",
+      "member": {
+        "target": "com.x.articles#Problem"
+      },
+      "traits": {}
+    },
+    "com.x.articles#ArticlePublish": {
+      "type": "operation",
+      "input": {
+        "target": "com.x.articles#ArticlePublishRequest"
+      },
+      "output": {
+        "target": "com.x.articles#ArticlePublishResponse"
+      },
+      "traits": {
+        "smithy.api#http": {
+          "method": "POST",
+          "uri": "/2/articles/{article_id}/publish",
+          "code": 200
+        },
+        "smithy.api#documentation": "Publish Article\n\nPublishes a draft Article, making it publicly visible."
+      }
+    },
+    "com.x.articles#Articles": {
+      "type": "service",
+      "version": "2.167",
+      "operations": [
+        {
+          "target": "com.x.articles#ArticleCreateDraft"
+        },
+        {
+          "target": "com.x.articles#ArticlePublish"
+        }
+      ],
+      "traits": {
+        "smithy.api#title": "X API v2",
+        "smithy.api#documentation": "X API v2 core endpoints"
+      }
+    }
+  }
+}

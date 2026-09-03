@@ -1,0 +1,597 @@
+// AUTO-GENERATED from xdevplatform/xdk@84c26540df30c0b798e50e34151c56d5d262ba1c; do not edit.
+import * as S from "@distilled.cloud/core/schema";
+import * as T from "../traits.ts";
+import {
+  makeOperation,
+  makeBinaryOperation,
+  makeStreamOperation,
+} from "../operation.ts";
+import { operations } from "../operations.ts";
+export interface CreateAccountActivitySubscriptionRequest2 {
+  webhook_id: string;
+}
+export const CreateAccountActivitySubscriptionRequest2 =
+  /*@__PURE__*/ S.suspend(() =>
+    S.Struct({
+      webhook_id: S.String.pipe(T.Label()),
+    }).pipe(
+      T.Http({
+        method: "POST",
+        uri: "/2/account_activity/webhooks/{webhook_id}/subscriptions/all",
+        code: 200,
+      }),
+    ),
+  ).annotate({
+    identifier: "CreateAccountActivitySubscriptionRequest2",
+  }) as any as S.Schema<CreateAccountActivitySubscriptionRequest2>;
+
+export interface CreateAccountActivitySubscriptionResponseData {
+  /** Whether the subscription is active. */
+  subscribed: boolean;
+}
+export const CreateAccountActivitySubscriptionResponseData =
+  /*@__PURE__*/ S.suspend(() =>
+    S.Struct({
+      subscribed: S.Boolean,
+    }),
+  ).annotate({
+    identifier: "CreateAccountActivitySubscriptionResponseData",
+  }) as any as S.Schema<CreateAccountActivitySubscriptionResponseData>;
+
+export type ResourceNotFoundProblemType =
+  "https://api.x.com/2/problems/resource-not-found";
+export const ResourceNotFoundProblemType = /*@__PURE__*/ S.String;
+
+export interface ResourceNotFoundProblem {
+  detail: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type: string;
+  status?: number;
+  title: string;
+  type: ResourceNotFoundProblemType;
+  value?: string;
+}
+export const ResourceNotFoundProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: ResourceNotFoundProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "ResourceNotFoundProblem",
+}) as any as S.Schema<ResourceNotFoundProblem>;
+
+export type InvalidRequestProblemType =
+  "https://api.x.com/2/problems/invalid-request";
+export const InvalidRequestProblemType = /*@__PURE__*/ S.String;
+
+export interface InvalidRequestProblem {
+  detail: string;
+  parameter?: string;
+  status?: number;
+  title: string;
+  type: InvalidRequestProblemType;
+  value?: string;
+}
+export const InvalidRequestProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: InvalidRequestProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "InvalidRequestProblem",
+}) as any as S.Schema<InvalidRequestProblem>;
+
+export type NotAuthorizedForResourceProblemType =
+  "https://api.x.com/2/problems/not-authorized-for-resource";
+export const NotAuthorizedForResourceProblemType = /*@__PURE__*/ S.String;
+
+export interface NotAuthorizedForResourceProblem {
+  detail: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: NotAuthorizedForResourceProblemType;
+  value?: string;
+}
+export const NotAuthorizedForResourceProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: NotAuthorizedForResourceProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "NotAuthorizedForResourceProblem",
+}) as any as S.Schema<NotAuthorizedForResourceProblem>;
+
+export type NotAuthorizedForFieldProblemType =
+  "https://api.x.com/2/problems/not-authorized-for-field";
+export const NotAuthorizedForFieldProblemType = /*@__PURE__*/ S.String;
+
+export interface NotAuthorizedForFieldProblem {
+  detail: string;
+  field: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: NotAuthorizedForFieldProblemType;
+  value?: string;
+}
+export const NotAuthorizedForFieldProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: NotAuthorizedForFieldProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "NotAuthorizedForFieldProblem",
+}) as any as S.Schema<NotAuthorizedForFieldProblem>;
+
+export type FieldUnauthorizedProblemType =
+  "https://api.x.com/2/problems/field-unauthorized";
+export const FieldUnauthorizedProblemType = /*@__PURE__*/ S.String;
+
+export interface FieldUnauthorizedProblem {
+  detail: string;
+  field: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: FieldUnauthorizedProblemType;
+}
+export const FieldUnauthorizedProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: FieldUnauthorizedProblemType,
+  }),
+).annotate({
+  identifier: "FieldUnauthorizedProblem",
+}) as any as S.Schema<FieldUnauthorizedProblem>;
+
+export type FieldHydrationFailureProblemType =
+  "https://api.x.com/2/problems/field-hydration-failure";
+export const FieldHydrationFailureProblemType = /*@__PURE__*/ S.String;
+
+export interface FieldHydrationFailureProblem {
+  detail: string;
+  field: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: FieldHydrationFailureProblemType;
+}
+export const FieldHydrationFailureProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: FieldHydrationFailureProblemType,
+  }),
+).annotate({
+  identifier: "FieldHydrationFailureProblem",
+}) as any as S.Schema<FieldHydrationFailureProblem>;
+
+export type ResourceUnavailableProblemType =
+  "https://api.x.com/2/problems/resource-unavailable";
+export const ResourceUnavailableProblemType = /*@__PURE__*/ S.String;
+
+export interface ResourceUnavailableProblem {
+  detail: string;
+  resource_id?: string;
+  resource_type: string;
+  status?: number;
+  title: string;
+  type: ResourceUnavailableProblemType;
+}
+export const ResourceUnavailableProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: ResourceUnavailableProblemType,
+  }),
+).annotate({
+  identifier: "ResourceUnavailableProblem",
+}) as any as S.Schema<ResourceUnavailableProblem>;
+
+export type DisallowedResourceProblemType =
+  "https://api.x.com/2/problems/disallowed-resource";
+export const DisallowedResourceProblemType = /*@__PURE__*/ S.String;
+
+export interface DisallowedResourceProblem {
+  detail: string;
+  resource_id?: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: DisallowedResourceProblemType;
+}
+export const DisallowedResourceProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    resource_id: S.optional(S.String),
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: DisallowedResourceProblemType,
+  }),
+).annotate({
+  identifier: "DisallowedResourceProblem",
+}) as any as S.Schema<DisallowedResourceProblem>;
+
+export type InternalErrorProblemType =
+  "https://api.x.com/2/problems/internal-error";
+export const InternalErrorProblemType = /*@__PURE__*/ S.String;
+
+export interface InternalErrorProblem {
+  detail: string;
+  status?: number;
+  title: string;
+  type: InternalErrorProblemType;
+}
+export const InternalErrorProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: InternalErrorProblemType,
+  }),
+).annotate({
+  identifier: "InternalErrorProblem",
+}) as any as S.Schema<InternalErrorProblem>;
+
+export type Problem =
+  | ResourceNotFoundProblem
+  | InvalidRequestProblem
+  | NotAuthorizedForResourceProblem
+  | NotAuthorizedForFieldProblem
+  | FieldUnauthorizedProblem
+  | FieldHydrationFailureProblem
+  | ResourceUnavailableProblem
+  | DisallowedResourceProblem
+  | InternalErrorProblem;
+export const Problem = /*@__PURE__*/ S.Unknown as any as S.Schema<Problem>;
+export type CreateAccountActivitySubscriptionResponseErrorsList =
+  Array<Problem>;
+export const CreateAccountActivitySubscriptionResponseErrorsList =
+  /*@__PURE__*/ S.Array(
+    Problem,
+  ) as any as S.Schema<CreateAccountActivitySubscriptionResponseErrorsList>;
+
+export interface CreateAccountActivitySubscriptionResponse {
+  data?: CreateAccountActivitySubscriptionResponseData;
+  errors?: CreateAccountActivitySubscriptionResponseErrorsList;
+}
+export const CreateAccountActivitySubscriptionResponse =
+  /*@__PURE__*/ S.suspend(() =>
+    S.Struct({
+      data: S.optional(CreateAccountActivitySubscriptionResponseData),
+      errors: S.optional(CreateAccountActivitySubscriptionResponseErrorsList),
+    }),
+  ).annotate({
+    identifier: "CreateAccountActivitySubscriptionResponse",
+  }) as any as S.Schema<CreateAccountActivitySubscriptionResponse>;
+
+export interface DeleteAccountActivitySubscriptionRequest {
+  webhook_id: string;
+  user_id: string;
+}
+export const DeleteAccountActivitySubscriptionRequest = /*@__PURE__*/ S.suspend(
+  () =>
+    S.Struct({
+      webhook_id: S.String.pipe(T.Label()),
+      user_id: S.String.pipe(T.Label()),
+    }).pipe(
+      T.Http({
+        method: "DELETE",
+        uri: "/2/account_activity/webhooks/{webhook_id}/subscriptions/{user_id}/all",
+        code: 200,
+      }),
+    ),
+).annotate({
+  identifier: "DeleteAccountActivitySubscriptionRequest",
+}) as any as S.Schema<DeleteAccountActivitySubscriptionRequest>;
+
+export interface DeleteAccountActivitySubscriptionResponseData {
+  /** Whether the user has an active subscription. */
+  subscribed: boolean;
+}
+export const DeleteAccountActivitySubscriptionResponseData =
+  /*@__PURE__*/ S.suspend(() =>
+    S.Struct({
+      subscribed: S.Boolean,
+    }),
+  ).annotate({
+    identifier: "DeleteAccountActivitySubscriptionResponseData",
+  }) as any as S.Schema<DeleteAccountActivitySubscriptionResponseData>;
+
+export type DeleteAccountActivitySubscriptionResponseErrorsList =
+  Array<Problem>;
+export const DeleteAccountActivitySubscriptionResponseErrorsList =
+  /*@__PURE__*/ S.Array(
+    Problem,
+  ) as any as S.Schema<DeleteAccountActivitySubscriptionResponseErrorsList>;
+
+export interface DeleteAccountActivitySubscriptionResponse {
+  data?: DeleteAccountActivitySubscriptionResponseData;
+  errors?: DeleteAccountActivitySubscriptionResponseErrorsList;
+}
+export const DeleteAccountActivitySubscriptionResponse =
+  /*@__PURE__*/ S.suspend(() =>
+    S.Struct({
+      data: S.optional(DeleteAccountActivitySubscriptionResponseData),
+      errors: S.optional(DeleteAccountActivitySubscriptionResponseErrorsList),
+    }),
+  ).annotate({
+    identifier: "DeleteAccountActivitySubscriptionResponse",
+  }) as any as S.Schema<DeleteAccountActivitySubscriptionResponse>;
+
+export interface GetAccountActivitySubscriptionCountRequest {}
+export const GetAccountActivitySubscriptionCountRequest =
+  /*@__PURE__*/ S.suspend(() =>
+    S.Struct({}).pipe(
+      T.Http({
+        method: "GET",
+        uri: "/2/account_activity/subscriptions/count",
+        code: 200,
+      }),
+    ),
+  ).annotate({
+    identifier: "GetAccountActivitySubscriptionCountRequest",
+  }) as any as S.Schema<GetAccountActivitySubscriptionCountRequest>;
+
+export interface GetAccountActivitySubscriptionCountResponseData {
+  /** Name of the subscribing account. */
+  account_name?: string;
+  /** Number of subscriptions provisioned for the app. */
+  provisioned_count?: string;
+  /** Number of active subscriptions across all event types. */
+  subscriptions_count_all?: string;
+  /** Number of active Direct Message subscriptions. */
+  subscriptions_count_direct_messages?: string;
+}
+export const GetAccountActivitySubscriptionCountResponseData =
+  /*@__PURE__*/ S.suspend(() =>
+    S.Struct({
+      account_name: S.optional(S.String),
+      provisioned_count: S.optional(S.String),
+      subscriptions_count_all: S.optional(S.String),
+      subscriptions_count_direct_messages: S.optional(S.String),
+    }),
+  ).annotate({
+    identifier: "GetAccountActivitySubscriptionCountResponseData",
+  }) as any as S.Schema<GetAccountActivitySubscriptionCountResponseData>;
+
+export type GetAccountActivitySubscriptionCountResponseErrorsList =
+  Array<Problem>;
+export const GetAccountActivitySubscriptionCountResponseErrorsList =
+  /*@__PURE__*/ S.Array(
+    Problem,
+  ) as any as S.Schema<GetAccountActivitySubscriptionCountResponseErrorsList>;
+
+export interface GetAccountActivitySubscriptionCountResponse {
+  data?: GetAccountActivitySubscriptionCountResponseData;
+  errors?: GetAccountActivitySubscriptionCountResponseErrorsList;
+}
+export const GetAccountActivitySubscriptionCountResponse =
+  /*@__PURE__*/ S.suspend(() =>
+    S.Struct({
+      data: S.optional(GetAccountActivitySubscriptionCountResponseData),
+      errors: S.optional(GetAccountActivitySubscriptionCountResponseErrorsList),
+    }),
+  ).annotate({
+    identifier: "GetAccountActivitySubscriptionCountResponse",
+  }) as any as S.Schema<GetAccountActivitySubscriptionCountResponse>;
+
+export interface GetAccountActivitySubscriptionsRequest {
+  webhook_id: string;
+}
+export const GetAccountActivitySubscriptionsRequest = /*@__PURE__*/ S.suspend(
+  () =>
+    S.Struct({
+      webhook_id: S.String.pipe(T.Label()),
+    }).pipe(
+      T.Http({
+        method: "GET",
+        uri: "/2/account_activity/webhooks/{webhook_id}/subscriptions/all/list",
+        code: 200,
+      }),
+    ),
+).annotate({
+  identifier: "GetAccountActivitySubscriptionsRequest",
+}) as any as S.Schema<GetAccountActivitySubscriptionsRequest>;
+
+export interface GetAccountActivitySubscriptionsResponseDataSubscriptions {
+  /** Subscribed user. */
+  user_id?: string;
+}
+export const GetAccountActivitySubscriptionsResponseDataSubscriptions =
+  /*@__PURE__*/ S.suspend(() =>
+    S.Struct({
+      user_id: S.optional(S.String),
+    }),
+  ).annotate({
+    identifier: "GetAccountActivitySubscriptionsResponseDataSubscriptions",
+  }) as any as S.Schema<GetAccountActivitySubscriptionsResponseDataSubscriptions>;
+
+export type GetAccountActivitySubscriptionsResponseDataSubscriptionsList =
+  Array<GetAccountActivitySubscriptionsResponseDataSubscriptions>;
+export const GetAccountActivitySubscriptionsResponseDataSubscriptionsList =
+  /*@__PURE__*/ S.Array(
+    GetAccountActivitySubscriptionsResponseDataSubscriptions,
+  ) as any as S.Schema<GetAccountActivitySubscriptionsResponseDataSubscriptionsList>;
+
+export interface GetAccountActivitySubscriptionsResponseData {
+  /** App the subscriptions belong to. */
+  application_id?: string;
+  subscriptions?: GetAccountActivitySubscriptionsResponseDataSubscriptionsList;
+  /** Webhook receiving the subscription events. */
+  webhook_id?: string;
+  /** URL the webhook delivers events to. */
+  webhook_url?: string;
+}
+export const GetAccountActivitySubscriptionsResponseData =
+  /*@__PURE__*/ S.suspend(() =>
+    S.Struct({
+      application_id: S.optional(S.String),
+      subscriptions: S.optional(
+        GetAccountActivitySubscriptionsResponseDataSubscriptionsList,
+      ),
+      webhook_id: S.optional(S.String),
+      webhook_url: S.optional(S.String),
+    }),
+  ).annotate({
+    identifier: "GetAccountActivitySubscriptionsResponseData",
+  }) as any as S.Schema<GetAccountActivitySubscriptionsResponseData>;
+
+export type GetAccountActivitySubscriptionsResponseErrorsList = Array<Problem>;
+export const GetAccountActivitySubscriptionsResponseErrorsList =
+  /*@__PURE__*/ S.Array(
+    Problem,
+  ) as any as S.Schema<GetAccountActivitySubscriptionsResponseErrorsList>;
+
+export interface GetAccountActivitySubscriptionsResponse {
+  data?: GetAccountActivitySubscriptionsResponseData;
+  errors?: GetAccountActivitySubscriptionsResponseErrorsList;
+}
+export const GetAccountActivitySubscriptionsResponse = /*@__PURE__*/ S.suspend(
+  () =>
+    S.Struct({
+      data: S.optional(GetAccountActivitySubscriptionsResponseData),
+      errors: S.optional(GetAccountActivitySubscriptionsResponseErrorsList),
+    }),
+).annotate({
+  identifier: "GetAccountActivitySubscriptionsResponse",
+}) as any as S.Schema<GetAccountActivitySubscriptionsResponse>;
+
+export interface ValidateAccountActivitySubscriptionRequest {
+  webhook_id: string;
+}
+export const ValidateAccountActivitySubscriptionRequest =
+  /*@__PURE__*/ S.suspend(() =>
+    S.Struct({
+      webhook_id: S.String.pipe(T.Label()),
+    }).pipe(
+      T.Http({
+        method: "GET",
+        uri: "/2/account_activity/webhooks/{webhook_id}/subscriptions/all",
+        code: 200,
+      }),
+    ),
+  ).annotate({
+    identifier: "ValidateAccountActivitySubscriptionRequest",
+  }) as any as S.Schema<ValidateAccountActivitySubscriptionRequest>;
+
+export type ValidateAccountActivitySubscriptionResponseData =
+  DeleteAccountActivitySubscriptionResponseData;
+export const ValidateAccountActivitySubscriptionResponseData =
+  DeleteAccountActivitySubscriptionResponseData;
+
+export type ValidateAccountActivitySubscriptionResponseErrorsList =
+  Array<Problem>;
+export const ValidateAccountActivitySubscriptionResponseErrorsList =
+  /*@__PURE__*/ S.Array(
+    Problem,
+  ) as any as S.Schema<ValidateAccountActivitySubscriptionResponseErrorsList>;
+
+export interface ValidateAccountActivitySubscriptionResponse {
+  data?: DeleteAccountActivitySubscriptionResponseData;
+  errors?: ValidateAccountActivitySubscriptionResponseErrorsList;
+}
+export const ValidateAccountActivitySubscriptionResponse =
+  /*@__PURE__*/ S.suspend(() =>
+    S.Struct({
+      data: S.optional(DeleteAccountActivitySubscriptionResponseData),
+      errors: S.optional(ValidateAccountActivitySubscriptionResponseErrorsList),
+    }),
+  ).annotate({
+    identifier: "ValidateAccountActivitySubscriptionResponse",
+  }) as any as S.Schema<ValidateAccountActivitySubscriptionResponse>;
+
+export const createAccountActivitySubscription = /*@__PURE__*/ makeOperation<
+  CreateAccountActivitySubscriptionRequest2,
+  CreateAccountActivitySubscriptionResponse
+>(
+  operations.createAccountActivitySubscription,
+  () => CreateAccountActivitySubscriptionRequest2,
+  () => CreateAccountActivitySubscriptionResponse,
+);
+
+export const deleteAccountActivitySubscription = /*@__PURE__*/ makeOperation<
+  DeleteAccountActivitySubscriptionRequest,
+  DeleteAccountActivitySubscriptionResponse
+>(
+  operations.deleteAccountActivitySubscription,
+  () => DeleteAccountActivitySubscriptionRequest,
+  () => DeleteAccountActivitySubscriptionResponse,
+);
+
+export const getAccountActivitySubscriptionCount = /*@__PURE__*/ makeOperation<
+  GetAccountActivitySubscriptionCountRequest,
+  GetAccountActivitySubscriptionCountResponse
+>(
+  operations.getAccountActivitySubscriptionCount,
+  () => GetAccountActivitySubscriptionCountRequest,
+  () => GetAccountActivitySubscriptionCountResponse,
+);
+
+export const getAccountActivitySubscriptions = /*@__PURE__*/ makeOperation<
+  GetAccountActivitySubscriptionsRequest,
+  GetAccountActivitySubscriptionsResponse
+>(
+  operations.getAccountActivitySubscriptions,
+  () => GetAccountActivitySubscriptionsRequest,
+  () => GetAccountActivitySubscriptionsResponse,
+);
+
+export const validateAccountActivitySubscription = /*@__PURE__*/ makeOperation<
+  ValidateAccountActivitySubscriptionRequest,
+  ValidateAccountActivitySubscriptionResponse
+>(
+  operations.validateAccountActivitySubscription,
+  () => ValidateAccountActivitySubscriptionRequest,
+  () => ValidateAccountActivitySubscriptionResponse,
+);

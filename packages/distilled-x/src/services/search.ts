@@ -1,0 +1,2306 @@
+// AUTO-GENERATED from xdevplatform/xdk@84c26540df30c0b798e50e34151c56d5d262ba1c; do not edit.
+import * as S from "@distilled.cloud/core/schema";
+import * as T from "../traits.ts";
+import {
+  makeOperation,
+  makeBinaryOperation,
+  makeStreamOperation,
+} from "../operation.ts";
+import { operations } from "../operations.ts";
+export type SearchNewsRequestNewsFieldsItem =
+  | "category"
+  | "cluster_posts_results"
+  | "contexts"
+  | "contexts"
+  | "contexts"
+  | "contexts"
+  | "disclaimer"
+  | "hook"
+  | "id"
+  | "keywords"
+  | "name"
+  | "summary"
+  | "updated_at";
+export const SearchNewsRequestNewsFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a News object. */
+export type SearchNewsRequestNewsFieldsList = Array<
+  SearchNewsRequestNewsFieldsItem | (string & {})
+>;
+export const SearchNewsRequestNewsFieldsList = /*@__PURE__*/ S.Array(
+  SearchNewsRequestNewsFieldsItem,
+) as any as S.Schema<SearchNewsRequestNewsFieldsList>;
+
+export interface SearchNewsRequest {
+  query: string;
+  max_results?: number;
+  max_age_hours?: number;
+  /** A comma separated list of News fields to display. */
+  news_fields?: SearchNewsRequestNewsFieldsList;
+}
+export const SearchNewsRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    query: S.String.pipe(T.Query()),
+    max_results: S.optional(S.Number.pipe(T.Query())),
+    max_age_hours: S.optional(S.Number.pipe(T.Query())),
+    news_fields: S.optional(
+      SearchNewsRequestNewsFieldsList.pipe(T.Query("news.fields")),
+    ),
+  }).pipe(T.Http({ method: "GET", uri: "/2/news/search", code: 200 })),
+).annotate({
+  identifier: "SearchNewsRequest",
+}) as any as S.Schema<SearchNewsRequest>;
+
+/** A Post belonging to this news story's cluster. */
+export interface NewsClusterPostsResultsItem {
+  /** Unique identifier of the Post. */
+  post_id: string;
+}
+export const NewsClusterPostsResultsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    post_id: S.String,
+  }),
+).annotate({
+  identifier: "NewsClusterPostsResultsItem",
+}) as any as S.Schema<NewsClusterPostsResultsItem>;
+
+export type NewsClusterPostsResults = Array<NewsClusterPostsResultsItem>;
+export const NewsClusterPostsResults = /*@__PURE__*/ S.Array(
+  NewsClusterPostsResultsItem,
+) as any as S.Schema<NewsClusterPostsResults>;
+
+export interface News {
+  category?: string;
+  cluster_posts_results?: NewsClusterPostsResults;
+  contexts?: unknown;
+  disclaimer?: string;
+  hook?: string;
+  id?: string;
+  keywords?: unknown;
+  name?: string;
+  summary?: string;
+  updated_at?: string;
+}
+export const News = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    category: S.optional(S.String),
+    cluster_posts_results: S.optional(NewsClusterPostsResults),
+    contexts: S.optional(S.Unknown),
+    disclaimer: S.optional(S.String),
+    hook: S.optional(S.String),
+    id: S.optional(S.String),
+    keywords: S.optional(S.Unknown),
+    name: S.optional(S.String),
+    summary: S.optional(S.String),
+    updated_at: S.optional(S.String),
+  }),
+).annotate({ identifier: "News" }) as any as S.Schema<News>;
+
+export type SearchNewsResponseDataList = Array<News>;
+export const SearchNewsResponseDataList = /*@__PURE__*/ S.Array(
+  News,
+) as any as S.Schema<SearchNewsResponseDataList>;
+
+export type ResourceNotFoundProblemType =
+  "https://api.x.com/2/problems/resource-not-found";
+export const ResourceNotFoundProblemType = /*@__PURE__*/ S.String;
+
+export interface ResourceNotFoundProblem {
+  detail: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type: string;
+  status?: number;
+  title: string;
+  type: ResourceNotFoundProblemType;
+  value?: string;
+}
+export const ResourceNotFoundProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: ResourceNotFoundProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "ResourceNotFoundProblem",
+}) as any as S.Schema<ResourceNotFoundProblem>;
+
+export type InvalidRequestProblemType =
+  "https://api.x.com/2/problems/invalid-request";
+export const InvalidRequestProblemType = /*@__PURE__*/ S.String;
+
+export interface InvalidRequestProblem {
+  detail: string;
+  parameter?: string;
+  status?: number;
+  title: string;
+  type: InvalidRequestProblemType;
+  value?: string;
+}
+export const InvalidRequestProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: InvalidRequestProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "InvalidRequestProblem",
+}) as any as S.Schema<InvalidRequestProblem>;
+
+export type NotAuthorizedForResourceProblemType =
+  "https://api.x.com/2/problems/not-authorized-for-resource";
+export const NotAuthorizedForResourceProblemType = /*@__PURE__*/ S.String;
+
+export interface NotAuthorizedForResourceProblem {
+  detail: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: NotAuthorizedForResourceProblemType;
+  value?: string;
+}
+export const NotAuthorizedForResourceProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: NotAuthorizedForResourceProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "NotAuthorizedForResourceProblem",
+}) as any as S.Schema<NotAuthorizedForResourceProblem>;
+
+export type NotAuthorizedForFieldProblemType =
+  "https://api.x.com/2/problems/not-authorized-for-field";
+export const NotAuthorizedForFieldProblemType = /*@__PURE__*/ S.String;
+
+export interface NotAuthorizedForFieldProblem {
+  detail: string;
+  field: string;
+  parameter?: string;
+  resource_id?: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: NotAuthorizedForFieldProblemType;
+  value?: string;
+}
+export const NotAuthorizedForFieldProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    parameter: S.optional(S.String),
+    resource_id: S.optional(S.String),
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: NotAuthorizedForFieldProblemType,
+    value: S.optional(S.String),
+  }),
+).annotate({
+  identifier: "NotAuthorizedForFieldProblem",
+}) as any as S.Schema<NotAuthorizedForFieldProblem>;
+
+export type FieldUnauthorizedProblemType =
+  "https://api.x.com/2/problems/field-unauthorized";
+export const FieldUnauthorizedProblemType = /*@__PURE__*/ S.String;
+
+export interface FieldUnauthorizedProblem {
+  detail: string;
+  field: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: FieldUnauthorizedProblemType;
+}
+export const FieldUnauthorizedProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: FieldUnauthorizedProblemType,
+  }),
+).annotate({
+  identifier: "FieldUnauthorizedProblem",
+}) as any as S.Schema<FieldUnauthorizedProblem>;
+
+export type FieldHydrationFailureProblemType =
+  "https://api.x.com/2/problems/field-hydration-failure";
+export const FieldHydrationFailureProblemType = /*@__PURE__*/ S.String;
+
+export interface FieldHydrationFailureProblem {
+  detail: string;
+  field: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: FieldHydrationFailureProblemType;
+}
+export const FieldHydrationFailureProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    field: S.String,
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: FieldHydrationFailureProblemType,
+  }),
+).annotate({
+  identifier: "FieldHydrationFailureProblem",
+}) as any as S.Schema<FieldHydrationFailureProblem>;
+
+export type ResourceUnavailableProblemType =
+  "https://api.x.com/2/problems/resource-unavailable";
+export const ResourceUnavailableProblemType = /*@__PURE__*/ S.String;
+
+export interface ResourceUnavailableProblem {
+  detail: string;
+  resource_id?: string;
+  resource_type: string;
+  status?: number;
+  title: string;
+  type: ResourceUnavailableProblemType;
+}
+export const ResourceUnavailableProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    resource_id: S.optional(S.String),
+    resource_type: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: ResourceUnavailableProblemType,
+  }),
+).annotate({
+  identifier: "ResourceUnavailableProblem",
+}) as any as S.Schema<ResourceUnavailableProblem>;
+
+export type DisallowedResourceProblemType =
+  "https://api.x.com/2/problems/disallowed-resource";
+export const DisallowedResourceProblemType = /*@__PURE__*/ S.String;
+
+export interface DisallowedResourceProblem {
+  detail: string;
+  resource_id?: string;
+  resource_type?: string;
+  section?: string;
+  status?: number;
+  title: string;
+  type: DisallowedResourceProblemType;
+}
+export const DisallowedResourceProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    resource_id: S.optional(S.String),
+    resource_type: S.optional(S.String),
+    section: S.optional(S.String),
+    status: S.optional(S.Number),
+    title: S.String,
+    type: DisallowedResourceProblemType,
+  }),
+).annotate({
+  identifier: "DisallowedResourceProblem",
+}) as any as S.Schema<DisallowedResourceProblem>;
+
+export type InternalErrorProblemType =
+  "https://api.x.com/2/problems/internal-error";
+export const InternalErrorProblemType = /*@__PURE__*/ S.String;
+
+export interface InternalErrorProblem {
+  detail: string;
+  status?: number;
+  title: string;
+  type: InternalErrorProblemType;
+}
+export const InternalErrorProblem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    detail: S.String,
+    status: S.optional(S.Number),
+    title: S.String,
+    type: InternalErrorProblemType,
+  }),
+).annotate({
+  identifier: "InternalErrorProblem",
+}) as any as S.Schema<InternalErrorProblem>;
+
+export type Problem =
+  | ResourceNotFoundProblem
+  | InvalidRequestProblem
+  | NotAuthorizedForResourceProblem
+  | NotAuthorizedForFieldProblem
+  | FieldUnauthorizedProblem
+  | FieldHydrationFailureProblem
+  | ResourceUnavailableProblem
+  | DisallowedResourceProblem
+  | InternalErrorProblem;
+export const Problem = /*@__PURE__*/ S.Unknown as any as S.Schema<Problem>;
+export type SearchNewsResponseErrorsList = Array<Problem>;
+export const SearchNewsResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<SearchNewsResponseErrorsList>;
+
+export interface SearchNewsResponseMeta {
+  /** Number of items in the data array. */
+  result_count?: number;
+}
+export const SearchNewsResponseMeta = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    result_count: S.optional(S.Number),
+  }),
+).annotate({
+  identifier: "SearchNewsResponseMeta",
+}) as any as S.Schema<SearchNewsResponseMeta>;
+
+export interface SearchNewsResponse {
+  data?: SearchNewsResponseDataList;
+  errors?: SearchNewsResponseErrorsList;
+  meta?: SearchNewsResponseMeta;
+}
+export const SearchNewsResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(SearchNewsResponseDataList),
+    errors: S.optional(SearchNewsResponseErrorsList),
+    meta: S.optional(SearchNewsResponseMeta),
+  }),
+).annotate({
+  identifier: "SearchNewsResponse",
+}) as any as S.Schema<SearchNewsResponse>;
+
+export type SearchPostsAllRequestSortOrder = "recency" | "relevancy";
+export const SearchPostsAllRequestSortOrder = /*@__PURE__*/ S.String;
+
+export type SearchPostsAllRequestPostFieldsItem =
+  | "article"
+  | "article_title"
+  | "attachments"
+  | "card_uri"
+  | "community_id"
+  | "context_annotations"
+  | "conversation_id"
+  | "created_at"
+  | "display_text_range"
+  | "edit_controls"
+  | "entities"
+  | "geo"
+  | "id"
+  | "lang"
+  | "matched_media_notes"
+  | "media_metadata"
+  | "non_public_metrics"
+  | "note_post"
+  | "note_request_suggestions"
+  | "organic_metrics"
+  | "paid_partnership"
+  | "possibly_sensitive"
+  | "promoted_metrics"
+  | "public_metrics"
+  | "reply_settings"
+  | "scopes"
+  | "source"
+  | "suggested_source_links"
+  | "suggested_source_links_with_counts"
+  | "text"
+  | "withheld";
+export const SearchPostsAllRequestPostFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a Post object. */
+export type SearchPostsAllRequestPostFieldsList = Array<
+  SearchPostsAllRequestPostFieldsItem | (string & {})
+>;
+export const SearchPostsAllRequestPostFieldsList = /*@__PURE__*/ S.Array(
+  SearchPostsAllRequestPostFieldsItem,
+) as any as S.Schema<SearchPostsAllRequestPostFieldsList>;
+
+export type SearchPostsAllRequestExpansionsItem =
+  | "article.cover_media"
+  | "article.media_entities"
+  | "attachments.media_keys"
+  | "attachments.media_source_tweet"
+  | "attachments.poll_ids"
+  | "author_id"
+  | "edit_history_post_ids"
+  | "entities.mentions.username"
+  | "geo.place_id"
+  | "in_reply_to_user_id"
+  | "referenced_posts"
+  | "username";
+export const SearchPostsAllRequestExpansionsItem = /*@__PURE__*/ S.String;
+
+export type SearchPostsAllRequestExpansionsList = Array<
+  SearchPostsAllRequestExpansionsItem | (string & {})
+>;
+export const SearchPostsAllRequestExpansionsList = /*@__PURE__*/ S.Array(
+  SearchPostsAllRequestExpansionsItem,
+) as any as S.Schema<SearchPostsAllRequestExpansionsList>;
+
+export type SearchPostsAllRequestUserFieldsItem =
+  | "confirmed_email"
+  | "connection_status"
+  | "created_at"
+  | "description"
+  | "entities"
+  | "id"
+  | "is_identity_verified"
+  | "location"
+  | "name"
+  | "parody"
+  | "profile_banner_url"
+  | "profile_image_url"
+  | "protected"
+  | "public_metrics"
+  | "receives_your_dm"
+  | "subscribes_to_you"
+  | "subscription"
+  | "subscription_type"
+  | "url"
+  | "username"
+  | "verified"
+  | "verified_followers_count"
+  | "verified_type"
+  | "withheld";
+export const SearchPostsAllRequestUserFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a User object. */
+export type SearchPostsAllRequestUserFieldsList = Array<
+  SearchPostsAllRequestUserFieldsItem | (string & {})
+>;
+export const SearchPostsAllRequestUserFieldsList = /*@__PURE__*/ S.Array(
+  SearchPostsAllRequestUserFieldsItem,
+) as any as S.Schema<SearchPostsAllRequestUserFieldsList>;
+
+export type SearchPostsAllRequestMediaFieldsItem =
+  | "alt_text"
+  | "duration_ms"
+  | "height"
+  | "media_key"
+  | "non_public_metrics"
+  | "organic_metrics"
+  | "preview_image_url"
+  | "promoted_metrics"
+  | "public_metrics"
+  | "type"
+  | "url"
+  | "variants"
+  | "width";
+export const SearchPostsAllRequestMediaFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a Media object. */
+export type SearchPostsAllRequestMediaFieldsList = Array<
+  SearchPostsAllRequestMediaFieldsItem | (string & {})
+>;
+export const SearchPostsAllRequestMediaFieldsList = /*@__PURE__*/ S.Array(
+  SearchPostsAllRequestMediaFieldsItem,
+) as any as S.Schema<SearchPostsAllRequestMediaFieldsList>;
+
+export type SearchPostsAllRequestPollFieldsItem =
+  | "duration_minutes"
+  | "end_datetime"
+  | "id"
+  | "options"
+  | "voting_status";
+export const SearchPostsAllRequestPollFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a Poll object. */
+export type SearchPostsAllRequestPollFieldsList = Array<
+  SearchPostsAllRequestPollFieldsItem | (string & {})
+>;
+export const SearchPostsAllRequestPollFieldsList = /*@__PURE__*/ S.Array(
+  SearchPostsAllRequestPollFieldsItem,
+) as any as S.Schema<SearchPostsAllRequestPollFieldsList>;
+
+export type SearchPostsAllRequestPlaceFieldsItem =
+  | "contained_within"
+  | "country"
+  | "country_code"
+  | "full_name"
+  | "geo"
+  | "id"
+  | "name"
+  | "place_type";
+export const SearchPostsAllRequestPlaceFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a Place object. */
+export type SearchPostsAllRequestPlaceFieldsList = Array<
+  SearchPostsAllRequestPlaceFieldsItem | (string & {})
+>;
+export const SearchPostsAllRequestPlaceFieldsList = /*@__PURE__*/ S.Array(
+  SearchPostsAllRequestPlaceFieldsItem,
+) as any as S.Schema<SearchPostsAllRequestPlaceFieldsList>;
+
+export interface SearchPostsAllRequest {
+  query: string;
+  start_time?: string;
+  end_time?: string;
+  since_id?: string;
+  until_id?: string;
+  max_results?: number;
+  /** A base32hex-encoded pagination token. */
+  next_token?: string;
+  /** A base32hex-encoded pagination token. */
+  pagination_token?: string;
+  sort_order?: SearchPostsAllRequestSortOrder | (string & {});
+  /** A comma separated list of Post fields to display. */
+  post_fields?: SearchPostsAllRequestPostFieldsList;
+  /** A comma separated list of fields to expand. */
+  expansions?: SearchPostsAllRequestExpansionsList;
+  /** A comma separated list of User fields to display. */
+  user_fields?: SearchPostsAllRequestUserFieldsList;
+  /** A comma separated list of Media fields to display. */
+  media_fields?: SearchPostsAllRequestMediaFieldsList;
+  /** A comma separated list of Poll fields to display. */
+  poll_fields?: SearchPostsAllRequestPollFieldsList;
+  /** A comma separated list of Place fields to display. */
+  place_fields?: SearchPostsAllRequestPlaceFieldsList;
+}
+export const SearchPostsAllRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    query: S.String.pipe(T.Query()),
+    start_time: S.optional(S.String.pipe(T.Query())),
+    end_time: S.optional(S.String.pipe(T.Query())),
+    since_id: S.optional(S.String.pipe(T.Query())),
+    until_id: S.optional(S.String.pipe(T.Query())),
+    max_results: S.optional(S.Number.pipe(T.Query())),
+    next_token: S.optional(S.String.pipe(T.Query())),
+    pagination_token: S.optional(S.String.pipe(T.Query())),
+    sort_order: S.optional(SearchPostsAllRequestSortOrder.pipe(T.Query())),
+    post_fields: S.optional(
+      SearchPostsAllRequestPostFieldsList.pipe(T.Query("post.fields")),
+    ),
+    expansions: S.optional(SearchPostsAllRequestExpansionsList.pipe(T.Query())),
+    user_fields: S.optional(
+      SearchPostsAllRequestUserFieldsList.pipe(T.Query("user.fields")),
+    ),
+    media_fields: S.optional(
+      SearchPostsAllRequestMediaFieldsList.pipe(T.Query("media.fields")),
+    ),
+    poll_fields: S.optional(
+      SearchPostsAllRequestPollFieldsList.pipe(T.Query("poll.fields")),
+    ),
+    place_fields: S.optional(
+      SearchPostsAllRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+    ),
+  }).pipe(T.Http({ method: "GET", uri: "/2/tweets/search/all", code: 200 })),
+).annotate({
+  identifier: "SearchPostsAllRequest",
+}) as any as S.Schema<SearchPostsAllRequest>;
+
+/** Media keys of media attached to this Post. */
+export type PostAttachmentsMediaKeysList = Array<string>;
+export const PostAttachmentsMediaKeysList = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<PostAttachmentsMediaKeysList>;
+
+/** IDs of the source Posts the attached media originated from. */
+export type PostAttachmentsMediaSourceTweetIdList = Array<string>;
+export const PostAttachmentsMediaSourceTweetIdList = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<PostAttachmentsMediaSourceTweetIdList>;
+
+/** IDs of polls attached to this Post. */
+export type PostAttachmentsPollIdsList = Array<string>;
+export const PostAttachmentsPollIdsList = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<PostAttachmentsPollIdsList>;
+
+/** Specifies the type of attachments (if any) present in this Post. */
+export interface PostAttachments {
+  /** Media keys of media attached to this Post. */
+  media_keys?: PostAttachmentsMediaKeysList | null;
+  /** IDs of the source Posts the attached media originated from. */
+  media_source_tweet_id?: PostAttachmentsMediaSourceTweetIdList | null;
+  /** IDs of polls attached to this Post. */
+  poll_ids?: PostAttachmentsPollIdsList | null;
+}
+export const PostAttachments = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    media_keys: S.optional(S.NullOr(PostAttachmentsMediaKeysList)),
+    media_source_tweet_id: S.optional(
+      S.NullOr(PostAttachmentsMediaSourceTweetIdList),
+    ),
+    poll_ids: S.optional(S.NullOr(PostAttachmentsPollIdsList)),
+  }),
+).annotate({
+  identifier: "PostAttachments",
+}) as any as S.Schema<PostAttachments>;
+
+/** A domain or entity referenced by a context annotation. */
+export interface PostContextAnnotationsItemDomain {
+  description?: string | null;
+  id?: string | null;
+  name?: string | null;
+}
+export const PostContextAnnotationsItemDomain = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    description: S.optional(S.NullOr(S.String)),
+    id: S.optional(S.NullOr(S.String)),
+    name: S.optional(S.NullOr(S.String)),
+  }),
+).annotate({
+  identifier: "PostContextAnnotationsItemDomain",
+}) as any as S.Schema<PostContextAnnotationsItemDomain>;
+
+/** A domain or entity referenced by a context annotation. */
+export type PostContextAnnotationsItemEntity = PostContextAnnotationsItemDomain;
+export const PostContextAnnotationsItemEntity =
+  PostContextAnnotationsItemDomain;
+
+/** A single inferred annotation about the Post (domain and entity context). */
+export interface PostContextAnnotationsItem {
+  /** The domain (broad category) this annotation belongs to. */
+  domain: PostContextAnnotationsItemDomain;
+  /** The specific entity recognized within the domain. */
+  entity: PostContextAnnotationsItemDomain;
+}
+export const PostContextAnnotationsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    domain: PostContextAnnotationsItemDomain,
+    entity: PostContextAnnotationsItemDomain,
+  }),
+).annotate({
+  identifier: "PostContextAnnotationsItem",
+}) as any as S.Schema<PostContextAnnotationsItem>;
+
+/** Annotations inferred about the Post (domain and entity context). */
+export type PostContextAnnotations = Array<PostContextAnnotationsItem>;
+export const PostContextAnnotations = /*@__PURE__*/ S.Array(
+  PostContextAnnotationsItem,
+) as any as S.Schema<PostContextAnnotations>;
+
+/** The inclusive start and exclusive end indices of the displayable content of the Post. */
+export type PostDisplayTextRange = Array<number>;
+export const PostDisplayTextRange = /*@__PURE__*/ S.Array(
+  S.Number,
+) as any as S.Schema<PostDisplayTextRange>;
+
+/** Indicates how much longer (if at all) this Post can be edited. */
+export interface PostEditControls {
+  /** The time until which this Post can be edited. */
+  editable_until?: string | null;
+  /** Number of edits still allowed for this Post. */
+  edits_remaining?: number | null;
+  /** Indicates whether this Post is eligible to be edited. */
+  is_edit_eligible?: boolean | null;
+}
+export const PostEditControls = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    editable_until: S.optional(S.NullOr(S.String)),
+    edits_remaining: S.optional(S.NullOr(S.Number)),
+    is_edit_eligible: S.optional(S.NullOr(S.Boolean)),
+  }),
+).annotate({
+  identifier: "PostEditControls",
+}) as any as S.Schema<PostEditControls>;
+
+/** A list of Post IDs in this Post's edit history chain. */
+export type PostEditHistoryPostIdsList = Array<string>;
+export const PostEditHistoryPostIdsList = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<PostEditHistoryPostIdsList>;
+
+/** A hashtag or cashtag entity. */
+export interface PostEntitiesCashtagsItem {
+  /** End index in the text (exclusive). */
+  end: number;
+  /** Start index in the text (inclusive). */
+  start: number;
+  tag: string;
+}
+export const PostEntitiesCashtagsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    end: S.Number,
+    start: S.Number,
+    tag: S.String,
+  }),
+).annotate({
+  identifier: "PostEntitiesCashtagsItem",
+}) as any as S.Schema<PostEntitiesCashtagsItem>;
+
+export type PostEntitiesCashtagsList = Array<PostEntitiesCashtagsItem>;
+export const PostEntitiesCashtagsList = /*@__PURE__*/ S.Array(
+  PostEntitiesCashtagsItem,
+) as any as S.Schema<PostEntitiesCashtagsList>;
+
+/** A hashtag or cashtag entity. */
+export type PostEntitiesHashtagsItem = PostEntitiesCashtagsItem;
+export const PostEntitiesHashtagsItem = PostEntitiesCashtagsItem;
+
+export type PostEntitiesHashtagsList = Array<PostEntitiesCashtagsItem>;
+export const PostEntitiesHashtagsList = /*@__PURE__*/ S.Array(
+  PostEntitiesCashtagsItem,
+) as any as S.Schema<PostEntitiesHashtagsList>;
+
+/** A user mention entity. */
+export interface PostEntitiesMentionsItem {
+  end: number;
+  id?: string | null;
+  start: number;
+  username?: string | null;
+}
+export const PostEntitiesMentionsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    end: S.Number,
+    id: S.optional(S.NullOr(S.String)),
+    start: S.Number,
+    username: S.optional(S.NullOr(S.String)),
+  }),
+).annotate({
+  identifier: "PostEntitiesMentionsItem",
+}) as any as S.Schema<PostEntitiesMentionsItem>;
+
+export type PostEntitiesMentionsList = Array<PostEntitiesMentionsItem>;
+export const PostEntitiesMentionsList = /*@__PURE__*/ S.Array(
+  PostEntitiesMentionsItem,
+) as any as S.Schema<PostEntitiesMentionsList>;
+
+/** A preview image for a linked page. */
+export interface PostEntitiesUrlsItemImagesItem {
+  height?: number | null;
+  url?: string | null;
+  width?: number | null;
+}
+export const PostEntitiesUrlsItemImagesItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    height: S.optional(S.NullOr(S.Number)),
+    url: S.optional(S.NullOr(S.String)),
+    width: S.optional(S.NullOr(S.Number)),
+  }),
+).annotate({
+  identifier: "PostEntitiesUrlsItemImagesItem",
+}) as any as S.Schema<PostEntitiesUrlsItemImagesItem>;
+
+export type PostEntitiesUrlsItemImagesList =
+  Array<PostEntitiesUrlsItemImagesItem>;
+export const PostEntitiesUrlsItemImagesList = /*@__PURE__*/ S.Array(
+  PostEntitiesUrlsItemImagesItem,
+) as any as S.Schema<PostEntitiesUrlsItemImagesList>;
+
+/** A URL entity found in the Post text, enriched with link metadata. */
+export interface PostEntitiesUrlsItem {
+  /** Description of the linked page, when available. */
+  description?: string | null;
+  /** The URL as displayed in the Post text. */
+  display_url?: string | null;
+  end: number;
+  /** The fully resolved URL. */
+  expanded_url?: string | null;
+  images?: PostEntitiesUrlsItemImagesList | null;
+  media_key?: string | null;
+  start: number;
+  /** HTTP status from resolving the URL. */
+  status?: number | null;
+  /** Title of the linked page, when available. */
+  title?: string | null;
+  /** The final destination after following redirects. */
+  unwound_url?: string | null;
+  /** The t.co shortened URL. */
+  url?: string | null;
+}
+export const PostEntitiesUrlsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    description: S.optional(S.NullOr(S.String)),
+    display_url: S.optional(S.NullOr(S.String)),
+    end: S.Number,
+    expanded_url: S.optional(S.NullOr(S.String)),
+    images: S.optional(S.NullOr(PostEntitiesUrlsItemImagesList)),
+    media_key: S.optional(S.NullOr(S.String)),
+    start: S.Number,
+    status: S.optional(S.NullOr(S.Number)),
+    title: S.optional(S.NullOr(S.String)),
+    unwound_url: S.optional(S.NullOr(S.String)),
+    url: S.optional(S.NullOr(S.String)),
+  }),
+).annotate({
+  identifier: "PostEntitiesUrlsItem",
+}) as any as S.Schema<PostEntitiesUrlsItem>;
+
+export type PostEntitiesUrlsList = Array<PostEntitiesUrlsItem>;
+export const PostEntitiesUrlsList = /*@__PURE__*/ S.Array(
+  PostEntitiesUrlsItem,
+) as any as S.Schema<PostEntitiesUrlsList>;
+
+/** A list of metadata entities (hashtags, mentions, URLs) found in the Post text. */
+export interface PostEntities {
+  cashtags?: PostEntitiesCashtagsList | null;
+  hashtags?: PostEntitiesHashtagsList | null;
+  mentions?: PostEntitiesMentionsList | null;
+  urls?: PostEntitiesUrlsList | null;
+}
+export const PostEntities = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    cashtags: S.optional(S.NullOr(PostEntitiesCashtagsList)),
+    hashtags: S.optional(S.NullOr(PostEntitiesHashtagsList)),
+    mentions: S.optional(S.NullOr(PostEntitiesMentionsList)),
+    urls: S.optional(S.NullOr(PostEntitiesUrlsList)),
+  }),
+).annotate({ identifier: "PostEntities" }) as any as S.Schema<PostEntities>;
+
+/** [longitude, latitude]. */
+export type PostGeoCoordinatesCoordinatesList = Array<number>;
+export const PostGeoCoordinatesCoordinatesList = /*@__PURE__*/ S.Array(
+  S.Number,
+) as any as S.Schema<PostGeoCoordinatesCoordinatesList>;
+
+/** The GeoJSON geometry type. */
+export type PostGeoCoordinatesType = "Point";
+export const PostGeoCoordinatesType = /*@__PURE__*/ S.String;
+
+/** A GeoJSON Point geometry. */
+export interface PostGeoCoordinates {
+  /** [longitude, latitude]. */
+  coordinates: PostGeoCoordinatesCoordinatesList;
+  /** The GeoJSON geometry type. */
+  type: PostGeoCoordinatesType;
+}
+export const PostGeoCoordinates = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    coordinates: PostGeoCoordinatesCoordinatesList,
+    type: PostGeoCoordinatesType,
+  }),
+).annotate({
+  identifier: "PostGeoCoordinates",
+}) as any as S.Schema<PostGeoCoordinates>;
+
+/** The location tagged on the Post, if the user provided one. */
+export interface PostGeo {
+  /** A GeoJSON Point geometry. */
+  coordinates?: PostGeoCoordinates | null;
+  /** The unique identifier of the tagged place. */
+  place_id?: string | null;
+}
+export const PostGeo = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    coordinates: S.optional(S.NullOr(PostGeoCoordinates)),
+    place_id: S.optional(S.NullOr(S.String)),
+  }),
+).annotate({ identifier: "PostGeo" }) as any as S.Schema<PostGeo>;
+
+/** A Community-Notes media match for this Post. */
+export interface PostMatchedMediaNotesItem {
+  /** The status of the media note match. */
+  match_status?: string | null;
+  /** The matched note's unique identifier. */
+  note_id?: string | null;
+}
+export const PostMatchedMediaNotesItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    match_status: S.optional(S.NullOr(S.String)),
+    note_id: S.optional(S.NullOr(S.String)),
+  }),
+).annotate({
+  identifier: "PostMatchedMediaNotesItem",
+}) as any as S.Schema<PostMatchedMediaNotesItem>;
+
+/** Community-Notes media matches for this Post. */
+export type PostMatchedMediaNotes = Array<PostMatchedMediaNotesItem>;
+export const PostMatchedMediaNotes = /*@__PURE__*/ S.Array(
+  PostMatchedMediaNotesItem,
+) as any as S.Schema<PostMatchedMediaNotes>;
+
+/** Metadata for one media item attached to this Post. */
+export interface PostMediaMetadataItem {
+  /** Alternative text describing the media for accessibility. */
+  alt_text?: string | null;
+  /** Description of the media. */
+  description?: string | null;
+  /** The unique identifier of the media. */
+  media_key?: string | null;
+  /** Title of the media. */
+  title?: string | null;
+}
+export const PostMediaMetadataItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    alt_text: S.optional(S.NullOr(S.String)),
+    description: S.optional(S.NullOr(S.String)),
+    media_key: S.optional(S.NullOr(S.String)),
+    title: S.optional(S.NullOr(S.String)),
+  }),
+).annotate({
+  identifier: "PostMediaMetadataItem",
+}) as any as S.Schema<PostMediaMetadataItem>;
+
+/** Metadata for media attached to this Post. */
+export type PostMediaMetadata = Array<PostMediaMetadataItem>;
+export const PostMediaMetadata = /*@__PURE__*/ S.Array(
+  PostMediaMetadataItem,
+) as any as S.Schema<PostMediaMetadata>;
+
+/** A hashtag or cashtag entity. */
+export type PostNotePostEntitiesCashtagsItem = PostEntitiesCashtagsItem;
+export const PostNotePostEntitiesCashtagsItem = PostEntitiesCashtagsItem;
+
+export type PostNotePostEntitiesCashtagsList = Array<PostEntitiesCashtagsItem>;
+export const PostNotePostEntitiesCashtagsList = /*@__PURE__*/ S.Array(
+  PostEntitiesCashtagsItem,
+) as any as S.Schema<PostNotePostEntitiesCashtagsList>;
+
+/** A hashtag or cashtag entity. */
+export type PostNotePostEntitiesHashtagsItem = PostEntitiesCashtagsItem;
+export const PostNotePostEntitiesHashtagsItem = PostEntitiesCashtagsItem;
+
+export type PostNotePostEntitiesHashtagsList = Array<PostEntitiesCashtagsItem>;
+export const PostNotePostEntitiesHashtagsList = /*@__PURE__*/ S.Array(
+  PostEntitiesCashtagsItem,
+) as any as S.Schema<PostNotePostEntitiesHashtagsList>;
+
+/** A user mention entity. */
+export type PostNotePostEntitiesMentionsItem = PostEntitiesMentionsItem;
+export const PostNotePostEntitiesMentionsItem = PostEntitiesMentionsItem;
+
+export type PostNotePostEntitiesMentionsList = Array<PostEntitiesMentionsItem>;
+export const PostNotePostEntitiesMentionsList = /*@__PURE__*/ S.Array(
+  PostEntitiesMentionsItem,
+) as any as S.Schema<PostNotePostEntitiesMentionsList>;
+
+/** A URL entity found in note Post text. */
+export interface PostNotePostEntitiesUrlsItem {
+  display_url?: string | null;
+  end: number;
+  expanded_url?: string | null;
+  start: number;
+  url?: string | null;
+}
+export const PostNotePostEntitiesUrlsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    display_url: S.optional(S.NullOr(S.String)),
+    end: S.Number,
+    expanded_url: S.optional(S.NullOr(S.String)),
+    start: S.Number,
+    url: S.optional(S.NullOr(S.String)),
+  }),
+).annotate({
+  identifier: "PostNotePostEntitiesUrlsItem",
+}) as any as S.Schema<PostNotePostEntitiesUrlsItem>;
+
+export type PostNotePostEntitiesUrlsList = Array<PostNotePostEntitiesUrlsItem>;
+export const PostNotePostEntitiesUrlsList = /*@__PURE__*/ S.Array(
+  PostNotePostEntitiesUrlsItem,
+) as any as S.Schema<PostNotePostEntitiesUrlsList>;
+
+/** Metadata entities (hashtags, cashtags, mentions, URLs) found in the note Post text. */
+export interface PostNotePostEntities {
+  cashtags?: PostNotePostEntitiesCashtagsList | null;
+  hashtags?: PostNotePostEntitiesHashtagsList | null;
+  mentions?: PostNotePostEntitiesMentionsList | null;
+  urls?: PostNotePostEntitiesUrlsList | null;
+}
+export const PostNotePostEntities = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    cashtags: S.optional(S.NullOr(PostNotePostEntitiesCashtagsList)),
+    hashtags: S.optional(S.NullOr(PostNotePostEntitiesHashtagsList)),
+    mentions: S.optional(S.NullOr(PostNotePostEntitiesMentionsList)),
+    urls: S.optional(S.NullOr(PostNotePostEntitiesUrlsList)),
+  }),
+).annotate({
+  identifier: "PostNotePostEntities",
+}) as any as S.Schema<PostNotePostEntities>;
+
+/** The full content of the Post, including text beyond 280 characters. */
+export interface PostNotePost {
+  /** Metadata entities (hashtags, cashtags, mentions, URLs) found in the note Post text. */
+  entities?: PostNotePostEntities | null;
+  /** The full note text of the Post. */
+  text: string;
+}
+export const PostNotePost = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    entities: S.optional(S.NullOr(PostNotePostEntities)),
+    text: S.String,
+  }),
+).annotate({ identifier: "PostNotePost" }) as any as S.Schema<PostNotePost>;
+
+/** A Community-Notes request suggestion for this Post. */
+export interface PostNoteRequestSuggestionsItem {
+  /** A suggested source link supporting the note request. */
+  source_link?: string | null;
+  /** The text of the note request suggestion. */
+  suggestion?: string | null;
+  /** The unique identifier of the note request suggestion. */
+  suggestion_id?: string | null;
+}
+export const PostNoteRequestSuggestionsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    source_link: S.optional(S.NullOr(S.String)),
+    suggestion: S.optional(S.NullOr(S.String)),
+    suggestion_id: S.optional(S.NullOr(S.String)),
+  }),
+).annotate({
+  identifier: "PostNoteRequestSuggestionsItem",
+}) as any as S.Schema<PostNoteRequestSuggestionsItem>;
+
+/** Community-Notes request suggestions for this Post. */
+export type PostNoteRequestSuggestions = Array<PostNoteRequestSuggestionsItem>;
+export const PostNoteRequestSuggestions = /*@__PURE__*/ S.Array(
+  PostNoteRequestSuggestionsItem,
+) as any as S.Schema<PostNoteRequestSuggestions>;
+
+/** Engagement metrics for the Post at the time of the request. */
+export interface PostPublicMetrics {
+  /** Number of times this Post has been bookmarked. */
+  bookmark_count: number;
+  /** Number of times this Post has been viewed. */
+  impression_count: number;
+  /** Number of likes on this Post. */
+  like_count: number;
+  /** Number of quote Posts of this Post. */
+  quote_count: number;
+  /** Number of replies to this Post. */
+  reply_count: number;
+  /** Number of times this Post has been reposted. */
+  repost_count: number;
+}
+export const PostPublicMetrics = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    bookmark_count: S.Number,
+    impression_count: S.Number,
+    like_count: S.Number,
+    quote_count: S.Number,
+    reply_count: S.Number,
+    repost_count: S.Number,
+  }),
+).annotate({
+  identifier: "PostPublicMetrics",
+}) as any as S.Schema<PostPublicMetrics>;
+
+/** The kind of Post-to-Post reference. */
+export type PostReferencedPostsItemType = "retweeted" | "quoted" | "replied_to";
+export const PostReferencedPostsItemType = /*@__PURE__*/ S.String;
+
+/** A reference from this Post to another Post (repost, quote, or reply). */
+export interface PostReferencedPostsItem {
+  /** Unique identifier of the referenced Post. */
+  id: string;
+  /** How this Post references the other Post. */
+  type: PostReferencedPostsItemType;
+}
+export const PostReferencedPostsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    id: S.String,
+    type: PostReferencedPostsItemType,
+  }),
+).annotate({
+  identifier: "PostReferencedPostsItem",
+}) as any as S.Schema<PostReferencedPostsItem>;
+
+/** A list of Posts this Post refers to. If the Post is a Retweet, Quote or Reply, it includes the referenced Post's type and ID. */
+export type PostReferencedPosts = Array<PostReferencedPostsItem>;
+export const PostReferencedPosts = /*@__PURE__*/ S.Array(
+  PostReferencedPostsItem,
+) as any as S.Schema<PostReferencedPosts>;
+
+/** The scopes for this Post. */
+export interface PostScopes {
+  /** Indicates whether visibility of this Post is limited to the author's followers. */
+  followers: boolean;
+}
+export const PostScopes = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    followers: S.Boolean,
+  }),
+).annotate({ identifier: "PostScopes" }) as any as S.Schema<PostScopes>;
+
+/** URLs suggested as sources for this Post. */
+export type PostSuggestedSourceLinks = Array<string>;
+export const PostSuggestedSourceLinks = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<PostSuggestedSourceLinks>;
+
+/** A suggested source URL for this Post with the number of times it was suggested. */
+export interface PostSuggestedSourceLinksWithCountsItem {
+  /** Number of times this source link was suggested. */
+  count?: number | null;
+  /** The suggested source URL. */
+  url?: string | null;
+}
+export const PostSuggestedSourceLinksWithCountsItem = /*@__PURE__*/ S.suspend(
+  () =>
+    S.Struct({
+      count: S.optional(S.NullOr(S.Number)),
+      url: S.optional(S.NullOr(S.String)),
+    }),
+).annotate({
+  identifier: "PostSuggestedSourceLinksWithCountsItem",
+}) as any as S.Schema<PostSuggestedSourceLinksWithCountsItem>;
+
+/** Suggested source URLs for this Post, each with the number of times it was suggested. */
+export type PostSuggestedSourceLinksWithCounts =
+  Array<PostSuggestedSourceLinksWithCountsItem>;
+export const PostSuggestedSourceLinksWithCounts = /*@__PURE__*/ S.Array(
+  PostSuggestedSourceLinksWithCountsItem,
+) as any as S.Schema<PostSuggestedSourceLinksWithCounts>;
+
+/** Uppercase ISO 3166-1 alpha-2 country codes where this content is withheld. */
+export type PostWithheldCountryCodesList = Array<string>;
+export const PostWithheldCountryCodesList = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<PostWithheldCountryCodesList>;
+
+/** Whether the withholding applies to a Post or a User. */
+export type PostWithheldScope = "post" | "user";
+export const PostWithheldScope = /*@__PURE__*/ S.String;
+
+/** Withholding details for withheld content. */
+export interface PostWithheld {
+  /** Indicates whether this content is withheld due to a copyright claim. */
+  copyright: boolean;
+  /** Uppercase ISO 3166-1 alpha-2 country codes where this content is withheld. */
+  country_codes: PostWithheldCountryCodesList;
+  /** Whether the withholding applies to a Post or a User. */
+  scope?: PostWithheldScope | null;
+}
+export const PostWithheld = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    copyright: S.Boolean,
+    country_codes: PostWithheldCountryCodesList,
+    scope: S.optional(S.NullOr(PostWithheldScope)),
+  }),
+).annotate({ identifier: "PostWithheld" }) as any as S.Schema<PostWithheld>;
+
+export interface Post {
+  article?: unknown;
+  /** Metadata about the long-form Article attached to this Post, if any. */
+  article_title?: unknown;
+  attachments?: PostAttachments;
+  /** Unique identifier of the author of this Post. */
+  author_id?: string;
+  card_uri?: string;
+  /** The unique identifier of the Community this Post belongs to, if any. */
+  community_id?: string;
+  context_annotations?: PostContextAnnotations;
+  /** The ID of the conversation this Post belongs to (matches the root Post's ID). */
+  conversation_id?: string;
+  /** Creation time of the Post. */
+  created_at?: string;
+  display_text_range?: PostDisplayTextRange;
+  edit_controls?: PostEditControls;
+  /** A list of Post IDs in this Post's edit history chain. */
+  edit_history_post_ids?: PostEditHistoryPostIdsList;
+  entities?: PostEntities;
+  geo?: PostGeo;
+  /** Unique identifier of this Post. */
+  id?: string;
+  /** Unique identifier of the User this Post is replying to. */
+  in_reply_to_user_id?: string;
+  /** Language of the Post, if detected by X. Returned as a BCP47 language tag. */
+  lang?: string;
+  matched_media_notes?: PostMatchedMediaNotes;
+  media_metadata?: PostMediaMetadata;
+  /** Nonpublic engagement metrics for the Post at the time of the request. */
+  non_public_metrics?: unknown;
+  note_post?: PostNotePost;
+  note_request_suggestions?: PostNoteRequestSuggestions;
+  /** Organic nonpublic engagement metrics for the Post at the time of the request. */
+  organic_metrics?: unknown;
+  /** Indicates if this Post is a paid partnership, i.e. it has been disclosed by the author as containing paid promotion. */
+  paid_partnership?: boolean;
+  /** Indicates if this Post contains URLs marked as sensitive, for example content suitable for mature audiences. */
+  possibly_sensitive?: boolean;
+  /** Promoted nonpublic engagement metrics for the Post at the time of the request. */
+  promoted_metrics?: unknown;
+  public_metrics?: PostPublicMetrics;
+  referenced_posts?: PostReferencedPosts;
+  /** Shows who can reply to this Post. */
+  reply_settings?: string;
+  scopes?: PostScopes;
+  /** The name of the app the user posted from. This is deprecated. */
+  source?: string;
+  suggested_source_links?: PostSuggestedSourceLinks;
+  suggested_source_links_with_counts?: PostSuggestedSourceLinksWithCounts;
+  /** The content of the Post. */
+  text?: string;
+  username?: string;
+  withheld?: PostWithheld;
+}
+export const Post = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    article: S.optional(S.Unknown),
+    article_title: S.optional(S.Unknown),
+    attachments: S.optional(PostAttachments),
+    author_id: S.optional(S.String),
+    card_uri: S.optional(S.String),
+    community_id: S.optional(S.String),
+    context_annotations: S.optional(PostContextAnnotations),
+    conversation_id: S.optional(S.String),
+    created_at: S.optional(S.String),
+    display_text_range: S.optional(PostDisplayTextRange),
+    edit_controls: S.optional(PostEditControls),
+    edit_history_post_ids: S.optional(PostEditHistoryPostIdsList),
+    entities: S.optional(PostEntities),
+    geo: S.optional(PostGeo),
+    id: S.optional(S.String),
+    in_reply_to_user_id: S.optional(S.String),
+    lang: S.optional(S.String),
+    matched_media_notes: S.optional(PostMatchedMediaNotes),
+    media_metadata: S.optional(PostMediaMetadata),
+    non_public_metrics: S.optional(S.Unknown),
+    note_post: S.optional(PostNotePost),
+    note_request_suggestions: S.optional(PostNoteRequestSuggestions),
+    organic_metrics: S.optional(S.Unknown),
+    paid_partnership: S.optional(S.Boolean),
+    possibly_sensitive: S.optional(S.Boolean),
+    promoted_metrics: S.optional(S.Unknown),
+    public_metrics: S.optional(PostPublicMetrics),
+    referenced_posts: S.optional(PostReferencedPosts),
+    reply_settings: S.optional(S.String),
+    scopes: S.optional(PostScopes),
+    source: S.optional(S.String),
+    suggested_source_links: S.optional(PostSuggestedSourceLinks),
+    suggested_source_links_with_counts: S.optional(
+      PostSuggestedSourceLinksWithCounts,
+    ),
+    text: S.optional(S.String),
+    username: S.optional(S.String),
+    withheld: S.optional(PostWithheld),
+  }),
+).annotate({ identifier: "Post" }) as any as S.Schema<Post>;
+
+export type SearchPostsAllResponseDataList = Array<Post>;
+export const SearchPostsAllResponseDataList = /*@__PURE__*/ S.Array(
+  Post,
+) as any as S.Schema<SearchPostsAllResponseDataList>;
+
+export type SearchPostsAllResponseErrorsList = Array<Problem>;
+export const SearchPostsAllResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<SearchPostsAllResponseErrorsList>;
+
+/** Nonpublic engagement metrics for the media at the time of the request. */
+export interface MediaNonPublicMetrics {
+  /** Number of users who started playback (0% quartile) of this video. */
+  playback_0_count?: number | null;
+  /** Number of users who completed playback (100% quartile) of this video. */
+  playback_100_count?: number | null;
+  /** Number of users who watched at least 25% of this video. */
+  playback_25_count?: number | null;
+  /** Number of users who watched at least 50% of this video. */
+  playback_50_count?: number | null;
+  /** Number of users who watched at least 75% of this video. */
+  playback_75_count?: number | null;
+}
+export const MediaNonPublicMetrics = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    playback_0_count: S.optional(S.NullOr(S.Number)),
+    playback_100_count: S.optional(S.NullOr(S.Number)),
+    playback_25_count: S.optional(S.NullOr(S.Number)),
+    playback_50_count: S.optional(S.NullOr(S.Number)),
+    playback_75_count: S.optional(S.NullOr(S.Number)),
+  }),
+).annotate({
+  identifier: "MediaNonPublicMetrics",
+}) as any as S.Schema<MediaNonPublicMetrics>;
+
+/** Organic nonpublic engagement metrics for the media at the time of the request. */
+export interface MediaOrganicMetrics {
+  /** Number of users who started playback (0% quartile) of this video. */
+  playback_0_count?: number | null;
+  /** Number of users who completed playback (100% quartile) of this video. */
+  playback_100_count?: number | null;
+  /** Number of users who watched at least 25% of this video. */
+  playback_25_count?: number | null;
+  /** Number of users who watched at least 50% of this video. */
+  playback_50_count?: number | null;
+  /** Number of users who watched at least 75% of this video. */
+  playback_75_count?: number | null;
+  /** The number of organic views of this video. Null when the backend returns quartile data without a view count. */
+  view_count?: number | null;
+}
+export const MediaOrganicMetrics = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    playback_0_count: S.optional(S.NullOr(S.Number)),
+    playback_100_count: S.optional(S.NullOr(S.Number)),
+    playback_25_count: S.optional(S.NullOr(S.Number)),
+    playback_50_count: S.optional(S.NullOr(S.Number)),
+    playback_75_count: S.optional(S.NullOr(S.Number)),
+    view_count: S.optional(S.NullOr(S.Number)),
+  }),
+).annotate({
+  identifier: "MediaOrganicMetrics",
+}) as any as S.Schema<MediaOrganicMetrics>;
+
+/** Promoted nonpublic engagement metrics for the media at the time of the request. */
+export interface MediaPromotedMetrics {
+  /** Number of users who started playback (0% quartile) of this video. */
+  playback_0_count?: number | null;
+  /** Number of users who completed playback (100% quartile) of this video. */
+  playback_100_count?: number | null;
+  /** Number of users who watched at least 25% of this video. */
+  playback_25_count?: number | null;
+  /** Number of users who watched at least 50% of this video. */
+  playback_50_count?: number | null;
+  /** Number of users who watched at least 75% of this video. */
+  playback_75_count?: number | null;
+  /** The number of promoted views of this video. Null when the backend returns quartile data without a view count. */
+  view_count?: number | null;
+}
+export const MediaPromotedMetrics = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    playback_0_count: S.optional(S.NullOr(S.Number)),
+    playback_100_count: S.optional(S.NullOr(S.Number)),
+    playback_25_count: S.optional(S.NullOr(S.Number)),
+    playback_50_count: S.optional(S.NullOr(S.Number)),
+    playback_75_count: S.optional(S.NullOr(S.Number)),
+    view_count: S.optional(S.NullOr(S.Number)),
+  }),
+).annotate({
+  identifier: "MediaPromotedMetrics",
+}) as any as S.Schema<MediaPromotedMetrics>;
+
+/** Public engagement metrics for the media at the time of the request. */
+export interface MediaPublicMetrics {
+  /** The number of times this video has been viewed. */
+  view_count: number;
+}
+export const MediaPublicMetrics = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    view_count: S.Number,
+  }),
+).annotate({
+  identifier: "MediaPublicMetrics",
+}) as any as S.Schema<MediaPublicMetrics>;
+
+/** A single playback or display variant of a media object. */
+export interface MediaVariantsItem {
+  /** The bit rate of this variant, in bits per second. Absent for playlist variants. */
+  bit_rate?: number | null;
+  /** The MIME type of this variant, for example "video/mp4" or "application/x-mpegURL". */
+  content_type?: string | null;
+  /** The URL to this media variant. */
+  url?: string | null;
+}
+export const MediaVariantsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    bit_rate: S.optional(S.NullOr(S.Number)),
+    content_type: S.optional(S.NullOr(S.String)),
+    url: S.optional(S.NullOr(S.String)),
+  }),
+).annotate({
+  identifier: "MediaVariantsItem",
+}) as any as S.Schema<MediaVariantsItem>;
+
+/** Each media object may have multiple display or playback variants, with different resolutions or formats. */
+export type MediaVariants = Array<MediaVariantsItem>;
+export const MediaVariants = /*@__PURE__*/ S.Array(
+  MediaVariantsItem,
+) as any as S.Schema<MediaVariants>;
+
+export interface Media {
+  alt_text?: string;
+  duration_ms?: number;
+  height?: number;
+  media_key?: string;
+  non_public_metrics?: MediaNonPublicMetrics;
+  organic_metrics?: MediaOrganicMetrics;
+  preview_image_url?: string;
+  promoted_metrics?: MediaPromotedMetrics;
+  public_metrics?: MediaPublicMetrics;
+  type?: string;
+  url?: string;
+  variants?: MediaVariants;
+  width?: number;
+}
+export const Media = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    alt_text: S.optional(S.String),
+    duration_ms: S.optional(S.Number),
+    height: S.optional(S.Number),
+    media_key: S.optional(S.String),
+    non_public_metrics: S.optional(MediaNonPublicMetrics),
+    organic_metrics: S.optional(MediaOrganicMetrics),
+    preview_image_url: S.optional(S.String),
+    promoted_metrics: S.optional(MediaPromotedMetrics),
+    public_metrics: S.optional(MediaPublicMetrics),
+    type: S.optional(S.String),
+    url: S.optional(S.String),
+    variants: S.optional(MediaVariants),
+    width: S.optional(S.Number),
+  }),
+).annotate({ identifier: "Media" }) as any as S.Schema<Media>;
+
+export type ExpansionsMediaList = Array<Media>;
+export const ExpansionsMediaList = /*@__PURE__*/ S.Array(
+  Media,
+) as any as S.Schema<ExpansionsMediaList>;
+
+/** A list of unique identifiers of the Places that contain this place. */
+export type PlaceContainedWithin = Array<string>;
+export const PlaceContainedWithin = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<PlaceContainedWithin>;
+
+/** The bounding box as [southwest_longitude, southwest_latitude, northeast_longitude, northeast_latitude]. */
+export type PlaceGeoBboxList = Array<number>;
+export const PlaceGeoBboxList = /*@__PURE__*/ S.Array(
+  S.Number,
+) as any as S.Schema<PlaceGeoBboxList>;
+
+export type PlaceGeoType = "Feature";
+export const PlaceGeoType = /*@__PURE__*/ S.String;
+
+/** The geographic location of this place, expressed as a GeoJSON Feature. */
+export interface PlaceGeo {
+  /** The bounding box as [southwest_longitude, southwest_latitude, northeast_longitude, northeast_latitude]. */
+  bbox: PlaceGeoBboxList;
+  /** Additional GeoJSON feature properties. */
+  properties: unknown;
+  /** The GeoJSON feature type. */
+  type: PlaceGeoType;
+}
+export const PlaceGeo = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    bbox: PlaceGeoBboxList,
+    properties: S.Unknown,
+    type: PlaceGeoType,
+  }),
+).annotate({ identifier: "PlaceGeo" }) as any as S.Schema<PlaceGeo>;
+
+export interface Place {
+  contained_within?: PlaceContainedWithin;
+  country?: string;
+  country_code?: string;
+  full_name?: string;
+  geo?: PlaceGeo;
+  id?: string;
+  name?: string;
+  place_type?: string;
+}
+export const Place = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    contained_within: S.optional(PlaceContainedWithin),
+    country: S.optional(S.String),
+    country_code: S.optional(S.String),
+    full_name: S.optional(S.String),
+    geo: S.optional(PlaceGeo),
+    id: S.optional(S.String),
+    name: S.optional(S.String),
+    place_type: S.optional(S.String),
+  }),
+).annotate({ identifier: "Place" }) as any as S.Schema<Place>;
+
+export type ExpansionsPlacesList = Array<Place>;
+export const ExpansionsPlacesList = /*@__PURE__*/ S.Array(
+  Place,
+) as any as S.Schema<ExpansionsPlacesList>;
+
+/** A single option (choice) available in a poll. */
+export interface PollOptionsItem {
+  /** The text label of this poll option. */
+  label: string;
+  /** The 1-based position of this option within the poll. */
+  position: number;
+  /** The number of votes this option has received. */
+  votes: number;
+}
+export const PollOptionsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    label: S.String,
+    position: S.Number,
+    votes: S.Number,
+  }),
+).annotate({
+  identifier: "PollOptionsItem",
+}) as any as S.Schema<PollOptionsItem>;
+
+/** The list of options (choices) available in this poll. */
+export type PollOptions = Array<PollOptionsItem>;
+export const PollOptions = /*@__PURE__*/ S.Array(
+  PollOptionsItem,
+) as any as S.Schema<PollOptions>;
+
+export interface Poll {
+  duration_minutes?: number;
+  end_datetime?: string;
+  id?: string;
+  options?: PollOptions;
+  voting_status?: string;
+}
+export const Poll = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    duration_minutes: S.optional(S.Number),
+    end_datetime: S.optional(S.String),
+    id: S.optional(S.String),
+    options: S.optional(PollOptions),
+    voting_status: S.optional(S.String),
+  }),
+).annotate({ identifier: "Poll" }) as any as S.Schema<Poll>;
+
+export type ExpansionsPollsList = Array<Poll>;
+export const ExpansionsPollsList = /*@__PURE__*/ S.Array(
+  Poll,
+) as any as S.Schema<ExpansionsPollsList>;
+
+export type ExpansionsPostsList = Array<Post>;
+export const ExpansionsPostsList = /*@__PURE__*/ S.Array(
+  Post,
+) as any as S.Schema<ExpansionsPostsList>;
+
+export interface Topic {
+  description?: string;
+  id?: string;
+  name?: string;
+}
+export const Topic = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    description: S.optional(S.String),
+    id: S.optional(S.String),
+    name: S.optional(S.String),
+  }),
+).annotate({ identifier: "Topic" }) as any as S.Schema<Topic>;
+
+export type ExpansionsTopicsList = Array<Topic>;
+export const ExpansionsTopicsList = /*@__PURE__*/ S.Array(
+  Topic,
+) as any as S.Schema<ExpansionsTopicsList>;
+
+/** A list of unique identifiers of the accounts this User is affiliated with. */
+export type UserAffiliationUserIdList = Array<string>;
+export const UserAffiliationUserIdList = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<UserAffiliationUserIdList>;
+
+/** Metadata about a user's affiliation. */
+export interface UserAffiliation {
+  /** URL of the affiliation badge image shown on the User's profile. */
+  badge_url?: string | null;
+  /** Description of the affiliation. */
+  description?: string | null;
+  /** URL associated with the affiliation. */
+  url?: string | null;
+  /** A list of unique identifiers of the accounts this User is affiliated with. */
+  user_id?: UserAffiliationUserIdList | null;
+}
+export const UserAffiliation = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    badge_url: S.optional(S.NullOr(S.String)),
+    description: S.optional(S.NullOr(S.String)),
+    url: S.optional(S.NullOr(S.String)),
+    user_id: S.optional(S.NullOr(UserAffiliationUserIdList)),
+  }),
+).annotate({
+  identifier: "UserAffiliation",
+}) as any as S.Schema<UserAffiliation>;
+
+/** A connection between the authenticated User and this User. */
+export type UserConnectionStatusItem =
+  | "blocking"
+  | "follow_request_received"
+  | "follow_request_sent"
+  | "followed_by"
+  | "following"
+  | "muting";
+export const UserConnectionStatusItem = /*@__PURE__*/ S.String;
+
+/** Returns detailed information about the relationship between two users. */
+export type UserConnectionStatus = Array<UserConnectionStatusItem>;
+export const UserConnectionStatus = /*@__PURE__*/ S.Array(
+  UserConnectionStatusItem,
+) as any as S.Schema<UserConnectionStatus>;
+
+/** A hashtag or cashtag entity. */
+export type UserEntitiesDescriptionCashtagsItem = PostEntitiesCashtagsItem;
+export const UserEntitiesDescriptionCashtagsItem = PostEntitiesCashtagsItem;
+
+export type UserEntitiesDescriptionCashtagsList =
+  Array<PostEntitiesCashtagsItem>;
+export const UserEntitiesDescriptionCashtagsList = /*@__PURE__*/ S.Array(
+  PostEntitiesCashtagsItem,
+) as any as S.Schema<UserEntitiesDescriptionCashtagsList>;
+
+/** A hashtag or cashtag entity. */
+export type UserEntitiesDescriptionHashtagsItem = PostEntitiesCashtagsItem;
+export const UserEntitiesDescriptionHashtagsItem = PostEntitiesCashtagsItem;
+
+export type UserEntitiesDescriptionHashtagsList =
+  Array<PostEntitiesCashtagsItem>;
+export const UserEntitiesDescriptionHashtagsList = /*@__PURE__*/ S.Array(
+  PostEntitiesCashtagsItem,
+) as any as S.Schema<UserEntitiesDescriptionHashtagsList>;
+
+/** A user mention entity. */
+export interface UserEntitiesDescriptionMentionsItem {
+  end: number;
+  id?: string | null;
+  start: number;
+  username: string;
+}
+export const UserEntitiesDescriptionMentionsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    end: S.Number,
+    id: S.optional(S.NullOr(S.String)),
+    start: S.Number,
+    username: S.String,
+  }),
+).annotate({
+  identifier: "UserEntitiesDescriptionMentionsItem",
+}) as any as S.Schema<UserEntitiesDescriptionMentionsItem>;
+
+export type UserEntitiesDescriptionMentionsList =
+  Array<UserEntitiesDescriptionMentionsItem>;
+export const UserEntitiesDescriptionMentionsList = /*@__PURE__*/ S.Array(
+  UserEntitiesDescriptionMentionsItem,
+) as any as S.Schema<UserEntitiesDescriptionMentionsList>;
+
+/** A preview image for a linked page. */
+export type UserEntitiesDescriptionUrlsItemImagesItem =
+  PostEntitiesUrlsItemImagesItem;
+export const UserEntitiesDescriptionUrlsItemImagesItem =
+  PostEntitiesUrlsItemImagesItem;
+
+export type UserEntitiesDescriptionUrlsItemImagesList =
+  Array<PostEntitiesUrlsItemImagesItem>;
+export const UserEntitiesDescriptionUrlsItemImagesList = /*@__PURE__*/ S.Array(
+  PostEntitiesUrlsItemImagesItem,
+) as any as S.Schema<UserEntitiesDescriptionUrlsItemImagesList>;
+
+/** A URL entity found in profile text. */
+export interface UserEntitiesDescriptionUrlsItem {
+  /** Description of the linked page, when available. */
+  description?: string | null;
+  /** The URL as displayed in the Post text. */
+  display_url?: string | null;
+  end: number;
+  /** The fully resolved URL. */
+  expanded_url?: string | null;
+  images?: UserEntitiesDescriptionUrlsItemImagesList | null;
+  media_key?: string | null;
+  start: number;
+  /** HTTP status from resolving the URL. */
+  status?: number | null;
+  /** Title of the linked page, when available. */
+  title?: string | null;
+  /** The final destination after following redirects. */
+  unwound_url?: string | null;
+  /** The t.co shortened URL. */
+  url: string;
+}
+export const UserEntitiesDescriptionUrlsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    description: S.optional(S.NullOr(S.String)),
+    display_url: S.optional(S.NullOr(S.String)),
+    end: S.Number,
+    expanded_url: S.optional(S.NullOr(S.String)),
+    images: S.optional(S.NullOr(UserEntitiesDescriptionUrlsItemImagesList)),
+    media_key: S.optional(S.NullOr(S.String)),
+    start: S.Number,
+    status: S.optional(S.NullOr(S.Number)),
+    title: S.optional(S.NullOr(S.String)),
+    unwound_url: S.optional(S.NullOr(S.String)),
+    url: S.String,
+  }),
+).annotate({
+  identifier: "UserEntitiesDescriptionUrlsItem",
+}) as any as S.Schema<UserEntitiesDescriptionUrlsItem>;
+
+export type UserEntitiesDescriptionUrlsList =
+  Array<UserEntitiesDescriptionUrlsItem>;
+export const UserEntitiesDescriptionUrlsList = /*@__PURE__*/ S.Array(
+  UserEntitiesDescriptionUrlsItem,
+) as any as S.Schema<UserEntitiesDescriptionUrlsList>;
+
+/** Entities found in the User's bio. */
+export interface UserEntitiesDescription {
+  cashtags?: UserEntitiesDescriptionCashtagsList | null;
+  hashtags?: UserEntitiesDescriptionHashtagsList | null;
+  mentions?: UserEntitiesDescriptionMentionsList | null;
+  urls?: UserEntitiesDescriptionUrlsList | null;
+}
+export const UserEntitiesDescription = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    cashtags: S.optional(S.NullOr(UserEntitiesDescriptionCashtagsList)),
+    hashtags: S.optional(S.NullOr(UserEntitiesDescriptionHashtagsList)),
+    mentions: S.optional(S.NullOr(UserEntitiesDescriptionMentionsList)),
+    urls: S.optional(S.NullOr(UserEntitiesDescriptionUrlsList)),
+  }),
+).annotate({
+  identifier: "UserEntitiesDescription",
+}) as any as S.Schema<UserEntitiesDescription>;
+
+/** A preview image for a linked page. */
+export type UserEntitiesUrlUrlsItemImagesItem = PostEntitiesUrlsItemImagesItem;
+export const UserEntitiesUrlUrlsItemImagesItem = PostEntitiesUrlsItemImagesItem;
+
+export type UserEntitiesUrlUrlsItemImagesList =
+  Array<PostEntitiesUrlsItemImagesItem>;
+export const UserEntitiesUrlUrlsItemImagesList = /*@__PURE__*/ S.Array(
+  PostEntitiesUrlsItemImagesItem,
+) as any as S.Schema<UserEntitiesUrlUrlsItemImagesList>;
+
+/** A URL entity found in profile text. */
+export interface UserEntitiesUrlUrlsItem {
+  /** Description of the linked page, when available. */
+  description?: string | null;
+  /** The URL as displayed in the Post text. */
+  display_url?: string | null;
+  end: number;
+  /** The fully resolved URL. */
+  expanded_url?: string | null;
+  images?: UserEntitiesUrlUrlsItemImagesList | null;
+  media_key?: string | null;
+  start: number;
+  /** HTTP status from resolving the URL. */
+  status?: number | null;
+  /** Title of the linked page, when available. */
+  title?: string | null;
+  /** The final destination after following redirects. */
+  unwound_url?: string | null;
+  /** The t.co shortened URL. */
+  url: string;
+}
+export const UserEntitiesUrlUrlsItem = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    description: S.optional(S.NullOr(S.String)),
+    display_url: S.optional(S.NullOr(S.String)),
+    end: S.Number,
+    expanded_url: S.optional(S.NullOr(S.String)),
+    images: S.optional(S.NullOr(UserEntitiesUrlUrlsItemImagesList)),
+    media_key: S.optional(S.NullOr(S.String)),
+    start: S.Number,
+    status: S.optional(S.NullOr(S.Number)),
+    title: S.optional(S.NullOr(S.String)),
+    unwound_url: S.optional(S.NullOr(S.String)),
+    url: S.String,
+  }),
+).annotate({
+  identifier: "UserEntitiesUrlUrlsItem",
+}) as any as S.Schema<UserEntitiesUrlUrlsItem>;
+
+export type UserEntitiesUrlUrlsList = Array<UserEntitiesUrlUrlsItem>;
+export const UserEntitiesUrlUrlsList = /*@__PURE__*/ S.Array(
+  UserEntitiesUrlUrlsItem,
+) as any as S.Schema<UserEntitiesUrlUrlsList>;
+
+/** Entities for the User's profile website URL. */
+export interface UserEntitiesUrl {
+  urls?: UserEntitiesUrlUrlsList | null;
+}
+export const UserEntitiesUrl = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    urls: S.optional(S.NullOr(UserEntitiesUrlUrlsList)),
+  }),
+).annotate({
+  identifier: "UserEntitiesUrl",
+}) as any as S.Schema<UserEntitiesUrl>;
+
+/** A list of metadata found in the User's profile description. */
+export interface UserEntities {
+  /** Entities found in the User's bio. */
+  description?: UserEntitiesDescription | null;
+  /** Entities for the User's profile website URL. */
+  url?: UserEntitiesUrl | null;
+}
+export const UserEntities = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    description: S.optional(S.NullOr(UserEntitiesDescription)),
+    url: S.optional(S.NullOr(UserEntitiesUrl)),
+  }),
+).annotate({ identifier: "UserEntities" }) as any as S.Schema<UserEntities>;
+
+/** A list of metrics for this User. */
+export interface UserPublicMetrics {
+  /** Number of Users who follow this User. */
+  followers_count: number;
+  /** Number of Users this User follows. */
+  following_count: number;
+  /** Number of Posts this User has liked. */
+  like_count?: number | null;
+  /** Number of Lists that include this User. */
+  listed_count: number;
+  /** Number of media items posted by this User. */
+  media_count?: number | null;
+  /** Number of Posts (including Reposts) created by this User. */
+  post_count: number;
+}
+export const UserPublicMetrics = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    followers_count: S.Number,
+    following_count: S.Number,
+    like_count: S.optional(S.NullOr(S.Number)),
+    listed_count: S.Number,
+    media_count: S.optional(S.NullOr(S.Number)),
+    post_count: S.Number,
+  }),
+).annotate({
+  identifier: "UserPublicMetrics",
+}) as any as S.Schema<UserPublicMetrics>;
+
+/** The subscription relationship between this User and you. */
+export interface UserSubscription {
+  /** Indicates if this User subscribes to you. */
+  subscribes_to_you: boolean;
+}
+export const UserSubscription = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    subscribes_to_you: S.Boolean,
+  }),
+).annotate({
+  identifier: "UserSubscription",
+}) as any as S.Schema<UserSubscription>;
+
+/** A list of countries (as ISO 3166-1 alpha-2 codes) where this content is withheld. */
+export type UserWithheldCountryCodesList = Array<string>;
+export const UserWithheldCountryCodesList = /*@__PURE__*/ S.Array(
+  S.String,
+) as any as S.Schema<UserWithheldCountryCodesList>;
+
+/** The scope of the withholding. Only present, with the value "user", when the entire User is withheld. */
+export type UserWithheldScope = "user";
+export const UserWithheldScope = /*@__PURE__*/ S.String;
+
+/** Withholding details for withheld content. */
+export interface UserWithheld {
+  /** A list of countries (as ISO 3166-1 alpha-2 codes) where this content is withheld. */
+  country_codes?: UserWithheldCountryCodesList | null;
+  /** The scope of the withholding. Only present, with the value "user", when the entire User is withheld. */
+  scope?: UserWithheldScope | null;
+}
+export const UserWithheld = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    country_codes: S.optional(S.NullOr(UserWithheldCountryCodesList)),
+    scope: S.optional(S.NullOr(UserWithheldScope)),
+  }),
+).annotate({ identifier: "UserWithheld" }) as any as S.Schema<UserWithheld>;
+
+export interface User {
+  affiliation?: UserAffiliation;
+  confirmed_email?: string;
+  connection_status?: UserConnectionStatus;
+  /** Creation time of this User. */
+  created_at?: string;
+  /** The text of this User's profile description (also known as bio), if the User provided one. */
+  description?: string;
+  entities?: UserEntities;
+  /** Unique identifier of this User. */
+  id?: string;
+  /** Indicates if this User has completed identity verification. */
+  is_identity_verified?: boolean;
+  /** The location specified in the User's profile, if the User provided one. As this is a freeform value, it may not indicate a valid location. */
+  location?: string;
+  /** Unique identifier of this User's most recent Post. */
+  most_recent_post_id?: string;
+  /** The friendly name of this User, as shown on their profile. */
+  name?: string;
+  /** Indicates if this User is a parody account. */
+  parody?: boolean;
+  /** Unique identifier of this User's pinned Post. */
+  pinned_post_id?: string;
+  /** The URL to the profile banner for this User. */
+  profile_banner_url?: string;
+  /** The URL to the profile image for this User. */
+  profile_image_url?: string;
+  /** Indicates if this User has chosen to protect their Posts (in other words, if this User's Posts are private). */
+  protected?: boolean;
+  public_metrics?: UserPublicMetrics;
+  /** Indicates if you can send a DM to this User. */
+  receives_your_dm?: boolean;
+  /** Indicates if this User subscribes to you. */
+  subscribes_to_you?: boolean;
+  subscription?: UserSubscription;
+  /** The X Blue subscription type of the user, e.g.: Basic, Premium, PremiumPlus or None. */
+  subscription_type?: string;
+  /** The URL specified in the User's profile. */
+  url?: string;
+  /** The X handle (screen name) of this User. */
+  username?: string;
+  /** Indicates if this User is a verified X User. */
+  verified?: boolean;
+  /** The number of verified followers of this User. */
+  verified_followers_count?: number;
+  /** The X Blue verified type of the user, e.g.: blue, government, business or none. */
+  verified_type?: string;
+  withheld?: UserWithheld;
+}
+export const User = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    affiliation: S.optional(UserAffiliation),
+    confirmed_email: S.optional(S.String),
+    connection_status: S.optional(UserConnectionStatus),
+    created_at: S.optional(S.String),
+    description: S.optional(S.String),
+    entities: S.optional(UserEntities),
+    id: S.optional(S.String),
+    is_identity_verified: S.optional(S.Boolean),
+    location: S.optional(S.String),
+    most_recent_post_id: S.optional(S.String),
+    name: S.optional(S.String),
+    parody: S.optional(S.Boolean),
+    pinned_post_id: S.optional(S.String),
+    profile_banner_url: S.optional(S.String),
+    profile_image_url: S.optional(S.String),
+    protected: S.optional(S.Boolean),
+    public_metrics: S.optional(UserPublicMetrics),
+    receives_your_dm: S.optional(S.Boolean),
+    subscribes_to_you: S.optional(S.Boolean),
+    subscription: S.optional(UserSubscription),
+    subscription_type: S.optional(S.String),
+    url: S.optional(S.String),
+    username: S.optional(S.String),
+    verified: S.optional(S.Boolean),
+    verified_followers_count: S.optional(S.Number),
+    verified_type: S.optional(S.String),
+    withheld: S.optional(UserWithheld),
+  }),
+).annotate({ identifier: "User" }) as any as S.Schema<User>;
+
+export type ExpansionsUsersList = Array<User>;
+export const ExpansionsUsersList = /*@__PURE__*/ S.Array(
+  User,
+) as any as S.Schema<ExpansionsUsersList>;
+
+export interface Expansions {
+  media?: ExpansionsMediaList;
+  places?: ExpansionsPlacesList;
+  polls?: ExpansionsPollsList;
+  posts?: ExpansionsPostsList;
+  topics?: ExpansionsTopicsList;
+  users?: ExpansionsUsersList;
+}
+export const Expansions = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    media: S.optional(ExpansionsMediaList),
+    places: S.optional(ExpansionsPlacesList),
+    polls: S.optional(ExpansionsPollsList),
+    posts: S.optional(ExpansionsPostsList),
+    topics: S.optional(ExpansionsTopicsList),
+    users: S.optional(ExpansionsUsersList),
+  }),
+).annotate({ identifier: "Expansions" }) as any as S.Schema<Expansions>;
+
+export interface SearchPostsAllResponseMeta {
+  /** Most recent ID in the data array. */
+  newest_id?: string;
+  /** Pagination token for the next page of results. */
+  next_token?: string;
+  /** Oldest ID in the data array. */
+  oldest_id?: string;
+  /** Pagination token for the previous page of results. */
+  previous_token?: string;
+  /** Number of items in the data array. */
+  result_count?: number;
+}
+export const SearchPostsAllResponseMeta = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    newest_id: S.optional(S.String),
+    next_token: S.optional(S.String),
+    oldest_id: S.optional(S.String),
+    previous_token: S.optional(S.String),
+    result_count: S.optional(S.Number),
+  }),
+).annotate({
+  identifier: "SearchPostsAllResponseMeta",
+}) as any as S.Schema<SearchPostsAllResponseMeta>;
+
+export interface SearchPostsAllResponse {
+  data?: SearchPostsAllResponseDataList;
+  errors?: SearchPostsAllResponseErrorsList;
+  includes?: Expansions;
+  meta?: SearchPostsAllResponseMeta;
+}
+export const SearchPostsAllResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(SearchPostsAllResponseDataList),
+    errors: S.optional(SearchPostsAllResponseErrorsList),
+    includes: S.optional(Expansions),
+    meta: S.optional(SearchPostsAllResponseMeta),
+  }),
+).annotate({
+  identifier: "SearchPostsAllResponse",
+}) as any as S.Schema<SearchPostsAllResponse>;
+
+export type SearchPostsRecentRequestSortOrder = "recency" | "relevancy";
+export const SearchPostsRecentRequestSortOrder = /*@__PURE__*/ S.String;
+
+export type SearchPostsRecentRequestPostFieldsItem =
+  | "article"
+  | "article_title"
+  | "attachments"
+  | "card_uri"
+  | "community_id"
+  | "context_annotations"
+  | "conversation_id"
+  | "created_at"
+  | "display_text_range"
+  | "edit_controls"
+  | "entities"
+  | "geo"
+  | "id"
+  | "lang"
+  | "matched_media_notes"
+  | "media_metadata"
+  | "non_public_metrics"
+  | "note_post"
+  | "note_request_suggestions"
+  | "organic_metrics"
+  | "paid_partnership"
+  | "possibly_sensitive"
+  | "promoted_metrics"
+  | "public_metrics"
+  | "reply_settings"
+  | "scopes"
+  | "source"
+  | "suggested_source_links"
+  | "suggested_source_links_with_counts"
+  | "text"
+  | "withheld";
+export const SearchPostsRecentRequestPostFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a Post object. */
+export type SearchPostsRecentRequestPostFieldsList = Array<
+  SearchPostsRecentRequestPostFieldsItem | (string & {})
+>;
+export const SearchPostsRecentRequestPostFieldsList = /*@__PURE__*/ S.Array(
+  SearchPostsRecentRequestPostFieldsItem,
+) as any as S.Schema<SearchPostsRecentRequestPostFieldsList>;
+
+export type SearchPostsRecentRequestExpansionsItem =
+  | "article.cover_media"
+  | "article.media_entities"
+  | "attachments.media_keys"
+  | "attachments.media_source_tweet"
+  | "attachments.poll_ids"
+  | "author_id"
+  | "edit_history_post_ids"
+  | "entities.mentions.username"
+  | "geo.place_id"
+  | "in_reply_to_user_id"
+  | "referenced_posts"
+  | "username";
+export const SearchPostsRecentRequestExpansionsItem = /*@__PURE__*/ S.String;
+
+export type SearchPostsRecentRequestExpansionsList = Array<
+  SearchPostsRecentRequestExpansionsItem | (string & {})
+>;
+export const SearchPostsRecentRequestExpansionsList = /*@__PURE__*/ S.Array(
+  SearchPostsRecentRequestExpansionsItem,
+) as any as S.Schema<SearchPostsRecentRequestExpansionsList>;
+
+export type SearchPostsRecentRequestUserFieldsItem =
+  | "confirmed_email"
+  | "connection_status"
+  | "created_at"
+  | "description"
+  | "entities"
+  | "id"
+  | "is_identity_verified"
+  | "location"
+  | "name"
+  | "parody"
+  | "profile_banner_url"
+  | "profile_image_url"
+  | "protected"
+  | "public_metrics"
+  | "receives_your_dm"
+  | "subscribes_to_you"
+  | "subscription"
+  | "subscription_type"
+  | "url"
+  | "username"
+  | "verified"
+  | "verified_followers_count"
+  | "verified_type"
+  | "withheld";
+export const SearchPostsRecentRequestUserFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a User object. */
+export type SearchPostsRecentRequestUserFieldsList = Array<
+  SearchPostsRecentRequestUserFieldsItem | (string & {})
+>;
+export const SearchPostsRecentRequestUserFieldsList = /*@__PURE__*/ S.Array(
+  SearchPostsRecentRequestUserFieldsItem,
+) as any as S.Schema<SearchPostsRecentRequestUserFieldsList>;
+
+export type SearchPostsRecentRequestMediaFieldsItem =
+  | "alt_text"
+  | "duration_ms"
+  | "height"
+  | "media_key"
+  | "non_public_metrics"
+  | "organic_metrics"
+  | "preview_image_url"
+  | "promoted_metrics"
+  | "public_metrics"
+  | "type"
+  | "url"
+  | "variants"
+  | "width";
+export const SearchPostsRecentRequestMediaFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a Media object. */
+export type SearchPostsRecentRequestMediaFieldsList = Array<
+  SearchPostsRecentRequestMediaFieldsItem | (string & {})
+>;
+export const SearchPostsRecentRequestMediaFieldsList = /*@__PURE__*/ S.Array(
+  SearchPostsRecentRequestMediaFieldsItem,
+) as any as S.Schema<SearchPostsRecentRequestMediaFieldsList>;
+
+export type SearchPostsRecentRequestPollFieldsItem =
+  | "duration_minutes"
+  | "end_datetime"
+  | "id"
+  | "options"
+  | "voting_status";
+export const SearchPostsRecentRequestPollFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a Poll object. */
+export type SearchPostsRecentRequestPollFieldsList = Array<
+  SearchPostsRecentRequestPollFieldsItem | (string & {})
+>;
+export const SearchPostsRecentRequestPollFieldsList = /*@__PURE__*/ S.Array(
+  SearchPostsRecentRequestPollFieldsItem,
+) as any as S.Schema<SearchPostsRecentRequestPollFieldsList>;
+
+export type SearchPostsRecentRequestPlaceFieldsItem =
+  | "contained_within"
+  | "country"
+  | "country_code"
+  | "full_name"
+  | "geo"
+  | "id"
+  | "name"
+  | "place_type";
+export const SearchPostsRecentRequestPlaceFieldsItem = /*@__PURE__*/ S.String;
+
+/** The fields available for a Place object. */
+export type SearchPostsRecentRequestPlaceFieldsList = Array<
+  SearchPostsRecentRequestPlaceFieldsItem | (string & {})
+>;
+export const SearchPostsRecentRequestPlaceFieldsList = /*@__PURE__*/ S.Array(
+  SearchPostsRecentRequestPlaceFieldsItem,
+) as any as S.Schema<SearchPostsRecentRequestPlaceFieldsList>;
+
+export interface SearchPostsRecentRequest {
+  query: string;
+  max_results?: number;
+  /** A base32hex-encoded pagination token. */
+  next_token?: string;
+  /** A base32hex-encoded pagination token. */
+  pagination_token?: string;
+  /** Must be within the last 7 days. */
+  start_time?: string;
+  end_time?: string;
+  since_id?: string;
+  until_id?: string;
+  sort_order?: SearchPostsRecentRequestSortOrder | (string & {});
+  /** A comma separated list of Post fields to display. */
+  post_fields?: SearchPostsRecentRequestPostFieldsList;
+  /** A comma separated list of fields to expand. */
+  expansions?: SearchPostsRecentRequestExpansionsList;
+  /** A comma separated list of User fields to display. */
+  user_fields?: SearchPostsRecentRequestUserFieldsList;
+  /** A comma separated list of Media fields to display. */
+  media_fields?: SearchPostsRecentRequestMediaFieldsList;
+  /** A comma separated list of Poll fields to display. */
+  poll_fields?: SearchPostsRecentRequestPollFieldsList;
+  /** A comma separated list of Place fields to display. */
+  place_fields?: SearchPostsRecentRequestPlaceFieldsList;
+}
+export const SearchPostsRecentRequest = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    query: S.String.pipe(T.Query()),
+    max_results: S.optional(S.Number.pipe(T.Query())),
+    next_token: S.optional(S.String.pipe(T.Query())),
+    pagination_token: S.optional(S.String.pipe(T.Query())),
+    start_time: S.optional(S.String.pipe(T.Query())),
+    end_time: S.optional(S.String.pipe(T.Query())),
+    since_id: S.optional(S.String.pipe(T.Query())),
+    until_id: S.optional(S.String.pipe(T.Query())),
+    sort_order: S.optional(SearchPostsRecentRequestSortOrder.pipe(T.Query())),
+    post_fields: S.optional(
+      SearchPostsRecentRequestPostFieldsList.pipe(T.Query("post.fields")),
+    ),
+    expansions: S.optional(
+      SearchPostsRecentRequestExpansionsList.pipe(T.Query()),
+    ),
+    user_fields: S.optional(
+      SearchPostsRecentRequestUserFieldsList.pipe(T.Query("user.fields")),
+    ),
+    media_fields: S.optional(
+      SearchPostsRecentRequestMediaFieldsList.pipe(T.Query("media.fields")),
+    ),
+    poll_fields: S.optional(
+      SearchPostsRecentRequestPollFieldsList.pipe(T.Query("poll.fields")),
+    ),
+    place_fields: S.optional(
+      SearchPostsRecentRequestPlaceFieldsList.pipe(T.Query("place.fields")),
+    ),
+  }).pipe(T.Http({ method: "GET", uri: "/2/tweets/search/recent", code: 200 })),
+).annotate({
+  identifier: "SearchPostsRecentRequest",
+}) as any as S.Schema<SearchPostsRecentRequest>;
+
+export type SearchPostsRecentResponseDataList = Array<Post>;
+export const SearchPostsRecentResponseDataList = /*@__PURE__*/ S.Array(
+  Post,
+) as any as S.Schema<SearchPostsRecentResponseDataList>;
+
+export type SearchPostsRecentResponseErrorsList = Array<Problem>;
+export const SearchPostsRecentResponseErrorsList = /*@__PURE__*/ S.Array(
+  Problem,
+) as any as S.Schema<SearchPostsRecentResponseErrorsList>;
+
+export type SearchPostsRecentResponseMeta = SearchPostsAllResponseMeta;
+export const SearchPostsRecentResponseMeta = SearchPostsAllResponseMeta;
+
+export interface SearchPostsRecentResponse {
+  data?: SearchPostsRecentResponseDataList;
+  errors?: SearchPostsRecentResponseErrorsList;
+  includes?: Expansions;
+  meta?: SearchPostsAllResponseMeta;
+}
+export const SearchPostsRecentResponse = /*@__PURE__*/ S.suspend(() =>
+  S.Struct({
+    data: S.optional(SearchPostsRecentResponseDataList),
+    errors: S.optional(SearchPostsRecentResponseErrorsList),
+    includes: S.optional(Expansions),
+    meta: S.optional(SearchPostsAllResponseMeta),
+  }),
+).annotate({
+  identifier: "SearchPostsRecentResponse",
+}) as any as S.Schema<SearchPostsRecentResponse>;
+
+export const searchNews = /*@__PURE__*/ makeOperation<
+  SearchNewsRequest,
+  SearchNewsResponse
+>(
+  operations.searchNews,
+  () => SearchNewsRequest,
+  () => SearchNewsResponse,
+);
+
+export const searchPostsAll = /*@__PURE__*/ makeOperation<
+  SearchPostsAllRequest,
+  SearchPostsAllResponse
+>(
+  operations.searchPostsAll,
+  () => SearchPostsAllRequest,
+  () => SearchPostsAllResponse,
+);
+
+export const searchPostsRecent = /*@__PURE__*/ makeOperation<
+  SearchPostsRecentRequest,
+  SearchPostsRecentResponse
+>(
+  operations.searchPostsRecent,
+  () => SearchPostsRecentRequest,
+  () => SearchPostsRecentResponse,
+);

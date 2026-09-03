@@ -24,8 +24,10 @@
   },
   "type": "module",
   "scripts": {
+    "generate": "bun run --cwd packages/distilled-x generate",
+    "generate:check": "bun run --cwd packages/distilled-x generate:check",
     "build": "rm -rf packages/distilled-x/lib packages/alchemy-x/lib && tsc -b --force",
-    "typecheck": "tsc -b --pretty false",
+    "typecheck": "tsc -b --pretty false && bun run --cwd packages/distilled-x typecheck:test",
     "format": "oxfmt '.' --ignore-path .oxfmtignore",
     "format:check": "oxfmt '.' --check --ignore-path .oxfmtignore",
     "lint": "oxlint",
@@ -33,7 +35,7 @@
     "test": "bun test",
     "test:live": "X_LIVE=1 bun --env-file=.env test ./packages/alchemy-x/test/live",
     "worker:check": "bun scripts/check-worker-bundle.ts",
-    "check": "bun run format:check && bun run lint && bun run typecheck && bun test && bun run worker:check"
+    "check": "bun run generate:check && bun run format:check && bun run lint && bun run typecheck && bun test && bun run worker:check"
   },
   "devDependencies": {
     "@effect/tsgo": "^0.38.0",

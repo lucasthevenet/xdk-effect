@@ -7,7 +7,7 @@ An X adapter for [Alchemy](https://alchemy.run/): stored or environment-backed X
 | Package | Use it for |
 | --- | --- |
 | [`alchemy-x`](./packages/alchemy-x/README.md) | Alchemy providers, stored/environment authentication, resources, and host-adapted X event consumption |
-| [`distilled-x`](./packages/distilled-x/README.md) | Direct X API, OAuth1 signing, app-token exchange, OAuth2/PKCE, and webhook cryptography |
+| [`distilled-x`](./packages/distilled-x/README.md) | Spec-generated Effect-native X SDK, OAuth1 signing, app-token exchange, OAuth2/PKCE, and webhook cryptography |
 
 ## Install
 
@@ -27,7 +27,7 @@ bun add @effect/platform-node
 For the portable client only:
 
 ```sh
-bun add distilled-x
+bun add distilled-x effect
 ```
 
 ## Alchemy setup
