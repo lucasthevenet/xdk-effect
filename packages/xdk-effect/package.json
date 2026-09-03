@@ -11,12 +11,12 @@
     "webhook",
     "x"
   ],
-  "homepage": "https://github.com/lucasthevenet/alchemy-x#readme",
-  "bugs": "https://github.com/lucasthevenet/alchemy-x/issues",
+  "homepage": "https://github.com/lucasthevenet/xdk-effect#readme",
+  "bugs": "https://github.com/lucasthevenet/xdk-effect/issues",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lucasthevenet/alchemy-x.git",
+    "url": "git+https://github.com/lucasthevenet/xdk-effect.git",
     "directory": "packages/xdk-effect"
   },
   "files": [
