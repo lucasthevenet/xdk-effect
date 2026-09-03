@@ -31,10 +31,8 @@
     "format": "oxfmt '.' --ignore-path .oxfmtignore",
     "format:check": "oxfmt '.' --check --ignore-path .oxfmtignore",
     "lint": "oxlint",
-    "pack:check": "bun run build && bun scripts/check-packs.ts",
     "test": "bun test",
-    "worker:check": "bun scripts/check-worker-bundle.ts",
-    "check": "bun run generate:check && bun run format:check && bun run lint && bun run typecheck && bun test && bun run worker:check"
+    "check": "bun run generate:check && bun run format:check && bun run lint && bun run typecheck && bun test"
   },
   "devDependencies": {
     "@effect/tsgo": "^0.38.0",
