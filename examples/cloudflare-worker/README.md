@@ -1,26 +1,23 @@
 # Cloudflare Worker example
 
-This stack lets one Cloudflare Worker consume verified X events and automatically
-manages the remote webhook plus an Account Activity subscription.
+Deploy a Worker that receives verified X events and automatically registers a webhook and an Account Activity subscription.
 
-For local development, authenticate Cloudflare and X, choose **Stored
-Credentials** for X, and paste the API key, API secret, OAuth1 access token, and
-access token secret:
+## Deploy
+
+Install workspace dependencies from the repository root:
 
 ```sh
+bun install
+cd examples/cloudflare-worker
 bunx alchemy login
 bunx alchemy deploy
 ```
 
-Stored credentials are saved under the selected Alchemy profile. This is manual
-credential entry, not interactive X OAuth. The adapter does not open an X
-authorization page. It signs user requests with OAuth1 and automatically obtains
-and caches an app-only token when an app operation needs one.
+Authenticate Cloudflare and X. For X, choose **Stored Credentials** and enter your app's API key, API secret, OAuth1 access token, and access-token secret. Use an X app with Account Activity access.
 
-For CI, use environment authentication instead:
+For environment authentication, choose **Environment Variables** for X and set:
 
 ```sh
-export CI=1
 export X_API_KEY=...
 export X_API_SECRET=...
 export X_ACCESS_TOKEN=...
@@ -28,25 +25,14 @@ export X_ACCESS_TOKEN_SECRET=...
 bunx alchemy deploy
 ```
 
-Generate own-account OAuth1 credentials in the X Developer Console. For stored
-authentication, run `bunx alchemy login --configure` when replacing them.
-No separately configured Bearer token or OAuth2 client settings are needed.
+Set `CI=1` for a new CI profile to select environment authentication without prompting. Configure Cloudflare authentication for that environment as well.
 
-`XCloudflare.EventSourceLive` owns the host integration: it derives the public
-callback from the Worker's URL, binds the API/consumer secret without exposing
-it to application code, handles CRC, verifies each raw request body before JSON
-decoding, and provisions the requested subscription. The handler receives a
-discriminated `{ kind, delivery }` event (`activity`, `account_activity`,
-`filtered_stream`, or `replay_job`). `EventSourceLive` claims
-`/api/x/webhook` while the Worker's returned `fetch` Effect handles all other
-requests, including paths the event source cannot parse. The exclusion applies
-to Alchemy's default `Worker.serve` listener; additional fetch listeners
-registered directly with `Worker.listen` must guard the X event path
-themselves.
-The example retains its former `AccountEvents` logical name and explicit
-`/api/x/webhook` path so upgrading from `WebhookRoute` preserves its managed
-resource identities and callback URL.
+## Handle events
 
-The Worker URL creates the deployment dependency needed before `POST /2/webhooks`
-triggers its immediate `GET /api/x/webhook?crc_token=...` check. X does not
-accept a localhost callback or an explicit port for production webhooks.
+Edit the `X.consumeEvents` handler in [alchemy.run.ts](./alchemy.run.ts). Each event contains `kind` and `delivery`; the kinds are `activity`, `account_activity`, `filtered_stream`, and `replay_job`.
+
+The webhook listens at `/api/x/webhook`. The adapter answers CRC challenges and verifies delivery signatures before invoking the handler. The Worker's returned `fetch` handler serves other paths.
+
+Keep the `AccountEvents` resource name and webhook URL stable between deployments. X requires a public HTTPS receiver; localhost callbacks are not supported.
+
+See the [alchemy-x guide](../../packages/alchemy-x/README.md) for granular event subscriptions and other options. X API operations and delivered events may incur charges.
