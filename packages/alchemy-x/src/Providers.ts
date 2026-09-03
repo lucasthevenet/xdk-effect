@@ -41,6 +41,7 @@ export const providers = () =>
         AccountActivitySubscriptionProvider(),
       ),
     ),
+    Layer.merge(Credentials.SdkCredentials),
     Layer.provideMerge(Credentials.fromAuthProvider()),
     Layer.provideMerge(XAuth),
     Layer.provideMerge(ProfileLive),

@@ -24,6 +24,7 @@ the deployment runtime with `bun add @effect/platform-node`.
 | `consumeEvents`, `EventSource` | Consume verified X events and automatically declare the selected remote resources |
 | `XAuth`, `makeXAuth` | Default or custom stored/environment X Auth Provider registration Layer |
 | `XCredentials`, `XCredentialsContext` | Flattened credential Effect accessor and its provided Context tag |
+| `SdkCredentials` | Lazily bridge Alchemy credentials into the native Distilled-style SDK |
 | `fromCredentials`, `fromEnv`, `fromAuthProvider` | Programmatic credential Layers; the Auth Provider path uses the selected profile method |
 | `createXClient` | Create a client from literal or `Redacted` OAuth1 credentials |
 | `Api` | The complete portable `distilled-x` API namespace |
@@ -56,6 +57,8 @@ export default Alchemy.Stack(
 ```
 
 Providers are Effect Layers in Alchemy; see [Alchemy's provider guide](https://alchemy.run/infrastructure-as-code/provider/). `X.providers()` supplies all X resource implementations, the credentials service, and an X Auth Provider with stored and environment-variable methods.
+
+It also provides the native `distilled-x/Credentials` service from the same redacted OAuth1 credentials. Generated operations (for example, `getUsersMe` from `distilled-x/users`) additionally require an Effect `HttpClient`. Outside `providers()`, use `SdkCredentials.pipe(Layer.provide(fromCredentials(...)))` or provide `fromEnv()`/`fromAuthProvider()` instead. The bridge stays lazy and does not introduce another authentication method.
 
 ## Authentication
 

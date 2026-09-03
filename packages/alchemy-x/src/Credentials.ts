@@ -11,6 +11,9 @@ import {
 import { ALCHEMY_PROFILE, AlchemyProfile } from "alchemy/Auth/Profile";
 import {
   createXClient as createDistilledXClient,
+  X_API_ORIGIN,
+  Credentials as DistilledCredentials,
+  oauth1Credentials,
   type XClient,
   type XClientOptions,
 } from "distilled-x";
@@ -35,6 +38,7 @@ export interface XCredentialsInput {
 
 export interface XCredentialsService {
   readonly client: XClient;
+  readonly apiBaseUrl?: string;
   readonly apiKey: Redacted.Redacted<string>;
   readonly apiSecret: Redacted.Redacted<string>;
   readonly accessToken: Redacted.Redacted<string>;
@@ -72,6 +76,7 @@ const make = (
   options?: XClientOptions,
 ): XCredentialsService => ({
   client: createXClient(input, options),
+  apiBaseUrl: options?.apiOrigin ?? X_API_ORIGIN,
   apiKey: toRedacted(input.apiKey),
   apiSecret: toRedacted(input.apiSecret),
   accessToken: toRedacted(input.accessToken),
@@ -90,6 +95,14 @@ export const XCredentials: Effect.Effect<
   never,
   XCredentialsContext
 > = Effect.flatten(XCredentialsContext);
+
+/** Supply native SDK operations with Alchemy's same lazy, redacted credentials. */
+export const SdkCredentials = Layer.effect(
+  DistilledCredentials,
+  Effect.map(XCredentialsContext, (resolve) =>
+    resolve.pipe(Effect.map(oauth1Credentials)),
+  ),
+);
 
 export const fromCredentials = (
   credentials: XCredentialsInput,

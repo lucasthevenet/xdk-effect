@@ -1,8 +1,12 @@
 import { describe, expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
+import * as Layer from "effect/Layer";
 import * as Stream from "effect/Stream";
-import { Client } from "../src/operation.ts";
+import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
+import { fromOAuth1, fromBearer } from "../src/credentials.ts";
+import * as Retry from "../src/retry.ts";
+import { withAuth } from "../src/protocol.ts";
 import { getUsersMe } from "../src/services/users.ts";
 import {
   createPosts,
@@ -15,12 +19,12 @@ import { chatMediaDownload } from "../src/services/chats.ts";
 import { streamPostsSample } from "../src/services/stream.ts";
 import { getOpenApiSpec } from "../src/services/general.ts";
 import {
-  XApiError,
+  ServiceUnavailable,
   XAuthenticationError,
-  XDecodeError,
+  XParseError,
   XInputError,
 } from "../src/errors.ts";
-import type { XClientOptions } from "../src/client.ts";
+import type { FetchLike } from "../src/runtime.ts";
 
 const credentials = {
   apiKey: "key",
@@ -28,8 +32,18 @@ const credentials = {
   accessToken: "token",
   accessTokenSecret: "token-secret",
 };
-const live = (runtime: NonNullable<XClientOptions["runtime"]>) =>
-  Client.layer({ ...credentials, runtime, retry: { maxAttempts: 1 } });
+const transport = (runtime: { readonly fetch: FetchLike }) =>
+  Layer.mergeAll(
+    FetchHttpClient.layer,
+    Layer.succeed(
+      FetchHttpClient.Fetch,
+      Object.assign(runtime.fetch, { preconnect: fetch.preconnect }),
+    ),
+    Layer.succeed(FetchHttpClient.RequestInit, { redirect: "error" }),
+    Layer.succeed(Retry.Retry, { while: () => false }),
+  );
+const live = (runtime: { readonly fetch: FetchLike }) =>
+  Layer.merge(fromOAuth1(credentials), transport(runtime));
 const me = { data: { id: "1", name: "Alchemy", username: "alchemy" } };
 
 describe("generated Effect operations", () => {
@@ -51,7 +65,7 @@ describe("generated Effect operations", () => {
     );
     expect(result).toEqual(document);
   });
-  test("is lazy, signs user requests, serializes CSV query names, and retains response metadata", async () => {
+  test("is lazy, signs user requests, and serializes CSV query names", async () => {
     const requests: Request[] = [];
     const layer = live({
       fetch: async (url, init) => {
@@ -62,13 +76,12 @@ describe("generated Effect operations", () => {
         );
       },
     });
-    const effect = getUsersMe
-      .withResponse({ user_fields: ["id", "username"] })
-      .pipe(Effect.provide(layer));
+    const effect = getUsersMe({ user_fields: ["id", "username"] }).pipe(
+      Effect.provide(layer),
+    );
     expect(requests).toHaveLength(0);
     const result = await Effect.runPromise(effect);
-    expect(result.value).toMatchObject({ ...me, future_field: true });
-    expect(result.rateLimit?.remaining).toBe(9);
+    expect(result).toMatchObject({ ...me, future_field: true });
     expect(
       new URL(requests[0]!.url).searchParams.getAll("user.fields"),
     ).toEqual(["id,username"]);
@@ -87,9 +100,8 @@ describe("generated Effect operations", () => {
           text: "hello",
           reply: { in_reply_to_tweet_id: "1" },
         });
-        yield* getPostsById(
-          { id: "a/b?c", post_fields: ["id", "text"] },
-          { auth: "user" },
+        yield* getPostsById({ id: "a/b?c", post_fields: ["id", "text"] }).pipe(
+          withAuth("user"),
         );
       }).pipe(
         Effect.provide(
@@ -128,7 +140,7 @@ describe("generated Effect operations", () => {
     const output = await Effect.runPromise(
       getUsersMe({}).pipe(Effect.flip, Effect.provide(layer)),
     );
-    expect(output).toBeInstanceOf(XDecodeError);
+    expect(output).toBeInstanceOf(XParseError);
   });
 
   test("uses declared auth alternatives and rejects OAuth2-only calls with OAuth1 credentials", async () => {
@@ -151,17 +163,17 @@ describe("generated Effect operations", () => {
     const result = await Effect.runPromise(
       createUsersBookmark({ id: "1", tweet_id: "2" }).pipe(
         Effect.provide(
-          Client.layer({
-            userAccessToken: "oauth2",
-            runtime: {
+          Layer.merge(
+            fromBearer({ userAccessToken: "oauth2" }),
+            transport({
               fetch: async (_url, init) => {
                 expect(new Headers(init?.headers).get("authorization")).toBe(
                   "Bearer oauth2",
                 );
                 return Response.json({ data: { bookmarked: true } });
               },
-            },
-          }),
+            }),
+          ),
         ),
       ),
     );
@@ -202,25 +214,20 @@ describe("generated Effect operations", () => {
       createPosts({ text: "hello" }).pipe(
         Effect.flip,
         Effect.provide(
-          Client.layer({
-            ...credentials,
-            runtime: {
-              fetch: async () => {
-                calls++;
-                return Response.json({ title: "Unavailable" }, { status: 503 });
-              },
+          live({
+            fetch: async () => {
+              calls++;
+              return Response.json({ title: "Unavailable" }, { status: 503 });
             },
           }),
         ),
       ),
     );
-    expect(error).toBeInstanceOf(XApiError);
+    expect(error).toBeInstanceOf(ServiceUnavailable);
     expect(calls).toBe(1);
     const status = await Effect.runPromise(
       getUsersMe({}).pipe(
-        Effect.catchTag("XApiError", (failure) =>
-          Effect.succeed(failure.status),
-        ),
+        Effect.catchTag("Forbidden", (failure) => Effect.succeed(failure._tag)),
         Effect.provide(
           live({
             fetch: async () =>
@@ -229,7 +236,7 @@ describe("generated Effect operations", () => {
         ),
       ),
     );
-    expect(status).toBe(403);
+    expect(status).toBe("Forbidden");
   });
 
   test("interrupting an Effect aborts the underlying fetch", async () => {
@@ -316,13 +323,14 @@ describe("generated Effect operations", () => {
     });
     const result = await Effect.runPromise(
       streamPostsSample({}).pipe(
+        Stream.unwrap,
         Stream.take(1),
         Stream.runCollect,
         Effect.provide(
-          Client.layer({
-            appBearerToken: "app",
-            runtime: { fetch: async () => new Response(body) },
-          }),
+          Layer.merge(
+            fromBearer({ appBearerToken: "app" }),
+            transport({ fetch: async () => new Response(body) }),
+          ),
         ),
       ),
     );
@@ -334,16 +342,17 @@ describe("generated Effect operations", () => {
   test("malformed streaming records fail in the typed channel", async () => {
     const error = await Effect.runPromise(
       streamPostsSample({}).pipe(
+        Stream.unwrap,
         Stream.runCollect,
         Effect.flip,
         Effect.provide(
-          Client.layer({
-            appBearerToken: "app",
-            runtime: { fetch: async () => new Response("not json\n") },
-          }),
+          Layer.merge(
+            fromBearer({ appBearerToken: "app" }),
+            transport({ fetch: async () => new Response("not json\n") }),
+          ),
         ),
       ),
     );
-    expect(error).toBeInstanceOf(XDecodeError);
+    expect(error).toBeInstanceOf(XParseError);
   });
 });

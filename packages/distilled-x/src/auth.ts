@@ -108,7 +108,70 @@ const isTokenResponse = (body: XJsonValue): body is TokenResponse =>
   typeof body.access_token === "string" &&
   body.access_token.trim().length > 0;
 
-/** Internal auth state is scoped to a client, never shared across apps. */
+/** Shared portable OAuth1 signer for the Effect protocol and compatibility client. */
+export const signOAuth1 = async (
+  credentials: XAuthentication,
+  platform: Pick<XRuntime, "crypto" | "now">,
+  method: string,
+  url: URL,
+): Promise<string> => {
+  if (!("apiKey" in credentials)) {
+    throw new XAuthenticationError(
+      "X OAuth 1.0a credentials are required for request signing",
+    );
+  }
+  const [apiKey, apiSecret, accessToken, accessTokenSecret] = await Promise.all(
+    [
+      required(credentials.apiKey, "API key"),
+      required(credentials.apiSecret, "API secret"),
+      required(credentials.accessToken, "access token"),
+      required(credentials.accessTokenSecret, "access token secret"),
+    ],
+  );
+  const oauth = {
+    oauth_consumer_key: apiKey,
+    oauth_nonce: bytesToBase64Url(
+      platform.crypto.getRandomValues(new Uint8Array(32)),
+    ),
+    oauth_signature_method: "HMAC-SHA1",
+    oauth_timestamp: String(Math.floor(platform.now() / 1000)),
+    oauth_token: accessToken,
+    oauth_version: "1.0",
+  };
+  // Neither JSON nor multipart bodies contribute OAuth1 signature parameters.
+  const parameters = [...url.searchParams, ...Object.entries(oauth)]
+    .filter(([key]) => key !== "oauth_signature")
+    .map(([key, value]) => [encode(key), encode(value)] as const)
+    .toSorted(([ak, av], [bk, bv]) =>
+      ak < bk ? -1 : ak > bk ? 1 : av < bv ? -1 : av > bv ? 1 : 0,
+    )
+    .map(([key, value]) => `${key}=${value}`)
+    .join("&");
+  const baseString = [
+    method.toUpperCase(),
+    `${url.origin}${url.pathname}`,
+    parameters,
+  ]
+    .map(encode)
+    .join("&");
+  const key = await platform.crypto.subtle.importKey(
+    "raw",
+    utf8(`${encode(apiSecret)}&${encode(accessTokenSecret)}`),
+    { name: "HMAC", hash: "SHA-1" },
+    false,
+    ["sign"],
+  );
+  const signature = bytesToBase64(
+    new Uint8Array(
+      await platform.crypto.subtle.sign("HMAC", key, utf8(baseString)),
+    ),
+  );
+  return `OAuth ${Object.entries({ ...oauth, oauth_signature: signature })
+    .map(([name, value]) => `${encode(name)}="${encode(value)}"`)
+    .join(", ")}`;
+};
+
+/** Internal auth state is scoped to a compatibility client, never shared across apps. */
 export const createAuthentication = (
   credentials: XAuthentication,
   platform: XRuntime,
@@ -189,62 +252,6 @@ export const createAuthentication = (
     return withSignal(cached.promise, signal);
   };
 
-  const sign = async (method: string, url: URL): Promise<string> => {
-    if (!("apiKey" in credentials)) {
-      throw new XAuthenticationError(
-        "X OAuth 1.0a credentials are required for request signing",
-      );
-    }
-    const [apiKey, apiSecret, accessToken, accessTokenSecret] =
-      await Promise.all([
-        required(credentials.apiKey, "API key"),
-        required(credentials.apiSecret, "API secret"),
-        required(credentials.accessToken, "access token"),
-        required(credentials.accessTokenSecret, "access token secret"),
-      ]);
-    const oauth = {
-      oauth_consumer_key: apiKey,
-      oauth_nonce: bytesToBase64Url(
-        platform.crypto.getRandomValues(new Uint8Array(32)),
-      ),
-      oauth_signature_method: "HMAC-SHA1",
-      oauth_timestamp: String(Math.floor(platform.now() / 1000)),
-      oauth_token: accessToken,
-      oauth_version: "1.0",
-    };
-    // Neither JSON nor multipart bodies contribute OAuth1 signature parameters.
-    const parameters = [...url.searchParams, ...Object.entries(oauth)]
-      .filter(([key]) => key !== "oauth_signature")
-      .map(([key, value]) => [encode(key), encode(value)] as const)
-      .toSorted(([ak, av], [bk, bv]) =>
-        ak < bk ? -1 : ak > bk ? 1 : av < bv ? -1 : av > bv ? 1 : 0,
-      )
-      .map(([key, value]) => `${key}=${value}`)
-      .join("&");
-    const baseString = [
-      method.toUpperCase(),
-      `${url.origin}${url.pathname}`,
-      parameters,
-    ]
-      .map(encode)
-      .join("&");
-    const key = await platform.crypto.subtle.importKey(
-      "raw",
-      utf8(`${encode(apiSecret)}&${encode(accessTokenSecret)}`),
-      { name: "HMAC", hash: "SHA-1" },
-      false,
-      ["sign"],
-    );
-    const signature = bytesToBase64(
-      new Uint8Array(
-        await platform.crypto.subtle.sign("HMAC", key, utf8(baseString)),
-      ),
-    );
-    return `OAuth ${Object.entries({ ...oauth, oauth_signature: signature })
-      .map(([name, value]) => `${encode(name)}="${encode(value)}"`)
-      .join(", ")}`;
-  };
-
   return {
     async authorize(
       kind: "app" | "user",
@@ -258,7 +265,7 @@ export const createAuthentication = (
         header =
           kind === "app"
             ? `Bearer ${await appToken(signal)}`
-            : await sign(method, url);
+            : await signOAuth1(credentials, platform, method, url);
       } else {
         const provider =
           kind === "app"

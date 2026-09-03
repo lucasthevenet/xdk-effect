@@ -50,6 +50,9 @@
       "dependencies": {
         "@distilled.cloud/core": "1.0.0-rc.8",
       },
+      "devDependencies": {
+        "@effect/platform-bun": "4.0.0-rc.112",
+      },
       "peerDependencies": {
         "effect": ">=4.0.0-rc.112 <5",
       },

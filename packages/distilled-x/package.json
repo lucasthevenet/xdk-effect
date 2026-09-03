@@ -34,11 +34,101 @@
       "worker": "./src/index.ts",
       "default": "./lib/index.js"
     },
+    "./Credentials": {
+      "types": "./lib/credentials.d.ts",
+      "bun": "./src/credentials.ts",
+      "worker": "./src/credentials.ts",
+      "default": "./lib/credentials.js"
+    },
+    "./Errors": {
+      "types": "./lib/errors.d.ts",
+      "bun": "./src/errors.ts",
+      "worker": "./src/errors.ts",
+      "default": "./lib/errors.js"
+    },
+    "./Traits": {
+      "types": "./lib/traits.d.ts",
+      "bun": "./src/traits.ts",
+      "worker": "./src/traits.ts",
+      "default": "./lib/traits.js"
+    },
+    "./Protocol": {
+      "types": "./lib/protocol.d.ts",
+      "bun": "./src/protocol.ts",
+      "worker": "./src/protocol.ts",
+      "default": "./lib/protocol.js"
+    },
+    "./Retry": {
+      "types": "./lib/retry.d.ts",
+      "bun": "./src/retry.ts",
+      "worker": "./src/retry.ts",
+      "default": "./lib/retry.js"
+    },
+    "./OAuth": {
+      "types": "./lib/oauth.d.ts",
+      "bun": "./src/oauth.ts",
+      "worker": "./src/oauth.ts",
+      "default": "./lib/oauth.js"
+    },
+    "./Webhooks": {
+      "types": "./lib/webhooks.d.ts",
+      "bun": "./src/webhooks.ts",
+      "worker": "./src/webhooks.ts",
+      "default": "./lib/webhooks.js"
+    },
+    "./Client": {
+      "types": "./lib/client.d.ts",
+      "bun": "./src/client.ts",
+      "worker": "./src/client.ts",
+      "default": "./lib/client.js"
+    },
+    "./client": {
+      "types": "./lib/client.d.ts",
+      "bun": "./src/client.ts",
+      "worker": "./src/client.ts",
+      "default": "./lib/client.js"
+    },
+    "./auth": {
+      "types": "./lib/auth.d.ts",
+      "bun": "./src/auth.ts",
+      "worker": "./src/auth.ts",
+      "default": "./lib/auth.js"
+    },
+    "./oauth": {
+      "types": "./lib/oauth.d.ts",
+      "bun": "./src/oauth.ts",
+      "worker": "./src/oauth.ts",
+      "default": "./lib/oauth.js"
+    },
+    "./runtime": {
+      "types": "./lib/runtime.d.ts",
+      "bun": "./src/runtime.ts",
+      "worker": "./src/runtime.ts",
+      "default": "./lib/runtime.js"
+    },
+    "./types": {
+      "types": "./lib/types.d.ts",
+      "bun": "./src/types.ts",
+      "worker": "./src/types.ts",
+      "default": "./lib/types.js"
+    },
+    "./errors": {
+      "types": "./lib/errors.d.ts",
+      "bun": "./src/errors.ts",
+      "worker": "./src/errors.ts",
+      "default": "./lib/errors.js"
+    },
+    "./services/*": {
+      "types": "./lib/services/*.d.ts",
+      "bun": "./src/services/*.ts",
+      "worker": "./src/services/*.ts",
+      "default": "./lib/services/*.js"
+    },
     "./*": {
-      "types": "./lib/*.d.ts",
-      "bun": "./src/*.ts",
-      "worker": "./src/*.ts",
-      "default": "./lib/*.js"
+      "types": "./lib/services/*.d.ts",
+      "bun": "./src/services/*.ts",
+      "worker": "./src/services/*.ts",
+      "default": "./lib/services/*.js"
     }
   },
   "publishConfig": {
@@ -48,8 +138,9 @@
   "scripts": {
     "specs:fetch": "bun scripts/specs.ts",
     "specs:update": "bun scripts/specs.ts --update",
-    "generate": "bun scripts/generate.ts",
-    "generate:check": "bun scripts/generate.ts --check",
+    "convert": "bun scripts/convert.ts",
+    "generate": "bun scripts/convert.ts && bun scripts/generate.ts",
+    "generate:check": "bun scripts/check-generated.ts",
     "build": "tsc -b",
     "prepack": "bun run build",
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -58,6 +149,9 @@
   },
   "dependencies": {
     "@distilled.cloud/core": "1.0.0-rc.8"
+  },
+  "devDependencies": {
+    "@effect/platform-bun": "4.0.0-rc.112"
   },
   "peerDependencies": {
     "effect": ">=4.0.0-rc.112 <5"

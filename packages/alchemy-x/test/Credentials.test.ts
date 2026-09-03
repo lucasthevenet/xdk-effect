@@ -3,6 +3,9 @@ import * as ConfigProvider from "effect/ConfigProvider";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import * as Redacted from "effect/Redacted";
+import * as HttpClient from "effect/unstable/http/HttpClient";
+import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
+import { getUsersMe } from "distilled-x/users";
 import { AuthProviders, type AuthProvider } from "alchemy/Auth/AuthProvider";
 import {
   AlchemyProfile,
@@ -15,7 +18,13 @@ import {
   type XAuthConfig,
   type XResolvedCredentials,
 } from "../src/AuthEnvironment.ts";
-import { fromAuthProvider, fromEnv, XCredentials } from "../src/Credentials.ts";
+import {
+  fromAuthProvider,
+  fromCredentials,
+  fromEnv,
+  SdkCredentials,
+  XCredentials,
+} from "../src/Credentials.ts";
 
 const environment = {
   X_API_KEY: "api-key",
@@ -39,6 +48,52 @@ const profileSelecting = (selected: XAuthConfig): ProfileService => ({
 });
 
 describe("X credential resolution", () => {
+  test("bridges lazy Alchemy credentials into native generated operations", async () => {
+    await Effect.runPromise(
+      Effect.void.pipe(
+        Effect.provide(SdkCredentials.pipe(Layer.provide(fromEnv()))),
+        Effect.provideService(
+          ConfigProvider.ConfigProvider,
+          ConfigProvider.fromEnvRecord({}),
+        ),
+      ),
+    );
+    const client = HttpClient.make((request) =>
+      Effect.sync(() => {
+        expect(request.url).toBe("https://x-proxy.example/2/users/me");
+        expect(request.headers.authorization).toContain(
+          'oauth_token="user-token"',
+        );
+        return HttpClientResponse.fromWeb(
+          request,
+          Response.json({
+            data: { id: "42", name: "Alchemy", username: "alchemy" },
+          }),
+        );
+      }),
+    );
+    const result = await Effect.runPromise(
+      getUsersMe({}).pipe(
+        Effect.provide(
+          SdkCredentials.pipe(
+            Layer.provide(
+              fromCredentials(
+                {
+                  apiKey: environment.X_API_KEY,
+                  apiSecret: environment.X_API_SECRET,
+                  accessToken: environment.X_ACCESS_TOKEN,
+                  accessTokenSecret: environment.X_ACCESS_TOKEN_SECRET,
+                },
+                { apiOrigin: "https://x-proxy.example" },
+              ),
+            ),
+          ),
+        ),
+        Effect.provideService(HttpClient.HttpClient, client),
+      ),
+    );
+    expect(result.data?.id).toBe("42");
+  });
   for (const method of ["env", "stored"] as const) {
     test(`shares one lazy client and token cache for ${method} credentials`, async () => {
       let reads = 0;
