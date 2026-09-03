@@ -1,3 +1,4 @@
+import * as BrowserCrypto from "@effect/platform-browser/BrowserCrypto";
 import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
@@ -17,6 +18,7 @@ const run = <A, E>(effect: Effect.Effect<A, E, AccountActivity.XOpContext>) =>
     effect.pipe(
       Effect.provide(CredentialsFromEnv),
       Effect.provide(FetchHttpClient.layer),
+      Effect.provide(BrowserCrypto.layer),
     ),
   );
 

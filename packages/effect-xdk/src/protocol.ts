@@ -10,10 +10,12 @@ import { ConfigError, HTTP_STATUS_MAP } from "@distilled.cloud/core/errors";
 import { mapKeys } from "@distilled.cloud/core/protocol-http";
 import { parseRetryAfterForStatus } from "@distilled.cloud/core/retry-after";
 import * as Context from "effect/Context";
+import type * as Crypto from "effect/Crypto";
 import * as Duration from "effect/Duration";
 import * as Deferred from "effect/Deferred";
 import * as Exit from "effect/Exit";
 import * as Effect from "effect/Effect";
+import * as Encoding from "effect/Encoding";
 import * as Layer from "effect/Layer";
 import * as Redacted from "effect/Redacted";
 import * as Schema from "effect/Schema";
@@ -43,7 +45,6 @@ import {
 import { prepareOperation } from "./operation-wire.ts";
 import type { OperationDefinition } from "./operation-types.ts";
 import { operations } from "./operations.ts";
-import { bytesToBase64, utf8 } from "./runtime.ts";
 export type XAuthKind = "app" | "user";
 import type { XJsonValue } from "./types.ts";
 
@@ -51,7 +52,7 @@ export type XOpError =
   | DefaultErrors
   | ConfigError
   | HttpClientError.HttpClientError;
-export type XOpContext = Credentials | HttpClient.HttpClient;
+export type XOpContext = Credentials | HttpClient.HttpClient | Crypto.Crypto;
 
 /** Override auth context on the calling Effect; endpoint security is still enforced. */
 export const AuthContext = Context.Reference<XAuthKind | undefined>(
@@ -118,8 +119,8 @@ const exchangeToken = (config: OAuth1Credentials) =>
       return yield* Effect.fail(
         new XAuthenticationError("X API key and secret must not be empty"),
       );
-    const basic = bytesToBase64(
-      utf8(`${encodeCredential(key)}:${encodeCredential(secret)}`),
+    const basic = Encoding.encodeBase64(
+      `${encodeCredential(key)}:${encodeCredential(secret)}`,
     );
     const response = yield* client.execute(
       HttpClientRequest.post(new URL("/oauth2/token", config.apiBaseUrl)).pipe(
@@ -308,13 +309,7 @@ const encode = (args: EncodeArgs) =>
       header = `Bearer ${Redacted.value(token)}`;
     } else if (auth === "app")
       header = `Bearer ${yield* appToken(resolver, config)}`;
-    else
-      header = yield* signOAuth1(
-        raw,
-        { crypto: globalThis.crypto, now: Date.now },
-        definition.method,
-        url,
-      );
+    else header = yield* signOAuth1(raw, definition.method, url);
     return HttpClientRequest.setHeader(request, "Authorization", header);
   });
 

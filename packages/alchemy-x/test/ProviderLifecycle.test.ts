@@ -1,3 +1,4 @@
+import * as BrowserCrypto from "@effect/platform-browser/BrowserCrypto";
 import { afterEach, describe, expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
@@ -46,6 +47,7 @@ const credentials = () =>
       { apiBaseUrl: server!.url.origin },
     ),
     FetchHttpClient.layer,
+    BrowserCrypto.layer,
     Layer.succeed(
       FetchHttpClient.Fetch,
       Object.assign(

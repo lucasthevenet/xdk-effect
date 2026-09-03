@@ -51,6 +51,22 @@ describe("X webhook security", () => {
     ).resolves.toBeFalse();
   });
 
+  test.each([
+    "sha256=",
+    "sha256=AA==",
+    "sha256=A===",
+    "sha256=!!!!",
+    "sha256=gn+m4oIE2v2YpMqtbpxZjFZ5wK04OwpO3/GG2C+m3UA==",
+  ])("rejects malformed or wrong-length signatures: %s", async (invalid) => {
+    await expect(
+      verifyWebhookSignature({
+        rawBody,
+        signature: invalid,
+        consumerSecret,
+      }),
+    ).resolves.toBeFalse();
+  });
+
   test("verifies a Request without consuming its body", async () => {
     const request = new Request("https://example.com/webhooks/x", {
       method: "POST",

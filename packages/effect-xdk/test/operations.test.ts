@@ -1,3 +1,4 @@
+import * as BunCrypto from "@effect/platform-bun/BunCrypto";
 import { describe, expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
@@ -38,6 +39,7 @@ const credentials = {
 const transport = (runtime: { readonly fetch: FetchLike }) =>
   Layer.mergeAll(
     FetchHttpClient.layer,
+    BunCrypto.layer,
     Layer.succeed(
       FetchHttpClient.Fetch,
       Object.assign(runtime.fetch, { preconnect: fetch.preconnect }),

@@ -1,3 +1,7 @@
+import * as PlatformError from "effect/PlatformError";
+import * as Crypto from "effect/Crypto";
+import * as Clock from "effect/Clock";
+import * as BunCrypto from "@effect/platform-bun/BunCrypto";
 import { describe, expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
@@ -22,6 +26,7 @@ type FetchLike = (
 const transport = (fetcher: FetchLike) =>
   Layer.mergeAll(
     FetchHttpClient.layer,
+    BunCrypto.layer,
     Layer.succeed(
       FetchHttpClient.Fetch,
       Object.assign(fetcher, { preconnect: fetch.preconnect }),
@@ -40,6 +45,12 @@ const oauthFields = (header: string) =>
 
 describe("OAuth1 signing", () => {
   test("matches the independent fixed HMAC-SHA1 signing vector", async () => {
+    const clock = await Effect.runPromise(Clock.Clock);
+    const injectedCrypto = Crypto.make({
+      randomBytes: (size) => new Uint8Array(size),
+      digest: () =>
+        Effect.die("OAuth1 signing must use native HMAC, not a plain digest"),
+    });
     const header = await Effect.runPromise(
       signOAuth1(
         {
@@ -48,27 +59,16 @@ describe("OAuth1 signing", () => {
           accessToken: "370773112-GmHxMAgYyLbNEtIKZeRNFsMKPR9EyMZeS9weJAEb",
           accessTokenSecret: "LswwdoUaIvS8ltyTt5jkRh4J50vUPVVHtR2YPi5kE",
         },
-        {
-          now: () => 1_318_622_958_000,
-          crypto: {
-            subtle: crypto.subtle,
-            getRandomValues: <T extends ArrayBufferView | null>(
-              array: T,
-            ): T => {
-              if (array)
-                new Uint8Array(
-                  array.buffer,
-                  array.byteOffset,
-                  array.byteLength,
-                ).fill(0);
-              return array;
-            },
-          },
-        },
         "POST",
         new URL(
           "https://api.x.com/1.1/statuses/update.json?include_entities=true&status=Hello+Ladies+%2B+Gentlemen%2C+a+signed+OAuth+request%21",
         ),
+      ).pipe(
+        Effect.provideService(Crypto.Crypto, injectedCrypto),
+        Effect.provideService(Clock.Clock, {
+          ...clock,
+          currentTimeMillis: Effect.succeed(1_318_622_958_000),
+        }),
       ),
     );
     const fields = oauthFields(header);
@@ -192,4 +192,39 @@ describe("native authentication", () => {
     );
     expect(headers).toEqual(["Bearer app", "Bearer user"]);
   });
+});
+
+test("OAuth1 nonce failures fail before HTTP requests", async () => {
+  const live = await Effect.runPromise(
+    Crypto.Crypto.pipe(Effect.provide(BunCrypto.layer)),
+  );
+  let requests = 0;
+  const error = await Effect.runPromise(
+    getUsersMe({}).pipe(
+      Effect.provideService(
+        Crypto.Crypto,
+        Crypto.Crypto.of({
+          ...live,
+          randomBytes: () =>
+            Effect.fail(
+              PlatformError.badArgument({
+                module: "Crypto",
+                method: "randomBytes",
+                description: "unavailable",
+              }),
+            ),
+        }),
+      ),
+      Effect.provide(fromOAuth1(credentials)),
+      Effect.provide(
+        transport(async () => {
+          requests++;
+          return Response.json({});
+        }),
+      ),
+      Effect.flip,
+    ),
+  );
+  expect(error).toBeInstanceOf(XAuthenticationError);
+  expect(requests).toBe(0);
 });

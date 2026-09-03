@@ -1,7 +1,10 @@
+import * as Crypto from "effect/Crypto";
+import * as Clock from "effect/Clock";
 import * as Effect from "effect/Effect";
+import * as Encoding from "effect/Encoding";
 import { XAuthenticationError } from "./errors.ts";
 import type { OperationDefinition } from "./operation-types.ts";
-import { bytesToBase64, bytesToBase64Url, utf8 } from "./runtime.ts";
+import { utf8 } from "./runtime.ts";
 
 /** One credential set for user signing and internal app-token exchange. */
 export interface XCredentials {
@@ -55,70 +58,83 @@ const required = (value: string, name: string): string => {
 /** Internal OAuth1 signing primitive used by the Effect protocol. */
 export const signOAuth1 = (
   credentials: XAuthentication,
-  platform: {
-    readonly crypto: Pick<Crypto, "getRandomValues" | "subtle">;
-    readonly now: () => number;
-  },
   method: string,
   url: URL,
 ) =>
-  Effect.tryPromise({
-    try: async () => {
-      if (!("apiKey" in credentials)) {
-        throw new XAuthenticationError(
-          "X OAuth 1.0a credentials are required for request signing",
+  Effect.gen(function* () {
+    const [apiKey, apiSecret, accessToken, accessTokenSecret] =
+      yield* Effect.try({
+        try: () => {
+          if (!("apiKey" in credentials)) {
+            throw new XAuthenticationError(
+              "X OAuth 1.0a credentials are required for request signing",
+            );
+          }
+          return [
+            required(credentials.apiKey, "API key"),
+            required(credentials.apiSecret, "API secret"),
+            required(credentials.accessToken, "access token"),
+            required(credentials.accessTokenSecret, "access token secret"),
+          ] as const;
+        },
+        catch: (cause) =>
+          cause instanceof XAuthenticationError
+            ? cause
+            : new XAuthenticationError("Invalid X credentials", { cause }),
+      });
+    const crypto = yield* Crypto.Crypto;
+    const nonce = yield* crypto.randomBytes(32);
+    const now = yield* Clock.currentTimeMillis;
+    const oauth = {
+      oauth_consumer_key: apiKey,
+      oauth_nonce: Encoding.encodeBase64Url(nonce),
+      oauth_signature_method: "HMAC-SHA1",
+      oauth_timestamp: String(Math.floor(now / 1000)),
+      oauth_token: accessToken,
+      oauth_version: "1.0",
+    };
+    // Neither JSON nor multipart bodies contribute OAuth1 signature parameters.
+    const parameters = [...url.searchParams, ...Object.entries(oauth)]
+      .filter(([key]) => key !== "oauth_signature")
+      .map(([key, value]) => [encode(key), encode(value)] as const)
+      .toSorted(([ak, av], [bk, bv]) =>
+        ak < bk ? -1 : ak > bk ? 1 : av < bv ? -1 : av > bv ? 1 : 0,
+      )
+      .map(([key, value]) => `${key}=${value}`)
+      .join("&");
+    const baseString = [
+      method.toUpperCase(),
+      `${url.origin}${url.pathname}`,
+      parameters,
+    ]
+      .map(encode)
+      .join("&");
+    // Effect Crypto does not expose HMAC; use the host's native implementation.
+    const signature = yield* Effect.tryPromise({
+      try: async () => {
+        const key = await globalThis.crypto.subtle.importKey(
+          "raw",
+          utf8(`${encode(apiSecret)}&${encode(accessTokenSecret)}`),
+          { name: "HMAC", hash: "SHA-1" },
+          false,
+          ["sign"],
         );
-      }
-      const [apiKey, apiSecret, accessToken, accessTokenSecret] = [
-        required(credentials.apiKey, "API key"),
-        required(credentials.apiSecret, "API secret"),
-        required(credentials.accessToken, "access token"),
-        required(credentials.accessTokenSecret, "access token secret"),
-      ] as const;
-      const oauth = {
-        oauth_consumer_key: apiKey,
-        oauth_nonce: bytesToBase64Url(
-          platform.crypto.getRandomValues(new Uint8Array(32)),
-        ),
-        oauth_signature_method: "HMAC-SHA1",
-        oauth_timestamp: String(Math.floor(platform.now() / 1000)),
-        oauth_token: accessToken,
-        oauth_version: "1.0",
-      };
-      // Neither JSON nor multipart bodies contribute OAuth1 signature parameters.
-      const parameters = [...url.searchParams, ...Object.entries(oauth)]
-        .filter(([key]) => key !== "oauth_signature")
-        .map(([key, value]) => [encode(key), encode(value)] as const)
-        .toSorted(([ak, av], [bk, bv]) =>
-          ak < bk ? -1 : ak > bk ? 1 : av < bv ? -1 : av > bv ? 1 : 0,
-        )
-        .map(([key, value]) => `${key}=${value}`)
-        .join("&");
-      const baseString = [
-        method.toUpperCase(),
-        `${url.origin}${url.pathname}`,
-        parameters,
-      ]
-        .map(encode)
-        .join("&");
-      const key = await platform.crypto.subtle.importKey(
-        "raw",
-        utf8(`${encode(apiSecret)}&${encode(accessTokenSecret)}`),
-        { name: "HMAC", hash: "SHA-1" },
-        false,
-        ["sign"],
-      );
-      const signature = bytesToBase64(
-        new Uint8Array(
-          await platform.crypto.subtle.sign("HMAC", key, utf8(baseString)),
-        ),
-      );
-      return `OAuth ${Object.entries({ ...oauth, oauth_signature: signature })
-        .map(([name, value]) => `${encode(name)}="${encode(value)}"`)
-        .join(", ")}`;
-    },
-    catch: (cause) =>
+        return Encoding.encodeBase64(
+          new Uint8Array(
+            await globalThis.crypto.subtle.sign("HMAC", key, utf8(baseString)),
+          ),
+        );
+      },
+      catch: (cause) =>
+        new XAuthenticationError("X request signing failed", { cause }),
+    });
+    return `OAuth ${Object.entries({ ...oauth, oauth_signature: signature })
+      .map(([name, value]) => `${encode(name)}="${encode(value)}"`)
+      .join(", ")}`;
+  }).pipe(
+    Effect.mapError((cause) =>
       cause instanceof XAuthenticationError
         ? cause
         : new XAuthenticationError("X request signing failed", { cause }),
-  });
+    ),
+  );

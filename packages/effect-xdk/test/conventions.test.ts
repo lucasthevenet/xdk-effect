@@ -1,3 +1,4 @@
+import * as BunCrypto from "@effect/platform-bun/BunCrypto";
 import { expect, test } from "bun:test";
 import * as ConfigProvider from "effect/ConfigProvider";
 import * as Effect from "effect/Effect";
@@ -34,6 +35,7 @@ const me = { data: { id: "1", name: "Alchemy", username: "alchemy" } };
 const transport = (fetcher: FetchLike) =>
   Layer.mergeAll(
     FetchHttpClient.layer,
+    BunCrypto.layer,
     Layer.succeed(
       FetchHttpClient.Fetch,
       Object.assign(fetcher, { preconnect: fetch.preconnect }),
@@ -141,6 +143,7 @@ test("API.make uses an injected HttpClient and Retry policy, re-signing each att
       Retry.policy({ while: () => true, schedule: Schedule.recurs(1) }),
       Effect.provide(fromOAuth1(oauth1)),
       Effect.provideService(HttpClient.HttpClient, client),
+      Effect.provide(BunCrypto.layer),
     ),
   );
   expect(headers).toHaveLength(2);

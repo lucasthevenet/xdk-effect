@@ -1,9 +1,11 @@
+import * as Crypto from "effect/Crypto";
 import * as Effect from "effect/Effect";
+import * as Encoding from "effect/Encoding";
 import * as Redacted from "effect/Redacted";
 import * as HttpClient from "effect/unstable/http/HttpClient";
 import * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
 import { XOAuthError, XOAuthStateError } from "./errors.ts";
-import { bytesToBase64, bytesToBase64Url, utf8 } from "./runtime.ts";
+import { utf8 } from "./runtime.ts";
 import type { XJsonObject, XJsonValue } from "./types.ts";
 
 export const X_OAUTH_AUTHORIZE_URL = "https://x.com/i/oauth2/authorize";
@@ -148,7 +150,7 @@ const oauthRequest = (
       request = HttpClientRequest.setHeader(
         request,
         "Authorization",
-        `Basic ${bytesToBase64(utf8(`${config.clientId}:${secret}`))}`,
+        `Basic ${Encoding.encodeBase64(`${config.clientId}:${secret}`)}`,
       );
     }
     const response = yield* client
@@ -194,35 +196,46 @@ export const createAuthorizationRequest = (
     readonly state?: string;
   },
 ) =>
-  Effect.tryPromise({
-    try: async (): Promise<OAuth2AuthorizationRequest> => {
-      const state =
-        input.state ??
-        bytesToBase64Url(crypto.getRandomValues(new Uint8Array(32)));
-      const codeVerifier = bytesToBase64Url(
-        crypto.getRandomValues(new Uint8Array(64)),
-      );
-      const digest = await crypto.subtle.digest("SHA-256", utf8(codeVerifier));
-      const codeChallenge = bytesToBase64Url(new Uint8Array(digest));
-      const url = new URL(config.authorizationUrl ?? X_OAUTH_AUTHORIZE_URL);
-      for (const [key, value] of Object.entries({
-        response_type: "code",
-        client_id: config.clientId,
-        redirect_uri: input.redirectUri,
-        scope: input.scopes.join(" "),
-        state,
-        code_challenge: codeChallenge,
-        code_challenge_method: "S256",
-      }))
-        url.searchParams.set(key, value);
-      return { url: url.toString(), state, codeVerifier, codeChallenge };
-    },
-    catch: () =>
-      new XOAuthError(
-        "invalid_request",
-        "Could not create OAuth authorization request",
-      ),
-  });
+  Effect.gen(function* () {
+    const crypto = yield* Crypto.Crypto;
+    const state =
+      input.state ?? Encoding.encodeBase64Url(yield* crypto.randomBytes(32));
+    const codeVerifier = Encoding.encodeBase64Url(
+      yield* crypto.randomBytes(64),
+    );
+    const codeChallenge = Encoding.encodeBase64Url(
+      yield* crypto.digest("SHA-256", utf8(codeVerifier)),
+    );
+    return yield* Effect.try({
+      try: (): OAuth2AuthorizationRequest => {
+        const url = new URL(config.authorizationUrl ?? X_OAUTH_AUTHORIZE_URL);
+        for (const [key, value] of Object.entries({
+          response_type: "code",
+          client_id: config.clientId,
+          redirect_uri: input.redirectUri,
+          scope: input.scopes.join(" "),
+          state,
+          code_challenge: codeChallenge,
+          code_challenge_method: "S256",
+        }))
+          url.searchParams.set(key, value);
+        return { url: url.toString(), state, codeVerifier, codeChallenge };
+      },
+      catch: () =>
+        new XOAuthError(
+          "invalid_request",
+          "Could not create OAuth authorization request",
+        ),
+    });
+  }).pipe(
+    Effect.mapError(
+      () =>
+        new XOAuthError(
+          "invalid_request",
+          "Could not create OAuth authorization request",
+        ),
+    ),
+  );
 
 export const parseAuthorizationCallback = (
   callback: string | URL,

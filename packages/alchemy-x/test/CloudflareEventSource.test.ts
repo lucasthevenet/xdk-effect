@@ -1,3 +1,4 @@
+import * as BrowserCrypto from "@effect/platform-browser/BrowserCrypto";
 import { describe, expect, test } from "bun:test";
 import type { ResourceLike } from "alchemy";
 import * as Cloudflare from "alchemy/Cloudflare";
@@ -181,6 +182,7 @@ const registerAtPlan = (
     // SAFETY: This in-memory Stack exposes every collection Resource uses to
     // register logical declarations; no provider or remote API is involved.
     Effect.provideService(Stack, stack as never),
+    Effect.provide(BrowserCrypto.layer),
     Effect.provide(
       fromCredentials({
         apiKey: "key",

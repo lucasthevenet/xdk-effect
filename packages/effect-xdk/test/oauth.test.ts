@@ -1,3 +1,6 @@
+import * as Crypto from "effect/Crypto";
+import * as PlatformError from "effect/PlatformError";
+import * as BunCrypto from "@effect/platform-bun/BunCrypto";
 import { describe, expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
@@ -38,8 +41,12 @@ describe("Effect-native OAuth 2.0 PKCE", () => {
       },
     );
     expect(Effect.isEffect(effect)).toBe(true);
-    const first = await Effect.runPromise(effect);
-    const second = await Effect.runPromise(effect);
+    const first = await Effect.runPromise(
+      effect.pipe(Effect.provide(BunCrypto.layer)),
+    );
+    const second = await Effect.runPromise(
+      effect.pipe(Effect.provide(BunCrypto.layer)),
+    );
     expect(first.state).not.toBe(second.state);
     expect(first.codeVerifier).not.toBe(second.codeVerifier);
     expect(first.state).toHaveLength(43);
@@ -199,3 +206,81 @@ describe("Effect-native OAuth 2.0 PKCE", () => {
     expect(aborted).toBe(true);
   });
 });
+
+test("PKCE uses the injected random and digest primitives", async () => {
+  const live = await Effect.runPromise(
+    Crypto.Crypto.pipe(Effect.provide(BunCrypto.layer)),
+  );
+  const sizes: number[] = [];
+  const digests: string[] = [];
+  const injected = Crypto.make({
+    randomBytes: (size) => {
+      sizes.push(size);
+      return new Uint8Array(size);
+    },
+    digest: (algorithm, bytes) => {
+      digests.push(algorithm);
+      expect(new TextDecoder().decode(bytes)).toBe("A".repeat(86));
+      return live.digest(algorithm, bytes);
+    },
+  });
+  const program = createAuthorizationRequest(
+    { clientId: "client" },
+    {
+      redirectUri: "https://example.com/callback",
+      scopes: ["users.read"],
+    },
+  );
+  expect(sizes).toEqual([]);
+  const request = await Effect.runPromise(
+    program.pipe(Effect.provideService(Crypto.Crypto, injected)),
+  );
+  expect(sizes).toEqual([32, 64]);
+  expect(digests).toEqual(["SHA-256"]);
+  expect(request.state).toBe("A".repeat(43));
+  expect(request.codeChallenge).toBe(
+    "4WWa1UBjo3n3f-4Qijdqan1a49DEN7-EcgOWO9AHjfw",
+  );
+  sizes.length = 0;
+  const suppliedState = await Effect.runPromise(
+    createAuthorizationRequest(
+      { clientId: "client" },
+      {
+        redirectUri: "https://example.com/callback",
+        scopes: [],
+        state: "supplied",
+      },
+    ).pipe(Effect.provideService(Crypto.Crypto, injected)),
+  );
+  expect(suppliedState.state).toBe("supplied");
+  expect(sizes).toEqual([64]);
+});
+
+for (const method of ["randomBytes", "digest"] as const) {
+  test(`PKCE ${method} failures use the OAuth error channel`, async () => {
+    const live = await Effect.runPromise(
+      Crypto.Crypto.pipe(Effect.provide(BunCrypto.layer)),
+    );
+    const failure = Effect.fail(
+      PlatformError.badArgument({
+        module: "Crypto",
+        method,
+        description: "sensitive platform diagnostic",
+      }),
+    );
+    const injected = Crypto.Crypto.of({ ...live, [method]: () => failure });
+    const error = await Effect.runPromise(
+      createAuthorizationRequest(
+        { clientId: "client" },
+        {
+          redirectUri: "https://example.com/callback",
+          scopes: [],
+        },
+      ).pipe(Effect.provideService(Crypto.Crypto, injected), Effect.flip),
+    );
+    expect(error).toBeInstanceOf(XOAuthError);
+    expect(JSON.stringify(error)).not.toContain(
+      "sensitive platform diagnostic",
+    );
+  });
+}

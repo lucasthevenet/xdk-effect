@@ -26,12 +26,13 @@ Follow the [Alchemy usage guide](./packages/alchemy-x/README.md) or deploy the [
 ## Effect SDK
 
 ```sh
-bun add effect-xdk effect
+bun add effect-xdk effect @effect/platform-browser
 ```
 
 ```ts
 import * as Effect from "effect/Effect";
 import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
+import * as BrowserCrypto from "@effect/platform-browser/BrowserCrypto";
 import { CredentialsFromEnv } from "effect-xdk/Credentials";
 import { getUsersMe } from "effect-xdk/users";
 
@@ -39,6 +40,7 @@ const me = await Effect.runPromise(
   getUsersMe({}).pipe(
     Effect.provide(CredentialsFromEnv),
     Effect.provide(FetchHttpClient.layer),
+    Effect.provide(BrowserCrypto.layer),
   ),
 );
 

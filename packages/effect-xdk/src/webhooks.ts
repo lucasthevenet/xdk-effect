@@ -1,6 +1,8 @@
 import * as Effect from "effect/Effect";
+import * as Encoding from "effect/Encoding";
+import * as Result from "effect/Result";
 import * as Schema from "effect/Schema";
-import { base64ToBytes, bytesToBase64, ownedBytes, utf8 } from "./runtime.ts";
+import { ownedBytes, utf8 } from "./runtime.ts";
 
 export const X_WEBHOOK_SIGNATURE_HEADER = "x-twitter-webhooks-signature";
 
@@ -28,7 +30,7 @@ export const createCrcResponse = (crcToken: string, consumerSecret: string) =>
         utf8(crcToken),
       );
       return {
-        response_token: `sha256=${bytesToBase64(new Uint8Array(signature))}`,
+        response_token: `sha256=${Encoding.encodeBase64(new Uint8Array(signature))}`,
       };
     },
     catch: (cause) =>
@@ -43,13 +45,15 @@ export const verifyWebhookSignature = (input: {
   Effect.tryPromise({
     try: async () => {
       if (!input.signature?.startsWith("sha256=")) return false;
-      const signature = base64ToBytes(input.signature.slice("sha256=".length));
-      if (!signature) return false;
+      const signature = Encoding.decodeBase64(
+        input.signature.slice("sha256=".length),
+      );
+      if (Result.isFailure(signature)) return false;
       const key = await hmacKey(input.consumerSecret);
       return globalThis.crypto.subtle.verify(
         "HMAC",
         key,
-        ownedBytes(signature),
+        ownedBytes(signature.success),
         ownedBytes(input.rawBody),
       );
     },

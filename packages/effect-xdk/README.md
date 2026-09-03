@@ -5,7 +5,7 @@ An Effect-native TypeScript SDK for the X API: posts, users, media, streams, web
 ## Install
 
 ```sh
-bun add effect-xdk effect
+bun add effect-xdk effect @effect/platform-browser
 ```
 
 ## Quick start
@@ -19,11 +19,12 @@ export X_ACCESS_TOKEN=...
 export X_ACCESS_TOKEN_SECRET=...
 ```
 
-Provide credentials and an Effect `HttpClient` to your program:
+Provide credentials, an Effect `HttpClient`, and a `Crypto` layer to your program:
 
 ```ts
 import * as Effect from "effect/Effect";
 import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
+import * as BrowserCrypto from "@effect/platform-browser/BrowserCrypto";
 import { CredentialsFromEnv } from "effect-xdk/Credentials";
 import { getUsersMe } from "effect-xdk/users";
 import { createPosts } from "effect-xdk/posts";
@@ -38,6 +39,7 @@ const result = await Effect.runPromise(
   program.pipe(
     Effect.provide(CredentialsFromEnv),
     Effect.provide(FetchHttpClient.layer),
+    Effect.provide(BrowserCrypto.layer),
   ),
 );
 ```
@@ -45,6 +47,8 @@ const result = await Effect.runPromise(
 Import operations from `effect-xdk/<service>`, such as `users`, `posts`, or `webhooks`. Request fields include path, query, and body parameters in one object. Dotted query names use underscores: `user_fields` sends `user.fields`.
 
 JSON operations return X's response envelope directly. Read `data` for results and inspect `errors` for partial failures. Operations also export their request/response types and schemas.
+
+Use `BrowserCrypto.layer` in browsers and Workers, `BunCrypto.layer` from `@effect/platform-bun/BunCrypto` in Bun, or `NodeCrypto.layer` from `@effect/platform-node/NodeCrypto` in Node.js. Match the platform package version to your Effect version.
 
 ## Authentication
 
@@ -105,7 +109,7 @@ const firstTen = streamPostsSample({}).pipe(
 );
 ```
 
-Provide credentials and an `HttpClient` as in the quick start. Ending consumption cancels the stream; reconnection is the caller's responsibility.
+Provide credentials, an `HttpClient`, and a `Crypto` layer as in the quick start. Ending consumption cancels the stream; reconnection is the caller's responsibility.
 
 Binary downloads return `Uint8Array`. Media upload operations accept a `Blob` for multipart uploads or a base64 string for JSON uploads.
 
@@ -114,6 +118,7 @@ Binary downloads return `Uint8Array`. Media upload operations accept a `Blob` fo
 ```ts
 import * as Effect from "effect/Effect";
 import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
+import * as BrowserCrypto from "@effect/platform-browser/BrowserCrypto";
 import * as OAuth from "effect-xdk/OAuth";
 
 const config = { clientId: process.env.X_CLIENT_ID! };
@@ -123,7 +128,7 @@ const authorization = await Effect.runPromise(
   OAuth.createAuthorizationRequest(config, {
     redirectUri,
     scopes: ["tweet.read", "users.read", "offline.access"],
-  }),
+  }).pipe(Effect.provide(BrowserCrypto.layer)),
 );
 
 // Persist state and codeVerifier securely, then redirect to authorization.url.

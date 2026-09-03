@@ -156,17 +156,19 @@ Changing `Webhook.url` deletes the old registration before creating the new one,
 
 ## Call the X API
 
-`X.providers()` supplies credentials and an Effect `HttpClient` for direct SDK calls within your stack. Outside a stack, provide them explicitly:
+`X.providers()` supplies credentials, an Effect `Crypto` layer, and an Effect `HttpClient` for direct SDK calls within your stack. Outside a stack, provide them explicitly (install `@effect/platform-browser` for this example):
 
 ```ts
 import * as X from "alchemy-x";
 import * as Effect from "effect/Effect";
 import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
+import * as BrowserCrypto from "@effect/platform-browser/BrowserCrypto";
 
 const identity = await Effect.runPromise(
   X.Api.Services.users.getUsersMe({}).pipe(
     Effect.provide(X.fromEnv()),
     Effect.provide(FetchHttpClient.layer),
+    Effect.provide(BrowserCrypto.layer),
   ),
 );
 

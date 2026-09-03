@@ -1,3 +1,4 @@
+import * as BrowserCrypto from "@effect/platform-browser/BrowserCrypto";
 import * as Layer from "effect/Layer";
 import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
 import { CredentialsStoreLive } from "alchemy/Auth/Credentials";
@@ -43,6 +44,7 @@ export const providers = () =>
       ),
     ),
     Layer.provideMerge(FetchHttpClient.layer),
+    Layer.provideMerge(BrowserCrypto.layer),
     Layer.provideMerge(Credentials.fromAuthProvider()),
     Layer.provideMerge(XAuth),
     Layer.provideMerge(ProfileLive),

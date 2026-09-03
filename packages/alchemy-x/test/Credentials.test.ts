@@ -1,3 +1,4 @@
+import * as BrowserCrypto from "@effect/platform-browser/BrowserCrypto";
 import { describe, expect, test } from "bun:test";
 import * as ConfigProvider from "effect/ConfigProvider";
 import * as Effect from "effect/Effect";
@@ -92,6 +93,7 @@ describe("X credential resolution", () => {
           ),
         ),
         Effect.provideService(HttpClient.HttpClient, client),
+        Effect.provide(BrowserCrypto.layer),
       ),
     );
     expect(result.data?.id).toBe("42");
@@ -126,6 +128,7 @@ describe("X credential resolution", () => {
       } satisfies AuthProvider<XAuthConfig, XResolvedCredentials>;
       const transport = Layer.mergeAll(
         FetchHttpClient.layer,
+        BrowserCrypto.layer,
         Layer.succeed(
           FetchHttpClient.Fetch,
           Object.assign(
