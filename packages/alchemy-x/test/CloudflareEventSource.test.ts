@@ -13,7 +13,8 @@ import {
   type EventSourceOptions,
   type XEvent,
 } from "../src/EventSource.ts";
-import { EventSourceLive } from "../src/Cloudflare.ts";
+import * as X from "alchemy-x";
+import { EventSourceLive } from "alchemy-x/Cloudflare";
 import { fromCredentials } from "../src/Credentials.ts";
 import * as HttpClient from "effect/unstable/http/HttpClient";
 import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
@@ -81,7 +82,7 @@ const provideAdapter = <A, E>(
   harness: Harness,
 ): Effect.Effect<A, E> =>
   effect.pipe(
-    Effect.provide(EventSourceLive),
+    Effect.provide(X.Cloudflare.EventSourceLive),
     // SAFETY: The fixture implements the Worker identity and listener boundary
     // exercised by EventSourceLive; provider/resource behavior stays real.
     Effect.provideService(Cloudflare.Worker.Self, harness.worker as never),
@@ -209,6 +210,9 @@ const registerAtPlan = (
   );
 
 describe("Cloudflare X event source", () => {
+  test("exports the Cloudflare module from the package root", () => {
+    expect(X.Cloudflare.EventSourceLive).toBe(EventSourceLive);
+  });
   test.serial("claims the exact event path and answers X CRC", async () => {
     const harness = makeHarness();
     await runAtRuntime(register(harness));

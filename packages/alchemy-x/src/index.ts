@@ -1,4 +1,5 @@
 export * as Api from "effect-xdk";
+export * as Cloudflare from "./Cloudflare.ts";
 export * from "./AccountActivitySubscription.ts";
 export * from "./ActivitySubscription.ts";
 export * from "./AuthEnvironment.ts";

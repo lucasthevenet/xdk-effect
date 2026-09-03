@@ -1,7 +1,6 @@
 import * as Alchemy from "alchemy";
 import * as Cloudflare from "alchemy/Cloudflare";
 import * as X from "alchemy-x";
-import * as XCloudflare from "alchemy-x/Cloudflare";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import * as HttpServerResponse from "effect/unstable/http/HttpServerResponse";
@@ -33,7 +32,7 @@ export default Alchemy.Stack(
         return {
           fetch: Effect.succeed(HttpServerResponse.text("Alchemy X worker")),
         };
-      }).pipe(Effect.provide(XCloudflare.EventSourceLive)),
+      }).pipe(Effect.provide(X.Cloudflare.EventSourceLive)),
     );
 
     return { url: worker.url };
