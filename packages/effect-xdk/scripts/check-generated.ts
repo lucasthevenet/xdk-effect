@@ -39,6 +39,12 @@ try {
       }
     }
   }
+  if (
+    (await readFile(path.join(root, "src/api.ts"), "utf8")) !==
+    (await readFile(path.join(target, "src/api.ts"), "utf8"))
+  ) {
+    throw new Error("Stale generated client API. Run bun run generate.");
+  }
   console.log(
     "Verified X Smithy models, generated services, and schema traits",
   );

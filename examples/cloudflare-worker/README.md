@@ -1,38 +1,16 @@
-# Cloudflare Worker example
+# Cloudflare Worker
 
-Deploy a Worker that receives verified X events and automatically registers a webhook and an Account Activity subscription.
+A plain Worker using `effect-xdk`. `GET /` returns the authenticated X user. `/webhook` handles CRC checks and verified event deliveries.
 
-## Deploy
+Configure these Worker secrets:
 
-Install workspace dependencies from the repository root:
+- `X_API_KEY`
+- `X_API_SECRET`
+- `X_ACCESS_TOKEN`
+- `X_ACCESS_TOKEN_SECRET`
 
-```sh
-bun install
-cd examples/cloudflare-worker
-bunx alchemy login
-bunx alchemy deploy
-```
+Use `src/worker.ts` as the entrypoint in your Cloudflare deployment tooling. No Node.js compatibility flag is required.
 
-Authenticate Cloudflare and X. For X, choose **Stored Credentials** and enter your app's API key, API secret, OAuth1 access token, and access-token secret. Use an X app with Account Activity access.
+After deployment, register `https://<your-worker>/webhook` using `client.Api.webhooks.createWebhooks({ url: "https://<your-worker>/webhook" })`, then create the desired subscriptions. The handler does not register webhooks automatically.
 
-For environment authentication, choose **Environment Variables** for X and set:
-
-```sh
-export X_API_KEY=...
-export X_API_SECRET=...
-export X_ACCESS_TOKEN=...
-export X_ACCESS_TOKEN_SECRET=...
-bunx alchemy deploy
-```
-
-Set `CI=1` for a new CI profile to select environment authentication without prompting. Configure Cloudflare authentication for that environment as well.
-
-## Handle events
-
-Edit the `X.consumeEvents` handler in [alchemy.run.ts](./alchemy.run.ts). Each event contains `kind` and `delivery`; the kinds are `activity`, `account_activity`, `filtered_stream`, and `replay_job`.
-
-The webhook listens at `/api/x/webhook`. The adapter answers CRC challenges and verifies delivery signatures before invoking the handler. The Worker's returned `fetch` handler serves other paths.
-
-Keep the `AccountEvents` resource name and webhook URL stable between deployments. X requires a public HTTPS receiver; localhost callbacks are not supported.
-
-See the [alchemy-x guide](../../packages/alchemy-x/README.md) for granular event subscriptions and other options. X API operations and delivered events may incur charges.
+Open the Worker root URL to test an authenticated API read. Upstream or processing failures return a generic 502 without exposing credentials.

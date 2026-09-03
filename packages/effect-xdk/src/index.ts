@@ -1,7 +1,12 @@
 export * from "./errors.ts";
+export { Client, type ClientConfig } from "./client.ts";
+export type { Api } from "./api.ts";
+export {
+  createWebhookHandler,
+  type WebhookHandlerConfig,
+} from "./webhook-handler.ts";
 export * from "./oauth.ts";
 export * from "./webhooks.ts";
-export * from "./credentials.ts";
 export * as T from "./traits.ts";
 export {
   XProtocol,

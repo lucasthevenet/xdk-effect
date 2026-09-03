@@ -8,9 +8,13 @@ test("the package exposes only Effect-native SDK operations and async helpers", 
   expect(X).not.toHaveProperty("createXClient");
   expect(X).not.toHaveProperty("createOAuth2Client");
   expect(X).not.toHaveProperty("runtime");
-  for (const path of ["./Client", "./client", "./auth", "./runtime"] as const) {
+  for (const path of ["./client", "./auth", "./runtime"] as const) {
     expect(manifest.exports[path]).toBeNull();
   }
+  expect(
+    Effect.isEffect(X.Client({ accessToken: "test" }).Api.users.getUsersMe({})),
+  ).toBe(true);
+  expect(manifest.exports["./Client"].types).toBe("./lib/client.d.ts");
   expect(Effect.isEffect(X.Services.users.getUsersMe({}))).toBe(true);
   expect(Effect.isEffect(X.createCrcResponse("challenge", "secret"))).toBe(
     true,

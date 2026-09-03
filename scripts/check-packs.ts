@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 
 const root = path.resolve(import.meta.dir, "..");
-const packages = ["packages/effect-xdk", "packages/alchemy-x"];
+const packages = ["packages/effect-xdk"];
 
 for (const packageDirectory of packages) {
   const manifestPath = path.join(root, packageDirectory, "package.json");
@@ -17,7 +17,7 @@ for (const packageDirectory of packages) {
     throw new Error(`${manifest.name} must build from its prepack script`);
   }
 
-  const npmCache = await mkdtemp(path.join(os.tmpdir(), "alchemy-x-pack-"));
+  const npmCache = await mkdtemp(path.join(os.tmpdir(), "effect-xdk-pack-"));
   try {
     const process = Bun.spawn(
       ["npm", "pack", "--dry-run", "--json", `./${packageDirectory}`],
@@ -47,35 +47,31 @@ for (const packageDirectory of packages) {
       "README.md",
       "lib/index.js",
       "lib/index.d.ts",
-      ...(manifest.name === "alchemy-x"
-        ? [
-            "lib/Cloudflare.js",
-            "lib/Cloudflare.d.ts",
-            "lib/EventSource.js",
-            "lib/EventSource.d.ts",
-            "src/Cloudflare.ts",
-            "src/EventSource.ts",
-          ]
-        : [
-            "lib/auth.js",
-            "lib/auth.d.ts",
-            "lib/oauth.js",
-            "lib/oauth.d.ts",
-            "src/auth.ts",
-            "src/oauth.ts",
-            "lib/credentials.js",
-            "lib/credentials.d.ts",
-            "lib/protocol.js",
-            "lib/protocol.d.ts",
-            "lib/retry.js",
-            "lib/retry.d.ts",
-            "lib/webhooks.js",
-            "lib/webhooks.d.ts",
-            "lib/services/index.js",
-            "lib/services/posts.js",
-            "lib/services/posts.d.ts",
-            "src/services/posts.ts",
-          ]),
+      "lib/client.js",
+      "lib/client.d.ts",
+      "src/client.ts",
+      "lib/api.js",
+      "lib/api.d.ts",
+      "lib/webhook-handler.js",
+      "lib/webhook-handler.d.ts",
+      "lib/auth.js",
+      "lib/auth.d.ts",
+      "lib/oauth.js",
+      "lib/oauth.d.ts",
+      "src/auth.ts",
+      "src/oauth.ts",
+      "lib/credentials.js",
+      "lib/credentials.d.ts",
+      "lib/protocol.js",
+      "lib/protocol.d.ts",
+      "lib/retry.js",
+      "lib/retry.d.ts",
+      "lib/webhooks.js",
+      "lib/webhooks.d.ts",
+      "lib/services/index.js",
+      "lib/services/posts.js",
+      "lib/services/posts.d.ts",
+      "src/services/posts.ts",
     ];
     for (const required of requiredFiles) {
       if (!files.has(required)) {
@@ -83,9 +79,6 @@ for (const packageDirectory of packages) {
       }
     }
     for (const removed of [
-      "lib/client.d.ts",
-      "lib/client.js",
-      "src/client.ts",
       "lib/CredentialFiles.d.ts",
       "lib/CredentialFiles.js",
       "lib/OAuthLoopback.d.ts",

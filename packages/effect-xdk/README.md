@@ -1,177 +1,127 @@
-# `effect-xdk`
+# effect-xdk
 
-An Effect-native TypeScript SDK for the X API: posts, users, media, streams, webhooks, and activity subscriptions.
+An Effect-native TypeScript SDK for X, generated from the official OpenAPI specification. Works in Node.js, Bun, browsers, and Cloudflare Workers with Fetch and Web Crypto available.
 
 ## Install
 
 ```sh
-bun add effect-xdk effect @effect/platform-browser
+bun add effect-xdk effect
 ```
 
-## Quick start
-
-Set your X app's credentials:
-
-```sh
-export X_API_KEY=...
-export X_API_SECRET=...
-export X_ACCESS_TOKEN=...
-export X_ACCESS_TOKEN_SECRET=...
-```
-
-Provide credentials, an Effect `HttpClient`, a `Crypto` layer, and `Hmac.layerSubtle` to your program:
+## Create a client
 
 ```ts
 import * as Effect from "effect/Effect";
-import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
-import * as BrowserCrypto from "@effect/platform-browser/BrowserCrypto";
-import * as Hmac from "effect-xdk/Hmac";
-import { CredentialsFromEnv } from "effect-xdk/Credentials";
-import { getUsersMe } from "effect-xdk/users";
-import { createPosts } from "effect-xdk/posts";
+import * as X from "effect-xdk";
 
-const program = Effect.gen(function* () {
-  const me = yield* getUsersMe({ user_fields: ["id", "username"] });
-  const post = yield* createPosts({ text: "Hello from Effect" });
-  return { me, post };
+const client = X.Client({
+  oauth1: {
+    apiKey: process.env.X_API_KEY!,
+    apiSecret: process.env.X_API_SECRET!,
+    accessToken: process.env.X_ACCESS_TOKEN!,
+    accessTokenSecret: process.env.X_ACCESS_TOKEN_SECRET!,
+  },
 });
 
-const result = await Effect.runPromise(
-  program.pipe(
-    Effect.provide(CredentialsFromEnv),
-    Effect.provide(FetchHttpClient.layer),
-    Effect.provide(BrowserCrypto.layer),
-    Effect.provide(Hmac.layerSubtle),
-  ),
-);
+const program = Effect.gen(function* () {
+  const me = yield* client.Api.users.getUsersMe({
+    user_fields: ["id", "username"],
+  });
+  return me.data;
+});
+
+console.log(await Effect.runPromise(program));
 ```
 
-Import operations from `effect-xdk/<service>`, such as `users`, `posts`, or `webhooks`. Request fields include path, query, and body parameters in one object. Dotted query names use underscores: `user_fields` sends `user.fields`.
+The constructor configures credentials, HTTP transport, and crypto. It performs no network requests, requires no disposal, and returns methods that produce lazy Effects. Reuse a client across operations.
 
-JSON operations return X's response envelope directly. Read `data` for results and inspect `errors` for partial failures. Operations also export their request/response types and schemas.
+Groups and method names follow the OpenAPI specification: `client.Api.posts.createPosts({ text: "Hello" })`, `client.Api.webhooks.getWebhooks({})`, and so on. Request fields combine path, query, and body parameters in one object. Dotted query names use underscores: `user_fields` sends `user.fields`.
 
-Use `BrowserCrypto.layer` in browsers and Workers, `BunCrypto.layer` from `@effect/platform-bun/BunCrypto` in Bun, or `NodeCrypto.layer` from `@effect/platform-node/NodeCrypto` in Node.js. Match the platform package version to your Effect version.
-
-`Hmac.layerSubtle` provides native Web Crypto signing and verification. To use a different Web Crypto instance, build a layer with `Layer.effect(Hmac.Hmac, Hmac.makeSubtle(crypto))`. Tests can override `Hmac.Hmac` with `Effect.provideService`.
+Responses retain X's envelope: read `data` for results and inspect `errors` for partial failures. Types and schemas are available from service modules such as `effect-xdk/users`.
 
 ## Authentication
 
-`CredentialsFromEnv` reads the four variables above. Set `X_API_BASE_URL` to use a custom API origin.
+OAuth1 config accepts strings or Effect `Redacted` values. App-only bearer tokens are obtained and cached automatically using the API key and secret when an operation needs app authentication.
 
-For explicit OAuth1 credentials:
+For pre-issued tokens:
 
 ```ts
-import { fromOAuth1 } from "effect-xdk/Credentials";
-
-const credentials = fromOAuth1({
-  apiKey: "...",
-  apiSecret: "...",
-  accessToken: "...",
-  accessTokenSecret: "...",
+const appClient = X.Client({ bearerToken: "app-only-token" });
+const userClient = X.Client({ accessToken: "oauth2-user-token" });
+const both = X.Client({
+  bearerToken: "app-only-token",
+  accessToken: "oauth2-user-token",
 });
 ```
 
-Pass this layer to `Effect.provide(credentials)`. Secret fields accept strings or Effect `Redacted` values. App-only tokens are obtained automatically from the API key and secret when needed.
+Supply OAuth1 credentials or bearer credentials. When both app and user authentication are available, app authentication is preferred where supported. Use `X.withAuth("user")` on an operation to select user context.
 
-For pre-issued Bearer tokens:
+Pass `baseUrl` for a custom API origin or `httpClient` to inject an Effect HTTP transport. Keep credentials server-side; use only appropriately scoped public-client tokens in browsers. Your X app needs the permissions and product access required by each operation.
 
-```ts
-import { fromBearer } from "effect-xdk/Credentials";
-
-const credentials = fromBearer({
-  appBearerToken: "...",
-  userAccessToken: "...",
-});
-```
-
-Supply either or both tokens according to the operations you need. App authentication is preferred when the endpoint supports it. Use `withAuth("user")` from `effect-xdk/Protocol` to select user context:
-
-```ts
-import { withAuth } from "effect-xdk/Protocol";
-
-const post = createPosts({ text: "Hello" }).pipe(withAuth("user"));
-```
-
-For rotating credentials, provide the `Credentials` service with an Effect that resolves the latest values on each request. Your X app must have the permissions and product access required by the endpoint.
+OAuth authorization helpers are exported from `effect-xdk/OAuth`, including `createAuthorizationRequest`, `parseAuthorizationCallback`, `exchangeCode`, `refreshToken`, and `revokeToken`. These standalone Effects require an Effect Crypto or HttpClient layer as indicated by their types. Pass the resulting user access token to `X.Client({ accessToken })`; token persistence and refresh scheduling belong to your application.
 
 ## Errors and retries
 
-Use `Effect.catchTag` to handle errors such as `Forbidden`, `NotFound`, `TooManyRequests`, `XAuthenticationError`, `XInputError`, and `XParseError`.
+Methods preserve typed errors and Effect cancellation. Handle failures with `Effect.catchTag`, and set time limits with `Effect.timeout`.
 
-Safe HTTP methods retry transient failures with a capped policy and honor rate-limit hints. POSTs are not automatically retried. Configure retries with `effect-xdk/Retry`; use `Retry.none` to disable them. Only retry writes when replaying the operation is safe.
+```ts
+const me = client.Api.users.getUsersMe({}).pipe(
+  Effect.timeout("10 seconds"),
+  X.Retry.none,
+);
+```
+
+Non-POST operations retry transient failures with a capped policy and rate-limit hints. POSTs are not automatically retried. Use `X.Retry.policy(...)` to customize retries; only retry writes when replaying them is safe.
 
 ## Streaming and media
 
 ```ts
 import * as Stream from "effect/Stream";
-import { streamPostsSample } from "effect-xdk/stream";
 
-const firstTen = streamPostsSample({}).pipe(
+const firstTen = client.Api.stream.streamPostsSample({}).pipe(
   Stream.unwrap,
   Stream.take(10),
   Stream.runCollect,
 );
+
+const events = await Effect.runPromise(firstTen);
 ```
 
-Provide credentials, an `HttpClient`, a `Crypto` layer, and `Hmac.layerSubtle` as in the quick start. Ending consumption cancels the stream; reconnection is the caller's responsibility.
+Stopping consumption cancels the stream. Reconnection is the caller's responsibility. Binary downloads return `Uint8Array`; media uploads accept `Blob` for multipart uploads or base64 strings for JSON uploads.
 
-Binary downloads return `Uint8Array`. Media upload operations accept a `Blob` for multipart uploads or a base64 string for JSON uploads.
-
-## OAuth 2.0 + PKCE
+## Webhook handler
 
 ```ts
-import * as Effect from "effect/Effect";
-import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
-import * as BrowserCrypto from "@effect/platform-browser/BrowserCrypto";
-import * as OAuth from "effect-xdk/OAuth";
+const webhook = X.createWebhookHandler({
+  consumerSecret: process.env.X_API_SECRET!,
+  onEvent: (event) => Effect.log("X delivery", event),
+});
 
-const config = { clientId: process.env.X_CLIENT_ID! };
-const redirectUri = "https://example.com/callback";
-
-const authorization = await Effect.runPromise(
-  OAuth.createAuthorizationRequest(config, {
-    redirectUri,
-    scopes: ["tweet.read", "users.read", "offline.access"],
-  }).pipe(Effect.provide(BrowserCrypto.layer)),
-);
-
-// Persist state and codeVerifier securely, then redirect to authorization.url.
-const handleCallback = (callbackUrl: string) =>
+// Mount this at your webhook route in any Fetch-compatible server.
+const fetch = (request: Request): Promise<Response> =>
   Effect.runPromise(
-    Effect.gen(function* () {
-      const { code } = yield* OAuth.parseAuthorizationCallback(
-        callbackUrl,
-        authorization.state,
-      );
-      return yield* OAuth.exchangeCode(config, {
-        code,
-        codeVerifier: authorization.codeVerifier,
-        redirectUri,
-      });
-    }).pipe(Effect.provide(FetchHttpClient.layer)),
+    webhook(request).pipe(
+      Effect.catch(() =>
+        Effect.succeed(new Response("Webhook processing failed", { status: 500 })),
+      ),
+    ),
   );
 ```
 
-For confidential clients, add `clientSecret` to the config. Use `refreshToken(config, { refreshToken })` to refresh a token and `revokeToken(config, { token })` to revoke it. Both require an Effect `HttpClient`.
+The helper uses the app's API secret, not its access-token secret. It answers GET CRC challenges and verifies POST signatures over the original bytes before decoding JSON or calling `onEvent`, following [X's webhook protocol](https://docs.x.com/x-api/webhooks/quickstart).
 
-## Webhook verification
+It consumes the request body and passes a JSON object to `onEvent`. Use an Effect Schema inside the callback when you need a narrower event type. Unknown event fields are preserved.
 
-Use `createCrcResponse` to answer X's CRC challenge and `verifyWebhookRequest` before processing a delivery:
+The handler acknowledges with 200 only after your callback succeeds. Callback requirements and errors remain in the Effect channel. CRC/signing failures use `XWebhookError`; map failures to non-2xx responses at your server boundary. Do not include secrets or raw error details in HTTP responses.
+
+Invalid signatures receive 401, malformed JSON/CRC requests 400, unsupported methods 405, and oversized bodies 413. The default body limit is 5 MiB; configure `maxBodyBytes` to change it.
+
+The helper does not start a server or register a webhook. After mounting a publicly reachable endpoint, register it with:
 
 ```ts
-import * as Effect from "effect/Effect";
-import * as Hmac from "effect-xdk/Hmac";
-import { createCrcResponse, verifyWebhookRequest } from "effect-xdk/Webhooks";
-
-const answerChallenge = (crcToken: string, apiSecret: string) =>
-  Effect.runPromise(
-    createCrcResponse(crcToken, apiSecret).pipe(Effect.provide(Hmac.layerSubtle)),
-  );
-
-const verifyDelivery = (request: Request, apiSecret: string) =>
-  Effect.runPromise(
-    verifyWebhookRequest(request, apiSecret).pipe(Effect.provide(Hmac.layerSubtle)),
-  );
+const registered = yield* client.Api.webhooks.createWebhooks({
+  url: "https://example.com/webhook",
+});
 ```
 
-`verifyWebhookRequest` returns a boolean and leaves the original request body readable. To verify bytes directly, use `verifyWebhookSignature({ rawBody, signature, consumerSecret })`. Cryptographic failures use the `XWebhookError` channel.
+Create the desired activity subscriptions separately. For manual verification, `createCrcResponse`, `verifyWebhookSignature`, and `verifyWebhookRequest` are available from `effect-xdk/Webhooks`; these low-level Effects require `Hmac.layerSubtle`. Unlike the handler, `verifyWebhookRequest` leaves the original body readable.

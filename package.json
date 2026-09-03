@@ -1,5 +1,5 @@
 {
-  "name": "alchemy-x-workspace",
+  "name": "effect-xdk-workspace",
   "version": "0.0.0",
   "private": true,
   "workspaces": {
@@ -26,14 +26,13 @@
   "scripts": {
     "generate": "bun run --cwd packages/effect-xdk generate",
     "generate:check": "bun run --cwd packages/effect-xdk generate:check",
-    "build": "rm -rf packages/effect-xdk/lib packages/alchemy-x/lib && tsc -b --force",
+    "build": "tsc -b --force",
     "typecheck": "tsc -b --pretty false && bun run --cwd packages/effect-xdk typecheck:test",
     "format": "oxfmt '.' --ignore-path .oxfmtignore",
     "format:check": "oxfmt '.' --check --ignore-path .oxfmtignore",
     "lint": "oxlint",
     "pack:check": "bun run build && bun scripts/check-packs.ts",
     "test": "bun test",
-    "test:live": "X_LIVE=1 bun --env-file=.env test ./packages/alchemy-x/test/live",
     "worker:check": "bun scripts/check-worker-bundle.ts",
     "check": "bun run generate:check && bun run format:check && bun run lint && bun run typecheck && bun test && bun run worker:check"
   },

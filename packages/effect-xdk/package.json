@@ -82,7 +82,12 @@
       "worker": "./src/webhooks.ts",
       "default": "./lib/webhooks.js"
     },
-    "./Client": null,
+    "./Client": {
+      "types": "./lib/client.d.ts",
+      "bun": "./src/client.ts",
+      "worker": "./src/client.ts",
+      "default": "./lib/client.js"
+    },
     "./client": null,
     "./auth": null,
     "./oauth": {
@@ -134,7 +139,8 @@
     "test": "bun test"
   },
   "dependencies": {
-    "@distilled.cloud/core": "1.0.0-rc.8"
+    "@distilled.cloud/core": "1.0.0-rc.8",
+    "@effect/platform-browser": "4.0.0-rc.112"
   },
   "devDependencies": {
     "@effect/platform-bun": "4.0.0-rc.112"

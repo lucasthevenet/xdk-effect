@@ -23,8 +23,8 @@ export interface OAuth1Config {
 }
 
 export interface BearerConfig {
-  readonly appBearerToken?: string | Redacted.Redacted<string>;
-  readonly userAccessToken?: string | Redacted.Redacted<string>;
+  readonly appBearerToken?: string | Redacted.Redacted<string> | undefined;
+  readonly userAccessToken?: string | Redacted.Redacted<string> | undefined;
   readonly apiBaseUrl?: string;
 }
 
@@ -84,7 +84,7 @@ export const fromOAuth1 = (config: OAuth1Config): Layer.Layer<Credentials> =>
 export const fromBearer = (config: BearerConfig): Layer.Layer<Credentials> =>
   Layer.succeed(Credentials, Effect.succeed(bearerCredentials(config)));
 
-/** Native SDK environment credentials use the same quartet as Alchemy. */
+/** Resolve OAuth1 credentials from environment configuration. */
 export const resolveFromEnv = Config.all({
   apiKey: Config.redacted("X_API_KEY"),
   apiSecret: Config.redacted("X_API_SECRET"),
