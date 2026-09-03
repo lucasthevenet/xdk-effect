@@ -11,7 +11,7 @@ Set these environment variables for deployment:
 
 Secrets are declared with `Config.redacted` in the Worker's `env` bindings. Alchemy resolves them at deployment and provides them to runtime `Config` reads; redacted values are passed directly to the SDK.
 
-`src/routes.ts` defines the routes. `src/worker.ts` creates `Cloudflare.Worker("XWebhookWorker", ...)` and uses `HttpRouter.toHttpEffect` for its fetch handler. `alchemy.run.ts` defines the `XExample` stack with Cloudflare providers and state.
+`src/worker.ts` defines the routes, creates `Cloudflare.Worker("XWebhookWorker", ...)`, and uses `HttpRouter.toHttpEffect` for its fetch handler. `alchemy.run.ts` defines the `XExample` stack with Cloudflare providers and state.
 
 From the workspace root, install dependencies with `bun install`, then deploy:
 

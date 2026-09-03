@@ -3,7 +3,6 @@ import path from "node:path";
 const root = path.resolve(import.meta.dir, "..");
 for (const entry of [
   "packages/effect-xdk/src/index.ts",
-  "examples/cloudflare-worker/src/routes.ts",
   "examples/cloudflare-worker/src/worker.ts",
 ]) {
   const result = await Bun.build({
@@ -12,7 +11,7 @@ for (const entry of [
     format: "esm",
     conditions: ["worker"],
     // Alchemy's deploy-time imports are transformed by its Worker bundler.
-    // Check the route implementation and SDK fully bundled above.
+    // The SDK and route implementation remain fully bundled.
     external: ["alchemy", "alchemy/*"],
   });
   if (!result.success)

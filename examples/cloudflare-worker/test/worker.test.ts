@@ -6,7 +6,7 @@ import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
 import * as HttpRouter from "effect/unstable/http/HttpRouter";
-import { Routes } from "../src/routes.ts";
+import { Routes } from "../src/worker.ts";
 
 const { handler: handleRequest, dispose } = HttpRouter.toWebHandler(Routes, {
   disableLogger: true,
