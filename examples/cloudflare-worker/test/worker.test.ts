@@ -4,15 +4,10 @@ import * as Cloudflare from "alchemy/Cloudflare";
 import * as ConfigProvider from "effect/ConfigProvider";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
+import * as Layer from "effect/Layer";
 import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
 import * as HttpRouter from "effect/unstable/http/HttpRouter";
 import { Routes } from "../src/worker.ts";
-
-const { handler: handleRequest, dispose } = HttpRouter.toWebHandler(Routes, {
-  disableLogger: true,
-});
-
-afterAll(dispose);
 
 const env = {
   API_KEY: "test-api-key",
@@ -20,6 +15,20 @@ const env = {
   ACCESS_TOKEN: "test-access-token",
   ACCESS_TOKEN_SECRET: "test-access-token-secret",
 };
+
+const { handler: handleRequest, dispose } = HttpRouter.toWebHandler(
+  Routes.pipe(
+    Layer.provide(
+      Layer.succeed(
+        ConfigProvider.ConfigProvider,
+        ConfigProvider.fromUnknown(env),
+      ),
+    ),
+  ),
+  { disableLogger: true },
+);
+
+afterAll(dispose);
 
 test.each([
   ["/", 200],
@@ -209,7 +218,6 @@ test("other paths and methods do not call X", async () => {
     new Request("https://example.com/", { method: "POST" }),
     fetcher,
   );
-  expect(response.status).toBe(405);
-  expect(response.headers.get("allow")).toBe("GET, HEAD");
+  expect(response.status).toBe(404);
   expect(calls).toBe(0);
 });

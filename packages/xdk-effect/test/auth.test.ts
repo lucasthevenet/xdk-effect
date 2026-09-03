@@ -1,4 +1,4 @@
-import * as Hmac from "effect-xdk/Hmac";
+import * as Hmac from "xdk-effect/Hmac";
 import * as PlatformError from "effect/PlatformError";
 import * as Crypto from "effect/Crypto";
 import * as Clock from "effect/Clock";

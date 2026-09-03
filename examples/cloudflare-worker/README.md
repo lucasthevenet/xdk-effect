@@ -1,6 +1,6 @@
 # Alchemy Cloudflare Worker
 
-An Alchemy-managed Worker using `effect-xdk` and Effect's `HttpRouter`. `GET /` returns the authenticated X user. `GET /webhook` handles CRC checks, and `POST /webhook` handles verified event deliveries.
+An Alchemy-managed Worker using `xdk-effect` and Effect's `HttpRouter`. `GET /` returns the authenticated X user. `GET /webhook` handles CRC checks, and `POST /webhook` handles verified event deliveries.
 
 Set these environment variables for deployment:
 
@@ -20,7 +20,7 @@ cd examples/cloudflare-worker
 bun alchemy deploy
 ```
 
-Unknown paths return 404; unsupported methods on known routes return 405. `HEAD /` uses the GET route with an empty response body.
+The webhook helper is passed directly to `HttpRouter.add` and reads the incoming request from Effect context. Unmatched paths and methods return 404; unsupported webhook methods return 405. `HEAD /` uses the GET route with an empty response body.
 
 After deployment, register `https://<your-worker>/webhook` using `client.webhooks.createWebhooks({ url: "https://<your-worker>/webhook" })`, then create the desired subscriptions. The handler does not register webhooks automatically.
 

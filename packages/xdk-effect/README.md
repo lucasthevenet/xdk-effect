@@ -1,18 +1,18 @@
-# effect-xdk
+# xdk-effect
 
 An Effect-native TypeScript SDK for X, generated from the official OpenAPI specification. Works in Node.js, Bun, browsers, and Cloudflare Workers with Fetch and Web Crypto available.
 
 ## Install
 
 ```sh
-bun add effect-xdk effect
+bun add xdk-effect effect
 ```
 
 ## Create a client
 
 ```ts
 import * as Effect from "effect/Effect";
-import * as X from "effect-xdk";
+import * as X from "xdk-effect";
 
 const client = X.Client({
   oauth1: {
@@ -37,7 +37,7 @@ The constructor configures credentials, HTTP transport, and crypto. It performs 
 
 Groups and method names follow the OpenAPI specification: `client.posts.createPosts({ text: "Hello" })`, `client.webhooks.getWebhooks({})`, and so on. Request fields combine path, query, and body parameters in one object. Dotted query names use underscores: `user_fields` sends `user.fields`.
 
-Responses retain X's envelope: read `data` for results and inspect `errors` for partial failures. Types and schemas are available from service modules such as `effect-xdk/users`.
+Responses retain X's envelope: read `data` for results and inspect `errors` for partial failures. Types and schemas are available from service modules such as `xdk-effect/users`.
 
 ## Authentication
 
@@ -58,7 +58,7 @@ Supply OAuth1 credentials or bearer credentials. When both app and user authenti
 
 Pass `baseUrl` for a custom API origin or `httpClient` to inject an Effect HTTP transport. Keep credentials server-side; use only appropriately scoped public-client tokens in browsers. Your X app needs the permissions and product access required by each operation.
 
-OAuth authorization helpers are exported from `effect-xdk/OAuth`, including `createAuthorizationRequest`, `parseAuthorizationCallback`, `exchangeCode`, `refreshToken`, and `revokeToken`. These standalone Effects require an Effect Crypto or HttpClient layer as indicated by their types. Pass the resulting user access token to `X.Client({ accessToken })`; token persistence and refresh scheduling belong to your application.
+OAuth authorization helpers are exported from `xdk-effect/OAuth`, including `createAuthorizationRequest`, `parseAuthorizationCallback`, `exchangeCode`, `refreshToken`, and `revokeToken`. These standalone Effects require an Effect Crypto or HttpClient layer as indicated by their types. Pass the resulting user access token to `X.Client({ accessToken })`; token persistence and refresh scheduling belong to your application.
 
 ## Errors and retries
 
@@ -92,27 +92,32 @@ Stopping consumption cancels the stream. Reconnection is the caller's responsibi
 ## Webhook handler
 
 ```ts
-const webhook = X.createWebhookHandler({
-  consumerSecret: process.env.X_API_SECRET!,
-  onEvent: (event) => Effect.log("X delivery", event),
-});
+import * as Config from "effect/Config";
+import * as Layer from "effect/Layer";
+import * as HttpRouter from "effect/unstable/http/HttpRouter";
 
-// Mount this at your webhook route in any Fetch-compatible server.
-const fetch = (request: Request): Promise<Response> =>
-  Effect.runPromise(
-    webhook(request).pipe(
-      Effect.catch(() =>
-        Effect.succeed(new Response("Webhook processing failed", { status: 500 })),
-      ),
-    ),
-  );
+const Routes = Layer.unwrap(
+  Effect.gen(function* () {
+    const WebhookRoute = HttpRouter.add(
+      "*",
+      "/webhook",
+      X.createWebhookHandler({
+        consumerSecret: yield* Config.redacted("API_SECRET"),
+        onEvent: (event) => Effect.log("X delivery", event),
+      }),
+    );
+    return WebhookRoute;
+  }),
+);
 ```
+
+`createWebhookHandler` returns an Effect that reads `HttpServerRequest` from context and produces `HttpServerResponse`. Pass it directly to `HttpRouter.add`; no Web `Request` or `Response` conversion is needed. In an Alchemy Worker, return `{ fetch: yield* HttpRouter.toHttpEffect(Routes) }` from initialization.
 
 The helper uses the app's API secret, not its access-token secret. It answers GET CRC challenges and verifies POST signatures over the original bytes before decoding JSON or calling `onEvent`, following [X's webhook protocol](https://docs.x.com/x-api/webhooks/quickstart).
 
 It consumes the request body and passes a JSON object to `onEvent`. Use an Effect Schema inside the callback when you need a narrower event type. Unknown event fields are preserved.
 
-The handler acknowledges with 200 only after your callback succeeds. Callback requirements and errors remain in the Effect channel. CRC/signing failures use `XWebhookError`; map failures to non-2xx responses at your server boundary. Do not include secrets or raw error details in HTTP responses.
+The handler acknowledges with 200 only after your callback succeeds. Callback requirements and errors remain in the Effect channel. CRC/signing failures use `XWebhookError`; use `Effect.catch` or router middleware to map failures to non-2xx `HttpServerResponse` values. Do not include secrets or raw error details in HTTP responses.
 
 Invalid signatures receive 401, malformed JSON/CRC requests 400, unsupported methods 405, and oversized bodies 413. The default body limit is 5 MiB; configure `maxBodyBytes` to change it.
 
@@ -124,4 +129,4 @@ const registered = yield* client.webhooks.createWebhooks({
 });
 ```
 
-Create the desired activity subscriptions separately. For manual verification, `createCrcResponse`, `verifyWebhookSignature`, and `verifyWebhookRequest` are available from `effect-xdk/Webhooks`; these low-level Effects require `Hmac.layerSubtle`. Unlike the handler, `verifyWebhookRequest` leaves the original body readable.
+Create the desired activity subscriptions separately. For manual verification, `createCrcResponse`, `verifyWebhookSignature`, and `verifyWebhookRequest` are available from `xdk-effect/Webhooks`; these low-level Effects require `Hmac.layerSubtle`. Unlike the handler, `verifyWebhookRequest` leaves the original body readable.

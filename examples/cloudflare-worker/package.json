@@ -1,5 +1,5 @@
 {
-  "name": "@effect-xdk/example-cloudflare-worker",
+  "name": "@xdk-effect/example-cloudflare-worker",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -10,7 +10,7 @@
     "@effect/platform-node": "4.0.0-rc.112",
     "alchemy": "2.0.0-beta.76",
     "effect": "catalog:effect",
-    "effect-xdk": "workspace:*"
+    "xdk-effect": "workspace:*"
   },
   "devDependencies": {
     "@effect/platform-bun": "4.0.0-rc.112",

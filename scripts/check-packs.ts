@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 
 const root = path.resolve(import.meta.dir, "..");
-const packages = ["packages/effect-xdk"];
+const packages = ["packages/xdk-effect"];
 
 for (const packageDirectory of packages) {
   const manifestPath = path.join(root, packageDirectory, "package.json");
@@ -17,7 +17,7 @@ for (const packageDirectory of packages) {
     throw new Error(`${manifest.name} must build from its prepack script`);
   }
 
-  const npmCache = await mkdtemp(path.join(os.tmpdir(), "effect-xdk-pack-"));
+  const npmCache = await mkdtemp(path.join(os.tmpdir(), "xdk-effect-pack-"));
   try {
     const process = Bun.spawn(
       ["npm", "pack", "--dry-run", "--json", `./${packageDirectory}`],

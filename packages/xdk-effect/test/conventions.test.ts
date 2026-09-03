@@ -1,4 +1,4 @@
-import * as Hmac from "effect-xdk/Hmac";
+import * as Hmac from "xdk-effect/Hmac";
 import * as BunCrypto from "@effect/platform-bun/BunCrypto";
 import { expect, test } from "bun:test";
 import * as ConfigProvider from "effect/ConfigProvider";
@@ -16,11 +16,11 @@ import {
   fromBearer,
   fromOAuth1,
   oauth1Credentials,
-} from "effect-xdk/Credentials";
-import { ConfigError, TooManyRequests } from "effect-xdk/Errors";
-import * as Retry from "effect-xdk/Retry";
-import { getUsersMe } from "effect-xdk/users";
-import { getWebhooks } from "effect-xdk/webhooks";
+} from "xdk-effect/Credentials";
+import { ConfigError, TooManyRequests } from "xdk-effect/Errors";
+import * as Retry from "xdk-effect/Retry";
+import { getUsersMe } from "xdk-effect/users";
+import { getWebhooks } from "xdk-effect/webhooks";
 type FetchLike = (
   input: RequestInfo | URL,
   init?: RequestInit,

@@ -3,7 +3,46 @@ import { expect, test } from "bun:test";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Redacted from "effect/Redacted";
+import * as HttpRouter from "effect/unstable/http/HttpRouter";
+import * as HttpServerRequest from "effect/unstable/http/HttpServerRequest";
+import * as HttpServerResponse from "effect/unstable/http/HttpServerResponse";
 import * as X from "../src/index.ts";
+
+const withRequest = <E, R>(
+  handler: Effect.Effect<HttpServerResponse.HttpServerResponse, E, R>,
+  request: Request,
+) =>
+  handler.pipe(
+    Effect.provideService(
+      HttpServerRequest.HttpServerRequest,
+      HttpServerRequest.fromWeb(request),
+    ),
+    Effect.map((response) => HttpServerResponse.toWeb(response)),
+  );
+
+test("handler mounts directly in HttpRouter and can serve multiple requests", async () => {
+  const handler = X.createWebhookHandler({
+    consumerSecret: "app-secret",
+    onEvent: () => Effect.void,
+  });
+  expect(Effect.isEffect(handler)).toBe(true);
+  const app = HttpRouter.toWebHandler(
+    HttpRouter.add("*", "/webhook", handler),
+    { disableLogger: true },
+  );
+  try {
+    const crc = await app.handler(
+      new Request("https://example.com/webhook?crc_token=challenge"),
+    );
+    expect(crc.status).toBe(200);
+    expect(await crc.json()).toEqual({ response_token: sign("challenge") });
+    const response = await app.handler(delivery("{}"));
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ ok: true });
+  } finally {
+    await app.dispose();
+  }
+});
 
 const secret = "app-secret";
 const sign = (body: string) =>
@@ -21,7 +60,10 @@ test("CRC uses the app secret and never invokes the callback", async () => {
     onEvent: () => Effect.die("unexpected delivery"),
   });
   const response = await Effect.runPromise(
-    handler(new Request("https://example.com/webhook?crc_token=challenge")),
+    withRequest(
+      handler,
+      new Request("https://example.com/webhook?crc_token=challenge"),
+    ),
   );
   expect(response.status).toBe(200);
   expect(await response.json()).toEqual({ response_token: sign("challenge") });
@@ -29,15 +71,41 @@ test("CRC uses the app secret and never invokes the callback", async () => {
   expect(
     (
       await Effect.runPromise(
-        handler(new Request("https://example.com/webhook")),
+        withRequest(handler, new Request("https://example.com/webhook")),
       )
     ).status,
   ).toBe(400);
   const unsupported = await Effect.runPromise(
-    handler(new Request("https://example.com/webhook", { method: "DELETE" })),
+    withRequest(
+      handler,
+      new Request("https://example.com/webhook", { method: "DELETE" }),
+    ),
   );
   expect(unsupported.status).toBe(405);
   expect(unsupported.headers.get("allow")).toBe("GET, POST");
+});
+
+test("handler returns an HttpServerResponse using only the request service", async () => {
+  const handler: Effect.Effect<
+    HttpServerResponse.HttpServerResponse,
+    X.XWebhookError,
+    HttpServerRequest.HttpServerRequest
+  > = X.createWebhookHandler({
+    consumerSecret: secret,
+    onEvent: () => Effect.void,
+  });
+  const response = await Effect.runPromise(
+    handler.pipe(
+      Effect.provideService(
+        HttpServerRequest.HttpServerRequest,
+        HttpServerRequest.fromWeb(
+          new Request("https://example.com/webhook?crc_token=challenge"),
+        ),
+      ),
+    ),
+  );
+  expect(HttpServerResponse.isHttpServerResponse(response)).toBe(true);
+  expect(response.status).toBe(200);
 });
 
 test("valid raw UTF-8 deliveries are verified and processed before acknowledgment", async () => {
@@ -51,7 +119,7 @@ test("valid raw UTF-8 deliveries are verified and processed before acknowledgmen
         processed = true;
       }),
   });
-  const effect = handler(delivery(body));
+  const effect = withRequest(handler, delivery(body));
   expect(processed).toBe(false);
   const response = await Effect.runPromise(effect);
   expect(processed).toBe(true);
@@ -66,7 +134,8 @@ test.each(["", "sha256=!!!!", "sha256=AA==", sign("different body")])(
       onEvent: () => Effect.die("must not run"),
     });
     expect(
-      (await Effect.runPromise(handler(delivery("{}", signature)))).status,
+      (await Effect.runPromise(withRequest(handler, delivery("{}", signature))))
+        .status,
     ).toBe(401);
   },
 );
@@ -78,7 +147,9 @@ test.each(["not json", "null", "[]", "42"])(
       consumerSecret: secret,
       onEvent: () => Effect.die("must not run"),
     });
-    expect((await Effect.runPromise(handler(delivery(body)))).status).toBe(400);
+    expect(
+      (await Effect.runPromise(withRequest(handler, delivery(body)))).status,
+    ).toBe(400);
   },
 );
 
@@ -100,7 +171,7 @@ test("callback requirements and failures stay in the Effect channel", async () =
     Response,
     X.XWebhookError | "processing failed",
     Receiver
-  > = handler(delivery("{}"));
+  > = withRequest(handler, delivery("{}"));
   expect(
     await Effect.runPromise(
       effect.pipe(Effect.provideService(Receiver, { fail: true }), Effect.flip),
@@ -130,7 +201,9 @@ test("limits streamed bodies without trusting content-length, cancelling oversiz
     maxBodyBytes: 10,
     onEvent: () => Effect.die("must not run"),
   });
-  expect((await Effect.runPromise(handler(request))).status).toBe(413);
+  expect((await Effect.runPromise(withRequest(handler, request))).status).toBe(
+    413,
+  );
   expect(cancelled).toBe(true);
 });
 

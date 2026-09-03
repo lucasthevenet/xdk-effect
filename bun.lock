@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "effect-xdk-workspace",
+      "name": "xdk-effect-workspace",
       "devDependencies": {
         "@effect/tsgo": "^0.38.0",
         "@oxlint/plugins": "^1.80.0",
@@ -16,13 +16,13 @@
       },
     },
     "examples/cloudflare-worker": {
-      "name": "@effect-xdk/example-cloudflare-worker",
+      "name": "@xdk-effect/example-cloudflare-worker",
       "version": "0.0.0",
       "dependencies": {
         "@effect/platform-node": "4.0.0-rc.112",
         "alchemy": "2.0.0-beta.76",
         "effect": "catalog:effect",
-        "effect-xdk": "workspace:*",
+        "xdk-effect": "workspace:*",
       },
       "devDependencies": {
         "@effect/platform-bun": "4.0.0-rc.112",
@@ -30,8 +30,8 @@
         "typescript": "catalog:build",
       },
     },
-    "packages/effect-xdk": {
-      "name": "effect-xdk",
+    "packages/xdk-effect": {
+      "name": "xdk-effect",
       "version": "0.1.0",
       "dependencies": {
         "@distilled.cloud/core": "1.0.0-rc.8",
@@ -150,7 +150,7 @@
 
     "@distilled.cloud/railway": ["@distilled.cloud/railway@1.0.0-rc.8", "", { "dependencies": { "@distilled.cloud/core": "1.0.0-rc.8" }, "peerDependencies": { "effect": ">=4.0.0-rc.112 || >=4.0.0" } }, "sha512-VW2YdbblVHhYww5JVtOjFlv3jBFl7xlt6/xTfkNxxgXgzJ5GYVlD3gPgBIpGy9Pcnv9rVRA6CL7QZeYeu47c9Q=="],
 
-    "@effect-xdk/example-cloudflare-worker": ["@effect-xdk/example-cloudflare-worker@workspace:examples/cloudflare-worker"],
+    "@xdk-effect/example-cloudflare-worker": ["@xdk-effect/example-cloudflare-worker@workspace:examples/cloudflare-worker"],
 
     "@effect/platform-browser": ["@effect/platform-browser@4.0.0-rc.112", "", { "peerDependencies": { "effect": "^4.0.0-rc.112" } }, "sha512-GSlqNDnjILz2EqOFPhVdMEHxlPq6SGb8+KOpNnLfRvVJjXRTMawEO+v1PCuwt2CHAqESbJAa2Nk+qcQvTrv4MQ=="],
 
@@ -592,7 +592,7 @@
 
     "effect": ["effect@4.0.0-rc.112", "", { "dependencies": { "fast-check": "^4.9.0", "msgpackr": "^2.0.5" } }, "sha512-wXxwuh1Ywnv4cPRM3Wfa0vDwuOHnZ1TsTgHJkG9XgzND6inhBH9n1vBxhg3iIXOia/OrpmvVmd3lrD4vq6bF3A=="],
 
-    "effect-xdk": ["effect-xdk@workspace:packages/effect-xdk"],
+    "xdk-effect": ["xdk-effect@workspace:packages/xdk-effect"],
 
     "emoji-regex": ["emoji-regex@10.6.0", "", {}, "sha512-toUI84YS5YmxW219erniWD0CIVOo46xGKColeNQRgOzDorgBi1v4D71/OFzgD9GO2UGKIv1C3Sp8DAn0+j5w7A=="],
 

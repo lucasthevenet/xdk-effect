@@ -10,7 +10,7 @@
     "suspicious": "warn"
   },
   "ignorePatterns": [
-    "packages/effect-xdk/src/services/**",
+    "packages/xdk-effect/src/services/**",
     ".agent/**",
     ".agents/**",
     ".claude/**",

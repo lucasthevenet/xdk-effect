@@ -3,9 +3,8 @@ import * as Config from "effect/Config";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import * as HttpRouter from "effect/unstable/http/HttpRouter";
-import * as HttpServerRequest from "effect/unstable/http/HttpServerRequest";
 import * as HttpServerResponse from "effect/unstable/http/HttpServerResponse";
-import * as X from "effect-xdk";
+import * as X from "xdk-effect";
 
 const requestFailed = () =>
   Effect.succeed(
@@ -35,20 +34,13 @@ const WebhookRoute = HttpRouter.add(
   "*",
   "/webhook",
   Effect.gen(function* () {
-    const request = yield* HttpServerRequest.HttpServerRequest;
-    const webhook = X.createWebhookHandler({
+    return yield* X.createWebhookHandler({
       consumerSecret: yield* Config.redacted("API_SECRET"),
       onEvent: (event) => Effect.log("X event", event),
-    });
-    const response = yield* webhook(yield* HttpServerRequest.toWeb(request));
-    return HttpServerResponse.fromWeb(response);
+    })
   }).pipe(Effect.catch(requestFailed)),
 );
 
-export const Routes = Layer.mergeAll(
-  GetMeRoute,
-  WebhookRoute,
-);
 
 export default Cloudflare.Worker(
   "XWebhookWorker",
@@ -62,6 +54,6 @@ export default Cloudflare.Worker(
     },
   },
   Effect.gen(function* () {
-    return { fetch: yield* HttpRouter.toHttpEffect(Routes) };
+    return { fetch: yield* HttpRouter.toHttpEffect(Layer.mergeAll(GetMeRoute, WebhookRoute)) };
   }),
 );

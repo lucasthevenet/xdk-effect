@@ -1,5 +1,5 @@
 {
-  "name": "effect-xdk-workspace",
+  "name": "xdk-effect-workspace",
   "version": "0.0.0",
   "private": true,
   "workspaces": {
@@ -24,10 +24,10 @@
   },
   "type": "module",
   "scripts": {
-    "generate": "bun run --cwd packages/effect-xdk generate",
-    "generate:check": "bun run --cwd packages/effect-xdk generate:check",
+    "generate": "bun run --cwd packages/xdk-effect generate",
+    "generate:check": "bun run --cwd packages/xdk-effect generate:check",
     "build": "tsc -b --force",
-    "typecheck": "tsc -b --pretty false && bun run --cwd packages/effect-xdk typecheck:test",
+    "typecheck": "tsc -b --pretty false && bun run --cwd packages/xdk-effect typecheck:test",
     "format": "oxfmt '.' --ignore-path .oxfmtignore",
     "format:check": "oxfmt '.' --check --ignore-path .oxfmtignore",
     "lint": "oxlint",

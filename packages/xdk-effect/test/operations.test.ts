@@ -1,4 +1,4 @@
-import * as Hmac from "effect-xdk/Hmac";
+import * as Hmac from "xdk-effect/Hmac";
 import * as BunCrypto from "@effect/platform-bun/BunCrypto";
 import { describe, expect, test } from "bun:test";
 import * as Effect from "effect/Effect";

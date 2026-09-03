@@ -23,7 +23,7 @@ export class Hmac extends Context.Service<
       input: HmacInput & { readonly signature: Uint8Array },
     ) => Effect.Effect<boolean, HmacError>;
   }
->()("effect-xdk/Hmac") {}
+>()("xdk-effect/Hmac") {}
 
 /** Wrap a host's Web Crypto implementation in the Hmac service. */
 export const makeSubtle = (crypto: Crypto): Effect.Effect<Hmac["Service"]> =>

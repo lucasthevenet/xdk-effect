@@ -2,7 +2,7 @@ import path from "node:path";
 
 const root = path.resolve(import.meta.dir, "..");
 for (const entry of [
-  "packages/effect-xdk/src/index.ts",
+  "packages/xdk-effect/src/index.ts",
   "examples/cloudflare-worker/src/worker.ts",
 ]) {
   const result = await Bun.build({
@@ -32,4 +32,4 @@ for (const entry of [
       throw new Error(`Worker bundle contains Node-only marker: ${marker}`);
   }
 }
-console.log("effect-xdk and Cloudflare Worker example bundles verified");
+console.log("xdk-effect and Cloudflare Worker example bundles verified");

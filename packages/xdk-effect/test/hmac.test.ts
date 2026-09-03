@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import * as Encoding from "effect/Encoding";
-import * as Hmac from "effect-xdk/Hmac";
+import * as Hmac from "xdk-effect/Hmac";
 
 const bytes = (value: string) => new TextEncoder().encode(value);
 

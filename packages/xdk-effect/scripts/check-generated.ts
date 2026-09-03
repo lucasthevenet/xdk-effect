@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 
 const root = path.resolve(import.meta.dir, "..");
-const target = await mkdtemp(path.join(tmpdir(), "effect-xdk-generation-"));
+const target = await mkdtemp(path.join(tmpdir(), "xdk-effect-generation-"));
 try {
   for (const script of ["convert.ts", "generate.ts"]) {
     const child = Bun.spawn(["bun", `scripts/${script}`], {

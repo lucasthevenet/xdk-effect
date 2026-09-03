@@ -1,14 +1,14 @@
-# effect-xdk
+# xdk-effect
 
 An Effect-native TypeScript SDK for X, generated from the official OpenAPI specification.
 
 ```sh
-bun add effect-xdk effect
+bun add xdk-effect effect
 ```
 
 ```ts
 import * as Effect from "effect/Effect";
-import * as X from "effect-xdk";
+import * as X from "xdk-effect";
 
 const client = X.Client({
   oauth1: {
@@ -23,4 +23,4 @@ const me = await Effect.runPromise(client.users.getUsersMe({}));
 console.log(me.data);
 ```
 
-See the [SDK guide](./packages/effect-xdk/README.md) for authentication, streaming, and webhook handlers, or the [Cloudflare Worker example](./examples/cloudflare-worker).
+See the [SDK guide](./packages/xdk-effect/README.md) for authentication, streaming, and webhook handlers, or the [Cloudflare Worker example](./examples/cloudflare-worker).
