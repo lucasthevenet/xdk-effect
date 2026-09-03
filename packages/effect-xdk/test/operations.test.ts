@@ -1,3 +1,4 @@
+import * as Hmac from "effect-xdk/Hmac";
 import * as BunCrypto from "@effect/platform-bun/BunCrypto";
 import { describe, expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
@@ -40,6 +41,7 @@ const transport = (runtime: { readonly fetch: FetchLike }) =>
   Layer.mergeAll(
     FetchHttpClient.layer,
     BunCrypto.layer,
+    Hmac.layerSubtle,
     Layer.succeed(
       FetchHttpClient.Fetch,
       Object.assign(runtime.fetch, { preconnect: fetch.preconnect }),

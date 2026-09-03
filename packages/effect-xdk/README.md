@@ -19,12 +19,13 @@ export X_ACCESS_TOKEN=...
 export X_ACCESS_TOKEN_SECRET=...
 ```
 
-Provide credentials, an Effect `HttpClient`, and a `Crypto` layer to your program:
+Provide credentials, an Effect `HttpClient`, a `Crypto` layer, and `Hmac.layerSubtle` to your program:
 
 ```ts
 import * as Effect from "effect/Effect";
 import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
 import * as BrowserCrypto from "@effect/platform-browser/BrowserCrypto";
+import * as Hmac from "effect-xdk/Hmac";
 import { CredentialsFromEnv } from "effect-xdk/Credentials";
 import { getUsersMe } from "effect-xdk/users";
 import { createPosts } from "effect-xdk/posts";
@@ -40,6 +41,7 @@ const result = await Effect.runPromise(
     Effect.provide(CredentialsFromEnv),
     Effect.provide(FetchHttpClient.layer),
     Effect.provide(BrowserCrypto.layer),
+    Effect.provide(Hmac.layerSubtle),
   ),
 );
 ```
@@ -49,6 +51,8 @@ Import operations from `effect-xdk/<service>`, such as `users`, `posts`, or `web
 JSON operations return X's response envelope directly. Read `data` for results and inspect `errors` for partial failures. Operations also export their request/response types and schemas.
 
 Use `BrowserCrypto.layer` in browsers and Workers, `BunCrypto.layer` from `@effect/platform-bun/BunCrypto` in Bun, or `NodeCrypto.layer` from `@effect/platform-node/NodeCrypto` in Node.js. Match the platform package version to your Effect version.
+
+`Hmac.layerSubtle` provides native Web Crypto signing and verification. To use a different Web Crypto instance, build a layer with `Layer.effect(Hmac.Hmac, Hmac.makeSubtle(crypto))`. Tests can override `Hmac.Hmac` with `Effect.provideService`.
 
 ## Authentication
 
@@ -109,7 +113,7 @@ const firstTen = streamPostsSample({}).pipe(
 );
 ```
 
-Provide credentials, an `HttpClient`, and a `Crypto` layer as in the quick start. Ending consumption cancels the stream; reconnection is the caller's responsibility.
+Provide credentials, an `HttpClient`, a `Crypto` layer, and `Hmac.layerSubtle` as in the quick start. Ending consumption cancels the stream; reconnection is the caller's responsibility.
 
 Binary downloads return `Uint8Array`. Media upload operations accept a `Blob` for multipart uploads or a base64 string for JSON uploads.
 
@@ -156,13 +160,18 @@ Use `createCrcResponse` to answer X's CRC challenge and `verifyWebhookRequest` b
 
 ```ts
 import * as Effect from "effect/Effect";
+import * as Hmac from "effect-xdk/Hmac";
 import { createCrcResponse, verifyWebhookRequest } from "effect-xdk/Webhooks";
 
 const answerChallenge = (crcToken: string, apiSecret: string) =>
-  Effect.runPromise(createCrcResponse(crcToken, apiSecret));
+  Effect.runPromise(
+    createCrcResponse(crcToken, apiSecret).pipe(Effect.provide(Hmac.layerSubtle)),
+  );
 
 const verifyDelivery = (request: Request, apiSecret: string) =>
-  Effect.runPromise(verifyWebhookRequest(request, apiSecret));
+  Effect.runPromise(
+    verifyWebhookRequest(request, apiSecret).pipe(Effect.provide(Hmac.layerSubtle)),
+  );
 ```
 
 `verifyWebhookRequest` returns a boolean and leaves the original request body readable. To verify bytes directly, use `verifyWebhookSignature({ rawBody, signature, consumerSecret })`. Cryptographic failures use the `XWebhookError` channel.

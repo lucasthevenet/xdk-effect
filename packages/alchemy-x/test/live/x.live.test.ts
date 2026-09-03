@@ -1,3 +1,4 @@
+import * as Hmac from "effect-xdk/Hmac";
 import * as BrowserCrypto from "@effect/platform-browser/BrowserCrypto";
 import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
@@ -19,6 +20,7 @@ const run = <A, E>(effect: Effect.Effect<A, E, AccountActivity.XOpContext>) =>
       Effect.provide(CredentialsFromEnv),
       Effect.provide(FetchHttpClient.layer),
       Effect.provide(BrowserCrypto.layer),
+      Effect.provide(Hmac.layerSubtle),
     ),
   );
 

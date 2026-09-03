@@ -1,3 +1,4 @@
+import * as Hmac from "effect-xdk/Hmac";
 import * as BrowserCrypto from "@effect/platform-browser/BrowserCrypto";
 import { describe, expect, test } from "bun:test";
 import * as ConfigProvider from "effect/ConfigProvider";
@@ -94,6 +95,7 @@ describe("X credential resolution", () => {
         ),
         Effect.provideService(HttpClient.HttpClient, client),
         Effect.provide(BrowserCrypto.layer),
+        Effect.provide(Hmac.layerSubtle),
       ),
     );
     expect(result.data?.id).toBe("42");
@@ -129,6 +131,7 @@ describe("X credential resolution", () => {
       const transport = Layer.mergeAll(
         FetchHttpClient.layer,
         BrowserCrypto.layer,
+        Hmac.layerSubtle,
         Layer.succeed(
           FetchHttpClient.Fetch,
           Object.assign(

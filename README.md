@@ -33,6 +33,7 @@ bun add effect-xdk effect @effect/platform-browser
 import * as Effect from "effect/Effect";
 import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
 import * as BrowserCrypto from "@effect/platform-browser/BrowserCrypto";
+import * as Hmac from "effect-xdk/Hmac";
 import { CredentialsFromEnv } from "effect-xdk/Credentials";
 import { getUsersMe } from "effect-xdk/users";
 
@@ -41,6 +42,7 @@ const me = await Effect.runPromise(
     Effect.provide(CredentialsFromEnv),
     Effect.provide(FetchHttpClient.layer),
     Effect.provide(BrowserCrypto.layer),
+    Effect.provide(Hmac.layerSubtle),
   ),
 );
 

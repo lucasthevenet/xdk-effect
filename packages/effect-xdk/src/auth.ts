@@ -3,6 +3,7 @@ import * as Clock from "effect/Clock";
 import * as Effect from "effect/Effect";
 import * as Encoding from "effect/Encoding";
 import { XAuthenticationError } from "./errors.ts";
+import { Hmac } from "./hmac.ts";
 import type { OperationDefinition } from "./operation-types.ts";
 import { utf8 } from "./runtime.ts";
 
@@ -109,25 +110,14 @@ export const signOAuth1 = (
     ]
       .map(encode)
       .join("&");
-    // Effect Crypto does not expose HMAC; use the host's native implementation.
-    const signature = yield* Effect.tryPromise({
-      try: async () => {
-        const key = await globalThis.crypto.subtle.importKey(
-          "raw",
-          utf8(`${encode(apiSecret)}&${encode(accessTokenSecret)}`),
-          { name: "HMAC", hash: "SHA-1" },
-          false,
-          ["sign"],
-        );
-        return Encoding.encodeBase64(
-          new Uint8Array(
-            await globalThis.crypto.subtle.sign("HMAC", key, utf8(baseString)),
-          ),
-        );
-      },
-      catch: (cause) =>
-        new XAuthenticationError("X request signing failed", { cause }),
-    });
+    const hmac = yield* Hmac;
+    const signature = Encoding.encodeBase64(
+      yield* hmac.sign({
+        hash: "SHA-1",
+        key: utf8(`${encode(apiSecret)}&${encode(accessTokenSecret)}`),
+        data: utf8(baseString),
+      }),
+    );
     return `OAuth ${Object.entries({ ...oauth, oauth_signature: signature })
       .map(([name, value]) => `${encode(name)}="${encode(value)}"`)
       .join(", ")}`;

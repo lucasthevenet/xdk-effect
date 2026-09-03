@@ -1,3 +1,4 @@
+import * as Hmac from "effect-xdk/Hmac";
 import * as BrowserCrypto from "@effect/platform-browser/BrowserCrypto";
 import { afterEach, describe, expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
@@ -48,6 +49,7 @@ const credentials = () =>
     ),
     FetchHttpClient.layer,
     BrowserCrypto.layer,
+    Hmac.layerSubtle,
     Layer.succeed(
       FetchHttpClient.Fetch,
       Object.assign(

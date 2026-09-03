@@ -1,3 +1,4 @@
+import * as Hmac from "effect-xdk/Hmac";
 import * as BunCrypto from "@effect/platform-bun/BunCrypto";
 import { expect, test } from "bun:test";
 import * as ConfigProvider from "effect/ConfigProvider";
@@ -36,6 +37,7 @@ const transport = (fetcher: FetchLike) =>
   Layer.mergeAll(
     FetchHttpClient.layer,
     BunCrypto.layer,
+    Hmac.layerSubtle,
     Layer.succeed(
       FetchHttpClient.Fetch,
       Object.assign(fetcher, { preconnect: fetch.preconnect }),
@@ -144,6 +146,7 @@ test("API.make uses an injected HttpClient and Retry policy, re-signing each att
       Effect.provide(fromOAuth1(oauth1)),
       Effect.provideService(HttpClient.HttpClient, client),
       Effect.provide(BunCrypto.layer),
+      Effect.provide(Hmac.layerSubtle),
     ),
   );
   expect(headers).toHaveLength(2);

@@ -13,4 +13,5 @@ export {
   type XOpContext,
 } from "./protocol.ts";
 export * as Retry from "./retry.ts";
+export * as Hmac from "./hmac.ts";
 export * as Services from "./services/index.ts";

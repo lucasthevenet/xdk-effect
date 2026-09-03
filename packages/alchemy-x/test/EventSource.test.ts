@@ -1,3 +1,4 @@
+import * as Hmac from "effect-xdk/Hmac";
 import { describe, expect, test } from "bun:test";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
@@ -36,8 +37,7 @@ const preservesHandlerRequirement: Same<
 > = true;
 
 const signature = async (body: string) =>
-  (await Effect.runPromise(createCrcResponse(body, secretValue)))
-    .response_token;
+  (await run(createCrcResponse(body, secretValue))).response_token;
 
 const post = async (
   body: string,
@@ -55,7 +55,7 @@ const post = async (
     body,
   });
   const receiver = makeEventReceiver(handler, secret, maximumBodyBytes);
-  return Effect.runPromise(receiver(request));
+  return run(receiver(request));
 };
 
 describe("X event source contract", () => {
@@ -66,7 +66,7 @@ describe("X event source contract", () => {
         observed.push(options);
       });
 
-    await Effect.runPromise(
+    await run(
       Effect.gen(function* () {
         yield* consumeEvents(() => Effect.void);
         yield* consumeEvents(
@@ -109,29 +109,27 @@ describe("X event source contract", () => {
 describe("X event receiver", () => {
   test("answers CRC with the X HMAC response", async () => {
     const request = new Request(`${receiverUrl}?crc_token=challenge`);
-    const response = await Effect.runPromise(
+    const response = await run(
       makeEventReceiver(() => Effect.void, secret)(request),
     );
 
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual(
-      await Effect.runPromise(createCrcResponse("challenge", secretValue)),
+      await run(createCrcResponse("challenge", secretValue)),
     );
     expect(response.headers.get("cache-control")).toBe("no-store");
   });
 
   test("requires a bounded, non-object CRC token", async () => {
     const receiver = makeEventReceiver(() => Effect.void, secret);
-    const missing = await Effect.runPromise(receiver(new Request(receiverUrl)));
+    const missing = await run(receiver(new Request(receiverUrl)));
     const forgedBody = JSON.stringify({ for_user_id: "42" });
     const forgedUrl = new URL(receiverUrl);
     forgedUrl.searchParams.set("crc_token", forgedBody);
-    const forged = await Effect.runPromise(receiver(new Request(forgedUrl)));
+    const forged = await run(receiver(new Request(forgedUrl)));
     const oversizedUrl = new URL(receiverUrl);
     oversizedUrl.searchParams.set("crc_token", "x".repeat(1_025));
-    const oversized = await Effect.runPromise(
-      receiver(new Request(oversizedUrl)),
-    );
+    const oversized = await run(receiver(new Request(oversizedUrl)));
 
     expect(missing.status).toBe(400);
     expect(forged.status).toBe(400);
@@ -144,7 +142,7 @@ describe("X event receiver", () => {
       () => Effect.void,
       Effect.fail("unavailable"),
     );
-    const response = await Effect.runPromise(
+    const response = await run(
       receiver(new Request(`${receiverUrl}?crc_token=challenge`)),
     );
 
@@ -153,7 +151,7 @@ describe("X event receiver", () => {
   });
 
   test("rejects methods other than GET and POST", async () => {
-    const response = await Effect.runPromise(
+    const response = await run(
       makeEventReceiver(
         () => Effect.void,
         secret,
@@ -372,3 +370,6 @@ describe("X event receiver", () => {
     );
   });
 });
+
+const run = <A, E>(effect: Effect.Effect<A, E, Hmac.Hmac>) =>
+  Effect.runPromise(effect.pipe(Effect.provide(Hmac.layerSubtle)));

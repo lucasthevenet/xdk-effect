@@ -1,3 +1,4 @@
+import * as Hmac from "effect-xdk/Hmac";
 import * as BrowserCrypto from "@effect/platform-browser/BrowserCrypto";
 import { describe, expect, test } from "bun:test";
 import type { ResourceLike } from "alchemy";
@@ -183,6 +184,7 @@ const registerAtPlan = (
     // register logical declarations; no provider or remote API is involved.
     Effect.provideService(Stack, stack as never),
     Effect.provide(BrowserCrypto.layer),
+    Effect.provide(Hmac.layerSubtle),
     Effect.provide(
       fromCredentials({
         apiKey: "key",

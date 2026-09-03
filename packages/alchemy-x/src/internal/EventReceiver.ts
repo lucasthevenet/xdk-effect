@@ -1,3 +1,4 @@
+import * as Hmac from "effect-xdk/Hmac";
 import * as Effect from "effect/Effect";
 import * as Redacted from "effect/Redacted";
 import * as Result from "effect/Result";
@@ -307,7 +308,7 @@ const decodeEvent = (body: Uint8Array) =>
 const handleCrc = <SecretE, SecretR>(
   request: Request,
   secret: RuntimeConsumerSecret<SecretE, SecretR>,
-): Effect.Effect<Response, never, SecretR> =>
+): Effect.Effect<Response, never, SecretR | Hmac.Hmac> =>
   Effect.gen(function* () {
     const url = new URL(request.url);
     const token = url.searchParams.get("crc_token");
@@ -339,7 +340,7 @@ const handleDelivery = <E, R, SecretE, SecretR>(
   handler: EventHandler<E, R>,
   secret: RuntimeConsumerSecret<SecretE, SecretR>,
   maximumBytes: number,
-): Effect.Effect<Response, never, R | SecretR> =>
+): Effect.Effect<Response, never, R | SecretR | Hmac.Hmac> =>
   Effect.gen(function* () {
     const resolvedSecret = yield* resolveSecret(secret).pipe(Effect.result);
     if (Result.isFailure(resolvedSecret)) {
@@ -382,7 +383,9 @@ export const makeEventReceiver = <E, R, SecretE = never, SecretR = never>(
   maximumBodyBytes = DEFAULT_MAX_BODY_BYTES,
 ) => {
   const maximumBytes = bodyLimit(maximumBodyBytes);
-  return (request: Request): Effect.Effect<Response, never, R | SecretR> => {
+  return (
+    request: Request,
+  ): Effect.Effect<Response, never, R | SecretR | Hmac.Hmac> => {
     if (request.method === "GET") return handleCrc(request, secret);
     if (request.method === "POST") {
       return handleDelivery(request, handler, secret, maximumBytes);

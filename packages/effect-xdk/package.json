@@ -70,6 +70,12 @@
       "worker": "./src/oauth.ts",
       "default": "./lib/oauth.js"
     },
+    "./Hmac": {
+      "types": "./lib/hmac.d.ts",
+      "bun": "./src/hmac.ts",
+      "worker": "./src/hmac.ts",
+      "default": "./lib/hmac.js"
+    },
     "./Webhooks": {
       "types": "./lib/webhooks.d.ts",
       "bun": "./src/webhooks.ts",

@@ -1,3 +1,4 @@
+import * as Hmac from "effect-xdk/Hmac";
 import * as Cloudflare from "alchemy/Cloudflare";
 import type { InputProps } from "alchemy/Input";
 import * as Namespace from "alchemy/Namespace";
@@ -250,7 +251,9 @@ export const EventSourceLive = Layer.effect(
         if (!Cloudflare.isWorkerEvent(event) || event.type !== "fetch") return;
 
         if (requestPath(event.input) !== path) return;
-        return receive(toStandardRequest(event.input));
+        return receive(toStandardRequest(event.input)).pipe(
+          Effect.provide(Hmac.layerSubtle),
+        );
       });
     }) as EventSourceService;
   }),

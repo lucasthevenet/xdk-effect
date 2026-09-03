@@ -1,3 +1,4 @@
+import * as Hmac from "effect-xdk/Hmac";
 import * as PlatformError from "effect/PlatformError";
 import * as Crypto from "effect/Crypto";
 import * as Clock from "effect/Clock";
@@ -27,6 +28,7 @@ const transport = (fetcher: FetchLike) =>
   Layer.mergeAll(
     FetchHttpClient.layer,
     BunCrypto.layer,
+    Hmac.layerSubtle,
     Layer.succeed(
       FetchHttpClient.Fetch,
       Object.assign(fetcher, { preconnect: fetch.preconnect }),
@@ -65,6 +67,7 @@ describe("OAuth1 signing", () => {
         ),
       ).pipe(
         Effect.provideService(Crypto.Crypto, injectedCrypto),
+        Effect.provide(Hmac.layerSubtle),
         Effect.provideService(Clock.Clock, {
           ...clock,
           currentTimeMillis: Effect.succeed(1_318_622_958_000),
@@ -192,6 +195,74 @@ describe("native authentication", () => {
     );
     expect(headers).toEqual(["Bearer app", "Bearer user"]);
   });
+});
+
+test("generated operations use the call-time HMAC service", async () => {
+  const signatures: string[] = [];
+  const signedInputs: Hmac.HmacInput[] = [];
+  const signer = (byte: number) =>
+    Hmac.Hmac.of({
+      sign: (input) =>
+        Effect.sync(() => {
+          signedInputs.push(input);
+          return new Uint8Array([byte]);
+        }),
+      verify: () => Effect.die("OAuth1 must not verify"),
+    });
+  await Effect.runPromise(
+    Effect.gen(function* () {
+      for (const byte of [1, 2]) {
+        yield* getUsersMe({}).pipe(
+          Effect.provideService(Hmac.Hmac, signer(byte)),
+        );
+      }
+    }).pipe(
+      Effect.provide(fromOAuth1(credentials)),
+      Effect.provide(
+        transport(async (_url, init) => {
+          signatures.push(
+            oauthFields(new Headers(init?.headers).get("authorization")!)
+              .oauth_signature!,
+          );
+          return Response.json({
+            data: { id: "1", name: "Test", username: "test" },
+          });
+        }),
+      ),
+    ),
+  );
+  expect(signatures).toEqual(["AQ==", "Ag=="]);
+  expect(signedInputs).toHaveLength(2);
+  expect(signedInputs[0]?.hash).toBe("SHA-1");
+  expect(new TextDecoder().decode(signedInputs[0]?.key)).toBe(
+    "api-secret&token-secret",
+  );
+});
+
+test("HMAC signing failures become authentication errors before HTTP requests", async () => {
+  let requests = 0;
+  const failure = new Hmac.HmacError({ method: "sign", cause: "unavailable" });
+  const error = await Effect.runPromise(
+    getUsersMe({}).pipe(
+      Effect.provideService(
+        Hmac.Hmac,
+        Hmac.Hmac.of({
+          sign: () => Effect.fail(failure),
+          verify: () => Effect.die("OAuth1 must not verify"),
+        }),
+      ),
+      Effect.provide(fromOAuth1(credentials)),
+      Effect.provide(
+        transport(async () => {
+          requests++;
+          return Response.json({});
+        }),
+      ),
+      Effect.flip,
+    ),
+  );
+  expect(error).toBeInstanceOf(XAuthenticationError);
+  expect(requests).toBe(0);
 });
 
 test("OAuth1 nonce failures fail before HTTP requests", async () => {

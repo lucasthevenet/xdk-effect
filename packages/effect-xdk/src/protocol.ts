@@ -43,6 +43,7 @@ import {
   type DefaultErrors,
 } from "./errors.ts";
 import { prepareOperation } from "./operation-wire.ts";
+import type { Hmac } from "./hmac.ts";
 import type { OperationDefinition } from "./operation-types.ts";
 import { operations } from "./operations.ts";
 export type XAuthKind = "app" | "user";
@@ -52,7 +53,11 @@ export type XOpError =
   | DefaultErrors
   | ConfigError
   | HttpClientError.HttpClientError;
-export type XOpContext = Credentials | HttpClient.HttpClient | Crypto.Crypto;
+export type XOpContext =
+  | Credentials
+  | HttpClient.HttpClient
+  | Crypto.Crypto
+  | Hmac;
 
 /** Override auth context on the calling Effect; endpoint security is still enforced. */
 export const AuthContext = Context.Reference<XAuthKind | undefined>(
