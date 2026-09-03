@@ -3,10 +3,10 @@ import * as Schema from "effect/Schema";
 import { isResolved, type Input, Resource } from "alchemy";
 import { Unowned } from "alchemy/AdoptPolicy";
 import * as Provider from "alchemy/Provider";
-import { XDecodeError } from "distilled-x";
-import { XCredentials } from "./Credentials.ts";
+import * as Api from "effect-xdk/account-activity";
+import { getUsersMe } from "effect-xdk/users";
 import {
-  callX,
+  XResponseError,
   ignoreXNotFound,
   requireXData,
   XAdoptionRequired,
@@ -55,8 +55,7 @@ export class XIdentityMissing extends Schema.TaggedError<XIdentityMissing>()(
 
 /** Resolve the current OAuth token's X user ID for direct resource declarations. */
 export const currentUserId = Effect.gen(function* () {
-  const { client } = yield* XCredentials;
-  const identity = yield* callX(() => client.users.getMe());
+  const identity = yield* getUsersMe({});
   const userId = (yield* requireXData(
     identity,
     "reading the authenticated X user",
@@ -69,21 +68,19 @@ export const currentUserId = Effect.gen(function* () {
 });
 
 const subscribedUsers = Effect.fn(function* (webhookId: string) {
-  const { client } = yield* XCredentials;
-  const response = yield* callX(() =>
-    client.accountActivity.listSubscriptions(webhookId),
-  );
+  const response = yield* Api.getAccountActivitySubscriptions({
+    webhook_id: webhookId,
+  });
   const data = yield* requireXData(
     response,
     "listing X Account Activity subscriptions",
   );
   if (data.subscriptions === undefined) {
     return yield* Effect.fail(
-      new XDecodeError(
-        "X did not return the Account Activity subscription list",
-        response.status,
-        JSON.stringify(response.value),
-      ),
+      new XResponseError({
+        message: "X did not return the Account Activity subscription list",
+        body: response,
+      }),
     );
   }
   return data.subscriptions;
@@ -93,9 +90,11 @@ const deleteAccountActivitySubscription = Effect.fn(function* (
   webhookId: string,
   userId: string,
 ) {
-  const { client } = yield* XCredentials;
   const deleted = yield* ignoreXNotFound(
-    callX(() => client.accountActivity.deleteSubscription(webhookId, userId)),
+    Api.deleteAccountActivitySubscription({
+      webhook_id: webhookId,
+      user_id: userId,
+    }),
   );
   if (
     deleted &&
@@ -105,11 +104,10 @@ const deleteAccountActivitySubscription = Effect.fn(function* (
     )).subscribed !== false
   ) {
     return yield* Effect.fail(
-      new XDecodeError(
-        "X did not confirm Account Activity unsubscription",
-        deleted.status,
-        JSON.stringify(deleted.value),
-      ),
+      new XResponseError({
+        message: "X did not confirm Account Activity unsubscription",
+        body: deleted,
+      }),
     );
   }
 });
@@ -151,7 +149,6 @@ export const AccountActivitySubscriptionProvider = () =>
     }),
 
     reconcile: Effect.fn(function* ({ news, output }) {
-      const { client } = yield* XCredentials;
       const userId = yield* currentUserId;
       // SAFETY: Alchemy calls reconcile only after resolving every Input prop.
       const desiredUserId = news.userId as string;
@@ -183,9 +180,9 @@ export const AccountActivitySubscriptionProvider = () =>
         }
       }
       if (!alreadySubscribed) {
-        const created = yield* callX(() =>
-          client.accountActivity.createSubscription(webhookId),
-        ).pipe(Effect.result);
+        const created = yield* Api.createAccountActivitySubscription({
+          webhook_id: webhookId,
+        }).pipe(Effect.result);
         if (created._tag === "Failure") {
           const raced = yield* subscribedUsers(webhookId);
           if (raced.some((entry) => entry.user_id === userId)) {
@@ -207,11 +204,10 @@ export const AccountActivitySubscriptionProvider = () =>
           )).subscribed !== true
         ) {
           return yield* Effect.fail(
-            new XDecodeError(
-              "X did not confirm the Account Activity subscription",
-              created.success.status,
-              JSON.stringify(created.success.value),
-            ),
+            new XResponseError({
+              message: "X did not confirm the Account Activity subscription",
+              body: created.success,
+            }),
           );
         }
       }

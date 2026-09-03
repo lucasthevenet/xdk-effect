@@ -9,7 +9,7 @@ import type {
   XAuthKind,
   XFilteredStreamDelivery,
   XReplayJobDelivery,
-} from "distilled-x";
+} from "effect-xdk";
 
 export interface EventSourceActivity {
   /** Stable logical key. Required only when two entries share event/filter. */

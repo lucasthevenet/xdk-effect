@@ -1,4 +1,5 @@
 import * as Layer from "effect/Layer";
+import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
 import { CredentialsStoreLive } from "alchemy/Auth/Credentials";
 import { ProfileLive } from "alchemy/Auth/Profile";
 import * as Provider from "alchemy/Provider";
@@ -41,7 +42,7 @@ export const providers = () =>
         AccountActivitySubscriptionProvider(),
       ),
     ),
-    Layer.merge(Credentials.SdkCredentials),
+    Layer.provideMerge(FetchHttpClient.layer),
     Layer.provideMerge(Credentials.fromAuthProvider()),
     Layer.provideMerge(XAuth),
     Layer.provideMerge(ProfileLive),

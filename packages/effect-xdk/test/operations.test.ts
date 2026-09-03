@@ -24,7 +24,10 @@ import {
   XParseError,
   XInputError,
 } from "../src/errors.ts";
-import type { FetchLike } from "../src/runtime.ts";
+type FetchLike = (
+  input: RequestInfo | URL,
+  init?: RequestInit,
+) => Promise<Response>;
 
 const credentials = {
   apiKey: "key",

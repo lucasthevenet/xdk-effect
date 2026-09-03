@@ -10,8 +10,8 @@
     "suspicious": "warn"
   },
   "ignorePatterns": [
-    "packages/distilled-x/src/services/**",
-    "packages/distilled-x/src/operations.ts",
+    "packages/effect-xdk/src/services/**",
+    "packages/effect-xdk/src/operations.ts",
     ".agent/**",
     ".agents/**",
     ".claude/**",

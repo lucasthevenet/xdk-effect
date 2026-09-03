@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Redacted from "effect/Redacted";
-import { createCrcResponse, X_WEBHOOK_SIGNATURE_HEADER } from "distilled-x";
+import { createCrcResponse, X_WEBHOOK_SIGNATURE_HEADER } from "effect-xdk";
 import {
   consumeEvents,
   EventSource,
@@ -36,7 +36,8 @@ const preservesHandlerRequirement: Same<
 > = true;
 
 const signature = async (body: string) =>
-  (await createCrcResponse(body, secretValue)).response_token;
+  (await Effect.runPromise(createCrcResponse(body, secretValue)))
+    .response_token;
 
 const post = async (
   body: string,
@@ -114,7 +115,7 @@ describe("X event receiver", () => {
 
     expect(response.status).toBe(200);
     expect(await response.json()).toEqual(
-      await createCrcResponse("challenge", secretValue),
+      await Effect.runPromise(createCrcResponse("challenge", secretValue)),
     );
     expect(response.headers.get("cache-control")).toBe("no-store");
   });

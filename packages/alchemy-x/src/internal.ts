@@ -1,11 +1,6 @@
 import * as Effect from "effect/Effect";
 import * as Schema from "effect/Schema";
-import {
-  XApiError,
-  XDecodeError,
-  type XEnvelope,
-  type XResult,
-} from "distilled-x";
+import { HTTP_STATUS_MAP, UnknownXError } from "effect-xdk";
 
 export class XAdoptionRequired extends Schema.TaggedError<XAdoptionRequired>()(
   "XAdoptionRequired",
@@ -16,106 +11,61 @@ export class XAdoptionRequired extends Schema.TaggedError<XAdoptionRequired>()(
   },
 ) {}
 
-export const callX = <A>(thunk: () => Promise<A>) =>
-  Effect.tryPromise({
-    try: thunk,
-    catch: (cause) =>
-      cause instanceof Error
-        ? cause
-        : new Error("X API request failed", { cause }),
-  });
+export class XResponseError extends Schema.TaggedError<XResponseError>()(
+  "XResponseError",
+  { message: Schema.String, body: Schema.Unknown },
+) {}
 
-const encodedBody = (value: XEnvelope<unknown>): string =>
-  JSON.stringify(value) ?? String(value);
+interface Envelope<T> {
+  readonly data?: T;
+  readonly errors?: unknown;
+}
 
-const XErrorsEnvelopeSchema = Schema.Struct({
-  errors: Schema.optional(
-    Schema.Array(Schema.Record(Schema.String, Schema.Json)),
-  ),
-});
-const isXErrorsEnvelope = Schema.is(XErrorsEnvelopeSchema);
+const Errors = Schema.Array(Schema.Record(Schema.String, Schema.Json));
 
-/**
- * Lifecycle observations must be authoritative. X can return a successful
- * errors-only or partial envelope, which is useful to imperative callers but
- * cannot safely drive create/delete decisions.
- */
-const assertXAuthoritativeSync = <T extends XEnvelope<unknown>>(
-  result: XResult<T>,
+/** Partial or errors-only responses cannot establish resource ownership. */
+export const assertXAuthoritative = (
+  response: Envelope<unknown>,
   operation: string,
-): void => {
-  if (
-    !isXErrorsEnvelope(result.value) ||
-    (result.value.errors !== undefined && result.value.errors.length > 0)
-  ) {
-    throw new XDecodeError(
-      `X returned partial errors while ${operation}`,
-      result.status,
-      encodedBody(result.value),
-    );
-  }
+): Effect.Effect<void, XResponseError> =>
+  response.errors !== undefined &&
+  (!Schema.is(Errors)(response.errors) || response.errors.length > 0)
+    ? Effect.fail(
+        new XResponseError({
+          message: `X returned partial errors while ${operation}`,
+          body: response,
+        }),
+      )
+    : Effect.void;
+
+export const requireXData = <T>(response: Envelope<T>, operation: string) =>
+  assertXAuthoritative(response, operation).pipe(
+    Effect.andThen(() =>
+      response.data === undefined
+        ? Effect.fail(
+            new XResponseError({
+              message: `X did not return data while ${operation}`,
+              body: response,
+            }),
+          )
+        : Effect.succeed(response.data),
+    ),
+  );
+
+const statusErrors = new Map(
+  Object.entries(HTTP_STATUS_MAP).map(([status, error]) => [
+    Number(status),
+    error,
+  ]),
+);
+
+export const isXStatus = (cause: unknown, status: number): boolean => {
+  const ErrorClass = statusErrors.get(status);
+  return (
+    (ErrorClass !== undefined && cause instanceof ErrorClass) ||
+    (cause instanceof UnknownXError && cause.status === status)
+  );
 };
-
-export const assertXAuthoritative = <T extends XEnvelope<unknown>>(
-  result: XResult<T>,
-  operation: string,
-) =>
-  Effect.try({
-    try: () => assertXAuthoritativeSync(result, operation),
-    catch: (cause) =>
-      cause instanceof XDecodeError
-        ? cause
-        : new XDecodeError(
-            `Could not validate X's response while ${operation}`,
-            result.status,
-            encodedBody(result.value),
-            { cause },
-          ),
-  });
-
-export const requireXData = <T>(
-  result: XResult<XEnvelope<T>>,
-  operation: string,
-) =>
-  Effect.try({
-    try: () => {
-      assertXAuthoritativeSync(result, operation);
-      if (result.value.data === undefined) {
-        throw new XDecodeError(
-          `X did not return data while ${operation}`,
-          result.status,
-          encodedBody(result.value),
-        );
-      }
-      return result.value.data;
-    },
-    catch: (cause) =>
-      cause instanceof XDecodeError
-        ? cause
-        : new XDecodeError(
-            `Could not validate X's response while ${operation}`,
-            result.status,
-            encodedBody(result.value),
-            { cause },
-          ),
-  });
-
-export const isXStatus = (cause: unknown, status: number): boolean =>
-  cause instanceof XApiError && cause.status === status;
-
-export const isDuplicateSubscription = (cause: unknown): boolean =>
-  cause instanceof XApiError &&
-  cause.problems.some((problem) => {
-    const text = [problem.type, problem.title, problem.detail, problem.message]
-      .filter((part): part is string => typeof part === "string")
-      .join(" ")
-      .toLowerCase();
-    return (
-      text.includes("duplicatesubscriptionfailed") ||
-      text.includes("duplicate subscription") ||
-      text.includes("already subscribed")
-    );
-  });
 
 export const stableId = (value: string): string => {
   let hash = 0xcbf29ce484222325n;

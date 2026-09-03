@@ -54,7 +54,7 @@
     "test": "bun test"
   },
   "dependencies": {
-    "distilled-x": "0.1.0"
+    "effect-xdk": "0.1.0"
   },
   "devDependencies": {
     "alchemy": "2.0.0-beta.75"

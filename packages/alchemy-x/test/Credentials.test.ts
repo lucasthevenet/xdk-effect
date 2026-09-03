@@ -5,7 +5,9 @@ import * as Layer from "effect/Layer";
 import * as Redacted from "effect/Redacted";
 import * as HttpClient from "effect/unstable/http/HttpClient";
 import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
-import { getUsersMe } from "distilled-x/users";
+import { getUsersMe } from "effect-xdk/users";
+import { getWebhooks } from "effect-xdk/webhooks";
+import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
 import { AuthProviders, type AuthProvider } from "alchemy/Auth/AuthProvider";
 import {
   AlchemyProfile,
@@ -84,7 +86,7 @@ describe("X credential resolution", () => {
                   accessToken: environment.X_ACCESS_TOKEN,
                   accessTokenSecret: environment.X_ACCESS_TOKEN_SECRET,
                 },
-                { apiOrigin: "https://x-proxy.example" },
+                { apiBaseUrl: "https://x-proxy.example" },
               ),
             ),
           ),
@@ -95,7 +97,7 @@ describe("X credential resolution", () => {
     expect(result.data?.id).toBe("42");
   });
   for (const method of ["env", "stored"] as const) {
-    test(`shares one lazy client and token cache for ${method} credentials`, async () => {
+    test(`shares lazy credentials and the native token cache for ${method} credentials`, async () => {
       let reads = 0;
       let exchanges = 0;
       const requests: Request[] = [];
@@ -122,27 +124,33 @@ describe("X credential resolution", () => {
               });
         },
       } satisfies AuthProvider<XAuthConfig, XResolvedCredentials>;
-      const credentials = fromAuthProvider({
-        runtime: {
-          fetch: async (input, init) => {
-            const request = new Request(input, init);
-            if (new URL(request.url).pathname === "/oauth2/token") {
-              exchanges++;
+      const transport = Layer.mergeAll(
+        FetchHttpClient.layer,
+        Layer.succeed(
+          FetchHttpClient.Fetch,
+          Object.assign(
+            async (input: RequestInfo | URL, init?: RequestInit) => {
+              const request = new Request(input, init);
+              if (new URL(request.url).pathname === "/oauth2/token") {
+                exchanges++;
+                return Response.json({
+                  token_type: "bearer",
+                  access_token: "derived-app-token",
+                });
+              }
+              requests.push(request);
               return Response.json({
-                token_type: "bearer",
-                access_token: "derived-app-token",
+                data:
+                  new URL(request.url).pathname === "/2/users/me"
+                    ? { id: "42", name: "Alchemy", username: "alchemy" }
+                    : [],
               });
-            }
-            requests.push(request);
-            return Response.json({
-              data:
-                new URL(request.url).pathname === "/2/users/me"
-                  ? { id: "42" }
-                  : [],
-            });
-          },
-        },
-      }).pipe(
+            },
+            { preconnect: fetch.preconnect },
+          ),
+        ),
+      );
+      const credentials = fromAuthProvider().pipe(
         Layer.provide(
           Layer.mergeAll(
             Layer.succeed(AuthProviders, { [X_AUTH_PROVIDER_NAME]: auth }),
@@ -164,16 +172,13 @@ describe("X credential resolution", () => {
           expect(Redacted.value(first.accessTokenSecret)).toBe(
             environment.X_ACCESS_TOKEN_SECRET,
           );
-          yield* Effect.promise(() => first.client.users.getMe());
+          yield* getUsersMe({});
           expect(exchanges).toBe(0);
-          yield* Effect.promise(() =>
-            Promise.all([
-              first.client.webhooks.list(),
-              second.client.webhooks.list(),
-            ]),
-          );
+          yield* Effect.all([getWebhooks({}), getWebhooks({})], {
+            concurrency: 2,
+          });
         }).pipe(
-          Effect.provide(credentials),
+          Effect.provide(Layer.merge(credentials, transport)),
           Effect.provideService(
             ConfigProvider.ConfigProvider,
             ConfigProvider.fromEnvRecord(environment),
@@ -191,7 +196,7 @@ describe("X credential resolution", () => {
     });
   }
 
-  test("fromEnv also caches credentials and its client", async () => {
+  test("fromEnv also caches credentials", async () => {
     const [first, second] = await Effect.runPromise(
       Effect.all([XCredentials, XCredentials]).pipe(
         Effect.provide(fromEnv()),

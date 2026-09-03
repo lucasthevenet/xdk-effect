@@ -8,7 +8,7 @@ Alchemy v2 providers for stored or environment-backed X credentials, project web
 bun add alchemy-x alchemy effect
 ```
 
-`alchemy` and `effect` are peer dependencies. `distilled-x`, the portable API and cryptography layer, is installed by `alchemy-x`.
+`alchemy` and `effect` are peer dependencies. `effect-xdk`, the portable API and cryptography layer, is installed by `alchemy-x`.
 
 When using `alchemy-x/Cloudflare` with the current Alchemy beta, also install
 the deployment runtime with `bun add @effect/platform-node`.
@@ -26,8 +26,7 @@ the deployment runtime with `bun add @effect/platform-node`.
 | `XCredentials`, `XCredentialsContext` | Flattened credential Effect accessor and its provided Context tag |
 | `SdkCredentials` | Lazily bridge Alchemy credentials into the native Distilled-style SDK |
 | `fromCredentials`, `fromEnv`, `fromAuthProvider` | Programmatic credential Layers; the Auth Provider path uses the selected profile method |
-| `createXClient` | Create a client from literal or `Redacted` OAuth1 credentials |
-| `Api` | The complete portable `distilled-x` API namespace |
+| `Api` | The complete portable `effect-xdk` API namespace |
 
 The `alchemy-x/Cloudflare` entrypoint exports `EventSourceLive`, the production
 Cloudflare Worker adapter for `consumeEvents`. The root package also exports
@@ -58,7 +57,7 @@ export default Alchemy.Stack(
 
 Providers are Effect Layers in Alchemy; see [Alchemy's provider guide](https://alchemy.run/infrastructure-as-code/provider/). `X.providers()` supplies all X resource implementations, the credentials service, and an X Auth Provider with stored and environment-variable methods.
 
-It also provides the native `distilled-x/Credentials` service from the same redacted OAuth1 credentials. Generated operations (for example, `getUsersMe` from `distilled-x/users`) additionally require an Effect `HttpClient`. Outside `providers()`, use `SdkCredentials.pipe(Layer.provide(fromCredentials(...)))` or provide `fromEnv()`/`fromAuthProvider()` instead. The bridge stays lazy and does not introduce another authentication method.
+It also provides native `effect-xdk/Credentials` and a Fetch-backed Effect `HttpClient`. All resource lifecycle calls use generated Effect operations. Outside `providers()`, `fromCredentials`, `fromEnv`, and `fromAuthProvider` provide both Alchemy and SDK credentials; supply an Effect `HttpClient` separately. Optional credential configuration uses `{ apiBaseUrl }`. Credentials stay lazy and do not introduce another authentication method.
 
 ## Authentication
 
@@ -110,19 +109,19 @@ secrets. OAuth2 settings such as `X_BEARER_TOKEN`, `X_CLIENT_ID`,
 
 ### Internal authentication
 
-The shared client signs user requests with OAuth1. For app requests, it exchanges
+The SDK protocol signs user requests with OAuth1. For app requests, it exchanges
 the API key and secret at `POST https://api.x.com/oauth2/token` using
 `grant_type=client_credentials`. This is not the OAuth2 user-token endpoint
 (`/2/oauth2/token`). No browser, consent callback, or separately supplied Bearer
 token is involved. [X app-only authentication](https://docs.x.com/fundamentals/authentication/oauth-2-0/application-only)
 
-App tokens are cached in memory per client and shared by concurrent requests.
+App tokens are cached per credential resolver and HTTP client and shared by concurrent requests.
 A rejected derived token is discarded; safe requests may retry within the
 configured attempt limit, but POSTs are not replayed unless explicitly enabled.
 Failed exchanges are not cached. Credential resolution and login do not make
 X API calls. Only the API secret is bound into the webhook receiver Worker.
 
-`distilled-x` retains all authentication methods, including explicit app/user
+`effect-xdk` retains all authentication methods, including explicit app/user
 Bearer tokens and OAuth2/PKCE helpers. The Alchemy credential methods do not
 expose those additional choices.
 
@@ -305,20 +304,24 @@ This provider enrolls accounts using OAuth 1.0a and uses an internally obtained 
 
 ## Direct API access
 
-The `Api` namespace re-exports `distilled-x` for imperative calls. Its client accepts raw `distilled-x` configuration:
+The `Api` namespace re-exports the Effect-native `effect-xdk` interface. Import generated operations by service, or use `X.Api.Services`.
 
 ```ts
-const client = X.Api.createXClient({
-  apiKey: process.env.X_API_KEY!,
-  apiSecret: process.env.X_API_SECRET!,
-  accessToken: process.env.X_ACCESS_TOKEN!,
-  accessTokenSecret: process.env.X_ACCESS_TOKEN_SECRET!,
-});
+import * as X from "alchemy-x";
+import * as Effect from "effect/Effect";
+import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
+import { getUsersMe } from "effect-xdk/users";
 
-const identity = await client.users.getMe();
+const identity = await Effect.runPromise(
+  getUsersMe({}).pipe(
+    Effect.provide(X.fromEnv()),
+    Effect.provide(FetchHttpClient.layer),
+  ),
+);
+console.log(identity.data);
 ```
 
-The separate root-level `X.createXClient(credentials, options?)` accepts the four OAuth1 values as literal strings or `Redacted` values. For custom Alchemy integration and tests, `X.XCredentialsContext` is the provided tag, `X.XCredentials` is its flattened Effect accessor, and `X.fromCredentials`, `X.fromEnv`, and `X.fromAuthProvider` build credential Layers.
+`X.XCredentialsContext` contains lazy redacted credentials, not a client. Use `X.fromCredentials`, `X.fromEnv`, or `X.fromAuthProvider` to build credential Layers. Inject a mock `HttpClient` for tests. The Promise client and its response wrapper are no longer exported.
 
 ## Tests
 

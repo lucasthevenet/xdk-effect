@@ -10,13 +10,10 @@ import {
 } from "alchemy/Auth/AuthProvider";
 import { ALCHEMY_PROFILE, AlchemyProfile } from "alchemy/Auth/Profile";
 import {
-  createXClient as createDistilledXClient,
-  X_API_ORIGIN,
-  Credentials as DistilledCredentials,
+  DEFAULT_API_BASE_URL,
+  Credentials as SdkCredentialsContext,
   oauth1Credentials,
-  type XClient,
-  type XClientOptions,
-} from "distilled-x";
+} from "effect-xdk";
 import {
   readEnvCredentials,
   X_AUTH_PROVIDER_NAME,
@@ -37,7 +34,6 @@ export interface XCredentialsInput {
 }
 
 export interface XCredentialsService {
-  readonly client: XClient;
   readonly apiBaseUrl?: string;
   readonly apiKey: Redacted.Redacted<string>;
   readonly apiSecret: Redacted.Redacted<string>;
@@ -46,37 +42,20 @@ export interface XCredentialsService {
   readonly source: XCredentialsSource;
 }
 
-export type { XClientOptions } from "distilled-x";
+export interface XCredentialsOptions {
+  readonly apiBaseUrl?: string;
+}
 
 const toRedacted = (
   value: string | Redacted.Redacted<string>,
 ): Redacted.Redacted<string> =>
   Redacted.isRedacted(value) ? value : Redacted.make(value);
 
-/** Both request authentication modes are handled internally by distilled-x. */
-export const createXClient = (
-  credentials: XCredentialsInput,
-  options: XClientOptions = {},
-): XClient => {
-  const apiKey = toRedacted(credentials.apiKey);
-  const apiSecret = toRedacted(credentials.apiSecret);
-  const accessToken = toRedacted(credentials.accessToken);
-  const accessTokenSecret = toRedacted(credentials.accessTokenSecret);
-  return createDistilledXClient({
-    ...options,
-    apiKey: () => Redacted.value(apiKey),
-    apiSecret: () => Redacted.value(apiSecret),
-    accessToken: () => Redacted.value(accessToken),
-    accessTokenSecret: () => Redacted.value(accessTokenSecret),
-  });
-};
-
 const make = (
   input: XCredentialsInput,
-  options?: XClientOptions,
+  options?: XCredentialsOptions,
 ): XCredentialsService => ({
-  client: createXClient(input, options),
-  apiBaseUrl: options?.apiOrigin ?? X_API_ORIGIN,
+  apiBaseUrl: options?.apiBaseUrl ?? DEFAULT_API_BASE_URL,
   apiKey: toRedacted(input.apiKey),
   apiSecret: toRedacted(input.apiSecret),
   accessToken: toRedacted(input.accessToken),
@@ -98,7 +77,7 @@ export const XCredentials: Effect.Effect<
 
 /** Supply native SDK operations with Alchemy's same lazy, redacted credentials. */
 export const SdkCredentials = Layer.effect(
-  DistilledCredentials,
+  SdkCredentialsContext,
   Effect.map(XCredentialsContext, (resolve) =>
     resolve.pipe(Effect.map(oauth1Credentials)),
   ),
@@ -106,50 +85,69 @@ export const SdkCredentials = Layer.effect(
 
 export const fromCredentials = (
   credentials: XCredentialsInput,
-  options?: XClientOptions,
+  options?: XCredentialsOptions,
 ) =>
-  Layer.succeed(
-    XCredentialsContext,
-    Effect.succeed(make(credentials, options)),
+  SdkCredentials.pipe(
+    Layer.provideMerge(
+      Layer.succeed(
+        XCredentialsContext,
+        Effect.succeed(make(credentials, options)),
+      ),
+    ),
   );
 
-/** Cache the client as well as credentials so resources share its app token. */
-export const fromEnv = (options?: XClientOptions) =>
-  Layer.effect(
-    XCredentialsContext,
-    Effect.cached(
-      readEnvCredentials().pipe(
-        Effect.map((credentials) => make(credentials, options)),
-        Effect.orDie,
+/** Resolve credentials lazily once per layer; the SDK protocol owns token caching. */
+export const fromEnv = (options?: XCredentialsOptions) =>
+  SdkCredentials.pipe(
+    Layer.provideMerge(
+      Layer.effect(
+        XCredentialsContext,
+        Effect.cached(
+          readEnvCredentials().pipe(
+            Effect.map((credentials) => make(credentials, options)),
+            Effect.orDie,
+          ),
+        ),
       ),
     ),
   );
 
 export const fromAuthProvider = (
-  options?: XClientOptions,
-): Layer.Layer<XCredentialsContext, never, AuthProviders | AlchemyProfile> =>
-  Layer.effect(
-    XCredentialsContext,
-    Effect.gen(function* () {
-      const profile = yield* AlchemyProfile;
-      const auth = yield* getAuthProvider<XAuthConfig, XResolvedCredentials>(
-        X_AUTH_PROVIDER_NAME,
-      );
-      const profileName = yield* ALCHEMY_PROFILE;
-      const ci = yield* Config.boolean("CI").pipe(Config.withDefault(false));
-      return yield* Effect.cached(
-        profile.loadOrConfigure(auth, profileName, { ci }).pipe(
-          Effect.flatMap((selected) => auth.read(profileName, selected)),
-          Effect.map((credentials) => make(credentials, options)),
-          Effect.mapError(
-            (cause) =>
-              new AuthError({
-                message: `Failed to resolve X credentials for profile '${profileName}': ${cause instanceof Error ? cause.message : String(cause)}`,
-                cause,
-              }),
-          ),
-          Effect.orDie,
-        ),
-      );
-    }).pipe(Effect.orDie),
+  options?: XCredentialsOptions,
+): Layer.Layer<
+  XCredentialsContext | SdkCredentialsContext,
+  never,
+  AuthProviders | AlchemyProfile
+> =>
+  SdkCredentials.pipe(
+    Layer.provideMerge(
+      Layer.effect(
+        XCredentialsContext,
+        Effect.gen(function* () {
+          const profile = yield* AlchemyProfile;
+          const auth = yield* getAuthProvider<
+            XAuthConfig,
+            XResolvedCredentials
+          >(X_AUTH_PROVIDER_NAME);
+          const profileName = yield* ALCHEMY_PROFILE;
+          const ci = yield* Config.boolean("CI").pipe(
+            Config.withDefault(false),
+          );
+          return yield* Effect.cached(
+            profile.loadOrConfigure(auth, profileName, { ci }).pipe(
+              Effect.flatMap((selected) => auth.read(profileName, selected)),
+              Effect.map((credentials) => make(credentials, options)),
+              Effect.mapError(
+                (cause) =>
+                  new AuthError({
+                    message: `Failed to resolve X credentials for profile '${profileName}': ${cause instanceof Error ? cause.message : String(cause)}`,
+                    cause,
+                  }),
+              ),
+              Effect.orDie,
+            ),
+          );
+        }).pipe(Effect.orDie),
+      ),
+    ),
   );

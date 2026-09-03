@@ -1,4 +1,4 @@
-import type { XJsonValue, XProblem, XRateLimit } from "./types.ts";
+import type { XJsonValue } from "./types.ts";
 import * as Schema from "effect/Schema";
 import * as Category from "@distilled.cloud/core/category";
 import type { HTTP_STATUS_MAP } from "@distilled.cloud/core/errors";
@@ -57,51 +57,6 @@ export type DefaultErrors =
   | XAuthenticationError
   | XInputError;
 
-export class XTransportError extends Error {
-  readonly _tag = "XTransportError";
-  override readonly name = "XTransportError";
-
-  constructor(
-    message: string,
-    readonly method: string,
-    readonly url: string,
-    options?: ErrorOptions,
-  ) {
-    super(message, options);
-  }
-}
-
-export class XDecodeError extends Error {
-  readonly _tag = "XDecodeError";
-  override readonly name = "XDecodeError";
-
-  constructor(
-    message: string,
-    readonly status: number,
-    readonly body: string,
-    options?: ErrorOptions,
-  ) {
-    super(message, options);
-  }
-}
-
-export class XApiError extends Error {
-  readonly _tag = "XApiError";
-  override readonly name = "XApiError";
-
-  constructor(
-    message: string,
-    readonly status: number,
-    readonly method: string,
-    readonly url: string,
-    readonly problems: readonly XProblem[],
-    readonly body: XJsonValue | undefined,
-    readonly rateLimit?: XRateLimit,
-  ) {
-    super(message);
-  }
-}
-
 export class XAuthenticationError extends Error {
   readonly _tag = "XAuthenticationError";
   override readonly name = "XAuthenticationError";
@@ -112,14 +67,8 @@ export class XInputError extends Error {
   override readonly name = "XInputError";
 }
 
-export type XError =
-  | XApiError
-  | XAuthenticationError
-  | XDecodeError
-  | XInputError
-  | XTransportError;
-
 export class XOAuthError extends Error {
+  readonly _tag = "XOAuthError";
   override readonly name = "XOAuthError";
 
   constructor(
@@ -133,6 +82,7 @@ export class XOAuthError extends Error {
 }
 
 export class XOAuthStateError extends Error {
+  readonly _tag = "XOAuthStateError";
   override readonly name = "XOAuthStateError";
 
   constructor(message = "The OAuth callback state does not match") {

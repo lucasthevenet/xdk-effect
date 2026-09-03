@@ -1,18 +1,19 @@
 import * as Effect from "effect/Effect";
+import * as Schema from "effect/Schema";
+import * as Option from "effect/Option";
+import * as Api from "effect-xdk/activity";
+import { withAuth } from "effect-xdk/Protocol";
 import { deepEqual, isResolved, type Input, Resource } from "alchemy";
 import { Unowned } from "alchemy/AdoptPolicy";
 import * as Provider from "alchemy/Provider";
 import {
-  XDecodeError,
   type XActivityEventType,
   type XActivityFilter,
-  type XActivitySubscription as ApiSubscription,
   type XAuthKind,
-} from "distilled-x";
-import { XCredentials } from "./Credentials.ts";
+} from "effect-xdk";
 import {
+  XResponseError,
   assertXAuthoritative,
-  callX,
   ignoreXNotFound,
   requireXData,
   stableId,
@@ -133,32 +134,81 @@ const sameSubscription = (
   subscription.webhook_id === desired.webhookId &&
   subscription.tag === desired.tag;
 
+const Subscription = Schema.Struct({
+  subscription_id: Schema.String,
+  event_type: Schema.String,
+  filter: Schema.Struct({
+    user_id: Schema.optionalKey(Schema.String),
+    keyword: Schema.optionalKey(Schema.String),
+    direction: Schema.optionalKey(Schema.Literals(["inbound", "outbound"])),
+    qualifiers: Schema.optionalKey(Schema.Record(Schema.String, Schema.String)),
+  }),
+  tag: Schema.optionalKey(Schema.String),
+  webhook_id: Schema.optionalKey(Schema.String),
+  created_at: Schema.optionalKey(Schema.String),
+  updated_at: Schema.optionalKey(Schema.String),
+});
+type ApiSubscription = typeof Subscription.Type;
+
+const normalizeSubscription = (
+  value: Api.CreateActivitySubscriptionResponseData["subscription"],
+): ApiSubscription | undefined =>
+  Option.getOrUndefined(Schema.decodeUnknownOption(Subscription)(value));
+
+const Pagination = Schema.Struct({
+  meta: Schema.optionalKey(
+    Schema.Struct({ next_token: Schema.optionalKey(Schema.String) }),
+  ),
+});
+
 const listAll = Effect.fn(function* () {
-  const { client } = yield* XCredentials;
-  const pages = yield* callX(async () => {
-    const values = [];
-    for await (const page of client.activity.iterateSubscriptions({
-      auth: "app",
-    })) {
-      values.push(page);
-    }
-    return values;
-  });
   const subscriptions: ApiSubscription[] = [];
-  for (const page of pages) {
-    subscriptions.push(
-      ...(yield* requireXData(page, "listing X Activity subscriptions")),
+  const seen = new Set<string>();
+  let token: string | undefined;
+  do {
+    const page = yield* Api.getActivitySubscriptions(
+      token === undefined ? {} : { pagination_token: token },
+    ).pipe(withAuth("app"));
+    const data = yield* requireXData(page, "listing X Activity subscriptions");
+    const items = yield* Schema.decodeUnknownEffect(Schema.Array(Subscription))(
+      data,
+    ).pipe(
+      Effect.mapError(
+        () =>
+          new XResponseError({
+            message: "X returned incomplete Activity subscription records",
+            body: page,
+          }),
+      ),
     );
-  }
+    subscriptions.push(...items);
+    const pagination = yield* Schema.decodeUnknownEffect(Pagination)(page).pipe(
+      Effect.mapError(
+        () =>
+          new XResponseError({
+            message: "X returned invalid Activity pagination metadata",
+            body: page,
+          }),
+      ),
+    );
+    token = pagination.meta?.next_token;
+    if (token && seen.has(token))
+      return yield* new XResponseError({
+        message: "X repeated an activity pagination token",
+        body: page,
+      });
+    if (token) seen.add(token);
+  } while (token);
   return subscriptions;
 });
 
 const deleteActivitySubscription = Effect.fn(function* (
   subscriptionId: string,
 ) {
-  const { client } = yield* XCredentials;
   const deleted = yield* ignoreXNotFound(
-    callX(() => client.activity.deleteSubscription(subscriptionId)),
+    Api.deleteActivitySubscription({ subscription_id: subscriptionId }).pipe(
+      withAuth("app"),
+    ),
   );
   if (
     deleted &&
@@ -168,11 +218,10 @@ const deleteActivitySubscription = Effect.fn(function* (
     )).deleted !== true
   ) {
     return yield* Effect.fail(
-      new XDecodeError(
-        "X did not confirm activity subscription deletion",
-        deleted.status,
-        JSON.stringify(deleted.value),
-      ),
+      new XResponseError({
+        message: "X did not confirm activity subscription deletion",
+        body: deleted,
+      }),
     );
   }
 });
@@ -231,7 +280,6 @@ export const ActivitySubscriptionProvider = () =>
     }),
 
     reconcile: Effect.fn(function* ({ fqn, instanceId, news, output }) {
-      const { client } = yield* XCredentials;
       const tag = ownershipTag(instanceId, fqn, news.tag);
       // SAFETY: reconcile runs only with fully resolved resource inputs.
       const webhookId = news.webhookId as string;
@@ -250,23 +298,18 @@ export const ActivitySubscriptionProvider = () =>
 
       const auth = news.auth ?? defaultActivityAuth(news.eventType);
       const createDesired = Effect.gen(function* () {
-        const created = yield* callX(() =>
-          client.activity.createSubscription(
-            {
-              event_type: desired.eventType,
-              filter: desired.filter,
-              webhook_id: desired.webhookId,
-              tag: desired.tag,
-            },
-            { auth },
-          ),
-        );
+        const created = yield* Api.createActivitySubscription({
+          event_type: desired.eventType,
+          filter: desired.filter,
+          webhook_id: desired.webhookId,
+          tag: desired.tag,
+        }).pipe(withAuth(auth));
         yield* assertXAuthoritative(
           created,
           "creating an X Activity subscription",
         );
-        const responseSubscription = client.activity.normalizeSubscription(
-          created.value,
+        const responseSubscription = normalizeSubscription(
+          created.data?.subscription,
         );
         if (
           responseSubscription &&
@@ -285,11 +328,11 @@ export const ActivitySubscriptionProvider = () =>
         );
         if (!refreshed || !sameSubscription(refreshed, desired)) {
           return yield* Effect.fail(
-            new XDecodeError(
-              "X did not expose the created Activity subscription with the declared webhook and ownership tag",
-              created.status,
-              JSON.stringify(created.value),
-            ),
+            new XResponseError({
+              message:
+                "X did not expose the created Activity subscription with the declared webhook and ownership tag",
+              body: created,
+            }),
           );
         }
         return refreshed;
@@ -346,17 +389,16 @@ export const ActivitySubscriptionProvider = () =>
       }
 
       if (observed.webhook_id !== webhookId || observed.tag !== tag) {
-        const updated = yield* callX(() =>
-          client.activity.updateSubscription(observed.subscription_id, {
-            webhook_id: webhookId,
-            tag,
-          }),
-        );
+        const updated = yield* Api.updateActivitySubscription({
+          webhook_id: webhookId,
+          tag,
+          subscription_id: observed.subscription_id,
+        }).pipe(withAuth("app"));
         yield* assertXAuthoritative(
           updated,
           "updating an X Activity subscription",
         );
-        const normalized = client.activity.normalizeSubscription(updated.value);
+        const normalized = normalizeSubscription(updated.data?.subscription);
         const refreshed =
           normalized && sameSubscription(normalized, desired)
             ? normalized
@@ -366,11 +408,11 @@ export const ActivitySubscriptionProvider = () =>
               );
         if (!refreshed || !sameSubscription(refreshed, desired)) {
           return yield* Effect.fail(
-            new XDecodeError(
-              "X did not expose the updated Activity subscription with the declared webhook and ownership tag",
-              updated.status,
-              JSON.stringify(updated.value),
-            ),
+            new XResponseError({
+              message:
+                "X did not expose the updated Activity subscription with the declared webhook and ownership tag",
+              body: updated,
+            }),
           );
         }
         return toAttributes(yield* deduplicateDesired(refreshed));

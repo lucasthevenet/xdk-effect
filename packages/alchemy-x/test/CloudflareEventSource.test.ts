@@ -12,7 +12,9 @@ import {
   type XEvent,
 } from "../src/EventSource.ts";
 import { EventSourceLive } from "../src/Cloudflare.ts";
-import { XCredentialsContext } from "../src/Credentials.ts";
+import { fromCredentials } from "../src/Credentials.ts";
+import * as HttpClient from "effect/unstable/http/HttpClient";
+import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
 
 const secret = Redacted.make("x-api-consumer-secret");
 const workerOrigin = "https://events.example.com";
@@ -179,21 +181,26 @@ const registerAtPlan = (
     // SAFETY: This in-memory Stack exposes every collection Resource uses to
     // register logical declarations; no provider or remote API is involved.
     Effect.provideService(Stack, stack as never),
-    // SAFETY: Account Activity planning reads only users.getMe from this
-    // boundary fixture; its response is a complete successful X envelope.
+    Effect.provide(
+      fromCredentials({
+        apiKey: "key",
+        apiSecret: "secret",
+        accessToken: "token",
+        accessTokenSecret: "token-secret",
+      }),
+    ),
     Effect.provideService(
-      XCredentialsContext,
-      Effect.succeed({
-        client: {
-          users: {
-            getMe: async () => ({
-              value: { data: { id: "42" } },
-              status: 200,
-              headers: new Headers(),
+      HttpClient.HttpClient,
+      HttpClient.make((request) =>
+        Effect.succeed(
+          HttpClientResponse.fromWeb(
+            request,
+            Response.json({
+              data: { id: "42", name: "Alchemy", username: "alchemy" },
             }),
-          },
-        },
-      }) as never,
+          ),
+        ),
+      ),
     ),
   );
 

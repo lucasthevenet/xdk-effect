@@ -8,12 +8,6 @@ export interface XJsonArray extends ReadonlyArray<XJsonValue> {}
 
 export type XJsonValue = XJsonArray | XJsonObject | XJsonPrimitive;
 
-export interface XRateLimit {
-  readonly limit?: number;
-  readonly remaining?: number;
-  readonly resetAt?: Date;
-}
-
 export interface XProblem extends XJsonObject {
   readonly type?: string;
   readonly title?: string;
@@ -26,48 +20,6 @@ export interface XProblem extends XJsonObject {
   readonly resource_id?: string;
   readonly resource_type?: string;
 }
-
-export interface XEnvelopeMeta extends XJsonObject {
-  readonly result_count?: number;
-  readonly next_token?: string;
-  readonly previous_token?: string;
-  readonly total_subscriptions?: number;
-}
-
-export interface XEnvelope<T> {
-  readonly data?: T;
-  readonly errors?: readonly XProblem[];
-  readonly meta?: XEnvelopeMeta;
-  readonly includes?: XJsonValue;
-  /** Forward-compatible fields returned by newer X API revisions. */
-  readonly [key: string]: T | XJsonValue | undefined;
-}
-
-export interface XResult<T> {
-  readonly value: T;
-  readonly status: number;
-  readonly headers: Headers;
-  readonly rateLimit?: XRateLimit;
-}
-
-export interface XWebhook extends XJsonObject {
-  readonly id: string;
-  readonly url: string;
-  readonly valid: boolean;
-  readonly created_at: string;
-}
-
-export type XWebhookValidation =
-  | {
-      readonly valid: boolean;
-      readonly attempted?: boolean;
-      readonly [key: string]: XJsonValue;
-    }
-  | {
-      readonly attempted: boolean;
-      readonly valid?: boolean;
-      readonly [key: string]: XJsonValue;
-    };
 
 export type KnownXActivityEventType =
   | "profile.update.bio"
@@ -124,29 +76,6 @@ export interface XActivityFilter extends XJsonObject {
   readonly qualifiers?: Readonly<Record<string, string>>;
 }
 
-export interface XActivitySubscriptionInput {
-  readonly event_type: XActivityEventType;
-  readonly filter: XActivityFilter;
-  readonly tag?: string;
-  readonly webhook_id?: string;
-}
-
-export interface XActivitySubscription extends XJsonObject {
-  readonly subscription_id: string;
-  readonly event_type: XActivityEventType;
-  readonly filter: XActivityFilter;
-  readonly tag?: string;
-  readonly webhook_id?: string;
-  readonly created_at?: string;
-  readonly updated_at?: string;
-}
-
-export interface XUser extends XJsonObject {
-  readonly id: string;
-  readonly name?: string;
-  readonly username?: string;
-}
-
 export interface XAccountActivityDelivery extends XJsonObject {
   /** Most deliveries include this; OAuth revoke user_event payloads may not. */
   readonly for_user_id?: string;
@@ -160,21 +89,6 @@ export interface XAccountActivityDelivery extends XJsonObject {
   readonly direct_message_events?: XJsonArray;
   readonly direct_message_indicate_typing_events?: XJsonArray;
   readonly direct_message_mark_read_events?: XJsonArray;
-}
-
-export interface XAccountActivitySubscriptionEntry extends XJsonObject {
-  readonly user_id: string;
-}
-
-export interface XAccountActivitySubscriptions extends XJsonObject {
-  readonly application_id?: string;
-  readonly webhook_id?: string;
-  readonly webhook_url?: string;
-  readonly subscriptions?: readonly XAccountActivitySubscriptionEntry[];
-}
-
-export interface XAccountActivitySubscriptionStatus extends XJsonObject {
-  readonly subscribed: boolean;
 }
 
 export interface XActivityDeliveryData extends XJsonObject {

@@ -2,7 +2,9 @@ import { afterEach, describe, expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import { Unowned } from "alchemy/AdoptPolicy";
-import { XDecodeError, type XActivitySubscriptionInput } from "distilled-x";
+import { XParseError } from "effect-xdk";
+import type { CreateActivitySubscriptionRequest as XActivitySubscriptionInput } from "effect-xdk/activity";
+import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
 import {
   AccountActivitySubscription,
   AccountActivitySubscriptionProvider,
@@ -12,7 +14,7 @@ import {
   ActivitySubscriptionProvider,
 } from "../src/ActivitySubscription.ts";
 import * as Credentials from "../src/Credentials.ts";
-import { XAdoptionRequired } from "../src/internal.ts";
+import { XAdoptionRequired, XResponseError } from "../src/internal.ts";
 import { Webhook, WebhookProvider } from "../src/Webhook.ts";
 
 let server: ReturnType<typeof Bun.serve> | undefined;
@@ -33,25 +35,119 @@ const lifecycle = {
 };
 
 const credentials = () =>
-  Credentials.fromCredentials(
-    {
-      apiKey: "api-key",
-      apiSecret: "api-secret",
-      accessToken: "user-token",
-      accessTokenSecret: "token-secret",
-    },
-    {
-      apiOrigin: server!.url.origin,
-      runtime: {
-        fetch: async (input, init) =>
+  Layer.mergeAll(
+    Credentials.fromCredentials(
+      {
+        apiKey: "api-key",
+        apiSecret: "api-secret",
+        accessToken: "user-token",
+        accessTokenSecret: "token-secret",
+      },
+      { apiBaseUrl: server!.url.origin },
+    ),
+    FetchHttpClient.layer,
+    Layer.succeed(
+      FetchHttpClient.Fetch,
+      Object.assign(
+        async (input: RequestInfo | URL, init?: RequestInit) =>
           new URL(input.toString()).pathname === "/oauth2/token"
             ? Response.json({ token_type: "bearer", access_token: "app-token" })
             : fetch(input, init),
-      },
-    },
+        { preconnect: fetch.preconnect },
+      ),
+    ),
   );
 
 describe("Alchemy X provider ownership and reconciliation", () => {
+  for (const mode of ["complete", "repeated", "invalid"] as const) {
+    test(`native Activity pagination handles ${mode} metadata`, async () => {
+      const tokens: (string | null)[] = [];
+      server = Bun.serve({
+        port: 0,
+        fetch: (request) => {
+          const token = new URL(request.url).searchParams.get(
+            "pagination_token",
+          );
+          tokens.push(token);
+          return Response.json({
+            data: token
+              ? [
+                  {
+                    subscription_id: "20",
+                    event_type: "post.create",
+                    filter: { user_id: "42" },
+                    webhook_id: "10",
+                  },
+                ]
+              : [],
+            meta:
+              mode === "invalid"
+                ? { next_token: 42 }
+                : {
+                    next_token:
+                      mode === "repeated" || !token ? "next" : undefined,
+                  },
+          });
+        },
+      });
+      const result = await Effect.runPromise(
+        Effect.gen(function* () {
+          const provider = yield* ActivitySubscription.Provider;
+          return yield* provider.read!({
+            ...lifecycle,
+            olds: {
+              eventType: "post.create",
+              filter: { user_id: "42" },
+              webhookId: "10",
+            },
+            output: {
+              subscriptionId: "20",
+              eventType: "post.create",
+              filter: { user_id: "42" },
+              webhookId: "10",
+            },
+          }).pipe(Effect.result);
+        }).pipe(
+          Effect.provide(
+            Layer.mergeAll(ActivitySubscriptionProvider(), credentials()),
+          ),
+        ),
+      );
+      if (mode === "complete") {
+        expect(result._tag).toBe("Success");
+        if (result._tag === "Success")
+          expect(result.success?.subscriptionId).toBe("20");
+      } else {
+        expect(result._tag).toBe("Failure");
+        if (result._tag === "Failure")
+          expect(result.failure).toBeInstanceOf(XResponseError);
+      }
+      expect(tokens).toEqual(mode === "invalid" ? [null] : [null, "next"]);
+    });
+  }
+
+  test("native NotFound errors make deletion idempotent", async () => {
+    server = Bun.serve({
+      port: 0,
+      fetch: () => Response.json({ detail: "gone" }, { status: 404 }),
+    });
+    await Effect.runPromise(
+      Effect.gen(function* () {
+        const provider = yield* Webhook.Provider;
+        yield* provider.delete({
+          ...lifecycle,
+          olds: { url: "https://example.com/x" },
+          output: {
+            webhookId: "10",
+            url: "https://example.com/x",
+            valid: true,
+            createdAt: "2026-01-01",
+          },
+        });
+      }).pipe(Effect.provide(Layer.mergeAll(WebhookProvider(), credentials()))),
+    );
+  });
+
   test("skips recovery reads while upstream outputs are unresolved", async () => {
     let requests = 0;
     server = Bun.serve({
@@ -152,7 +248,7 @@ describe("Alchemy X provider ownership and reconciliation", () => {
       }).pipe(Effect.provide(Layer.mergeAll(WebhookProvider(), credentials()))),
     );
 
-    expect(error).toBeInstanceOf(XDecodeError);
+    expect(error).toBeInstanceOf(XResponseError);
   });
 
   test("refuses a webhook that appears after the ownership read", async () => {
@@ -304,7 +400,7 @@ describe("Alchemy X provider ownership and reconciliation", () => {
       }).pipe(Effect.provide(Layer.mergeAll(WebhookProvider(), credentials()))),
     );
 
-    expect(error).toBeInstanceOf(XDecodeError);
+    expect(error).toBeInstanceOf(XResponseError);
   });
 
   test("rejects a webhook delete without deleted: true confirmation", async () => {
@@ -331,7 +427,7 @@ describe("Alchemy X provider ownership and reconciliation", () => {
       }).pipe(Effect.provide(Layer.mergeAll(WebhookProvider(), credentials()))),
     );
 
-    expect(error).toBeInstanceOf(XDecodeError);
+    expect(error).toBeInstanceOf(XResponseError);
   });
 
   test("marks an explicitly-tagged cold Activity subscription as unowned", async () => {
@@ -470,13 +566,16 @@ describe("Alchemy X provider ownership and reconciliation", () => {
       ),
     );
 
-    expect(error).toBeInstanceOf(XDecodeError);
+    expect(error).toBeInstanceOf(XParseError);
   });
 
   test("rejects an Activity delete without deleted: true confirmation", async () => {
     server = Bun.serve({
       port: 0,
-      fetch: () => Response.json({ data: {} }),
+      fetch: (request) =>
+        Response.json({
+          data: request.method === "GET" ? [] : { deleted: false },
+        }),
     });
 
     const error = await Effect.runPromise(
@@ -505,7 +604,7 @@ describe("Alchemy X provider ownership and reconciliation", () => {
       ),
     );
 
-    expect(error).toBeInstanceOf(XDecodeError);
+    expect(error).toBeInstanceOf(XResponseError);
   });
 
   test("marks a cold Account Activity subscription as unowned", async () => {
@@ -543,7 +642,9 @@ describe("Alchemy X provider ownership and reconciliation", () => {
       port: 0,
       fetch: (request) =>
         new URL(request.url).pathname === "/2/users/me"
-          ? Response.json({ data: { id: "42" } })
+          ? Response.json({
+              data: { id: "42", name: "Alchemy", username: "alchemy" },
+            })
           : Response.json({
               data: {
                 webhook_id: "10",
@@ -577,11 +678,13 @@ describe("Alchemy X provider ownership and reconciliation", () => {
     const requests: Array<readonly [string, string]> = [];
     server = Bun.serve({
       port: 0,
-      fetch: (request) => {
+      fetch: async (request) => {
         const path = new URL(request.url).pathname;
         requests.push([request.method, path]);
         if (path === "/2/users/me") {
-          return Response.json({ data: { id: "42" } });
+          return Response.json({
+            data: { id: "42", name: "Alchemy", username: "alchemy" },
+          });
         }
         if (request.method === "GET") {
           return Response.json({
@@ -589,6 +692,11 @@ describe("Alchemy X provider ownership and reconciliation", () => {
           });
         }
         if (request.method === "POST") {
+          expect(request.headers.get("content-type")).toContain(
+            "application/json",
+          );
+          expect(await request.json()).toEqual({});
+          expect(request.headers.get("authorization")).toStartWith("OAuth ");
           return Response.json({ data: { subscribed: true } });
         }
         return Response.json({ data: { subscribed: false } });
@@ -643,6 +751,6 @@ describe("Alchemy X provider ownership and reconciliation", () => {
       ),
     );
 
-    expect(error).toBeInstanceOf(XDecodeError);
+    expect(error).toBeInstanceOf(XResponseError);
   });
 });

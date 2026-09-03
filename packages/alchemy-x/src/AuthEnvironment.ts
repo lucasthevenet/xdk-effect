@@ -32,7 +32,7 @@ export interface XResolvedCredentials {
   };
 }
 
-/** Resolve the four credentials; app-only tokens are obtained by the client. */
+/** Resolve the four credentials; app-only tokens are obtained by the SDK protocol. */
 export const readEnvCredentials = (): Effect.Effect<
   XResolvedCredentials,
   AuthError

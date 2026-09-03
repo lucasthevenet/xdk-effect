@@ -250,7 +250,7 @@ outputs.set(
     2,
   ) + "\n",
 );
-const target = process.env.DISTILLED_X_GENERATION_ROOT ?? root;
+const target = process.env.EFFECT_XDK_GENERATION_ROOT ?? root;
 for (const [file, code] of outputs) {
   await mkdir(path.dirname(path.join(target, file)), { recursive: true });
   await Bun.write(path.join(target, file), code);

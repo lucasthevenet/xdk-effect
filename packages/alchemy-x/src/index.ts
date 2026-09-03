@@ -1,4 +1,4 @@
-export * as Api from "distilled-x";
+export * as Api from "effect-xdk";
 export * from "./AccountActivitySubscription.ts";
 export * from "./ActivitySubscription.ts";
 export * from "./AuthEnvironment.ts";

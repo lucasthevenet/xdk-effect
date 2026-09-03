@@ -34,7 +34,7 @@
       "name": "alchemy-x",
       "version": "0.1.0",
       "dependencies": {
-        "distilled-x": "0.1.0",
+        "effect-xdk": "0.1.0",
       },
       "devDependencies": {
         "alchemy": "2.0.0-beta.75",
@@ -44,8 +44,8 @@
         "effect": ">=4.0.0-rc.112 <5",
       },
     },
-    "packages/distilled-x": {
-      "name": "distilled-x",
+    "packages/effect-xdk": {
+      "name": "effect-xdk",
       "version": "0.1.0",
       "dependencies": {
         "@distilled.cloud/core": "1.0.0-rc.8",
@@ -603,7 +603,7 @@
 
     "detect-libc": ["detect-libc@2.1.2", "", {}, "sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ=="],
 
-    "distilled-x": ["distilled-x@workspace:packages/distilled-x"],
+    "effect-xdk": ["effect-xdk@workspace:packages/effect-xdk"],
 
     "effect": ["effect@4.0.0-rc.112", "", { "dependencies": { "fast-check": "^4.9.0", "msgpackr": "^2.0.5" } }, "sha512-wXxwuh1Ywnv4cPRM3Wfa0vDwuOHnZ1TsTgHJkG9XgzND6inhBH9n1vBxhg3iIXOia/OrpmvVmd3lrD4vq6bF3A=="],
 

@@ -44,7 +44,7 @@ import { prepareOperation } from "./operation-wire.ts";
 import type { OperationDefinition } from "./operation-types.ts";
 import { operations } from "./operations.ts";
 import { bytesToBase64, utf8 } from "./runtime.ts";
-import type { XAuthKind } from "./client.ts";
+export type XAuthKind = "app" | "user";
 import type { XJsonValue } from "./types.ts";
 
 export type XOpError =
@@ -309,21 +309,12 @@ const encode = (args: EncodeArgs) =>
     } else if (auth === "app")
       header = `Bearer ${yield* appToken(resolver, config)}`;
     else
-      header = yield* Effect.tryPromise({
-        try: () =>
-          signOAuth1(
-            raw,
-            { crypto: globalThis.crypto, now: Date.now },
-            definition.method,
-            url,
-          ),
-        catch: (cause) =>
-          cause instanceof XAuthenticationError
-            ? cause
-            : new XAuthenticationError("X request signing failed", {
-                cause,
-              }),
-      });
+      header = yield* signOAuth1(
+        raw,
+        { crypto: globalThis.crypto, now: Date.now },
+        definition.method,
+        url,
+      );
     return HttpClientRequest.setHeader(request, "Authorization", header);
   });
 

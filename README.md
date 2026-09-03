@@ -1,13 +1,13 @@
 # `alchemy-x`
 
-An X adapter for [Alchemy](https://alchemy.run/): stored or environment-backed X credentials, declarative webhook and activity-subscription resources, automatic X webhook registration, and a portable lower-level X client.
+An X adapter for [Alchemy](https://alchemy.run/): stored or environment-backed X credentials, declarative webhook and activity-subscription resources, automatic X webhook registration, and an Effect-native X SDK.
 
 ## Packages
 
 | Package | Use it for |
 | --- | --- |
 | [`alchemy-x`](./packages/alchemy-x/README.md) | Alchemy providers, stored/environment authentication, resources, and host-adapted X event consumption |
-| [`distilled-x`](./packages/distilled-x/README.md) | Spec-generated Effect-native X SDK, OAuth1 signing, app-token exchange, OAuth2/PKCE, and webhook cryptography |
+| [`effect-xdk`](./packages/effect-xdk/README.md) | Spec-generated Effect-native X SDK, OAuth1 signing, app-token exchange, OAuth2/PKCE, and webhook cryptography |
 
 ## Install
 
@@ -24,10 +24,10 @@ runtime:
 bun add @effect/platform-node
 ```
 
-For the portable client only:
+For the Effect-native SDK only:
 
 ```sh
-bun add distilled-x effect
+bun add effect-xdk effect
 ```
 
 ## Alchemy setup
@@ -90,14 +90,14 @@ environment method without prompting. Existing profiles keep their selected
 method.
 
 User-context requests are signed with OAuth1. When an app-context operation
-needs a Bearer token, `distilled-x` obtains it from X using the API key and
+needs a Bearer token, `effect-xdk` obtains it from X using the API key and
 secret and caches it internally. No separate `X_BEARER_TOKEN`, OAuth2 client
 settings, browser authorization, or refresh-token setup is needed.
 The API secret also signs webhook CRC responses and verifies deliveries.
 See [X's own-account credentials](https://docs.x.com/fundamentals/authentication/oauth-1-0a/overview)
 and [app-token exchange](https://docs.x.com/fundamentals/authentication/oauth-2-0/application-only).
 
-This restriction applies only to Alchemy authentication. `distilled-x` keeps
+This restriction applies only to Alchemy authentication. `effect-xdk` keeps
 explicit app/user Bearer authentication and all OAuth2/PKCE helpers.
 See the [authentication reference](./packages/alchemy-x/README.md#authentication).
 

@@ -7,6 +7,6 @@
     "outDir": "lib",
     "tsBuildInfoFile": "../../.alchemy-x.tsbuildinfo"
   },
-  "references": [{ "path": "../distilled-x" }],
+  "references": [{ "path": "../effect-xdk" }],
   "include": ["src/**/*.ts"]
 }

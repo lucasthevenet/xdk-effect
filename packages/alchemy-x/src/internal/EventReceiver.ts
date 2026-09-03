@@ -10,7 +10,7 @@ import {
   type XActivityDelivery,
   type XFilteredStreamDelivery,
   type XReplayJobDelivery,
-} from "distilled-x";
+} from "effect-xdk";
 import type { EventHandler, XEvent } from "../EventSource.ts";
 
 export const DEFAULT_EVENT_PATH = "/__alchemy/x/events";
@@ -325,14 +325,10 @@ const handleCrc = <SecretE, SecretR>(
     if (Result.isFailure(resolvedSecret)) {
       return response(500, { error: "secret_unavailable" });
     }
-    const crc = yield* Effect.tryPromise({
-      try: () =>
-        createCrcResponse(token, Redacted.value(resolvedSecret.success)),
-      catch: (cause) =>
-        cause instanceof Error
-          ? cause
-          : new Error("Could not create X CRC response", { cause }),
-    }).pipe(Effect.result);
+    const crc = yield* createCrcResponse(
+      token,
+      Redacted.value(resolvedSecret.success),
+    ).pipe(Effect.result);
     return Result.isFailure(crc)
       ? response(500, { error: "crc_failed" })
       : response(200, crc.success);
@@ -361,17 +357,10 @@ const handleDelivery = <E, R, SecretE, SecretR>(
     }
     const rawBody = bodyResult.success.body;
 
-    const verified = yield* Effect.tryPromise({
-      try: () =>
-        verifyWebhookSignature({
-          rawBody,
-          signature: request.headers.get(X_WEBHOOK_SIGNATURE_HEADER),
-          consumerSecret: Redacted.value(resolvedSecret.success),
-        }),
-      catch: (cause) =>
-        cause instanceof Error
-          ? cause
-          : new Error("Could not verify X event signature", { cause }),
+    const verified = yield* verifyWebhookSignature({
+      rawBody,
+      signature: request.headers.get(X_WEBHOOK_SIGNATURE_HEADER),
+      consumerSecret: Redacted.value(resolvedSecret.success),
     }).pipe(Effect.result);
     if (Result.isFailure(verified) || !verified.success) {
       return response(401, { error: "invalid_signature" });

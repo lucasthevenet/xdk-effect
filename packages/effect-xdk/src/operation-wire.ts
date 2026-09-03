@@ -1,10 +1,15 @@
-import type { XRequestOptions } from "./client.ts";
 import { XInputError } from "./errors.ts";
 import type { OperationDefinition } from "./operation-types.ts";
 
+interface WireOptions {
+  readonly headers: Headers;
+  readonly rawBody?: FormData;
+  readonly json?: object;
+}
+
 interface PreparedOperation {
   readonly path: `/${string}`;
-  readonly options: XRequestOptions;
+  readonly options: WireOptions;
 }
 
 /** Serialize generated bindings; authentication sees the final encoded URL. */
@@ -48,8 +53,8 @@ export const prepareOperation = <I extends object>(
   if (path.includes("{"))
     throw new XInputError(`Missing path parameter for ${definition.id}`);
   if (query.size) path += `?${query}`;
-  const options: XRequestOptions = { headers };
-  let content: XRequestOptions = options;
+  const options: WireOptions = { headers };
+  let content: WireOptions = options;
   if (
     definition.multipart &&
     [...body.values()].some((value) => value instanceof Blob)

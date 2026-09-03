@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 
 const root = path.resolve(import.meta.dir, "..");
-const packages = ["packages/distilled-x", "packages/alchemy-x"];
+const packages = ["packages/effect-xdk", "packages/alchemy-x"];
 
 for (const packageDirectory of packages) {
   const manifestPath = path.join(root, packageDirectory, "package.json");
@@ -81,6 +81,9 @@ for (const packageDirectory of packages) {
       }
     }
     for (const removed of [
+      "lib/client.d.ts",
+      "lib/client.js",
+      "src/client.ts",
       "lib/CredentialFiles.d.ts",
       "lib/CredentialFiles.js",
       "lib/OAuthLoopback.d.ts",

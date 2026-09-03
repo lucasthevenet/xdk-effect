@@ -19,8 +19,7 @@ import type { OperationDefinition } from "../src/operation-types.ts";
 import source from "../specs/source.json";
 
 const root =
-  process.env.DISTILLED_X_GENERATION_ROOT ??
-  path.resolve(import.meta.dir, "..");
+  process.env.EFFECT_XDK_GENERATION_ROOT ?? path.resolve(import.meta.dir, "..");
 const manifest: Readonly<Record<string, OperationDefinition>> = JSON.parse(
   await readFile(path.join(root, ".generated-specs/operations.json"), "utf8"),
 );

@@ -2,10 +2,11 @@ import * as Effect from "effect/Effect";
 import { isResolved, type Input, Resource } from "alchemy";
 import { Unowned } from "alchemy/AdoptPolicy";
 import * as Provider from "alchemy/Provider";
-import { XDecodeError, type XWebhook } from "distilled-x";
-import { XCredentials } from "./Credentials.ts";
+import type { CreateWebhooksResponseData as XWebhook } from "effect-xdk/webhooks";
+import * as Api from "effect-xdk/webhooks";
+import * as Schema from "effect/Schema";
 import {
-  callX,
+  XResponseError,
   ignoreXNotFound,
   isXStatus,
   normalizeWebhookUrl,
@@ -56,6 +57,32 @@ export interface Webhook extends Resource<
  */
 export const Webhook = Resource<Webhook>("X.Webhook");
 
+const listWebhooks = Effect.fn(function* () {
+  const response = yield* Api.getWebhooks({
+    webhook_config_fields: ["id", "url", "valid", "created_at"],
+  });
+  const data = yield* requireXData(response, "listing X webhooks");
+  const webhooks = yield* Schema.decodeUnknownEffect(
+    Schema.Array(
+      Schema.Struct({
+        id: Schema.String,
+        url: Schema.String,
+        valid: Schema.Boolean,
+        created_at: Schema.String,
+      }),
+    ),
+  )(data).pipe(
+    Effect.mapError(
+      () =>
+        new XResponseError({
+          message: "X returned incomplete webhook records",
+          body: response,
+        }),
+    ),
+  );
+  return { ...response, data: webhooks };
+});
+
 const toAttributes = (webhook: XWebhook): WebhookAttributes => ({
   webhookId: webhook.id,
   url: webhook.url,
@@ -75,9 +102,8 @@ const refuseAdoption = (webhook: XWebhook, message: string) =>
   });
 
 const deleteWebhookRegistration = Effect.fn(function* (webhookId: string) {
-  const { client } = yield* XCredentials;
   const deleted = yield* ignoreXNotFound(
-    callX(() => client.webhooks.delete(webhookId)),
+    Api.deleteWebhooks({ webhook_id: webhookId }),
   );
   if (
     deleted &&
@@ -85,11 +111,10 @@ const deleteWebhookRegistration = Effect.fn(function* (webhookId: string) {
       true
   ) {
     return yield* Effect.fail(
-      new XDecodeError(
-        "X did not confirm webhook deletion",
-        deleted.status,
-        JSON.stringify(deleted.value),
-      ),
+      new XResponseError({
+        message: "X did not confirm webhook deletion",
+        body: deleted,
+      }),
     );
   }
 });
@@ -119,8 +144,7 @@ export const WebhookProvider = () =>
     read: Effect.fn(function* ({ olds, output }) {
       if (!output) {
         if (!isResolvedStringInput(olds.url)) return undefined;
-        const { client } = yield* XCredentials;
-        const listed = yield* callX(() => client.webhooks.list());
+        const listed = yield* listWebhooks();
         const webhooks = yield* requireXData(listed, "reading X webhooks");
         const url = normalizeWebhookUrl(olds.url);
         const existing = webhooks.find(
@@ -128,8 +152,7 @@ export const WebhookProvider = () =>
         );
         return existing ? Unowned(toAttributes(existing)) : undefined;
       }
-      const { client } = yield* XCredentials;
-      const listed = yield* callX(() => client.webhooks.list());
+      const listed = yield* listWebhooks();
       const webhooks = yield* requireXData(listed, "reading X webhooks");
       const webhook = webhooks.find(
         (candidate) => candidate.id === output.webhookId,
@@ -138,10 +161,9 @@ export const WebhookProvider = () =>
     }),
 
     reconcile: Effect.fn(function* ({ news, output }) {
-      const { client } = yield* XCredentials;
       // SAFETY: Alchemy invokes reconcile only after resolving every Input.
       const url = normalizeWebhookUrl(news.url as string);
-      const listed = yield* callX(() => client.webhooks.list());
+      const listed = yield* listWebhooks();
       const webhooks = yield* requireXData(listed, "reconciling X webhooks");
       const mayAdopt = news.adoptExisting === true;
       const exact = webhooks.find(
@@ -153,48 +175,45 @@ export const WebhookProvider = () =>
 
       const requireValid = Effect.fn(function* (webhook: XWebhook) {
         if (webhook.valid || news.revalidateInvalid === false) return webhook;
-        yield* callX(() => client.webhooks.validate(webhook.id));
-        const refreshed = yield* callX(() => client.webhooks.list());
+        yield* Api.validateWebhooks({ webhook_id: webhook.id });
+        const refreshed = yield* listWebhooks();
         const validated = (yield* requireXData(
           refreshed,
           "confirming X webhook revalidation",
         )).find((candidate) => candidate.id === webhook.id);
         if (!validated?.valid) {
           return yield* Effect.fail(
-            new XDecodeError(
-              validated
+            new XResponseError({
+              message: validated
                 ? "X webhook remained invalid after creation and revalidation"
                 : "X did not expose the created webhook after revalidation",
-              refreshed.status,
-              JSON.stringify(refreshed.value),
-            ),
+              body: refreshed,
+            }),
           );
         }
         return validated;
       });
 
       const createOwned = Effect.gen(function* () {
-        const created = yield* callX(() =>
-          client.webhooks.create({ url }),
-        ).pipe(Effect.result);
+        const created = yield* Api.createWebhooks({ url }).pipe(Effect.result);
         if (created._tag === "Success") {
           let webhook = yield* requireXData(
             created.success,
             "creating an X webhook",
           );
           if (normalizeWebhookUrl(webhook.url) !== url) {
-            const refreshed = yield* callX(() => client.webhooks.list());
+            const refreshed = yield* listWebhooks();
             const observed = (yield* requireXData(
               refreshed,
               "confirming the created X webhook URL",
             )).find((candidate) => candidate.id === webhook.id);
             if (!observed || normalizeWebhookUrl(observed.url) !== url) {
               return yield* Effect.fail(
-                new XDecodeError(
-                  "X did not expose the created webhook at the declared URL",
-                  refreshed.status,
-                  JSON.stringify(refreshed.value),
-                ),
+                new XResponseError({
+                  message:
+                    "X did not expose the created webhook at the declared URL",
+                  body: refreshed,
+                }),
               );
             }
             webhook = observed;
@@ -202,7 +221,7 @@ export const WebhookProvider = () =>
           return yield* requireValid(webhook);
         }
 
-        const raced = yield* callX(() => client.webhooks.list());
+        const raced = yield* listWebhooks();
         const replacement = (yield* requireXData(
           raced,
           "checking an X webhook creation race",
@@ -239,14 +258,14 @@ export const WebhookProvider = () =>
           return toAttributes(ownedWebhook);
         }
 
-        const validated = yield* callX(() =>
-          client.webhooks.validate(ownedWebhook.id),
-        ).pipe(Effect.result);
+        const validated = yield* Api.validateWebhooks({
+          webhook_id: ownedWebhook.id,
+        }).pipe(Effect.result);
         if (validated._tag === "Failure") {
           if (!isXStatus(validated.failure, 404)) {
             return yield* Effect.fail(validated.failure);
           }
-          const afterDelete = yield* callX(() => client.webhooks.list());
+          const afterDelete = yield* listWebhooks();
           const replacement = (yield* requireXData(
             afterDelete,
             "checking an X webhook revalidation race",
@@ -261,20 +280,19 @@ export const WebhookProvider = () =>
           return toAttributes(yield* createOwned);
         }
 
-        const refreshed = yield* callX(() => client.webhooks.list());
+        const refreshed = yield* listWebhooks();
         const webhook = (yield* requireXData(
           refreshed,
           "confirming the reconciled X webhook",
         )).find((candidate) => candidate.id === ownedWebhook.id);
         if (!webhook?.valid) {
           return yield* Effect.fail(
-            new XDecodeError(
-              webhook
+            new XResponseError({
+              message: webhook
                 ? "X webhook remained invalid after revalidation"
                 : "X did not expose the revalidated webhook",
-              refreshed.status,
-              JSON.stringify(refreshed.value),
-            ),
+              body: refreshed,
+            }),
           );
         }
         return toAttributes(webhook);
@@ -302,8 +320,7 @@ export const WebhookProvider = () =>
     }),
 
     list: Effect.fn(function* () {
-      const { client } = yield* XCredentials;
-      const listed = yield* callX(() => client.webhooks.list());
+      const listed = yield* listWebhooks();
       return (yield* requireXData(listed, "listing X webhooks")).map(
         toAttributes,
       );

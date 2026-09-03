@@ -1,9 +1,10 @@
 import { describe, expect, test } from "bun:test";
+import * as Effect from "effect/Effect";
 import {
   X_WEBHOOK_SIGNATURE_HEADER,
-  createCrcResponse,
-  verifyWebhookRequest,
-  verifyWebhookSignature,
+  createCrcResponse as createCrcResponseEffect,
+  verifyWebhookRequest as verifyWebhookRequestEffect,
+  verifyWebhookSignature as verifyWebhookSignatureEffect,
 } from "../src/index.ts";
 
 const consumerSecret = "consumer-secret";
@@ -63,3 +64,15 @@ describe("X webhook security", () => {
     expect(await request.text()).toBe('{"event":"post.create","text":"café"}');
   });
 });
+
+const createCrcResponse = (
+  ...args: Parameters<typeof createCrcResponseEffect>
+) => Effect.runPromise(createCrcResponseEffect(...args));
+
+const verifyWebhookRequest = (
+  ...args: Parameters<typeof verifyWebhookRequestEffect>
+) => Effect.runPromise(verifyWebhookRequestEffect(...args));
+
+const verifyWebhookSignature = (
+  ...args: Parameters<typeof verifyWebhookSignatureEffect>
+) => Effect.runPromise(verifyWebhookSignatureEffect(...args));

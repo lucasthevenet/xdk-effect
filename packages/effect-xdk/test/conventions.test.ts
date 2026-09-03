@@ -14,12 +14,15 @@ import {
   fromBearer,
   fromOAuth1,
   oauth1Credentials,
-} from "distilled-x/Credentials";
-import { ConfigError, TooManyRequests } from "distilled-x/Errors";
-import * as Retry from "distilled-x/Retry";
-import { getUsersMe } from "distilled-x/users";
-import { getWebhooks } from "distilled-x/webhooks";
-import type { FetchLike } from "../src/runtime.ts";
+} from "effect-xdk/Credentials";
+import { ConfigError, TooManyRequests } from "effect-xdk/Errors";
+import * as Retry from "effect-xdk/Retry";
+import { getUsersMe } from "effect-xdk/users";
+import { getWebhooks } from "effect-xdk/webhooks";
+type FetchLike = (
+  input: RequestInfo | URL,
+  init?: RequestInit,
+) => Promise<Response>;
 
 const oauth1 = {
   apiKey: "key",

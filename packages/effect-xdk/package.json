@@ -1,5 +1,5 @@
 {
-  "name": "distilled-x",
+  "name": "effect-xdk",
   "version": "0.1.0",
   "description": "Spec-generated, Effect-native X API SDK with OAuth, streaming, and webhook primitives.",
   "keywords": [
@@ -17,7 +17,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lucasthevenet/alchemy-x.git",
-    "directory": "packages/distilled-x"
+    "directory": "packages/effect-xdk"
   },
   "files": [
     "lib",
@@ -76,36 +76,16 @@
       "worker": "./src/webhooks.ts",
       "default": "./lib/webhooks.js"
     },
-    "./Client": {
-      "types": "./lib/client.d.ts",
-      "bun": "./src/client.ts",
-      "worker": "./src/client.ts",
-      "default": "./lib/client.js"
-    },
-    "./client": {
-      "types": "./lib/client.d.ts",
-      "bun": "./src/client.ts",
-      "worker": "./src/client.ts",
-      "default": "./lib/client.js"
-    },
-    "./auth": {
-      "types": "./lib/auth.d.ts",
-      "bun": "./src/auth.ts",
-      "worker": "./src/auth.ts",
-      "default": "./lib/auth.js"
-    },
+    "./Client": null,
+    "./client": null,
+    "./auth": null,
     "./oauth": {
       "types": "./lib/oauth.d.ts",
       "bun": "./src/oauth.ts",
       "worker": "./src/oauth.ts",
       "default": "./lib/oauth.js"
     },
-    "./runtime": {
-      "types": "./lib/runtime.d.ts",
-      "bun": "./src/runtime.ts",
-      "worker": "./src/runtime.ts",
-      "default": "./lib/runtime.js"
-    },
+    "./runtime": null,
     "./types": {
       "types": "./lib/types.d.ts",
       "bun": "./src/types.ts",

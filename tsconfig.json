@@ -1,7 +1,7 @@
 {
   "files": [],
   "references": [
-    { "path": "./packages/distilled-x" },
+    { "path": "./packages/effect-xdk" },
     { "path": "./packages/alchemy-x" },
     { "path": "./examples/cloudflare-worker" }
   ]

@@ -12,21 +12,21 @@ const workerExternals = [
   "alchemy/*",
   "effect",
   "effect/*",
-  "distilled-x",
+  "effect-xdk",
 ];
 const workerCwd = path.join(root, "examples/cloudflare-worker");
 
 // Bundle the portable package itself: keeping it external below must not hide
 // accidental Node-only imports in signing, token exchange, or OAuth2 helpers.
 const distilledResult = await Bun.build({
-  entrypoints: [path.join(root, "packages/distilled-x/src/index.ts")],
+  entrypoints: [path.join(root, "packages/effect-xdk/src/index.ts")],
   target: "browser",
   format: "esm",
 });
 if (!distilledResult.success) {
   throw new AggregateError(
     distilledResult.logs,
-    "Could not bundle distilled-x for a Worker",
+    "Could not bundle effect-xdk for a Worker",
   );
 }
 

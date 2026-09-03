@@ -4,10 +4,10 @@ Research date: 2026-08-31. Sources are first-party Alchemy and X documentation/s
 
 > **Current implementation status (2026-09-02):** `alchemy-x` accepts one
 > OAuth1 credential set (API key/secret and access token/secret), either stored
-> in an Alchemy profile or loaded from environment variables. `distilled-x`
+> in an Alchemy profile or loaded from environment variables. `effect-xdk`
 > signs user requests and lazily obtains/caches app-only tokens using the API
 > key/secret. No separate Bearer configuration or browser authorization is
-> needed in Alchemy. `distilled-x` also retains explicit Bearer authentication
+> needed in Alchemy. `effect-xdk` also retains explicit Bearer authentication
 > and all OAuth2/PKCE helpers. The interactive Alchemy OAuth2 design below is
 > historical research, not the current provider contract.
 
@@ -26,7 +26,7 @@ Account Activity is not a free feature: X documents Pay Per Use and Enterprise a
 
 Recommended split:
 
-- `distilled-x`: an Effect-native X API SDK generated from X's official OpenAPI, with hand-written credential/protocol/error modules. This mirrors `@distilled.cloud/github`, whose package exposes `Credentials`, protocol, errors, retry, generated services, and per-service entry points, and resolves its credential Effect per request so rotated tokens work without rebuilding the Layer. [Distilled GitHub package](https://github.com/alchemy-run/distilled/tree/cc93bf364f93840f008e0a50e8edbaab63348a9d/packages/github) [GitHub credentials source](https://github.com/alchemy-run/distilled/blob/cc93bf364f93840f008e0a50e8edbaab63348a9d/packages/github/src/credentials.ts) [GitHub protocol source](https://github.com/alchemy-run/distilled/blob/cc93bf364f93840f008e0a50e8edbaab63348a9d/packages/github/src/protocol.ts)
+- `effect-xdk`: an Effect-native X API SDK generated from X's official OpenAPI, with hand-written credential/protocol/error modules. This mirrors `@distilled.cloud/github`, whose package exposes `Credentials`, protocol, errors, retry, generated services, and per-service entry points, and resolves its credential Effect per request so rotated tokens work without rebuilding the Layer. [Distilled GitHub package](https://github.com/alchemy-run/distilled/tree/cc93bf364f93840f008e0a50e8edbaab63348a9d/packages/github) [GitHub credentials source](https://github.com/alchemy-run/distilled/blob/cc93bf364f93840f008e0a50e8edbaab63348a9d/packages/github/src/credentials.ts) [GitHub protocol source](https://github.com/alchemy-run/distilled/blob/cc93bf364f93840f008e0a50e8edbaab63348a9d/packages/github/src/protocol.ts)
 - `alchemy-x`: declarative resources, the `X.providers()` collection, the Alchemy Auth Provider, and runtime event-source integrations. Alchemy providers are Effect Layers; a resource implementation supplies lifecycle operations such as `diff`, `reconcile`, `delete`, and `list`, while `providers()` bundles the resource collection and implementations. [Provider guide](https://alchemy.run/infrastructure-as-code/provider/) [Custom provider guide](https://alchemy.run/infrastructure-as-code/custom-provider/)
 
 The `alchemy-x` public surface should initially contain `Webhook`, `AccountActivitySubscription`, `consumeAccountActivity`, `providers()`, and explicit credential layers for tests/programmatic use. `AccountActivitySubscription` should depend on the `Webhook` output so destroy order removes subscriptions before deleting the webhook. This follows Alchemy's current GitHub split between a declarative webhook resource and a host-specific event source that provisions it at deploy time and verifies deliveries at runtime. [Alchemy GitHub Webhook](https://github.com/alchemy-run/alchemy/blob/901859886e0fb6130fb7bb5aff397e6db72332f9/packages/alchemy/src/GitHub/Webhook.ts) [GitHub repository event source](https://github.com/alchemy-run/alchemy/blob/901859886e0fb6130fb7bb5aff397e6db72332f9/packages/alchemy/src/GitHub/RepositoryEventSource.ts) [Cloudflare host integration](https://github.com/alchemy-run/alchemy/blob/901859886e0fb6130fb7bb5aff397e6db72332f9/packages/alchemy/src/Cloudflare/Workers/GitHubRepositoryEventSource.ts)

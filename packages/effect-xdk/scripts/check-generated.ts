@@ -5,12 +5,12 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 
 const root = path.resolve(import.meta.dir, "..");
-const target = await mkdtemp(path.join(tmpdir(), "distilled-x-generation-"));
+const target = await mkdtemp(path.join(tmpdir(), "effect-xdk-generation-"));
 try {
   for (const script of ["convert.ts", "generate.ts"]) {
     const child = Bun.spawn(["bun", `scripts/${script}`], {
       cwd: root,
-      env: { ...process.env, DISTILLED_X_GENERATION_ROOT: target },
+      env: { ...process.env, EFFECT_XDK_GENERATION_ROOT: target },
       stdout: "pipe",
       stderr: "pipe",
     });
