@@ -2,7 +2,6 @@ import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
 import * as Schema from "effect/Schema";
-import { ownedBytes } from "./runtime.ts";
 
 export class HmacError extends Schema.TaggedError<HmacError>()("HmacError", {
   method: Schema.Literals(["sign", "verify"]),
@@ -35,13 +34,13 @@ export const makeSubtle = (crypto: Crypto): Effect.Effect<Hmac["Service"]> =>
           try: async () => {
             const key = await crypto.subtle.importKey(
               "raw",
-              ownedBytes(input.key),
+              new Uint8Array(input.key),
               { name: "HMAC", hash: input.hash },
               false,
               ["sign"],
             );
             return new Uint8Array(
-              await crypto.subtle.sign("HMAC", key, ownedBytes(input.data)),
+              await crypto.subtle.sign("HMAC", key, new Uint8Array(input.data)),
             );
           },
           catch: (cause) => new HmacError({ method: "sign", cause }),
@@ -51,7 +50,7 @@ export const makeSubtle = (crypto: Crypto): Effect.Effect<Hmac["Service"]> =>
           try: async () => {
             const key = await crypto.subtle.importKey(
               "raw",
-              ownedBytes(input.key),
+              new Uint8Array(input.key),
               { name: "HMAC", hash: input.hash },
               false,
               ["verify"],
@@ -59,8 +58,8 @@ export const makeSubtle = (crypto: Crypto): Effect.Effect<Hmac["Service"]> =>
             return crypto.subtle.verify(
               "HMAC",
               key,
-              ownedBytes(input.signature),
-              ownedBytes(input.data),
+              new Uint8Array(input.signature),
+              new Uint8Array(input.data),
             );
           },
           catch: (cause) => new HmacError({ method: "verify", cause }),

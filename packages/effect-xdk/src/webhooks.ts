@@ -3,7 +3,6 @@ import * as Encoding from "effect/Encoding";
 import * as Result from "effect/Result";
 import * as Schema from "effect/Schema";
 import { Hmac } from "./hmac.ts";
-import { utf8 } from "./runtime.ts";
 
 export const X_WEBHOOK_SIGNATURE_HEADER = "x-twitter-webhooks-signature";
 
@@ -17,8 +16,8 @@ export const createCrcResponse = (crcToken: string, consumerSecret: string) =>
     const hmac = yield* Hmac;
     const signature = yield* hmac.sign({
       hash: "SHA-256",
-      key: utf8(consumerSecret),
-      data: utf8(crcToken),
+      key: new TextEncoder().encode(consumerSecret),
+      data: new TextEncoder().encode(crcToken),
     });
     return {
       response_token: `sha256=${Encoding.encodeBase64(signature)}` as const,
@@ -47,7 +46,7 @@ export const verifyWebhookSignature = (input: {
     const hmac = yield* Hmac;
     return yield* hmac.verify({
       hash: "SHA-256",
-      key: utf8(input.consumerSecret),
+      key: new TextEncoder().encode(input.consumerSecret),
       signature: signature.success,
       data: input.rawBody,
     });

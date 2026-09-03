@@ -204,7 +204,7 @@ export const createAuthorizationRequest = (
       yield* crypto.randomBytes(64),
     );
     const codeChallenge = Encoding.encodeBase64Url(
-      yield* crypto.digest("SHA-256", utf8(codeVerifier)),
+      yield* crypto.digest("SHA-256", new TextEncoder().encode(codeVerifier)),
     );
     return yield* Effect.try({
       try: (): OAuth2AuthorizationRequest => {

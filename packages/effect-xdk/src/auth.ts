@@ -5,7 +5,6 @@ import * as Encoding from "effect/Encoding";
 import { XAuthenticationError } from "./errors.ts";
 import { Hmac } from "./hmac.ts";
 import type { OperationDefinition } from "./operation-types.ts";
-import { utf8 } from "./runtime.ts";
 
 /** One credential set for user signing and internal app-token exchange. */
 export interface XCredentials {
@@ -114,8 +113,8 @@ export const signOAuth1 = (
     const signature = Encoding.encodeBase64(
       yield* hmac.sign({
         hash: "SHA-1",
-        key: utf8(`${encode(apiSecret)}&${encode(accessTokenSecret)}`),
-        data: utf8(baseString),
+        key: new TextEncoder().encode(`${encode(apiSecret)}&${encode(accessTokenSecret)}`),
+        data: new TextEncoder().encode(baseString),
       }),
     );
     return `OAuth ${Object.entries({ ...oauth, oauth_signature: signature })
