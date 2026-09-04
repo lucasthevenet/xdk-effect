@@ -37,10 +37,9 @@ const WebhookRoute = HttpRouter.add(
     return yield* X.createWebhookHandler({
       consumerSecret: yield* Config.redacted("API_SECRET"),
       onEvent: (event) => Effect.log("X event", event),
-    })
+    });
   }).pipe(Effect.catch(requestFailed)),
 );
-
 
 export default Cloudflare.Worker(
   "XWebhookWorker",
@@ -54,6 +53,10 @@ export default Cloudflare.Worker(
     },
   },
   Effect.gen(function* () {
-    return { fetch: yield* HttpRouter.toHttpEffect(Layer.mergeAll(GetMeRoute, WebhookRoute)) };
+    return {
+      fetch: yield* HttpRouter.toHttpEffect(
+        Layer.mergeAll(GetMeRoute, WebhookRoute),
+      ),
+    };
   }),
 );

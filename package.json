@@ -32,6 +32,8 @@
     "format:check": "oxfmt '.' --check --ignore-path .oxfmtignore",
     "lint": "oxlint",
     "test": "bun test",
+    "release:packages": "bun scripts/validate-release.ts",
+    "release:validate": "bun run check && bun run build && bun run release:packages",
     "check": "bun run generate:check && bun run format:check && bun run lint && bun run typecheck && bun test"
   },
   "devDependencies": {

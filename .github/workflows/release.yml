@@ -1,0 +1,58 @@
+name: Release package
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: xdk-effect-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      RELEASE_VERSION: ${{ github.event.release.tag_name }}
+    steps:
+      - name: Check out release source
+        uses: actions/checkout@v6
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.14
+
+      - name: Set up Node and npm trusted publishing
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+
+      - name: Install locked dependencies
+        run: bun ci
+
+      - name: Validate release inputs and package artifacts
+        run: bun run release:validate
+
+      - name: Select npm distribution tag
+        id: distribution
+        env:
+          PRERELEASE: ${{ github.event.release.prerelease }}
+        run: |
+          if [[ "$PRERELEASE" == "true" || "$RELEASE_VERSION" == *-* ]]; then
+            echo "tag=next" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish xdk-effect with provenance
+        run: npm publish ./packages/xdk-effect --access public --provenance --tag "$NPM_DIST_TAG"
+        env:
+          NPM_DIST_TAG: ${{ steps.distribution.outputs.tag }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
