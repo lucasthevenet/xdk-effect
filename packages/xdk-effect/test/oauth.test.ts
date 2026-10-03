@@ -5,7 +5,7 @@ import { describe, expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
 import * as Layer from "effect/Layer";
-import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
+import * as FetchHttpClient from "effect/http/FetchHttpClient";
 import { XOAuthError, XOAuthStateError } from "../src/errors.ts";
 import {
   createAuthorizationRequest,

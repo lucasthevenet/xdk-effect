@@ -33,7 +33,7 @@ export type GetSpacesBuyersRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetSpacesBuyersRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const GetSpacesBuyersRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetSpacesBuyersRequestUserFieldsList = Array<
@@ -47,7 +47,7 @@ export type GetSpacesBuyersRequestExpansionsItem =
   | "affiliation"
   | "most_recent_post_id"
   | "pinned_post_id";
-export const GetSpacesBuyersRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const GetSpacesBuyersRequestExpansionsItem = S.String;
 
 export type GetSpacesBuyersRequestExpansionsList = Array<
   GetSpacesBuyersRequestExpansionsItem | (string & {})
@@ -88,7 +88,7 @@ export type GetSpacesBuyersRequestPostFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const GetSpacesBuyersRequestPostFieldsItem = /*@__PURE__*/ S.String;
+export const GetSpacesBuyersRequestPostFieldsItem = S.String;
 
 /** The fields available for a Post object. */
 export type GetSpacesBuyersRequestPostFieldsList = Array<
@@ -173,7 +173,7 @@ export type UserConnectionStatusItem =
   | "followed_by"
   | "following"
   | "muting";
-export const UserConnectionStatusItem = /*@__PURE__*/ S.String;
+export const UserConnectionStatusItem = S.String;
 
 /** Returns detailed information about the relationship between two users. */
 export type UserConnectionStatus = Array<UserConnectionStatusItem>;
@@ -458,7 +458,7 @@ export const UserWithheldCountryCodesList = /*@__PURE__*/ S.Array(
 
 /** The scope of the withholding. Only present, with the value "user", when the entire User is withheld. */
 export type UserWithheldScope = "user";
-export const UserWithheldScope = /*@__PURE__*/ S.String;
+export const UserWithheldScope = S.String;
 
 /** Withholding details for withheld content. */
 export interface UserWithheld {
@@ -562,7 +562,7 @@ export const GetSpacesBuyersResponseDataList = /*@__PURE__*/ S.Array(
 
 export type ResourceNotFoundProblemType =
   "https://api.x.com/2/problems/resource-not-found";
-export const ResourceNotFoundProblemType = /*@__PURE__*/ S.String;
+export const ResourceNotFoundProblemType = S.String;
 
 export interface ResourceNotFoundProblem {
   detail: string;
@@ -591,7 +591,7 @@ export const ResourceNotFoundProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type InvalidRequestProblemType =
   "https://api.x.com/2/problems/invalid-request";
-export const InvalidRequestProblemType = /*@__PURE__*/ S.String;
+export const InvalidRequestProblemType = S.String;
 
 export interface InvalidRequestProblem {
   detail: string;
@@ -616,7 +616,7 @@ export const InvalidRequestProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type NotAuthorizedForResourceProblemType =
   "https://api.x.com/2/problems/not-authorized-for-resource";
-export const NotAuthorizedForResourceProblemType = /*@__PURE__*/ S.String;
+export const NotAuthorizedForResourceProblemType = S.String;
 
 export interface NotAuthorizedForResourceProblem {
   detail: string;
@@ -647,7 +647,7 @@ export const NotAuthorizedForResourceProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type NotAuthorizedForFieldProblemType =
   "https://api.x.com/2/problems/not-authorized-for-field";
-export const NotAuthorizedForFieldProblemType = /*@__PURE__*/ S.String;
+export const NotAuthorizedForFieldProblemType = S.String;
 
 export interface NotAuthorizedForFieldProblem {
   detail: string;
@@ -680,7 +680,7 @@ export const NotAuthorizedForFieldProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type FieldUnauthorizedProblemType =
   "https://api.x.com/2/problems/field-unauthorized";
-export const FieldUnauthorizedProblemType = /*@__PURE__*/ S.String;
+export const FieldUnauthorizedProblemType = S.String;
 
 export interface FieldUnauthorizedProblem {
   detail: string;
@@ -707,7 +707,7 @@ export const FieldUnauthorizedProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type FieldHydrationFailureProblemType =
   "https://api.x.com/2/problems/field-hydration-failure";
-export const FieldHydrationFailureProblemType = /*@__PURE__*/ S.String;
+export const FieldHydrationFailureProblemType = S.String;
 
 export interface FieldHydrationFailureProblem {
   detail: string;
@@ -734,7 +734,7 @@ export const FieldHydrationFailureProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type ResourceUnavailableProblemType =
   "https://api.x.com/2/problems/resource-unavailable";
-export const ResourceUnavailableProblemType = /*@__PURE__*/ S.String;
+export const ResourceUnavailableProblemType = S.String;
 
 export interface ResourceUnavailableProblem {
   detail: string;
@@ -759,7 +759,7 @@ export const ResourceUnavailableProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type DisallowedResourceProblemType =
   "https://api.x.com/2/problems/disallowed-resource";
-export const DisallowedResourceProblemType = /*@__PURE__*/ S.String;
+export const DisallowedResourceProblemType = S.String;
 
 export interface DisallowedResourceProblem {
   detail: string;
@@ -786,7 +786,7 @@ export const DisallowedResourceProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type InternalErrorProblemType =
   "https://api.x.com/2/problems/internal-error";
-export const InternalErrorProblemType = /*@__PURE__*/ S.String;
+export const InternalErrorProblemType = S.String;
 
 export interface InternalErrorProblem {
   detail: string;
@@ -991,7 +991,7 @@ export const PlaceGeoBboxList = /*@__PURE__*/ S.Array(
 ) as any as S.Schema<PlaceGeoBboxList>;
 
 export type PlaceGeoType = "Feature";
-export const PlaceGeoType = /*@__PURE__*/ S.String;
+export const PlaceGeoType = S.String;
 
 /** The geographic location of this place, expressed as a GeoJSON Feature. */
 export interface PlaceGeo {
@@ -1321,7 +1321,7 @@ export const PostGeoCoordinatesCoordinatesList = /*@__PURE__*/ S.Array(
 
 /** The GeoJSON geometry type. */
 export type PostGeoCoordinatesType = "Point";
-export const PostGeoCoordinatesType = /*@__PURE__*/ S.String;
+export const PostGeoCoordinatesType = S.String;
 
 /** A GeoJSON Point geometry. */
 export interface PostGeoCoordinates {
@@ -1548,7 +1548,7 @@ export const PostPublicMetrics = /*@__PURE__*/ S.suspend(() =>
 
 /** The kind of Post-to-Post reference. */
 export type PostReferencedPostsItemType = "retweeted" | "quoted" | "replied_to";
-export const PostReferencedPostsItemType = /*@__PURE__*/ S.String;
+export const PostReferencedPostsItemType = S.String;
 
 /** A reference from this Post to another Post (repost, quote, or reply). */
 export interface PostReferencedPostsItem {
@@ -1621,7 +1621,7 @@ export const PostWithheldCountryCodesList = /*@__PURE__*/ S.Array(
 
 /** Whether the withholding applies to a Post or a User. */
 export type PostWithheldScope = "post" | "user";
-export const PostWithheldScope = /*@__PURE__*/ S.String;
+export const PostWithheldScope = S.String;
 
 /** Withholding details for withheld content. */
 export interface PostWithheld {
@@ -1838,8 +1838,7 @@ export type GetSpacesByCreatorIdsRequestSpaceFieldsItem =
   | "subscriber_count"
   | "title"
   | "updated_at";
-export const GetSpacesByCreatorIdsRequestSpaceFieldsItem =
-  /*@__PURE__*/ S.String;
+export const GetSpacesByCreatorIdsRequestSpaceFieldsItem = S.String;
 
 /** The fields available for a Space object. */
 export type GetSpacesByCreatorIdsRequestSpaceFieldsList = Array<
@@ -1856,8 +1855,7 @@ export type GetSpacesByCreatorIdsRequestExpansionsItem =
   | "invited_user_ids"
   | "speaker_ids"
   | "topic_ids";
-export const GetSpacesByCreatorIdsRequestExpansionsItem =
-  /*@__PURE__*/ S.String;
+export const GetSpacesByCreatorIdsRequestExpansionsItem = S.String;
 
 export type GetSpacesByCreatorIdsRequestExpansionsList = Array<
   GetSpacesByCreatorIdsRequestExpansionsItem | (string & {})
@@ -1891,8 +1889,7 @@ export type GetSpacesByCreatorIdsRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetSpacesByCreatorIdsRequestUserFieldsItem =
-  /*@__PURE__*/ S.String;
+export const GetSpacesByCreatorIdsRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetSpacesByCreatorIdsRequestUserFieldsList = Array<
@@ -1906,8 +1903,7 @@ export type GetSpacesByCreatorIdsRequestTopicFieldsItem =
   | "description"
   | "id"
   | "name";
-export const GetSpacesByCreatorIdsRequestTopicFieldsItem =
-  /*@__PURE__*/ S.String;
+export const GetSpacesByCreatorIdsRequestTopicFieldsItem = S.String;
 
 /** The fields available for a Topic object. */
 export type GetSpacesByCreatorIdsRequestTopicFieldsList = Array<
@@ -2083,7 +2079,7 @@ export type GetSpacesByIdRequestSpaceFieldsItem =
   | "subscriber_count"
   | "title"
   | "updated_at";
-export const GetSpacesByIdRequestSpaceFieldsItem = /*@__PURE__*/ S.String;
+export const GetSpacesByIdRequestSpaceFieldsItem = S.String;
 
 /** The fields available for a Space object. */
 export type GetSpacesByIdRequestSpaceFieldsList = Array<
@@ -2099,7 +2095,7 @@ export type GetSpacesByIdRequestExpansionsItem =
   | "invited_user_ids"
   | "speaker_ids"
   | "topic_ids";
-export const GetSpacesByIdRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const GetSpacesByIdRequestExpansionsItem = S.String;
 
 export type GetSpacesByIdRequestExpansionsList = Array<
   GetSpacesByIdRequestExpansionsItem | (string & {})
@@ -2133,7 +2129,7 @@ export type GetSpacesByIdRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetSpacesByIdRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const GetSpacesByIdRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetSpacesByIdRequestUserFieldsList = Array<
@@ -2144,7 +2140,7 @@ export const GetSpacesByIdRequestUserFieldsList = /*@__PURE__*/ S.Array(
 ) as any as S.Schema<GetSpacesByIdRequestUserFieldsList>;
 
 export type GetSpacesByIdRequestTopicFieldsItem = "description" | "id" | "name";
-export const GetSpacesByIdRequestTopicFieldsItem = /*@__PURE__*/ S.String;
+export const GetSpacesByIdRequestTopicFieldsItem = S.String;
 
 /** The fields available for a Topic object. */
 export type GetSpacesByIdRequestTopicFieldsList = Array<
@@ -2234,7 +2230,7 @@ export type GetSpacesByIdsRequestSpaceFieldsItem =
   | "subscriber_count"
   | "title"
   | "updated_at";
-export const GetSpacesByIdsRequestSpaceFieldsItem = /*@__PURE__*/ S.String;
+export const GetSpacesByIdsRequestSpaceFieldsItem = S.String;
 
 /** The fields available for a Space object. */
 export type GetSpacesByIdsRequestSpaceFieldsList = Array<
@@ -2250,7 +2246,7 @@ export type GetSpacesByIdsRequestExpansionsItem =
   | "invited_user_ids"
   | "speaker_ids"
   | "topic_ids";
-export const GetSpacesByIdsRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const GetSpacesByIdsRequestExpansionsItem = S.String;
 
 export type GetSpacesByIdsRequestExpansionsList = Array<
   GetSpacesByIdsRequestExpansionsItem | (string & {})
@@ -2284,7 +2280,7 @@ export type GetSpacesByIdsRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetSpacesByIdsRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const GetSpacesByIdsRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetSpacesByIdsRequestUserFieldsList = Array<
@@ -2298,7 +2294,7 @@ export type GetSpacesByIdsRequestTopicFieldsItem =
   | "description"
   | "id"
   | "name";
-export const GetSpacesByIdsRequestTopicFieldsItem = /*@__PURE__*/ S.String;
+export const GetSpacesByIdsRequestTopicFieldsItem = S.String;
 
 /** The fields available for a Topic object. */
 export type GetSpacesByIdsRequestTopicFieldsList = Array<
@@ -2407,7 +2403,7 @@ export type GetSpacesPostsRequestPostFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const GetSpacesPostsRequestPostFieldsItem = /*@__PURE__*/ S.String;
+export const GetSpacesPostsRequestPostFieldsItem = S.String;
 
 /** The fields available for a Post object. */
 export type GetSpacesPostsRequestPostFieldsList = Array<
@@ -2430,7 +2426,7 @@ export type GetSpacesPostsRequestExpansionsItem =
   | "in_reply_to_user_id"
   | "referenced_posts"
   | "username";
-export const GetSpacesPostsRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const GetSpacesPostsRequestExpansionsItem = S.String;
 
 export type GetSpacesPostsRequestExpansionsList = Array<
   GetSpacesPostsRequestExpansionsItem | (string & {})
@@ -2464,7 +2460,7 @@ export type GetSpacesPostsRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetSpacesPostsRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const GetSpacesPostsRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetSpacesPostsRequestUserFieldsList = Array<
@@ -2488,7 +2484,7 @@ export type GetSpacesPostsRequestMediaFieldsItem =
   | "url"
   | "variants"
   | "width";
-export const GetSpacesPostsRequestMediaFieldsItem = /*@__PURE__*/ S.String;
+export const GetSpacesPostsRequestMediaFieldsItem = S.String;
 
 /** The fields available for a Media object. */
 export type GetSpacesPostsRequestMediaFieldsList = Array<
@@ -2504,7 +2500,7 @@ export type GetSpacesPostsRequestPollFieldsItem =
   | "id"
   | "options"
   | "voting_status";
-export const GetSpacesPostsRequestPollFieldsItem = /*@__PURE__*/ S.String;
+export const GetSpacesPostsRequestPollFieldsItem = S.String;
 
 /** The fields available for a Poll object. */
 export type GetSpacesPostsRequestPollFieldsList = Array<
@@ -2523,7 +2519,7 @@ export type GetSpacesPostsRequestPlaceFieldsItem =
   | "id"
   | "name"
   | "place_type";
-export const GetSpacesPostsRequestPlaceFieldsItem = /*@__PURE__*/ S.String;
+export const GetSpacesPostsRequestPlaceFieldsItem = S.String;
 
 /** The fields available for a Place object. */
 export type GetSpacesPostsRequestPlaceFieldsList = Array<
@@ -2627,7 +2623,7 @@ export const GetSpacesPostsResponse = /*@__PURE__*/ S.suspend(() =>
 }) as any as S.Schema<GetSpacesPostsResponse>;
 
 export type SearchSpacesRequestState = "live" | "scheduled" | "all";
-export const SearchSpacesRequestState = /*@__PURE__*/ S.String;
+export const SearchSpacesRequestState = S.String;
 
 export type SearchSpacesRequestSpaceFieldsItem =
   | "created_at"
@@ -2642,7 +2638,7 @@ export type SearchSpacesRequestSpaceFieldsItem =
   | "subscriber_count"
   | "title"
   | "updated_at";
-export const SearchSpacesRequestSpaceFieldsItem = /*@__PURE__*/ S.String;
+export const SearchSpacesRequestSpaceFieldsItem = S.String;
 
 /** The fields available for a Space object. */
 export type SearchSpacesRequestSpaceFieldsList = Array<
@@ -2658,7 +2654,7 @@ export type SearchSpacesRequestExpansionsItem =
   | "invited_user_ids"
   | "speaker_ids"
   | "topic_ids";
-export const SearchSpacesRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const SearchSpacesRequestExpansionsItem = S.String;
 
 export type SearchSpacesRequestExpansionsList = Array<
   SearchSpacesRequestExpansionsItem | (string & {})
@@ -2692,7 +2688,7 @@ export type SearchSpacesRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const SearchSpacesRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const SearchSpacesRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type SearchSpacesRequestUserFieldsList = Array<
@@ -2703,7 +2699,7 @@ export const SearchSpacesRequestUserFieldsList = /*@__PURE__*/ S.Array(
 ) as any as S.Schema<SearchSpacesRequestUserFieldsList>;
 
 export type SearchSpacesRequestTopicFieldsItem = "description" | "id" | "name";
-export const SearchSpacesRequestTopicFieldsItem = /*@__PURE__*/ S.String;
+export const SearchSpacesRequestTopicFieldsItem = S.String;
 
 /** The fields available for a Topic object. */
 export type SearchSpacesRequestTopicFieldsList = Array<

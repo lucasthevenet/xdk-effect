@@ -94,7 +94,7 @@ Stopping consumption cancels the stream. Reconnection is the caller's responsibi
 ```ts
 import * as Config from "effect/Config";
 import * as Layer from "effect/Layer";
-import * as HttpRouter from "effect/unstable/http/HttpRouter";
+import * as HttpRouter from "effect/http/HttpRouter";
 
 const Routes = Layer.unwrap(
   Effect.gen(function* () {
@@ -102,7 +102,7 @@ const Routes = Layer.unwrap(
       "*",
       "/webhook",
       X.createWebhookHandler({
-        consumerSecret: yield* Config.redacted("API_SECRET"),
+        consumerSecret: yield* Config.Redacted("API_SECRET"),
         onEvent: (event) => Effect.log("X delivery", event),
       }),
     );

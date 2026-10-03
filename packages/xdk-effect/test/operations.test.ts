@@ -8,7 +8,7 @@ import * as Stream from "effect/Stream";
 import * as Schema from "effect/Schema";
 import * as API from "@distilled.cloud/core/api";
 import * as T from "../src/traits.ts";
-import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
+import * as FetchHttpClient from "effect/http/FetchHttpClient";
 import { fromOAuth1, fromBearer } from "../src/credentials.ts";
 import * as Retry from "../src/retry.ts";
 import {
@@ -67,6 +67,25 @@ const live = (runtime: { readonly fetch: FetchLike }) =>
 const me = { data: { id: "1", name: "Alchemy", username: "alchemy" } };
 
 describe("generated Effect operations", () => {
+  test("preserves nested legacy references after validating known response fields", async () => {
+    const response = {
+      data: {
+        id: "42",
+        text: "hello",
+        edit_history_tweet_ids: ["42"],
+        referenced_tweets: [{ type: "quoted", id: "99" }],
+      },
+      meta: { legacy: true },
+    };
+    const result = await Effect.runPromise(
+      getPostsById({ id: "42" }).pipe(
+        withAuth("user"),
+        Effect.provide(live({ fetch: async () => Response.json(response) })),
+      ),
+    );
+    expect(result).toEqual(response);
+  });
+
   test("preserves a metadata-only empty webhook list", async () => {
     const response = { meta: { result_count: 0 } };
     const result = await Effect.runPromise(

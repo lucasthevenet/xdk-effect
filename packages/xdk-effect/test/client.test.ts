@@ -2,9 +2,9 @@ import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import * as Fiber from "effect/Fiber";
 import * as Stream from "effect/Stream";
-import * as HttpClient from "effect/unstable/http/HttpClient";
-import * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
-import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
+import * as HttpClient from "effect/http/HttpClient";
+import * as HttpClientResponse from "effect/http/HttpClientResponse";
+import * as FetchHttpClient from "effect/http/FetchHttpClient";
 import * as X from "../src/index.ts";
 
 const me = { data: { id: "42", name: "Example", username: "example" } };

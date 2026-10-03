@@ -9,7 +9,7 @@ Set these environment variables for deployment:
 - `ACCESS_TOKEN`
 - `ACCESS_TOKEN_SECRET`
 
-Secrets are declared with `Config.redacted` in the Worker's `env` bindings. Alchemy resolves them at deployment and provides them to runtime `Config` reads; redacted values are passed directly to the SDK.
+Secrets are declared with `Config.Redacted` in the Worker's `env` bindings. Alchemy resolves them at deployment and provides them to runtime `Config` reads; redacted values are passed directly to the SDK.
 
 `src/worker.ts` defines the routes, creates `Cloudflare.Worker("XWebhookWorker", ...)`, and uses `HttpRouter.toHttpEffect` for its fetch handler. `alchemy.run.ts` defines the `XExample` stack with Cloudflare providers and state.
 

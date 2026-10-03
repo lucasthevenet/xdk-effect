@@ -22,7 +22,7 @@ export type SearchNewsRequestNewsFieldsItem =
   | "name"
   | "summary"
   | "updated_at";
-export const SearchNewsRequestNewsFieldsItem = /*@__PURE__*/ S.String;
+export const SearchNewsRequestNewsFieldsItem = S.String;
 
 /** The fields available for a News object. */
 export type SearchNewsRequestNewsFieldsList = Array<
@@ -109,7 +109,7 @@ export const SearchNewsResponseDataList = /*@__PURE__*/ S.Array(
 
 export type ResourceNotFoundProblemType =
   "https://api.x.com/2/problems/resource-not-found";
-export const ResourceNotFoundProblemType = /*@__PURE__*/ S.String;
+export const ResourceNotFoundProblemType = S.String;
 
 export interface ResourceNotFoundProblem {
   detail: string;
@@ -138,7 +138,7 @@ export const ResourceNotFoundProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type InvalidRequestProblemType =
   "https://api.x.com/2/problems/invalid-request";
-export const InvalidRequestProblemType = /*@__PURE__*/ S.String;
+export const InvalidRequestProblemType = S.String;
 
 export interface InvalidRequestProblem {
   detail: string;
@@ -163,7 +163,7 @@ export const InvalidRequestProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type NotAuthorizedForResourceProblemType =
   "https://api.x.com/2/problems/not-authorized-for-resource";
-export const NotAuthorizedForResourceProblemType = /*@__PURE__*/ S.String;
+export const NotAuthorizedForResourceProblemType = S.String;
 
 export interface NotAuthorizedForResourceProblem {
   detail: string;
@@ -194,7 +194,7 @@ export const NotAuthorizedForResourceProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type NotAuthorizedForFieldProblemType =
   "https://api.x.com/2/problems/not-authorized-for-field";
-export const NotAuthorizedForFieldProblemType = /*@__PURE__*/ S.String;
+export const NotAuthorizedForFieldProblemType = S.String;
 
 export interface NotAuthorizedForFieldProblem {
   detail: string;
@@ -227,7 +227,7 @@ export const NotAuthorizedForFieldProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type FieldUnauthorizedProblemType =
   "https://api.x.com/2/problems/field-unauthorized";
-export const FieldUnauthorizedProblemType = /*@__PURE__*/ S.String;
+export const FieldUnauthorizedProblemType = S.String;
 
 export interface FieldUnauthorizedProblem {
   detail: string;
@@ -254,7 +254,7 @@ export const FieldUnauthorizedProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type FieldHydrationFailureProblemType =
   "https://api.x.com/2/problems/field-hydration-failure";
-export const FieldHydrationFailureProblemType = /*@__PURE__*/ S.String;
+export const FieldHydrationFailureProblemType = S.String;
 
 export interface FieldHydrationFailureProblem {
   detail: string;
@@ -281,7 +281,7 @@ export const FieldHydrationFailureProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type ResourceUnavailableProblemType =
   "https://api.x.com/2/problems/resource-unavailable";
-export const ResourceUnavailableProblemType = /*@__PURE__*/ S.String;
+export const ResourceUnavailableProblemType = S.String;
 
 export interface ResourceUnavailableProblem {
   detail: string;
@@ -306,7 +306,7 @@ export const ResourceUnavailableProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type DisallowedResourceProblemType =
   "https://api.x.com/2/problems/disallowed-resource";
-export const DisallowedResourceProblemType = /*@__PURE__*/ S.String;
+export const DisallowedResourceProblemType = S.String;
 
 export interface DisallowedResourceProblem {
   detail: string;
@@ -333,7 +333,7 @@ export const DisallowedResourceProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type InternalErrorProblemType =
   "https://api.x.com/2/problems/internal-error";
-export const InternalErrorProblemType = /*@__PURE__*/ S.String;
+export const InternalErrorProblemType = S.String;
 
 export interface InternalErrorProblem {
   detail: string;
@@ -396,7 +396,7 @@ export const SearchNewsResponse = /*@__PURE__*/ S.suspend(() =>
 }) as any as S.Schema<SearchNewsResponse>;
 
 export type SearchPostsAllRequestSortOrder = "recency" | "relevancy";
-export const SearchPostsAllRequestSortOrder = /*@__PURE__*/ S.String;
+export const SearchPostsAllRequestSortOrder = S.String;
 
 export type SearchPostsAllRequestPostFieldsItem =
   | "article"
@@ -430,7 +430,7 @@ export type SearchPostsAllRequestPostFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const SearchPostsAllRequestPostFieldsItem = /*@__PURE__*/ S.String;
+export const SearchPostsAllRequestPostFieldsItem = S.String;
 
 /** The fields available for a Post object. */
 export type SearchPostsAllRequestPostFieldsList = Array<
@@ -453,7 +453,7 @@ export type SearchPostsAllRequestExpansionsItem =
   | "in_reply_to_user_id"
   | "referenced_posts"
   | "username";
-export const SearchPostsAllRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const SearchPostsAllRequestExpansionsItem = S.String;
 
 export type SearchPostsAllRequestExpansionsList = Array<
   SearchPostsAllRequestExpansionsItem | (string & {})
@@ -487,7 +487,7 @@ export type SearchPostsAllRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const SearchPostsAllRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const SearchPostsAllRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type SearchPostsAllRequestUserFieldsList = Array<
@@ -511,7 +511,7 @@ export type SearchPostsAllRequestMediaFieldsItem =
   | "url"
   | "variants"
   | "width";
-export const SearchPostsAllRequestMediaFieldsItem = /*@__PURE__*/ S.String;
+export const SearchPostsAllRequestMediaFieldsItem = S.String;
 
 /** The fields available for a Media object. */
 export type SearchPostsAllRequestMediaFieldsList = Array<
@@ -527,7 +527,7 @@ export type SearchPostsAllRequestPollFieldsItem =
   | "id"
   | "options"
   | "voting_status";
-export const SearchPostsAllRequestPollFieldsItem = /*@__PURE__*/ S.String;
+export const SearchPostsAllRequestPollFieldsItem = S.String;
 
 /** The fields available for a Poll object. */
 export type SearchPostsAllRequestPollFieldsList = Array<
@@ -546,7 +546,7 @@ export type SearchPostsAllRequestPlaceFieldsItem =
   | "id"
   | "name"
   | "place_type";
-export const SearchPostsAllRequestPlaceFieldsItem = /*@__PURE__*/ S.String;
+export const SearchPostsAllRequestPlaceFieldsItem = S.String;
 
 /** The fields available for a Place object. */
 export type SearchPostsAllRequestPlaceFieldsList = Array<
@@ -890,7 +890,7 @@ export const PostGeoCoordinatesCoordinatesList = /*@__PURE__*/ S.Array(
 
 /** The GeoJSON geometry type. */
 export type PostGeoCoordinatesType = "Point";
-export const PostGeoCoordinatesType = /*@__PURE__*/ S.String;
+export const PostGeoCoordinatesType = S.String;
 
 /** A GeoJSON Point geometry. */
 export interface PostGeoCoordinates {
@@ -1111,7 +1111,7 @@ export const PostPublicMetrics = /*@__PURE__*/ S.suspend(() =>
 
 /** The kind of Post-to-Post reference. */
 export type PostReferencedPostsItemType = "retweeted" | "quoted" | "replied_to";
-export const PostReferencedPostsItemType = /*@__PURE__*/ S.String;
+export const PostReferencedPostsItemType = S.String;
 
 /** A reference from this Post to another Post (repost, quote, or reply). */
 export interface PostReferencedPostsItem {
@@ -1184,7 +1184,7 @@ export const PostWithheldCountryCodesList = /*@__PURE__*/ S.Array(
 
 /** Whether the withholding applies to a Post or a User. */
 export type PostWithheldScope = "post" | "user";
-export const PostWithheldScope = /*@__PURE__*/ S.String;
+export const PostWithheldScope = S.String;
 
 /** Withholding details for withheld content. */
 export interface PostWithheld {
@@ -1481,7 +1481,7 @@ export const PlaceGeoBboxList = /*@__PURE__*/ S.Array(
 ) as any as S.Schema<PlaceGeoBboxList>;
 
 export type PlaceGeoType = "Feature";
-export const PlaceGeoType = /*@__PURE__*/ S.String;
+export const PlaceGeoType = S.String;
 
 /** The geographic location of this place, expressed as a GeoJSON Feature. */
 export interface PlaceGeo {
@@ -1634,7 +1634,7 @@ export type UserConnectionStatusItem =
   | "followed_by"
   | "following"
   | "muting";
-export const UserConnectionStatusItem = /*@__PURE__*/ S.String;
+export const UserConnectionStatusItem = S.String;
 
 /** Returns detailed information about the relationship between two users. */
 export type UserConnectionStatus = Array<UserConnectionStatusItem>;
@@ -1890,7 +1890,7 @@ export const UserWithheldCountryCodesList = /*@__PURE__*/ S.Array(
 
 /** The scope of the withholding. Only present, with the value "user", when the entire User is withheld. */
 export type UserWithheldScope = "user";
-export const UserWithheldScope = /*@__PURE__*/ S.String;
+export const UserWithheldScope = S.String;
 
 /** Withholding details for withheld content. */
 export interface UserWithheld {
@@ -2053,7 +2053,7 @@ export const SearchPostsAllResponse = /*@__PURE__*/ S.suspend(() =>
 }) as any as S.Schema<SearchPostsAllResponse>;
 
 export type SearchPostsRecentRequestSortOrder = "recency" | "relevancy";
-export const SearchPostsRecentRequestSortOrder = /*@__PURE__*/ S.String;
+export const SearchPostsRecentRequestSortOrder = S.String;
 
 export type SearchPostsRecentRequestPostFieldsItem =
   | "article"
@@ -2087,7 +2087,7 @@ export type SearchPostsRecentRequestPostFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const SearchPostsRecentRequestPostFieldsItem = /*@__PURE__*/ S.String;
+export const SearchPostsRecentRequestPostFieldsItem = S.String;
 
 /** The fields available for a Post object. */
 export type SearchPostsRecentRequestPostFieldsList = Array<
@@ -2110,7 +2110,7 @@ export type SearchPostsRecentRequestExpansionsItem =
   | "in_reply_to_user_id"
   | "referenced_posts"
   | "username";
-export const SearchPostsRecentRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const SearchPostsRecentRequestExpansionsItem = S.String;
 
 export type SearchPostsRecentRequestExpansionsList = Array<
   SearchPostsRecentRequestExpansionsItem | (string & {})
@@ -2144,7 +2144,7 @@ export type SearchPostsRecentRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const SearchPostsRecentRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const SearchPostsRecentRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type SearchPostsRecentRequestUserFieldsList = Array<
@@ -2168,7 +2168,7 @@ export type SearchPostsRecentRequestMediaFieldsItem =
   | "url"
   | "variants"
   | "width";
-export const SearchPostsRecentRequestMediaFieldsItem = /*@__PURE__*/ S.String;
+export const SearchPostsRecentRequestMediaFieldsItem = S.String;
 
 /** The fields available for a Media object. */
 export type SearchPostsRecentRequestMediaFieldsList = Array<
@@ -2184,7 +2184,7 @@ export type SearchPostsRecentRequestPollFieldsItem =
   | "id"
   | "options"
   | "voting_status";
-export const SearchPostsRecentRequestPollFieldsItem = /*@__PURE__*/ S.String;
+export const SearchPostsRecentRequestPollFieldsItem = S.String;
 
 /** The fields available for a Poll object. */
 export type SearchPostsRecentRequestPollFieldsList = Array<
@@ -2203,7 +2203,7 @@ export type SearchPostsRecentRequestPlaceFieldsItem =
   | "id"
   | "name"
   | "place_type";
-export const SearchPostsRecentRequestPlaceFieldsItem = /*@__PURE__*/ S.String;
+export const SearchPostsRecentRequestPlaceFieldsItem = S.String;
 
 /** The fields available for a Place object. */
 export type SearchPostsRecentRequestPlaceFieldsList = Array<

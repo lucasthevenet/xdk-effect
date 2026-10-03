@@ -14,7 +14,7 @@ export type GetTrendsPersonalizedTrendsRequestPersonalizedTrendFieldsItem =
   | "trend_name"
   | "trending_since";
 export const GetTrendsPersonalizedTrendsRequestPersonalizedTrendFieldsItem =
-  /*@__PURE__*/ S.String;
+  S.String;
 
 /** The fields available for a PersonalizedTrend object. */
 export type GetTrendsPersonalizedTrendsRequestPersonalizedTrendFieldsList =
@@ -74,7 +74,7 @@ export const GetTrendsPersonalizedTrendsResponseDataList =
 
 export type ResourceNotFoundProblemType =
   "https://api.x.com/2/problems/resource-not-found";
-export const ResourceNotFoundProblemType = /*@__PURE__*/ S.String;
+export const ResourceNotFoundProblemType = S.String;
 
 export interface ResourceNotFoundProblem {
   detail: string;
@@ -103,7 +103,7 @@ export const ResourceNotFoundProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type InvalidRequestProblemType =
   "https://api.x.com/2/problems/invalid-request";
-export const InvalidRequestProblemType = /*@__PURE__*/ S.String;
+export const InvalidRequestProblemType = S.String;
 
 export interface InvalidRequestProblem {
   detail: string;
@@ -128,7 +128,7 @@ export const InvalidRequestProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type NotAuthorizedForResourceProblemType =
   "https://api.x.com/2/problems/not-authorized-for-resource";
-export const NotAuthorizedForResourceProblemType = /*@__PURE__*/ S.String;
+export const NotAuthorizedForResourceProblemType = S.String;
 
 export interface NotAuthorizedForResourceProblem {
   detail: string;
@@ -159,7 +159,7 @@ export const NotAuthorizedForResourceProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type NotAuthorizedForFieldProblemType =
   "https://api.x.com/2/problems/not-authorized-for-field";
-export const NotAuthorizedForFieldProblemType = /*@__PURE__*/ S.String;
+export const NotAuthorizedForFieldProblemType = S.String;
 
 export interface NotAuthorizedForFieldProblem {
   detail: string;
@@ -192,7 +192,7 @@ export const NotAuthorizedForFieldProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type FieldUnauthorizedProblemType =
   "https://api.x.com/2/problems/field-unauthorized";
-export const FieldUnauthorizedProblemType = /*@__PURE__*/ S.String;
+export const FieldUnauthorizedProblemType = S.String;
 
 export interface FieldUnauthorizedProblem {
   detail: string;
@@ -219,7 +219,7 @@ export const FieldUnauthorizedProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type FieldHydrationFailureProblemType =
   "https://api.x.com/2/problems/field-hydration-failure";
-export const FieldHydrationFailureProblemType = /*@__PURE__*/ S.String;
+export const FieldHydrationFailureProblemType = S.String;
 
 export interface FieldHydrationFailureProblem {
   detail: string;
@@ -246,7 +246,7 @@ export const FieldHydrationFailureProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type ResourceUnavailableProblemType =
   "https://api.x.com/2/problems/resource-unavailable";
-export const ResourceUnavailableProblemType = /*@__PURE__*/ S.String;
+export const ResourceUnavailableProblemType = S.String;
 
 export interface ResourceUnavailableProblem {
   detail: string;
@@ -271,7 +271,7 @@ export const ResourceUnavailableProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type DisallowedResourceProblemType =
   "https://api.x.com/2/problems/disallowed-resource";
-export const DisallowedResourceProblemType = /*@__PURE__*/ S.String;
+export const DisallowedResourceProblemType = S.String;
 
 export interface DisallowedResourceProblem {
   detail: string;
@@ -298,7 +298,7 @@ export const DisallowedResourceProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type InternalErrorProblemType =
   "https://api.x.com/2/problems/internal-error";
-export const InternalErrorProblemType = /*@__PURE__*/ S.String;
+export const InternalErrorProblemType = S.String;
 
 export interface InternalErrorProblem {
   detail: string;

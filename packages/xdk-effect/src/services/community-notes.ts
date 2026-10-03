@@ -12,7 +12,7 @@ export type { XOpError, XOpContext };
 export type CreateCommunityNotesInfoClassification =
   | "misinformed_or_potentially_misleading"
   | "not_misleading";
-export const CreateCommunityNotesInfoClassification = /*@__PURE__*/ S.String;
+export const CreateCommunityNotesInfoClassification = S.String;
 
 export type CreateCommunityNotesInfoMisleadingTagsItem =
   | "disputed_claim_as_fact"
@@ -22,8 +22,7 @@ export type CreateCommunityNotesInfoMisleadingTagsItem =
   | "missing_important_context"
   | "other"
   | "outdated_information";
-export const CreateCommunityNotesInfoMisleadingTagsItem =
-  /*@__PURE__*/ S.String;
+export const CreateCommunityNotesInfoMisleadingTagsItem = S.String;
 
 /** Tags describing why the Post is misleading. */
 export type CreateCommunityNotesInfoMisleadingTagsList = Array<
@@ -92,7 +91,7 @@ export const CreateCommunityNotesResponseData = /*@__PURE__*/ S.suspend(() =>
 
 export type ResourceNotFoundProblemType =
   "https://api.x.com/2/problems/resource-not-found";
-export const ResourceNotFoundProblemType = /*@__PURE__*/ S.String;
+export const ResourceNotFoundProblemType = S.String;
 
 export interface ResourceNotFoundProblem {
   detail: string;
@@ -121,7 +120,7 @@ export const ResourceNotFoundProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type InvalidRequestProblemType =
   "https://api.x.com/2/problems/invalid-request";
-export const InvalidRequestProblemType = /*@__PURE__*/ S.String;
+export const InvalidRequestProblemType = S.String;
 
 export interface InvalidRequestProblem {
   detail: string;
@@ -146,7 +145,7 @@ export const InvalidRequestProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type NotAuthorizedForResourceProblemType =
   "https://api.x.com/2/problems/not-authorized-for-resource";
-export const NotAuthorizedForResourceProblemType = /*@__PURE__*/ S.String;
+export const NotAuthorizedForResourceProblemType = S.String;
 
 export interface NotAuthorizedForResourceProblem {
   detail: string;
@@ -177,7 +176,7 @@ export const NotAuthorizedForResourceProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type NotAuthorizedForFieldProblemType =
   "https://api.x.com/2/problems/not-authorized-for-field";
-export const NotAuthorizedForFieldProblemType = /*@__PURE__*/ S.String;
+export const NotAuthorizedForFieldProblemType = S.String;
 
 export interface NotAuthorizedForFieldProblem {
   detail: string;
@@ -210,7 +209,7 @@ export const NotAuthorizedForFieldProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type FieldUnauthorizedProblemType =
   "https://api.x.com/2/problems/field-unauthorized";
-export const FieldUnauthorizedProblemType = /*@__PURE__*/ S.String;
+export const FieldUnauthorizedProblemType = S.String;
 
 export interface FieldUnauthorizedProblem {
   detail: string;
@@ -237,7 +236,7 @@ export const FieldUnauthorizedProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type FieldHydrationFailureProblemType =
   "https://api.x.com/2/problems/field-hydration-failure";
-export const FieldHydrationFailureProblemType = /*@__PURE__*/ S.String;
+export const FieldHydrationFailureProblemType = S.String;
 
 export interface FieldHydrationFailureProblem {
   detail: string;
@@ -264,7 +263,7 @@ export const FieldHydrationFailureProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type ResourceUnavailableProblemType =
   "https://api.x.com/2/problems/resource-unavailable";
-export const ResourceUnavailableProblemType = /*@__PURE__*/ S.String;
+export const ResourceUnavailableProblemType = S.String;
 
 export interface ResourceUnavailableProblem {
   detail: string;
@@ -289,7 +288,7 @@ export const ResourceUnavailableProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type DisallowedResourceProblemType =
   "https://api.x.com/2/problems/disallowed-resource";
-export const DisallowedResourceProblemType = /*@__PURE__*/ S.String;
+export const DisallowedResourceProblemType = S.String;
 
 export interface DisallowedResourceProblem {
   detail: string;
@@ -316,7 +315,7 @@ export const DisallowedResourceProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type InternalErrorProblemType =
   "https://api.x.com/2/problems/internal-error";
-export const InternalErrorProblemType = /*@__PURE__*/ S.String;
+export const InternalErrorProblemType = S.String;
 
 export interface InternalErrorProblem {
   detail: string;
@@ -461,8 +460,7 @@ export type SearchCommunityNotesWrittenRequestNoteFieldsItem =
   | "scoring_status"
   | "status"
   | "test_result";
-export const SearchCommunityNotesWrittenRequestNoteFieldsItem =
-  /*@__PURE__*/ S.String;
+export const SearchCommunityNotesWrittenRequestNoteFieldsItem = S.String;
 
 /** The fields available for a Note object. */
 export type SearchCommunityNotesWrittenRequestNoteFieldsList = Array<
@@ -918,7 +916,7 @@ export type SearchEligiblePostsRequestPostFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const SearchEligiblePostsRequestPostFieldsItem = /*@__PURE__*/ S.String;
+export const SearchEligiblePostsRequestPostFieldsItem = S.String;
 
 /** The fields available for a Post object. */
 export type SearchEligiblePostsRequestPostFieldsList = Array<
@@ -941,7 +939,7 @@ export type SearchEligiblePostsRequestExpansionsItem =
   | "in_reply_to_user_id"
   | "referenced_posts"
   | "username";
-export const SearchEligiblePostsRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const SearchEligiblePostsRequestExpansionsItem = S.String;
 
 export type SearchEligiblePostsRequestExpansionsList = Array<
   SearchEligiblePostsRequestExpansionsItem | (string & {})
@@ -975,7 +973,7 @@ export type SearchEligiblePostsRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const SearchEligiblePostsRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const SearchEligiblePostsRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type SearchEligiblePostsRequestUserFieldsList = Array<
@@ -999,7 +997,7 @@ export type SearchEligiblePostsRequestMediaFieldsItem =
   | "url"
   | "variants"
   | "width";
-export const SearchEligiblePostsRequestMediaFieldsItem = /*@__PURE__*/ S.String;
+export const SearchEligiblePostsRequestMediaFieldsItem = S.String;
 
 /** The fields available for a Media object. */
 export type SearchEligiblePostsRequestMediaFieldsList = Array<
@@ -1015,7 +1013,7 @@ export type SearchEligiblePostsRequestPollFieldsItem =
   | "id"
   | "options"
   | "voting_status";
-export const SearchEligiblePostsRequestPollFieldsItem = /*@__PURE__*/ S.String;
+export const SearchEligiblePostsRequestPollFieldsItem = S.String;
 
 /** The fields available for a Poll object. */
 export type SearchEligiblePostsRequestPollFieldsList = Array<
@@ -1034,7 +1032,7 @@ export type SearchEligiblePostsRequestPlaceFieldsItem =
   | "id"
   | "name"
   | "place_type";
-export const SearchEligiblePostsRequestPlaceFieldsItem = /*@__PURE__*/ S.String;
+export const SearchEligiblePostsRequestPlaceFieldsItem = S.String;
 
 /** The fields available for a Place object. */
 export type SearchEligiblePostsRequestPlaceFieldsList = Array<
@@ -1375,7 +1373,7 @@ export const PostGeoCoordinatesCoordinatesList = /*@__PURE__*/ S.Array(
 
 /** The GeoJSON geometry type. */
 export type PostGeoCoordinatesType = "Point";
-export const PostGeoCoordinatesType = /*@__PURE__*/ S.String;
+export const PostGeoCoordinatesType = S.String;
 
 /** A GeoJSON Point geometry. */
 export interface PostGeoCoordinates {
@@ -1596,7 +1594,7 @@ export const PostPublicMetrics = /*@__PURE__*/ S.suspend(() =>
 
 /** The kind of Post-to-Post reference. */
 export type PostReferencedPostsItemType = "retweeted" | "quoted" | "replied_to";
-export const PostReferencedPostsItemType = /*@__PURE__*/ S.String;
+export const PostReferencedPostsItemType = S.String;
 
 /** A reference from this Post to another Post (repost, quote, or reply). */
 export interface PostReferencedPostsItem {
@@ -1669,7 +1667,7 @@ export const PostWithheldCountryCodesList = /*@__PURE__*/ S.Array(
 
 /** Whether the withholding applies to a Post or a User. */
 export type PostWithheldScope = "post" | "user";
-export const PostWithheldScope = /*@__PURE__*/ S.String;
+export const PostWithheldScope = S.String;
 
 /** Withholding details for withheld content. */
 export interface PostWithheld {
@@ -1966,7 +1964,7 @@ export const PlaceGeoBboxList = /*@__PURE__*/ S.Array(
 ) as any as S.Schema<PlaceGeoBboxList>;
 
 export type PlaceGeoType = "Feature";
-export const PlaceGeoType = /*@__PURE__*/ S.String;
+export const PlaceGeoType = S.String;
 
 /** The geographic location of this place, expressed as a GeoJSON Feature. */
 export interface PlaceGeo {
@@ -2119,7 +2117,7 @@ export type UserConnectionStatusItem =
   | "followed_by"
   | "following"
   | "muting";
-export const UserConnectionStatusItem = /*@__PURE__*/ S.String;
+export const UserConnectionStatusItem = S.String;
 
 /** Returns detailed information about the relationship between two users. */
 export type UserConnectionStatus = Array<UserConnectionStatusItem>;
@@ -2375,7 +2373,7 @@ export const UserWithheldCountryCodesList = /*@__PURE__*/ S.Array(
 
 /** The scope of the withholding. Only present, with the value "user", when the entire User is withheld. */
 export type UserWithheldScope = "user";
-export const UserWithheldScope = /*@__PURE__*/ S.String;
+export const UserWithheldScope = S.String;
 
 /** Withholding details for withheld content. */
 export interface UserWithheld {

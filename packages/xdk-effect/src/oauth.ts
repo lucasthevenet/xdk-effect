@@ -1,9 +1,9 @@
 import * as Crypto from "effect/Crypto";
 import * as Effect from "effect/Effect";
-import * as Encoding from "effect/Encoding";
+import { Base64, Base64Url } from "effect/encoding";
 import * as Redacted from "effect/Redacted";
-import * as HttpClient from "effect/unstable/http/HttpClient";
-import * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
+import * as HttpClient from "effect/http/HttpClient";
+import * as HttpClientRequest from "effect/http/HttpClientRequest";
 import { XOAuthError, XOAuthStateError } from "./errors.ts";
 import type * as Schema from "effect/Schema";
 
@@ -149,7 +149,7 @@ const oauthRequest = (
       request = HttpClientRequest.setHeader(
         request,
         "Authorization",
-        `Basic ${Encoding.encodeBase64(`${config.clientId}:${secret}`)}`,
+        `Basic ${Base64.encode(`${config.clientId}:${secret}`)}`,
       );
     }
     const response = yield* client
@@ -198,11 +198,9 @@ export const createAuthorizationRequest = (
   Effect.gen(function* () {
     const crypto = yield* Crypto.Crypto;
     const state =
-      input.state ?? Encoding.encodeBase64Url(yield* crypto.randomBytes(32));
-    const codeVerifier = Encoding.encodeBase64Url(
-      yield* crypto.randomBytes(64),
-    );
-    const codeChallenge = Encoding.encodeBase64Url(
+      input.state ?? Base64Url.encode(yield* crypto.randomBytes(32));
+    const codeVerifier = Base64Url.encode(yield* crypto.randomBytes(64));
+    const codeChallenge = Base64Url.encode(
       yield* crypto.digest("SHA-256", new TextEncoder().encode(codeVerifier)),
     );
     return yield* Effect.try({

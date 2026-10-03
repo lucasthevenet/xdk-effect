@@ -35,7 +35,7 @@ export const BlockUsersDmsResponseData = /*@__PURE__*/ S.suspend(() =>
 
 export type ResourceNotFoundProblemType =
   "https://api.x.com/2/problems/resource-not-found";
-export const ResourceNotFoundProblemType = /*@__PURE__*/ S.String;
+export const ResourceNotFoundProblemType = S.String;
 
 export interface ResourceNotFoundProblem {
   detail: string;
@@ -64,7 +64,7 @@ export const ResourceNotFoundProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type InvalidRequestProblemType =
   "https://api.x.com/2/problems/invalid-request";
-export const InvalidRequestProblemType = /*@__PURE__*/ S.String;
+export const InvalidRequestProblemType = S.String;
 
 export interface InvalidRequestProblem {
   detail: string;
@@ -89,7 +89,7 @@ export const InvalidRequestProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type NotAuthorizedForResourceProblemType =
   "https://api.x.com/2/problems/not-authorized-for-resource";
-export const NotAuthorizedForResourceProblemType = /*@__PURE__*/ S.String;
+export const NotAuthorizedForResourceProblemType = S.String;
 
 export interface NotAuthorizedForResourceProblem {
   detail: string;
@@ -120,7 +120,7 @@ export const NotAuthorizedForResourceProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type NotAuthorizedForFieldProblemType =
   "https://api.x.com/2/problems/not-authorized-for-field";
-export const NotAuthorizedForFieldProblemType = /*@__PURE__*/ S.String;
+export const NotAuthorizedForFieldProblemType = S.String;
 
 export interface NotAuthorizedForFieldProblem {
   detail: string;
@@ -153,7 +153,7 @@ export const NotAuthorizedForFieldProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type FieldUnauthorizedProblemType =
   "https://api.x.com/2/problems/field-unauthorized";
-export const FieldUnauthorizedProblemType = /*@__PURE__*/ S.String;
+export const FieldUnauthorizedProblemType = S.String;
 
 export interface FieldUnauthorizedProblem {
   detail: string;
@@ -180,7 +180,7 @@ export const FieldUnauthorizedProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type FieldHydrationFailureProblemType =
   "https://api.x.com/2/problems/field-hydration-failure";
-export const FieldHydrationFailureProblemType = /*@__PURE__*/ S.String;
+export const FieldHydrationFailureProblemType = S.String;
 
 export interface FieldHydrationFailureProblem {
   detail: string;
@@ -207,7 +207,7 @@ export const FieldHydrationFailureProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type ResourceUnavailableProblemType =
   "https://api.x.com/2/problems/resource-unavailable";
-export const ResourceUnavailableProblemType = /*@__PURE__*/ S.String;
+export const ResourceUnavailableProblemType = S.String;
 
 export interface ResourceUnavailableProblem {
   detail: string;
@@ -232,7 +232,7 @@ export const ResourceUnavailableProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type DisallowedResourceProblemType =
   "https://api.x.com/2/problems/disallowed-resource";
-export const DisallowedResourceProblemType = /*@__PURE__*/ S.String;
+export const DisallowedResourceProblemType = S.String;
 
 export interface DisallowedResourceProblem {
   detail: string;
@@ -259,7 +259,7 @@ export const DisallowedResourceProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type InternalErrorProblemType =
   "https://api.x.com/2/problems/internal-error";
-export const InternalErrorProblemType = /*@__PURE__*/ S.String;
+export const InternalErrorProblemType = S.String;
 
 export interface InternalErrorProblem {
   detail: string;
@@ -466,8 +466,7 @@ export const CreateDirectMessagesByParticipantIdResponse =
 
 /** The conversation type to create. Supports `Group` only. */
 export type CreateDirectMessagesConversationRequestConversationType = "Group";
-export const CreateDirectMessagesConversationRequestConversationType =
-  /*@__PURE__*/ S.String;
+export const CreateDirectMessagesConversationRequestConversationType = S.String;
 
 export type CreateDirectMessagesConversationMessageAttachments =
   CreateDirectMessagesByConversationIdAttachments;
@@ -646,8 +645,7 @@ export type GetDirectMessagesEventsRequestEventTypesItem =
   | "MessageCreate"
   | "ParticipantsJoin"
   | "ParticipantsLeave";
-export const GetDirectMessagesEventsRequestEventTypesItem =
-  /*@__PURE__*/ S.String;
+export const GetDirectMessagesEventsRequestEventTypesItem = S.String;
 
 export type GetDirectMessagesEventsRequestEventTypesList = Array<
   GetDirectMessagesEventsRequestEventTypesItem | (string & {})
@@ -665,8 +663,7 @@ export type GetDirectMessagesEventsRequestDmEventFieldsItem =
   | "event_type"
   | "id"
   | "text";
-export const GetDirectMessagesEventsRequestDmEventFieldsItem =
-  /*@__PURE__*/ S.String;
+export const GetDirectMessagesEventsRequestDmEventFieldsItem = S.String;
 
 /** The fields available for a DmEvent object. */
 export type GetDirectMessagesEventsRequestDmEventFieldsList = Array<
@@ -683,8 +680,7 @@ export type GetDirectMessagesEventsRequestExpansionsItem =
   | "participant_ids"
   | "referenced_posts"
   | "sender_id";
-export const GetDirectMessagesEventsRequestExpansionsItem =
-  /*@__PURE__*/ S.String;
+export const GetDirectMessagesEventsRequestExpansionsItem = S.String;
 
 export type GetDirectMessagesEventsRequestExpansionsList = Array<
   GetDirectMessagesEventsRequestExpansionsItem | (string & {})
@@ -719,8 +715,7 @@ export type GetDirectMessagesEventsRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetDirectMessagesEventsRequestUserFieldsItem =
-  /*@__PURE__*/ S.String;
+export const GetDirectMessagesEventsRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetDirectMessagesEventsRequestUserFieldsList = Array<
@@ -763,8 +758,7 @@ export type GetDirectMessagesEventsRequestPostFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const GetDirectMessagesEventsRequestPostFieldsItem =
-  /*@__PURE__*/ S.String;
+export const GetDirectMessagesEventsRequestPostFieldsItem = S.String;
 
 /** The fields available for a Post object. */
 export type GetDirectMessagesEventsRequestPostFieldsList = Array<
@@ -789,8 +783,7 @@ export type GetDirectMessagesEventsRequestMediaFieldsItem =
   | "url"
   | "variants"
   | "width";
-export const GetDirectMessagesEventsRequestMediaFieldsItem =
-  /*@__PURE__*/ S.String;
+export const GetDirectMessagesEventsRequestMediaFieldsItem = S.String;
 
 /** The fields available for a Media object. */
 export type GetDirectMessagesEventsRequestMediaFieldsList = Array<
@@ -1223,7 +1216,7 @@ export const PlaceGeoBboxList = /*@__PURE__*/ S.Array(
 ) as any as S.Schema<PlaceGeoBboxList>;
 
 export type PlaceGeoType = "Feature";
-export const PlaceGeoType = /*@__PURE__*/ S.String;
+export const PlaceGeoType = S.String;
 
 /** The geographic location of this place, expressed as a GeoJSON Feature. */
 export interface PlaceGeo {
@@ -1561,7 +1554,7 @@ export const PostGeoCoordinatesCoordinatesList = /*@__PURE__*/ S.Array(
 
 /** The GeoJSON geometry type. */
 export type PostGeoCoordinatesType = "Point";
-export const PostGeoCoordinatesType = /*@__PURE__*/ S.String;
+export const PostGeoCoordinatesType = S.String;
 
 /** A GeoJSON Point geometry. */
 export interface PostGeoCoordinates {
@@ -1784,7 +1777,7 @@ export const PostPublicMetrics = /*@__PURE__*/ S.suspend(() =>
 
 /** The kind of Post-to-Post reference. */
 export type PostReferencedPostsItemType = "retweeted" | "quoted" | "replied_to";
-export const PostReferencedPostsItemType = /*@__PURE__*/ S.String;
+export const PostReferencedPostsItemType = S.String;
 
 /** A reference from this Post to another Post (repost, quote, or reply). */
 export interface PostReferencedPostsItem {
@@ -1857,7 +1850,7 @@ export const PostWithheldCountryCodesList = /*@__PURE__*/ S.Array(
 
 /** Whether the withholding applies to a Post or a User. */
 export type PostWithheldScope = "post" | "user";
-export const PostWithheldScope = /*@__PURE__*/ S.String;
+export const PostWithheldScope = S.String;
 
 /** Withholding details for withheld content. */
 export interface PostWithheld {
@@ -2033,7 +2026,7 @@ export type UserConnectionStatusItem =
   | "followed_by"
   | "following"
   | "muting";
-export const UserConnectionStatusItem = /*@__PURE__*/ S.String;
+export const UserConnectionStatusItem = S.String;
 
 /** Returns detailed information about the relationship between two users. */
 export type UserConnectionStatus = Array<UserConnectionStatusItem>;
@@ -2275,7 +2268,7 @@ export const UserWithheldCountryCodesList = /*@__PURE__*/ S.Array(
 
 /** The scope of the withholding. Only present, with the value "user", when the entire User is withheld. */
 export type UserWithheldScope = "user";
-export const UserWithheldScope = /*@__PURE__*/ S.String;
+export const UserWithheldScope = S.String;
 
 /** Withholding details for withheld content. */
 export interface UserWithheld {
@@ -2436,7 +2429,7 @@ export type GetDirectMessagesEventsByConversationIdRequestEventTypesItem =
   | "ParticipantsJoin"
   | "ParticipantsLeave";
 export const GetDirectMessagesEventsByConversationIdRequestEventTypesItem =
-  /*@__PURE__*/ S.String;
+  S.String;
 
 export type GetDirectMessagesEventsByConversationIdRequestEventTypesList =
   Array<
@@ -2456,7 +2449,7 @@ export type GetDirectMessagesEventsByConversationIdRequestDmEventFieldsItem =
   | "id"
   | "text";
 export const GetDirectMessagesEventsByConversationIdRequestDmEventFieldsItem =
-  /*@__PURE__*/ S.String;
+  S.String;
 
 /** The fields available for a DmEvent object. */
 export type GetDirectMessagesEventsByConversationIdRequestDmEventFieldsList =
@@ -2476,7 +2469,7 @@ export type GetDirectMessagesEventsByConversationIdRequestExpansionsItem =
   | "referenced_posts"
   | "sender_id";
 export const GetDirectMessagesEventsByConversationIdRequestExpansionsItem =
-  /*@__PURE__*/ S.String;
+  S.String;
 
 export type GetDirectMessagesEventsByConversationIdRequestExpansionsList =
   Array<
@@ -2513,7 +2506,7 @@ export type GetDirectMessagesEventsByConversationIdRequestUserFieldsItem =
   | "verified_type"
   | "withheld";
 export const GetDirectMessagesEventsByConversationIdRequestUserFieldsItem =
-  /*@__PURE__*/ S.String;
+  S.String;
 
 /** The fields available for a User object. */
 export type GetDirectMessagesEventsByConversationIdRequestUserFieldsList =
@@ -2558,7 +2551,7 @@ export type GetDirectMessagesEventsByConversationIdRequestPostFieldsItem =
   | "text"
   | "withheld";
 export const GetDirectMessagesEventsByConversationIdRequestPostFieldsItem =
-  /*@__PURE__*/ S.String;
+  S.String;
 
 /** The fields available for a Post object. */
 export type GetDirectMessagesEventsByConversationIdRequestPostFieldsList =
@@ -2585,7 +2578,7 @@ export type GetDirectMessagesEventsByConversationIdRequestMediaFieldsItem =
   | "variants"
   | "width";
 export const GetDirectMessagesEventsByConversationIdRequestMediaFieldsItem =
-  /*@__PURE__*/ S.String;
+  S.String;
 
 /** The fields available for a Media object. */
 export type GetDirectMessagesEventsByConversationIdRequestMediaFieldsList =
@@ -2717,8 +2710,7 @@ export type GetDirectMessagesEventsByIdRequestDmEventFieldsItem =
   | "event_type"
   | "id"
   | "text";
-export const GetDirectMessagesEventsByIdRequestDmEventFieldsItem =
-  /*@__PURE__*/ S.String;
+export const GetDirectMessagesEventsByIdRequestDmEventFieldsItem = S.String;
 
 /** The fields available for a DmEvent object. */
 export type GetDirectMessagesEventsByIdRequestDmEventFieldsList = Array<
@@ -2735,8 +2727,7 @@ export type GetDirectMessagesEventsByIdRequestExpansionsItem =
   | "participant_ids"
   | "referenced_posts"
   | "sender_id";
-export const GetDirectMessagesEventsByIdRequestExpansionsItem =
-  /*@__PURE__*/ S.String;
+export const GetDirectMessagesEventsByIdRequestExpansionsItem = S.String;
 
 export type GetDirectMessagesEventsByIdRequestExpansionsList = Array<
   GetDirectMessagesEventsByIdRequestExpansionsItem | (string & {})
@@ -2771,8 +2762,7 @@ export type GetDirectMessagesEventsByIdRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetDirectMessagesEventsByIdRequestUserFieldsItem =
-  /*@__PURE__*/ S.String;
+export const GetDirectMessagesEventsByIdRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetDirectMessagesEventsByIdRequestUserFieldsList = Array<
@@ -2815,8 +2805,7 @@ export type GetDirectMessagesEventsByIdRequestPostFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const GetDirectMessagesEventsByIdRequestPostFieldsItem =
-  /*@__PURE__*/ S.String;
+export const GetDirectMessagesEventsByIdRequestPostFieldsItem = S.String;
 
 /** The fields available for a Post object. */
 export type GetDirectMessagesEventsByIdRequestPostFieldsList = Array<
@@ -2841,8 +2830,7 @@ export type GetDirectMessagesEventsByIdRequestMediaFieldsItem =
   | "url"
   | "variants"
   | "width";
-export const GetDirectMessagesEventsByIdRequestMediaFieldsItem =
-  /*@__PURE__*/ S.String;
+export const GetDirectMessagesEventsByIdRequestMediaFieldsItem = S.String;
 
 /** The fields available for a Media object. */
 export type GetDirectMessagesEventsByIdRequestMediaFieldsList = Array<
@@ -2932,7 +2920,7 @@ export type GetDirectMessagesEventsByParticipantIdRequestEventTypesItem =
   | "ParticipantsJoin"
   | "ParticipantsLeave";
 export const GetDirectMessagesEventsByParticipantIdRequestEventTypesItem =
-  /*@__PURE__*/ S.String;
+  S.String;
 
 export type GetDirectMessagesEventsByParticipantIdRequestEventTypesList = Array<
   GetDirectMessagesEventsByParticipantIdRequestEventTypesItem | (string & {})
@@ -2951,7 +2939,7 @@ export type GetDirectMessagesEventsByParticipantIdRequestDmEventFieldsItem =
   | "id"
   | "text";
 export const GetDirectMessagesEventsByParticipantIdRequestDmEventFieldsItem =
-  /*@__PURE__*/ S.String;
+  S.String;
 
 /** The fields available for a DmEvent object. */
 export type GetDirectMessagesEventsByParticipantIdRequestDmEventFieldsList =
@@ -2971,7 +2959,7 @@ export type GetDirectMessagesEventsByParticipantIdRequestExpansionsItem =
   | "referenced_posts"
   | "sender_id";
 export const GetDirectMessagesEventsByParticipantIdRequestExpansionsItem =
-  /*@__PURE__*/ S.String;
+  S.String;
 
 export type GetDirectMessagesEventsByParticipantIdRequestExpansionsList = Array<
   GetDirectMessagesEventsByParticipantIdRequestExpansionsItem | (string & {})
@@ -3007,7 +2995,7 @@ export type GetDirectMessagesEventsByParticipantIdRequestUserFieldsItem =
   | "verified_type"
   | "withheld";
 export const GetDirectMessagesEventsByParticipantIdRequestUserFieldsItem =
-  /*@__PURE__*/ S.String;
+  S.String;
 
 /** The fields available for a User object. */
 export type GetDirectMessagesEventsByParticipantIdRequestUserFieldsList = Array<
@@ -3051,7 +3039,7 @@ export type GetDirectMessagesEventsByParticipantIdRequestPostFieldsItem =
   | "text"
   | "withheld";
 export const GetDirectMessagesEventsByParticipantIdRequestPostFieldsItem =
-  /*@__PURE__*/ S.String;
+  S.String;
 
 /** The fields available for a Post object. */
 export type GetDirectMessagesEventsByParticipantIdRequestPostFieldsList = Array<
@@ -3077,7 +3065,7 @@ export type GetDirectMessagesEventsByParticipantIdRequestMediaFieldsItem =
   | "variants"
   | "width";
 export const GetDirectMessagesEventsByParticipantIdRequestMediaFieldsItem =
-  /*@__PURE__*/ S.String;
+  S.String;
 
 /** The fields available for a Media object. */
 export type GetDirectMessagesEventsByParticipantIdRequestMediaFieldsList =

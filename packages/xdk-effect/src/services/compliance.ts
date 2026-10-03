@@ -19,8 +19,7 @@ export type CreateComplianceJobsRequestComplianceJobFieldsItem =
   | "type"
   | "upload_expires_at"
   | "upload_url";
-export const CreateComplianceJobsRequestComplianceJobFieldsItem =
-  /*@__PURE__*/ S.String;
+export const CreateComplianceJobsRequestComplianceJobFieldsItem = S.String;
 
 /** The fields available for a ComplianceJob object. */
 export type CreateComplianceJobsRequestComplianceJobFieldsList = Array<
@@ -33,7 +32,7 @@ export const CreateComplianceJobsRequestComplianceJobFieldsList =
 
 /** Type of compliance job to list. */
 export type CreateComplianceJobsRequestType = "tweets" | "users";
-export const CreateComplianceJobsRequestType = /*@__PURE__*/ S.String;
+export const CreateComplianceJobsRequestType = S.String;
 
 export interface CreateComplianceJobsRequest {
   /** A comma separated list of ComplianceJob fields to display. */
@@ -93,7 +92,7 @@ export const ComplianceJob = /*@__PURE__*/ S.suspend(() =>
 
 export type ResourceNotFoundProblemType =
   "https://api.x.com/2/problems/resource-not-found";
-export const ResourceNotFoundProblemType = /*@__PURE__*/ S.String;
+export const ResourceNotFoundProblemType = S.String;
 
 export interface ResourceNotFoundProblem {
   detail: string;
@@ -122,7 +121,7 @@ export const ResourceNotFoundProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type InvalidRequestProblemType =
   "https://api.x.com/2/problems/invalid-request";
-export const InvalidRequestProblemType = /*@__PURE__*/ S.String;
+export const InvalidRequestProblemType = S.String;
 
 export interface InvalidRequestProblem {
   detail: string;
@@ -147,7 +146,7 @@ export const InvalidRequestProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type NotAuthorizedForResourceProblemType =
   "https://api.x.com/2/problems/not-authorized-for-resource";
-export const NotAuthorizedForResourceProblemType = /*@__PURE__*/ S.String;
+export const NotAuthorizedForResourceProblemType = S.String;
 
 export interface NotAuthorizedForResourceProblem {
   detail: string;
@@ -178,7 +177,7 @@ export const NotAuthorizedForResourceProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type NotAuthorizedForFieldProblemType =
   "https://api.x.com/2/problems/not-authorized-for-field";
-export const NotAuthorizedForFieldProblemType = /*@__PURE__*/ S.String;
+export const NotAuthorizedForFieldProblemType = S.String;
 
 export interface NotAuthorizedForFieldProblem {
   detail: string;
@@ -211,7 +210,7 @@ export const NotAuthorizedForFieldProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type FieldUnauthorizedProblemType =
   "https://api.x.com/2/problems/field-unauthorized";
-export const FieldUnauthorizedProblemType = /*@__PURE__*/ S.String;
+export const FieldUnauthorizedProblemType = S.String;
 
 export interface FieldUnauthorizedProblem {
   detail: string;
@@ -238,7 +237,7 @@ export const FieldUnauthorizedProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type FieldHydrationFailureProblemType =
   "https://api.x.com/2/problems/field-hydration-failure";
-export const FieldHydrationFailureProblemType = /*@__PURE__*/ S.String;
+export const FieldHydrationFailureProblemType = S.String;
 
 export interface FieldHydrationFailureProblem {
   detail: string;
@@ -265,7 +264,7 @@ export const FieldHydrationFailureProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type ResourceUnavailableProblemType =
   "https://api.x.com/2/problems/resource-unavailable";
-export const ResourceUnavailableProblemType = /*@__PURE__*/ S.String;
+export const ResourceUnavailableProblemType = S.String;
 
 export interface ResourceUnavailableProblem {
   detail: string;
@@ -290,7 +289,7 @@ export const ResourceUnavailableProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type DisallowedResourceProblemType =
   "https://api.x.com/2/problems/disallowed-resource";
-export const DisallowedResourceProblemType = /*@__PURE__*/ S.String;
+export const DisallowedResourceProblemType = S.String;
 
 export interface DisallowedResourceProblem {
   detail: string;
@@ -317,7 +316,7 @@ export const DisallowedResourceProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type InternalErrorProblemType =
   "https://api.x.com/2/problems/internal-error";
-export const InternalErrorProblemType = /*@__PURE__*/ S.String;
+export const InternalErrorProblemType = S.String;
 
 export interface InternalErrorProblem {
   detail: string;
@@ -366,14 +365,14 @@ export const CreateComplianceJobsResponse = /*@__PURE__*/ S.suspend(() =>
 }) as any as S.Schema<CreateComplianceJobsResponse>;
 
 export type GetComplianceJobsRequestType = "tweets" | "users";
-export const GetComplianceJobsRequestType = /*@__PURE__*/ S.String;
+export const GetComplianceJobsRequestType = S.String;
 
 export type GetComplianceJobsRequestStatus =
   | "created"
   | "in_progress"
   | "failed"
   | "complete";
-export const GetComplianceJobsRequestStatus = /*@__PURE__*/ S.String;
+export const GetComplianceJobsRequestStatus = S.String;
 
 export type GetComplianceJobsRequestComplianceJobFieldsItem =
   | "created_at"
@@ -386,8 +385,7 @@ export type GetComplianceJobsRequestComplianceJobFieldsItem =
   | "type"
   | "upload_expires_at"
   | "upload_url";
-export const GetComplianceJobsRequestComplianceJobFieldsItem =
-  /*@__PURE__*/ S.String;
+export const GetComplianceJobsRequestComplianceJobFieldsItem = S.String;
 
 /** The fields available for a ComplianceJob object. */
 export type GetComplianceJobsRequestComplianceJobFieldsList = Array<
@@ -469,8 +467,7 @@ export type GetComplianceJobsByIdRequestComplianceJobFieldsItem =
   | "type"
   | "upload_expires_at"
   | "upload_url";
-export const GetComplianceJobsByIdRequestComplianceJobFieldsItem =
-  /*@__PURE__*/ S.String;
+export const GetComplianceJobsByIdRequestComplianceJobFieldsItem = S.String;
 
 /** The fields available for a ComplianceJob object. */
 export type GetComplianceJobsByIdRequestComplianceJobFieldsList = Array<

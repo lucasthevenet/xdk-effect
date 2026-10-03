@@ -22,16 +22,16 @@ import * as Duration from "effect/Duration";
 import * as Deferred from "effect/Deferred";
 import * as Exit from "effect/Exit";
 import * as Effect from "effect/Effect";
-import * as Encoding from "effect/Encoding";
+import { Base64 } from "effect/encoding";
 import * as Layer from "effect/Layer";
 import * as Option from "effect/Option";
 import * as Redacted from "effect/Redacted";
 import * as Schema from "effect/Schema";
 import * as Stream from "effect/Stream";
-import * as HttpClient from "effect/unstable/http/HttpClient";
-import type * as HttpClientError from "effect/unstable/http/HttpClientError";
-import * as HttpClientRequest from "effect/unstable/http/HttpClientRequest";
-import type * as HttpClientResponse from "effect/unstable/http/HttpClientResponse";
+import * as HttpClient from "effect/http/HttpClient";
+import type * as HttpClientError from "effect/http/HttpClientError";
+import * as HttpClientRequest from "effect/http/HttpClientRequest";
+import type * as HttpClientResponse from "effect/http/HttpClientResponse";
 import {
   signOAuth1,
   selectAuthentication,
@@ -119,7 +119,7 @@ const exchangeToken = (config: OAuth1Credentials) =>
       return yield* Effect.fail(
         new XAuthenticationError("X API key and secret must not be empty"),
       );
-    const basic = Encoding.encodeBase64(
+    const basic = Base64.encode(
       `${encodeCredential(key)}:${encodeCredential(secret)}`,
     );
     const response = yield* client.execute(
@@ -375,10 +375,13 @@ const decode = (args: DecodeArgs) =>
       );
     }
     const outputSchema = Schema.toType(Schema.make(args.outputAst));
-    const decodeValue = (value: Schema.Json | Uint8Array | undefined) =>
-      Schema.decodeUnknownEffect(outputSchema, {
-        onExcessProperty: "preserve",
-      })(mapKeys(args.outputAst, value, "decode")).pipe(
+    const decodeValue = (value: Schema.Json | Uint8Array | undefined) => {
+      const mapped = mapKeys(args.outputAst, value, "decode");
+      // Effect 4 removed onExcessProperty: "preserve". Validate the response,
+      // then retain the mapped wire value, including nested legacy X fields
+      // (referenced_tweets) needed to reject quotes/retweets during verification.
+      return Schema.decodeUnknownEffect(outputSchema)(mapped).pipe(
+        Effect.as(mapped),
         Effect.mapError(
           (cause) =>
             new XParseError({
@@ -387,6 +390,7 @@ const decode = (args: DecodeArgs) =>
             }),
         ),
       );
+    };
     if (response.status >= 200 && response.status < 300) {
       if (getAnn(args.outputAst, T.responseSymbol) === "binary")
         return yield* response.arrayBuffer.pipe(

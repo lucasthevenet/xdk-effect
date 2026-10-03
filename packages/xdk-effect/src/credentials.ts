@@ -86,11 +86,11 @@ export const fromBearer = (config: BearerConfig): Layer.Layer<Credentials> =>
 
 /** Resolve OAuth1 credentials from environment configuration. */
 export const resolveFromEnv = Config.all({
-  apiKey: Config.redacted("X_API_KEY"),
-  apiSecret: Config.redacted("X_API_SECRET"),
-  accessToken: Config.redacted("X_ACCESS_TOKEN"),
-  accessTokenSecret: Config.redacted("X_ACCESS_TOKEN_SECRET"),
-  apiBaseUrl: Config.string("X_API_BASE_URL").pipe(
+  apiKey: Config.Redacted("X_API_KEY"),
+  apiSecret: Config.Redacted("X_API_SECRET"),
+  accessToken: Config.Redacted("X_ACCESS_TOKEN"),
+  accessTokenSecret: Config.Redacted("X_ACCESS_TOKEN_SECRET"),
+  apiBaseUrl: Config.String("X_API_BASE_URL").pipe(
     Config.withDefault(DEFAULT_API_BASE_URL),
   ),
 }).pipe(

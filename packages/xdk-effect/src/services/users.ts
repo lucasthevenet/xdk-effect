@@ -44,7 +44,7 @@ export const FollowListResponseData = /*@__PURE__*/ S.suspend(() =>
 
 export type ResourceNotFoundProblemType =
   "https://api.x.com/2/problems/resource-not-found";
-export const ResourceNotFoundProblemType = /*@__PURE__*/ S.String;
+export const ResourceNotFoundProblemType = S.String;
 
 export interface ResourceNotFoundProblem {
   detail: string;
@@ -73,7 +73,7 @@ export const ResourceNotFoundProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type InvalidRequestProblemType =
   "https://api.x.com/2/problems/invalid-request";
-export const InvalidRequestProblemType = /*@__PURE__*/ S.String;
+export const InvalidRequestProblemType = S.String;
 
 export interface InvalidRequestProblem {
   detail: string;
@@ -98,7 +98,7 @@ export const InvalidRequestProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type NotAuthorizedForResourceProblemType =
   "https://api.x.com/2/problems/not-authorized-for-resource";
-export const NotAuthorizedForResourceProblemType = /*@__PURE__*/ S.String;
+export const NotAuthorizedForResourceProblemType = S.String;
 
 export interface NotAuthorizedForResourceProblem {
   detail: string;
@@ -129,7 +129,7 @@ export const NotAuthorizedForResourceProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type NotAuthorizedForFieldProblemType =
   "https://api.x.com/2/problems/not-authorized-for-field";
-export const NotAuthorizedForFieldProblemType = /*@__PURE__*/ S.String;
+export const NotAuthorizedForFieldProblemType = S.String;
 
 export interface NotAuthorizedForFieldProblem {
   detail: string;
@@ -162,7 +162,7 @@ export const NotAuthorizedForFieldProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type FieldUnauthorizedProblemType =
   "https://api.x.com/2/problems/field-unauthorized";
-export const FieldUnauthorizedProblemType = /*@__PURE__*/ S.String;
+export const FieldUnauthorizedProblemType = S.String;
 
 export interface FieldUnauthorizedProblem {
   detail: string;
@@ -189,7 +189,7 @@ export const FieldUnauthorizedProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type FieldHydrationFailureProblemType =
   "https://api.x.com/2/problems/field-hydration-failure";
-export const FieldHydrationFailureProblemType = /*@__PURE__*/ S.String;
+export const FieldHydrationFailureProblemType = S.String;
 
 export interface FieldHydrationFailureProblem {
   detail: string;
@@ -216,7 +216,7 @@ export const FieldHydrationFailureProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type ResourceUnavailableProblemType =
   "https://api.x.com/2/problems/resource-unavailable";
-export const ResourceUnavailableProblemType = /*@__PURE__*/ S.String;
+export const ResourceUnavailableProblemType = S.String;
 
 export interface ResourceUnavailableProblem {
   detail: string;
@@ -241,7 +241,7 @@ export const ResourceUnavailableProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type DisallowedResourceProblemType =
   "https://api.x.com/2/problems/disallowed-resource";
-export const DisallowedResourceProblemType = /*@__PURE__*/ S.String;
+export const DisallowedResourceProblemType = S.String;
 
 export interface DisallowedResourceProblem {
   detail: string;
@@ -268,7 +268,7 @@ export const DisallowedResourceProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type InternalErrorProblemType =
   "https://api.x.com/2/problems/internal-error";
-export const InternalErrorProblemType = /*@__PURE__*/ S.String;
+export const InternalErrorProblemType = S.String;
 
 export interface InternalErrorProblem {
   detail: string;
@@ -390,7 +390,7 @@ export type GetUsersAffiliatesRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetUsersAffiliatesRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersAffiliatesRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetUsersAffiliatesRequestUserFieldsList = Array<
@@ -404,7 +404,7 @@ export type GetUsersAffiliatesRequestExpansionsItem =
   | "affiliation"
   | "most_recent_post_id"
   | "pinned_post_id";
-export const GetUsersAffiliatesRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const GetUsersAffiliatesRequestExpansionsItem = S.String;
 
 export type GetUsersAffiliatesRequestExpansionsList = Array<
   GetUsersAffiliatesRequestExpansionsItem | (string & {})
@@ -445,7 +445,7 @@ export type GetUsersAffiliatesRequestPostFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const GetUsersAffiliatesRequestPostFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersAffiliatesRequestPostFieldsItem = S.String;
 
 /** The fields available for a Post object. */
 export type GetUsersAffiliatesRequestPostFieldsList = Array<
@@ -530,7 +530,7 @@ export type UserConnectionStatusItem =
   | "followed_by"
   | "following"
   | "muting";
-export const UserConnectionStatusItem = /*@__PURE__*/ S.String;
+export const UserConnectionStatusItem = S.String;
 
 /** Returns detailed information about the relationship between two users. */
 export type UserConnectionStatus = Array<UserConnectionStatusItem>;
@@ -815,7 +815,7 @@ export const UserWithheldCountryCodesList = /*@__PURE__*/ S.Array(
 
 /** The scope of the withholding. Only present, with the value "user", when the entire User is withheld. */
 export type UserWithheldScope = "user";
-export const UserWithheldScope = /*@__PURE__*/ S.String;
+export const UserWithheldScope = S.String;
 
 /** Withholding details for withheld content. */
 export interface UserWithheld {
@@ -1092,7 +1092,7 @@ export const PlaceGeoBboxList = /*@__PURE__*/ S.Array(
 ) as any as S.Schema<PlaceGeoBboxList>;
 
 export type PlaceGeoType = "Feature";
-export const PlaceGeoType = /*@__PURE__*/ S.String;
+export const PlaceGeoType = S.String;
 
 /** The geographic location of this place, expressed as a GeoJSON Feature. */
 export interface PlaceGeo {
@@ -1422,7 +1422,7 @@ export const PostGeoCoordinatesCoordinatesList = /*@__PURE__*/ S.Array(
 
 /** The GeoJSON geometry type. */
 export type PostGeoCoordinatesType = "Point";
-export const PostGeoCoordinatesType = /*@__PURE__*/ S.String;
+export const PostGeoCoordinatesType = S.String;
 
 /** A GeoJSON Point geometry. */
 export interface PostGeoCoordinates {
@@ -1649,7 +1649,7 @@ export const PostPublicMetrics = /*@__PURE__*/ S.suspend(() =>
 
 /** The kind of Post-to-Post reference. */
 export type PostReferencedPostsItemType = "retweeted" | "quoted" | "replied_to";
-export const PostReferencedPostsItemType = /*@__PURE__*/ S.String;
+export const PostReferencedPostsItemType = S.String;
 
 /** A reference from this Post to another Post (repost, quote, or reply). */
 export interface PostReferencedPostsItem {
@@ -1722,7 +1722,7 @@ export const PostWithheldCountryCodesList = /*@__PURE__*/ S.Array(
 
 /** Whether the withholding applies to a Post or a User. */
 export type PostWithheldScope = "post" | "user";
-export const PostWithheldScope = /*@__PURE__*/ S.String;
+export const PostWithheldScope = S.String;
 
 /** Withholding details for withheld content. */
 export interface PostWithheld {
@@ -1946,7 +1946,7 @@ export type GetUsersBlockingRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetUsersBlockingRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersBlockingRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetUsersBlockingRequestUserFieldsList = Array<
@@ -1960,7 +1960,7 @@ export type GetUsersBlockingRequestExpansionsItem =
   | "affiliation"
   | "most_recent_post_id"
   | "pinned_post_id";
-export const GetUsersBlockingRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const GetUsersBlockingRequestExpansionsItem = S.String;
 
 export type GetUsersBlockingRequestExpansionsList = Array<
   GetUsersBlockingRequestExpansionsItem | (string & {})
@@ -2001,7 +2001,7 @@ export type GetUsersBlockingRequestPostFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const GetUsersBlockingRequestPostFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersBlockingRequestPostFieldsItem = S.String;
 
 /** The fields available for a Post object. */
 export type GetUsersBlockingRequestPostFieldsList = Array<
@@ -2104,7 +2104,7 @@ export type GetUsersByIdRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetUsersByIdRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersByIdRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetUsersByIdRequestUserFieldsList = Array<
@@ -2118,7 +2118,7 @@ export type GetUsersByIdRequestExpansionsItem =
   | "affiliation"
   | "most_recent_post_id"
   | "pinned_post_id";
-export const GetUsersByIdRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const GetUsersByIdRequestExpansionsItem = S.String;
 
 export type GetUsersByIdRequestExpansionsList = Array<
   GetUsersByIdRequestExpansionsItem | (string & {})
@@ -2159,7 +2159,7 @@ export type GetUsersByIdRequestPostFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const GetUsersByIdRequestPostFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersByIdRequestPostFieldsItem = S.String;
 
 /** The fields available for a Post object. */
 export type GetUsersByIdRequestPostFieldsList = Array<
@@ -2253,7 +2253,7 @@ export type GetUsersByIdsRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetUsersByIdsRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersByIdsRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetUsersByIdsRequestUserFieldsList = Array<
@@ -2267,7 +2267,7 @@ export type GetUsersByIdsRequestExpansionsItem =
   | "affiliation"
   | "most_recent_post_id"
   | "pinned_post_id";
-export const GetUsersByIdsRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const GetUsersByIdsRequestExpansionsItem = S.String;
 
 export type GetUsersByIdsRequestExpansionsList = Array<
   GetUsersByIdsRequestExpansionsItem | (string & {})
@@ -2308,7 +2308,7 @@ export type GetUsersByIdsRequestPostFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const GetUsersByIdsRequestPostFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersByIdsRequestPostFieldsItem = S.String;
 
 /** The fields available for a Post object. */
 export type GetUsersByIdsRequestPostFieldsList = Array<
@@ -2402,7 +2402,7 @@ export type GetUsersByUsernameRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetUsersByUsernameRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersByUsernameRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetUsersByUsernameRequestUserFieldsList = Array<
@@ -2416,7 +2416,7 @@ export type GetUsersByUsernameRequestExpansionsItem =
   | "affiliation"
   | "most_recent_post_id"
   | "pinned_post_id";
-export const GetUsersByUsernameRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const GetUsersByUsernameRequestExpansionsItem = S.String;
 
 export type GetUsersByUsernameRequestExpansionsList = Array<
   GetUsersByUsernameRequestExpansionsItem | (string & {})
@@ -2457,7 +2457,7 @@ export type GetUsersByUsernameRequestPostFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const GetUsersByUsernameRequestPostFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersByUsernameRequestPostFieldsItem = S.String;
 
 /** The fields available for a Post object. */
 export type GetUsersByUsernameRequestPostFieldsList = Array<
@@ -2557,7 +2557,7 @@ export type GetUsersByUsernamesRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetUsersByUsernamesRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersByUsernamesRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetUsersByUsernamesRequestUserFieldsList = Array<
@@ -2571,7 +2571,7 @@ export type GetUsersByUsernamesRequestExpansionsItem =
   | "affiliation"
   | "most_recent_post_id"
   | "pinned_post_id";
-export const GetUsersByUsernamesRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const GetUsersByUsernamesRequestExpansionsItem = S.String;
 
 export type GetUsersByUsernamesRequestExpansionsList = Array<
   GetUsersByUsernamesRequestExpansionsItem | (string & {})
@@ -2612,7 +2612,7 @@ export type GetUsersByUsernamesRequestPostFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const GetUsersByUsernamesRequestPostFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersByUsernamesRequestPostFieldsItem = S.String;
 
 /** The fields available for a Post object. */
 export type GetUsersByUsernamesRequestPostFieldsList = Array<
@@ -2695,8 +2695,7 @@ export type GetUsersFollowedListsRequestListFieldsItem =
   | "member_count"
   | "name"
   | "private";
-export const GetUsersFollowedListsRequestListFieldsItem =
-  /*@__PURE__*/ S.String;
+export const GetUsersFollowedListsRequestListFieldsItem = S.String;
 
 /** The fields available for a List object. */
 export type GetUsersFollowedListsRequestListFieldsList = Array<
@@ -2707,8 +2706,7 @@ export const GetUsersFollowedListsRequestListFieldsList = /*@__PURE__*/ S.Array(
 ) as any as S.Schema<GetUsersFollowedListsRequestListFieldsList>;
 
 export type GetUsersFollowedListsRequestExpansionsItem = "owner_id";
-export const GetUsersFollowedListsRequestExpansionsItem =
-  /*@__PURE__*/ S.String;
+export const GetUsersFollowedListsRequestExpansionsItem = S.String;
 
 export type GetUsersFollowedListsRequestExpansionsList = Array<
   GetUsersFollowedListsRequestExpansionsItem | (string & {})
@@ -2742,8 +2740,7 @@ export type GetUsersFollowedListsRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetUsersFollowedListsRequestUserFieldsItem =
-  /*@__PURE__*/ S.String;
+export const GetUsersFollowedListsRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetUsersFollowedListsRequestUserFieldsList = Array<
@@ -2875,7 +2872,7 @@ export type GetUsersFollowersRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetUsersFollowersRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersFollowersRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetUsersFollowersRequestUserFieldsList = Array<
@@ -2889,7 +2886,7 @@ export type GetUsersFollowersRequestExpansionsItem =
   | "affiliation"
   | "most_recent_post_id"
   | "pinned_post_id";
-export const GetUsersFollowersRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const GetUsersFollowersRequestExpansionsItem = S.String;
 
 export type GetUsersFollowersRequestExpansionsList = Array<
   GetUsersFollowersRequestExpansionsItem | (string & {})
@@ -2930,7 +2927,7 @@ export type GetUsersFollowersRequestPostFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const GetUsersFollowersRequestPostFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersFollowersRequestPostFieldsItem = S.String;
 
 /** The fields available for a Post object. */
 export type GetUsersFollowersRequestPostFieldsList = Array<
@@ -3034,7 +3031,7 @@ export type GetUsersFollowingRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetUsersFollowingRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersFollowingRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetUsersFollowingRequestUserFieldsList = Array<
@@ -3048,7 +3045,7 @@ export type GetUsersFollowingRequestExpansionsItem =
   | "affiliation"
   | "most_recent_post_id"
   | "pinned_post_id";
-export const GetUsersFollowingRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const GetUsersFollowingRequestExpansionsItem = S.String;
 
 export type GetUsersFollowingRequestExpansionsList = Array<
   GetUsersFollowingRequestExpansionsItem | (string & {})
@@ -3089,7 +3086,7 @@ export type GetUsersFollowingRequestPostFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const GetUsersFollowingRequestPostFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersFollowingRequestPostFieldsItem = S.String;
 
 /** The fields available for a Post object. */
 export type GetUsersFollowingRequestPostFieldsList = Array<
@@ -3176,8 +3173,7 @@ export type GetUsersListMembershipsRequestListFieldsItem =
   | "member_count"
   | "name"
   | "private";
-export const GetUsersListMembershipsRequestListFieldsItem =
-  /*@__PURE__*/ S.String;
+export const GetUsersListMembershipsRequestListFieldsItem = S.String;
 
 /** The fields available for a List object. */
 export type GetUsersListMembershipsRequestListFieldsList = Array<
@@ -3189,8 +3185,7 @@ export const GetUsersListMembershipsRequestListFieldsList =
   ) as any as S.Schema<GetUsersListMembershipsRequestListFieldsList>;
 
 export type GetUsersListMembershipsRequestExpansionsItem = "owner_id";
-export const GetUsersListMembershipsRequestExpansionsItem =
-  /*@__PURE__*/ S.String;
+export const GetUsersListMembershipsRequestExpansionsItem = S.String;
 
 export type GetUsersListMembershipsRequestExpansionsList = Array<
   GetUsersListMembershipsRequestExpansionsItem | (string & {})
@@ -3225,8 +3220,7 @@ export type GetUsersListMembershipsRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetUsersListMembershipsRequestUserFieldsItem =
-  /*@__PURE__*/ S.String;
+export const GetUsersListMembershipsRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetUsersListMembershipsRequestUserFieldsList = Array<
@@ -3341,7 +3335,7 @@ export type GetUsersMeRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetUsersMeRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersMeRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetUsersMeRequestUserFieldsList = Array<
@@ -3355,7 +3349,7 @@ export type GetUsersMeRequestExpansionsItem =
   | "affiliation"
   | "most_recent_post_id"
   | "pinned_post_id";
-export const GetUsersMeRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const GetUsersMeRequestExpansionsItem = S.String;
 
 export type GetUsersMeRequestExpansionsList = Array<
   GetUsersMeRequestExpansionsItem | (string & {})
@@ -3396,7 +3390,7 @@ export type GetUsersMeRequestPostFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const GetUsersMeRequestPostFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersMeRequestPostFieldsItem = S.String;
 
 /** The fields available for a Post object. */
 export type GetUsersMeRequestPostFieldsList = Array<
@@ -3483,7 +3477,7 @@ export type GetUsersMutingRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetUsersMutingRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersMutingRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetUsersMutingRequestUserFieldsList = Array<
@@ -3497,7 +3491,7 @@ export type GetUsersMutingRequestExpansionsItem =
   | "affiliation"
   | "most_recent_post_id"
   | "pinned_post_id";
-export const GetUsersMutingRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const GetUsersMutingRequestExpansionsItem = S.String;
 
 export type GetUsersMutingRequestExpansionsList = Array<
   GetUsersMutingRequestExpansionsItem | (string & {})
@@ -3538,7 +3532,7 @@ export type GetUsersMutingRequestPostFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const GetUsersMutingRequestPostFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersMutingRequestPostFieldsItem = S.String;
 
 /** The fields available for a Post object. */
 export type GetUsersMutingRequestPostFieldsList = Array<
@@ -3624,7 +3618,7 @@ export type GetUsersOwnedListsRequestListFieldsItem =
   | "member_count"
   | "name"
   | "private";
-export const GetUsersOwnedListsRequestListFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersOwnedListsRequestListFieldsItem = S.String;
 
 /** The fields available for a List object. */
 export type GetUsersOwnedListsRequestListFieldsList = Array<
@@ -3635,7 +3629,7 @@ export const GetUsersOwnedListsRequestListFieldsList = /*@__PURE__*/ S.Array(
 ) as any as S.Schema<GetUsersOwnedListsRequestListFieldsList>;
 
 export type GetUsersOwnedListsRequestExpansionsItem = "owner_id";
-export const GetUsersOwnedListsRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const GetUsersOwnedListsRequestExpansionsItem = S.String;
 
 export type GetUsersOwnedListsRequestExpansionsList = Array<
   GetUsersOwnedListsRequestExpansionsItem | (string & {})
@@ -3669,7 +3663,7 @@ export type GetUsersOwnedListsRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetUsersOwnedListsRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersOwnedListsRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetUsersOwnedListsRequestUserFieldsList = Array<
@@ -3758,7 +3752,7 @@ export type GetUsersPinnedListsRequestListFieldsItem =
   | "member_count"
   | "name"
   | "private";
-export const GetUsersPinnedListsRequestListFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersPinnedListsRequestListFieldsItem = S.String;
 
 /** The fields available for a List object. */
 export type GetUsersPinnedListsRequestListFieldsList = Array<
@@ -3769,7 +3763,7 @@ export const GetUsersPinnedListsRequestListFieldsList = /*@__PURE__*/ S.Array(
 ) as any as S.Schema<GetUsersPinnedListsRequestListFieldsList>;
 
 export type GetUsersPinnedListsRequestExpansionsItem = "owner_id";
-export const GetUsersPinnedListsRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const GetUsersPinnedListsRequestExpansionsItem = S.String;
 
 export type GetUsersPinnedListsRequestExpansionsList = Array<
   GetUsersPinnedListsRequestExpansionsItem | (string & {})
@@ -3803,7 +3797,7 @@ export type GetUsersPinnedListsRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetUsersPinnedListsRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersPinnedListsRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetUsersPinnedListsRequestUserFieldsList = Array<
@@ -3923,7 +3917,7 @@ export type GetUsersRepostsOfMeRequestPostFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const GetUsersRepostsOfMeRequestPostFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersRepostsOfMeRequestPostFieldsItem = S.String;
 
 /** The fields available for a Post object. */
 export type GetUsersRepostsOfMeRequestPostFieldsList = Array<
@@ -3946,7 +3940,7 @@ export type GetUsersRepostsOfMeRequestExpansionsItem =
   | "in_reply_to_user_id"
   | "referenced_posts"
   | "username";
-export const GetUsersRepostsOfMeRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const GetUsersRepostsOfMeRequestExpansionsItem = S.String;
 
 export type GetUsersRepostsOfMeRequestExpansionsList = Array<
   GetUsersRepostsOfMeRequestExpansionsItem | (string & {})
@@ -3980,7 +3974,7 @@ export type GetUsersRepostsOfMeRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const GetUsersRepostsOfMeRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersRepostsOfMeRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type GetUsersRepostsOfMeRequestUserFieldsList = Array<
@@ -4004,7 +3998,7 @@ export type GetUsersRepostsOfMeRequestMediaFieldsItem =
   | "url"
   | "variants"
   | "width";
-export const GetUsersRepostsOfMeRequestMediaFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersRepostsOfMeRequestMediaFieldsItem = S.String;
 
 /** The fields available for a Media object. */
 export type GetUsersRepostsOfMeRequestMediaFieldsList = Array<
@@ -4020,7 +4014,7 @@ export type GetUsersRepostsOfMeRequestPollFieldsItem =
   | "id"
   | "options"
   | "voting_status";
-export const GetUsersRepostsOfMeRequestPollFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersRepostsOfMeRequestPollFieldsItem = S.String;
 
 /** The fields available for a Poll object. */
 export type GetUsersRepostsOfMeRequestPollFieldsList = Array<
@@ -4039,7 +4033,7 @@ export type GetUsersRepostsOfMeRequestPlaceFieldsItem =
   | "id"
   | "name"
   | "place_type";
-export const GetUsersRepostsOfMeRequestPlaceFieldsItem = /*@__PURE__*/ S.String;
+export const GetUsersRepostsOfMeRequestPlaceFieldsItem = S.String;
 
 /** The fields available for a Place object. */
 export type GetUsersRepostsOfMeRequestPlaceFieldsList = Array<
@@ -4214,7 +4208,7 @@ export type SearchUsersRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const SearchUsersRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const SearchUsersRequestUserFieldsItem = S.String;
 
 /** The fields available for a User object. */
 export type SearchUsersRequestUserFieldsList = Array<
@@ -4228,7 +4222,7 @@ export type SearchUsersRequestExpansionsItem =
   | "affiliation"
   | "most_recent_post_id"
   | "pinned_post_id";
-export const SearchUsersRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const SearchUsersRequestExpansionsItem = S.String;
 
 export type SearchUsersRequestExpansionsList = Array<
   SearchUsersRequestExpansionsItem | (string & {})
@@ -4269,7 +4263,7 @@ export type SearchUsersRequestPostFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const SearchUsersRequestPostFieldsItem = /*@__PURE__*/ S.String;
+export const SearchUsersRequestPostFieldsItem = S.String;
 
 /** The fields available for a Post object. */
 export type SearchUsersRequestPostFieldsList = Array<

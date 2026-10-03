@@ -1,7 +1,7 @@
 import * as Crypto from "effect/Crypto";
 import * as Clock from "effect/Clock";
 import * as Effect from "effect/Effect";
-import * as Encoding from "effect/Encoding";
+import { Base64, Base64Url } from "effect/encoding";
 import { XAuthenticationError } from "./errors.ts";
 import { Hmac } from "./hmac.ts";
 import type { SecurityScheme } from "./traits.ts";
@@ -87,7 +87,7 @@ export const signOAuth1 = (
     const now = yield* Clock.currentTimeMillis;
     const oauth = {
       oauth_consumer_key: apiKey,
-      oauth_nonce: Encoding.encodeBase64Url(nonce),
+      oauth_nonce: Base64Url.encode(nonce),
       oauth_signature_method: "HMAC-SHA1",
       oauth_timestamp: String(Math.floor(now / 1000)),
       oauth_token: accessToken,
@@ -110,7 +110,7 @@ export const signOAuth1 = (
       .map(encode)
       .join("&");
     const hmac = yield* Hmac;
-    const signature = Encoding.encodeBase64(
+    const signature = Base64.encode(
       yield* hmac.sign({
         hash: "SHA-1",
         key: new TextEncoder().encode(

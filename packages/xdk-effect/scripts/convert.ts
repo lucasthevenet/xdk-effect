@@ -128,6 +128,8 @@ for (const [group, paths] of [...groups].toSorted(([a], [b]) =>
     {
       namespace: `com.x.${namespace(group)}`,
       serviceName: upperFirst(namespace(group)),
+      // Keep published SDK operation names across Distilled converter upgrades.
+      operationNaming: "as-is",
       skipDeprecated: false,
       headerParams: true,
       sensitivePatterns: [],

@@ -3,7 +3,7 @@ import type {
   CreateActivitySubscriptionRequestEventType,
 } from "./services/activity.ts";
 import * as Effect from "effect/Effect";
-import * as Encoding from "effect/Encoding";
+import { Base64 } from "effect/encoding";
 import * as Result from "effect/Result";
 import * as Schema from "effect/Schema";
 import { Hmac } from "./hmac.ts";
@@ -24,7 +24,7 @@ export const createCrcResponse = (crcToken: string, consumerSecret: string) =>
       data: new TextEncoder().encode(crcToken),
     });
     return {
-      response_token: `sha256=${Encoding.encodeBase64(signature)}` as const,
+      response_token: `sha256=${Base64.encode(signature)}` as const,
     };
   }).pipe(
     Effect.mapError(
@@ -43,9 +43,7 @@ export const verifyWebhookSignature = (input: {
 }) =>
   Effect.gen(function* () {
     if (!input.signature?.startsWith("sha256=")) return false;
-    const signature = Encoding.decodeBase64(
-      input.signature.slice("sha256=".length),
-    );
+    const signature = Base64.decode(input.signature.slice("sha256=".length));
     if (Result.isFailure(signature)) return false;
     const hmac = yield* Hmac;
     return yield* hmac.verify({

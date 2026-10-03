@@ -6,7 +6,7 @@ import * as BunCrypto from "@effect/platform-bun/BunCrypto";
 import { describe, expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
-import * as FetchHttpClient from "effect/unstable/http/FetchHttpClient";
+import * as FetchHttpClient from "effect/http/FetchHttpClient";
 import { fromOAuth1, fromBearer } from "../src/credentials.ts";
 import { signOAuth1 } from "../src/auth.ts";
 import { XAuthenticationError } from "../src/errors.ts";

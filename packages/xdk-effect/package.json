@@ -1,6 +1,6 @@
 {
   "name": "xdk-effect",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Spec-generated, Effect-native X API SDK with OAuth, streaming, and webhook primitives.",
   "keywords": [
     "api",
@@ -23,7 +23,8 @@
     "lib",
     "!lib/.tsbuildinfo",
     "src",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md"
   ],
   "type": "module",
   "sideEffects": false,
@@ -139,13 +140,13 @@
     "test": "bun test"
   },
   "dependencies": {
-    "@distilled.cloud/core": "1.0.0-rc.8",
-    "@effect/platform-browser": "4.0.0-rc.112"
+    "@distilled.cloud/core": "1.0.0-rc.13",
+    "@effect/platform-browser": "4.0.0"
   },
   "devDependencies": {
-    "@effect/platform-bun": "4.0.0-rc.112"
+    "@effect/platform-bun": "4.0.0"
   },
   "peerDependencies": {
-    "effect": ">=4.0.0-rc.112 <5"
+    "effect": ">=4.0.0 <5"
   }
 }

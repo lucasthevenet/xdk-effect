@@ -2,8 +2,8 @@ import * as Cloudflare from "alchemy/Cloudflare";
 import * as Config from "effect/Config";
 import * as Effect from "effect/Effect";
 import * as Layer from "effect/Layer";
-import * as HttpRouter from "effect/unstable/http/HttpRouter";
-import * as HttpServerResponse from "effect/unstable/http/HttpServerResponse";
+import * as HttpRouter from "effect/http/HttpRouter";
+import * as HttpServerResponse from "effect/http/HttpServerResponse";
 import * as X from "xdk-effect";
 
 const requestFailed = () =>
@@ -20,10 +20,10 @@ const GetMeRoute = HttpRouter.add(
   Effect.gen(function* () {
     const client = X.Client({
       oauth1: {
-        apiKey: yield* Config.redacted("API_KEY"),
-        apiSecret: yield* Config.redacted("API_SECRET"),
-        accessToken: yield* Config.redacted("ACCESS_TOKEN"),
-        accessTokenSecret: yield* Config.redacted("ACCESS_TOKEN_SECRET"),
+        apiKey: yield* Config.Redacted("API_KEY"),
+        apiSecret: yield* Config.Redacted("API_SECRET"),
+        accessToken: yield* Config.Redacted("ACCESS_TOKEN"),
+        accessTokenSecret: yield* Config.Redacted("ACCESS_TOKEN_SECRET"),
       },
     });
     return yield* HttpServerResponse.json(yield* client.users.getUsersMe({}));
@@ -35,7 +35,7 @@ const WebhookRoute = HttpRouter.add(
   "/webhook",
   Effect.gen(function* () {
     return yield* X.createWebhookHandler({
-      consumerSecret: yield* Config.redacted("API_SECRET"),
+      consumerSecret: yield* Config.Redacted("API_SECRET"),
       onEvent: (event) => Effect.log("X event", event),
     });
   }).pipe(Effect.catch(requestFailed)),
@@ -46,10 +46,10 @@ export default Cloudflare.Worker(
   {
     main: import.meta.url,
     env: {
-      API_KEY: Config.redacted("API_KEY"),
-      API_SECRET: Config.redacted("API_SECRET"),
-      ACCESS_TOKEN: Config.redacted("ACCESS_TOKEN"),
-      ACCESS_TOKEN_SECRET: Config.redacted("ACCESS_TOKEN_SECRET"),
+      API_KEY: Config.Redacted("API_KEY"),
+      API_SECRET: Config.Redacted("API_SECRET"),
+      ACCESS_TOKEN: Config.Redacted("ACCESS_TOKEN"),
+      ACCESS_TOKEN_SECRET: Config.Redacted("ACCESS_TOKEN_SECRET"),
     },
   },
   Effect.gen(function* () {

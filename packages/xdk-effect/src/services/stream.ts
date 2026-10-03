@@ -31,7 +31,7 @@ export const ActivityStreamRequest = /*@__PURE__*/ S.suspend(() =>
 
 /** Optional direction filter for directional events. */
 export type ActivitySubscriptionFilterDirection = "inbound" | "outbound";
-export const ActivitySubscriptionFilterDirection = /*@__PURE__*/ S.String;
+export const ActivitySubscriptionFilterDirection = S.String;
 
 /** An XAA subscription filter. */
 export interface ActivitySubscriptionFilter {
@@ -220,7 +220,7 @@ export const PlaceGeoBboxList = /*@__PURE__*/ S.Array(
 ) as any as S.Schema<PlaceGeoBboxList>;
 
 export type PlaceGeoType = "Feature";
-export const PlaceGeoType = /*@__PURE__*/ S.String;
+export const PlaceGeoType = S.String;
 
 /** The geographic location of this place, expressed as a GeoJSON Feature. */
 export interface PlaceGeo {
@@ -572,7 +572,7 @@ export const PostGeoCoordinatesCoordinatesList = /*@__PURE__*/ S.Array(
 
 /** The GeoJSON geometry type. */
 export type PostGeoCoordinatesType = "Point";
-export const PostGeoCoordinatesType = /*@__PURE__*/ S.String;
+export const PostGeoCoordinatesType = S.String;
 
 /** A GeoJSON Point geometry. */
 export interface PostGeoCoordinates {
@@ -793,7 +793,7 @@ export const PostPublicMetrics = /*@__PURE__*/ S.suspend(() =>
 
 /** The kind of Post-to-Post reference. */
 export type PostReferencedPostsItemType = "retweeted" | "quoted" | "replied_to";
-export const PostReferencedPostsItemType = /*@__PURE__*/ S.String;
+export const PostReferencedPostsItemType = S.String;
 
 /** A reference from this Post to another Post (repost, quote, or reply). */
 export interface PostReferencedPostsItem {
@@ -866,7 +866,7 @@ export const PostWithheldCountryCodesList = /*@__PURE__*/ S.Array(
 
 /** Whether the withholding applies to a Post or a User. */
 export type PostWithheldScope = "post" | "user";
-export const PostWithheldScope = /*@__PURE__*/ S.String;
+export const PostWithheldScope = S.String;
 
 /** Withholding details for withheld content. */
 export interface PostWithheld {
@@ -1042,7 +1042,7 @@ export type UserConnectionStatusItem =
   | "followed_by"
   | "following"
   | "muting";
-export const UserConnectionStatusItem = /*@__PURE__*/ S.String;
+export const UserConnectionStatusItem = S.String;
 
 /** Returns detailed information about the relationship between two users. */
 export type UserConnectionStatus = Array<UserConnectionStatusItem>;
@@ -1298,7 +1298,7 @@ export const UserWithheldCountryCodesList = /*@__PURE__*/ S.Array(
 
 /** The scope of the withholding. Only present, with the value "user", when the entire User is withheld. */
 export type UserWithheldScope = "user";
-export const UserWithheldScope = /*@__PURE__*/ S.String;
+export const UserWithheldScope = S.String;
 
 /** Withholding details for withheld content. */
 export interface UserWithheld {
@@ -1531,7 +1531,7 @@ export const ActivityStreamResponseData = /*@__PURE__*/ S.suspend(() =>
 
 export type ResourceNotFoundProblemType =
   "https://api.x.com/2/problems/resource-not-found";
-export const ResourceNotFoundProblemType = /*@__PURE__*/ S.String;
+export const ResourceNotFoundProblemType = S.String;
 
 export interface ResourceNotFoundProblem {
   detail: string;
@@ -1560,7 +1560,7 @@ export const ResourceNotFoundProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type InvalidRequestProblemType =
   "https://api.x.com/2/problems/invalid-request";
-export const InvalidRequestProblemType = /*@__PURE__*/ S.String;
+export const InvalidRequestProblemType = S.String;
 
 export interface InvalidRequestProblem {
   detail: string;
@@ -1585,7 +1585,7 @@ export const InvalidRequestProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type NotAuthorizedForResourceProblemType =
   "https://api.x.com/2/problems/not-authorized-for-resource";
-export const NotAuthorizedForResourceProblemType = /*@__PURE__*/ S.String;
+export const NotAuthorizedForResourceProblemType = S.String;
 
 export interface NotAuthorizedForResourceProblem {
   detail: string;
@@ -1616,7 +1616,7 @@ export const NotAuthorizedForResourceProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type NotAuthorizedForFieldProblemType =
   "https://api.x.com/2/problems/not-authorized-for-field";
-export const NotAuthorizedForFieldProblemType = /*@__PURE__*/ S.String;
+export const NotAuthorizedForFieldProblemType = S.String;
 
 export interface NotAuthorizedForFieldProblem {
   detail: string;
@@ -1649,7 +1649,7 @@ export const NotAuthorizedForFieldProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type FieldUnauthorizedProblemType =
   "https://api.x.com/2/problems/field-unauthorized";
-export const FieldUnauthorizedProblemType = /*@__PURE__*/ S.String;
+export const FieldUnauthorizedProblemType = S.String;
 
 export interface FieldUnauthorizedProblem {
   detail: string;
@@ -1676,7 +1676,7 @@ export const FieldUnauthorizedProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type FieldHydrationFailureProblemType =
   "https://api.x.com/2/problems/field-hydration-failure";
-export const FieldHydrationFailureProblemType = /*@__PURE__*/ S.String;
+export const FieldHydrationFailureProblemType = S.String;
 
 export interface FieldHydrationFailureProblem {
   detail: string;
@@ -1703,7 +1703,7 @@ export const FieldHydrationFailureProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type ResourceUnavailableProblemType =
   "https://api.x.com/2/problems/resource-unavailable";
-export const ResourceUnavailableProblemType = /*@__PURE__*/ S.String;
+export const ResourceUnavailableProblemType = S.String;
 
 export interface ResourceUnavailableProblem {
   detail: string;
@@ -1728,7 +1728,7 @@ export const ResourceUnavailableProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type DisallowedResourceProblemType =
   "https://api.x.com/2/problems/disallowed-resource";
-export const DisallowedResourceProblemType = /*@__PURE__*/ S.String;
+export const DisallowedResourceProblemType = S.String;
 
 export interface DisallowedResourceProblem {
   detail: string;
@@ -1755,7 +1755,7 @@ export const DisallowedResourceProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type InternalErrorProblemType =
   "https://api.x.com/2/problems/internal-error";
-export const InternalErrorProblemType = /*@__PURE__*/ S.String;
+export const InternalErrorProblemType = S.String;
 
 export interface InternalErrorProblem {
   detail: string;
@@ -2143,8 +2143,7 @@ export type StreamLikesFirehoseRequestLikeWithTweetAuthorFieldsItem =
   | "liked_tweet_author_id"
   | "liked_tweet_id"
   | "timestamp_ms";
-export const StreamLikesFirehoseRequestLikeWithTweetAuthorFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamLikesFirehoseRequestLikeWithTweetAuthorFieldsItem = S.String;
 
 export type StreamLikesFirehoseRequestLikeWithTweetAuthorFieldsList = Array<
   StreamLikesFirehoseRequestLikeWithTweetAuthorFieldsItem | (string & {})
@@ -2158,7 +2157,7 @@ export type StreamLikesFirehoseRequestExpansionsItem =
   | "attachments.media_keys"
   | "liked_tweet_author_id"
   | "liked_tweet_id";
-export const StreamLikesFirehoseRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const StreamLikesFirehoseRequestExpansionsItem = S.String;
 
 export type StreamLikesFirehoseRequestExpansionsList = Array<
   StreamLikesFirehoseRequestExpansionsItem | (string & {})
@@ -2181,7 +2180,7 @@ export type StreamLikesFirehoseRequestMediaFieldsItem =
   | "url"
   | "variants"
   | "width";
-export const StreamLikesFirehoseRequestMediaFieldsItem = /*@__PURE__*/ S.String;
+export const StreamLikesFirehoseRequestMediaFieldsItem = S.String;
 
 export type StreamLikesFirehoseRequestMediaFieldsList = Array<
   StreamLikesFirehoseRequestMediaFieldsItem | (string & {})
@@ -2217,7 +2216,7 @@ export type StreamLikesFirehoseRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const StreamLikesFirehoseRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const StreamLikesFirehoseRequestUserFieldsItem = S.String;
 
 export type StreamLikesFirehoseRequestUserFieldsList = Array<
   StreamLikesFirehoseRequestUserFieldsItem | (string & {})
@@ -2261,7 +2260,7 @@ export type StreamLikesFirehoseRequestTweetFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const StreamLikesFirehoseRequestTweetFieldsItem = /*@__PURE__*/ S.String;
+export const StreamLikesFirehoseRequestTweetFieldsItem = S.String;
 
 export type StreamLikesFirehoseRequestTweetFieldsList = Array<
   StreamLikesFirehoseRequestTweetFieldsItem | (string & {})
@@ -2360,8 +2359,7 @@ export type StreamLikesSample10RequestLikeWithTweetAuthorFieldsItem =
   | "liked_tweet_author_id"
   | "liked_tweet_id"
   | "timestamp_ms";
-export const StreamLikesSample10RequestLikeWithTweetAuthorFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamLikesSample10RequestLikeWithTweetAuthorFieldsItem = S.String;
 
 export type StreamLikesSample10RequestLikeWithTweetAuthorFieldsList = Array<
   StreamLikesSample10RequestLikeWithTweetAuthorFieldsItem | (string & {})
@@ -2375,7 +2373,7 @@ export type StreamLikesSample10RequestExpansionsItem =
   | "attachments.media_keys"
   | "liked_tweet_author_id"
   | "liked_tweet_id";
-export const StreamLikesSample10RequestExpansionsItem = /*@__PURE__*/ S.String;
+export const StreamLikesSample10RequestExpansionsItem = S.String;
 
 export type StreamLikesSample10RequestExpansionsList = Array<
   StreamLikesSample10RequestExpansionsItem | (string & {})
@@ -2398,7 +2396,7 @@ export type StreamLikesSample10RequestMediaFieldsItem =
   | "url"
   | "variants"
   | "width";
-export const StreamLikesSample10RequestMediaFieldsItem = /*@__PURE__*/ S.String;
+export const StreamLikesSample10RequestMediaFieldsItem = S.String;
 
 export type StreamLikesSample10RequestMediaFieldsList = Array<
   StreamLikesSample10RequestMediaFieldsItem | (string & {})
@@ -2434,7 +2432,7 @@ export type StreamLikesSample10RequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const StreamLikesSample10RequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const StreamLikesSample10RequestUserFieldsItem = S.String;
 
 export type StreamLikesSample10RequestUserFieldsList = Array<
   StreamLikesSample10RequestUserFieldsItem | (string & {})
@@ -2478,7 +2476,7 @@ export type StreamLikesSample10RequestTweetFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const StreamLikesSample10RequestTweetFieldsItem = /*@__PURE__*/ S.String;
+export const StreamLikesSample10RequestTweetFieldsItem = S.String;
 
 export type StreamLikesSample10RequestTweetFieldsList = Array<
   StreamLikesSample10RequestTweetFieldsItem | (string & {})
@@ -2605,7 +2603,7 @@ export type StreamPostsRequestTweetFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const StreamPostsRequestTweetFieldsItem = /*@__PURE__*/ S.String;
+export const StreamPostsRequestTweetFieldsItem = S.String;
 
 export type StreamPostsRequestTweetFieldsList = Array<
   StreamPostsRequestTweetFieldsItem | (string & {})
@@ -2629,7 +2627,7 @@ export type StreamPostsRequestExpansionsItem =
   | "referenced_tweets.id"
   | "referenced_tweets.id.attachments.media_keys"
   | "referenced_tweets.id.author_id";
-export const StreamPostsRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const StreamPostsRequestExpansionsItem = S.String;
 
 export type StreamPostsRequestExpansionsList = Array<
   StreamPostsRequestExpansionsItem | (string & {})
@@ -2652,7 +2650,7 @@ export type StreamPostsRequestMediaFieldsItem =
   | "url"
   | "variants"
   | "width";
-export const StreamPostsRequestMediaFieldsItem = /*@__PURE__*/ S.String;
+export const StreamPostsRequestMediaFieldsItem = S.String;
 
 export type StreamPostsRequestMediaFieldsList = Array<
   StreamPostsRequestMediaFieldsItem | (string & {})
@@ -2667,7 +2665,7 @@ export type StreamPostsRequestPollFieldsItem =
   | "id"
   | "options"
   | "voting_status";
-export const StreamPostsRequestPollFieldsItem = /*@__PURE__*/ S.String;
+export const StreamPostsRequestPollFieldsItem = S.String;
 
 export type StreamPostsRequestPollFieldsList = Array<
   StreamPostsRequestPollFieldsItem | (string & {})
@@ -2703,7 +2701,7 @@ export type StreamPostsRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const StreamPostsRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const StreamPostsRequestUserFieldsItem = S.String;
 
 export type StreamPostsRequestUserFieldsList = Array<
   StreamPostsRequestUserFieldsItem | (string & {})
@@ -2721,7 +2719,7 @@ export type StreamPostsRequestPlaceFieldsItem =
   | "id"
   | "name"
   | "place_type";
-export const StreamPostsRequestPlaceFieldsItem = /*@__PURE__*/ S.String;
+export const StreamPostsRequestPlaceFieldsItem = S.String;
 
 export type StreamPostsRequestPlaceFieldsList = Array<
   StreamPostsRequestPlaceFieldsItem | (string & {})
@@ -3089,7 +3087,7 @@ export type StreamPostsFirehoseRequestTweetFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const StreamPostsFirehoseRequestTweetFieldsItem = /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseRequestTweetFieldsItem = S.String;
 
 export type StreamPostsFirehoseRequestTweetFieldsList = Array<
   StreamPostsFirehoseRequestTweetFieldsItem | (string & {})
@@ -3113,7 +3111,7 @@ export type StreamPostsFirehoseRequestExpansionsItem =
   | "referenced_tweets.id"
   | "referenced_tweets.id.attachments.media_keys"
   | "referenced_tweets.id.author_id";
-export const StreamPostsFirehoseRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseRequestExpansionsItem = S.String;
 
 export type StreamPostsFirehoseRequestExpansionsList = Array<
   StreamPostsFirehoseRequestExpansionsItem | (string & {})
@@ -3136,7 +3134,7 @@ export type StreamPostsFirehoseRequestMediaFieldsItem =
   | "url"
   | "variants"
   | "width";
-export const StreamPostsFirehoseRequestMediaFieldsItem = /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseRequestMediaFieldsItem = S.String;
 
 export type StreamPostsFirehoseRequestMediaFieldsList = Array<
   StreamPostsFirehoseRequestMediaFieldsItem | (string & {})
@@ -3151,7 +3149,7 @@ export type StreamPostsFirehoseRequestPollFieldsItem =
   | "id"
   | "options"
   | "voting_status";
-export const StreamPostsFirehoseRequestPollFieldsItem = /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseRequestPollFieldsItem = S.String;
 
 export type StreamPostsFirehoseRequestPollFieldsList = Array<
   StreamPostsFirehoseRequestPollFieldsItem | (string & {})
@@ -3187,7 +3185,7 @@ export type StreamPostsFirehoseRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const StreamPostsFirehoseRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseRequestUserFieldsItem = S.String;
 
 export type StreamPostsFirehoseRequestUserFieldsList = Array<
   StreamPostsFirehoseRequestUserFieldsItem | (string & {})
@@ -3205,7 +3203,7 @@ export type StreamPostsFirehoseRequestPlaceFieldsItem =
   | "id"
   | "name"
   | "place_type";
-export const StreamPostsFirehoseRequestPlaceFieldsItem = /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseRequestPlaceFieldsItem = S.String;
 
 export type StreamPostsFirehoseRequestPlaceFieldsList = Array<
   StreamPostsFirehoseRequestPlaceFieldsItem | (string & {})
@@ -3342,8 +3340,7 @@ export type StreamPostsFirehoseEnRequestTweetFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const StreamPostsFirehoseEnRequestTweetFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseEnRequestTweetFieldsItem = S.String;
 
 export type StreamPostsFirehoseEnRequestTweetFieldsList = Array<
   StreamPostsFirehoseEnRequestTweetFieldsItem | (string & {})
@@ -3368,8 +3365,7 @@ export type StreamPostsFirehoseEnRequestExpansionsItem =
   | "referenced_tweets.id"
   | "referenced_tweets.id.attachments.media_keys"
   | "referenced_tweets.id.author_id";
-export const StreamPostsFirehoseEnRequestExpansionsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseEnRequestExpansionsItem = S.String;
 
 export type StreamPostsFirehoseEnRequestExpansionsList = Array<
   StreamPostsFirehoseEnRequestExpansionsItem | (string & {})
@@ -3392,8 +3388,7 @@ export type StreamPostsFirehoseEnRequestMediaFieldsItem =
   | "url"
   | "variants"
   | "width";
-export const StreamPostsFirehoseEnRequestMediaFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseEnRequestMediaFieldsItem = S.String;
 
 export type StreamPostsFirehoseEnRequestMediaFieldsList = Array<
   StreamPostsFirehoseEnRequestMediaFieldsItem | (string & {})
@@ -3409,8 +3404,7 @@ export type StreamPostsFirehoseEnRequestPollFieldsItem =
   | "id"
   | "options"
   | "voting_status";
-export const StreamPostsFirehoseEnRequestPollFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseEnRequestPollFieldsItem = S.String;
 
 export type StreamPostsFirehoseEnRequestPollFieldsList = Array<
   StreamPostsFirehoseEnRequestPollFieldsItem | (string & {})
@@ -3446,8 +3440,7 @@ export type StreamPostsFirehoseEnRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const StreamPostsFirehoseEnRequestUserFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseEnRequestUserFieldsItem = S.String;
 
 export type StreamPostsFirehoseEnRequestUserFieldsList = Array<
   StreamPostsFirehoseEnRequestUserFieldsItem | (string & {})
@@ -3465,8 +3458,7 @@ export type StreamPostsFirehoseEnRequestPlaceFieldsItem =
   | "id"
   | "name"
   | "place_type";
-export const StreamPostsFirehoseEnRequestPlaceFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseEnRequestPlaceFieldsItem = S.String;
 
 export type StreamPostsFirehoseEnRequestPlaceFieldsList = Array<
   StreamPostsFirehoseEnRequestPlaceFieldsItem | (string & {})
@@ -3608,8 +3600,7 @@ export type StreamPostsFirehoseJaRequestTweetFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const StreamPostsFirehoseJaRequestTweetFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseJaRequestTweetFieldsItem = S.String;
 
 export type StreamPostsFirehoseJaRequestTweetFieldsList = Array<
   StreamPostsFirehoseJaRequestTweetFieldsItem | (string & {})
@@ -3634,8 +3625,7 @@ export type StreamPostsFirehoseJaRequestExpansionsItem =
   | "referenced_tweets.id"
   | "referenced_tweets.id.attachments.media_keys"
   | "referenced_tweets.id.author_id";
-export const StreamPostsFirehoseJaRequestExpansionsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseJaRequestExpansionsItem = S.String;
 
 export type StreamPostsFirehoseJaRequestExpansionsList = Array<
   StreamPostsFirehoseJaRequestExpansionsItem | (string & {})
@@ -3658,8 +3648,7 @@ export type StreamPostsFirehoseJaRequestMediaFieldsItem =
   | "url"
   | "variants"
   | "width";
-export const StreamPostsFirehoseJaRequestMediaFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseJaRequestMediaFieldsItem = S.String;
 
 export type StreamPostsFirehoseJaRequestMediaFieldsList = Array<
   StreamPostsFirehoseJaRequestMediaFieldsItem | (string & {})
@@ -3675,8 +3664,7 @@ export type StreamPostsFirehoseJaRequestPollFieldsItem =
   | "id"
   | "options"
   | "voting_status";
-export const StreamPostsFirehoseJaRequestPollFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseJaRequestPollFieldsItem = S.String;
 
 export type StreamPostsFirehoseJaRequestPollFieldsList = Array<
   StreamPostsFirehoseJaRequestPollFieldsItem | (string & {})
@@ -3712,8 +3700,7 @@ export type StreamPostsFirehoseJaRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const StreamPostsFirehoseJaRequestUserFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseJaRequestUserFieldsItem = S.String;
 
 export type StreamPostsFirehoseJaRequestUserFieldsList = Array<
   StreamPostsFirehoseJaRequestUserFieldsItem | (string & {})
@@ -3731,8 +3718,7 @@ export type StreamPostsFirehoseJaRequestPlaceFieldsItem =
   | "id"
   | "name"
   | "place_type";
-export const StreamPostsFirehoseJaRequestPlaceFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseJaRequestPlaceFieldsItem = S.String;
 
 export type StreamPostsFirehoseJaRequestPlaceFieldsList = Array<
   StreamPostsFirehoseJaRequestPlaceFieldsItem | (string & {})
@@ -3874,8 +3860,7 @@ export type StreamPostsFirehoseKoRequestTweetFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const StreamPostsFirehoseKoRequestTweetFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseKoRequestTweetFieldsItem = S.String;
 
 export type StreamPostsFirehoseKoRequestTweetFieldsList = Array<
   StreamPostsFirehoseKoRequestTweetFieldsItem | (string & {})
@@ -3900,8 +3885,7 @@ export type StreamPostsFirehoseKoRequestExpansionsItem =
   | "referenced_tweets.id"
   | "referenced_tweets.id.attachments.media_keys"
   | "referenced_tweets.id.author_id";
-export const StreamPostsFirehoseKoRequestExpansionsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseKoRequestExpansionsItem = S.String;
 
 export type StreamPostsFirehoseKoRequestExpansionsList = Array<
   StreamPostsFirehoseKoRequestExpansionsItem | (string & {})
@@ -3924,8 +3908,7 @@ export type StreamPostsFirehoseKoRequestMediaFieldsItem =
   | "url"
   | "variants"
   | "width";
-export const StreamPostsFirehoseKoRequestMediaFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseKoRequestMediaFieldsItem = S.String;
 
 export type StreamPostsFirehoseKoRequestMediaFieldsList = Array<
   StreamPostsFirehoseKoRequestMediaFieldsItem | (string & {})
@@ -3941,8 +3924,7 @@ export type StreamPostsFirehoseKoRequestPollFieldsItem =
   | "id"
   | "options"
   | "voting_status";
-export const StreamPostsFirehoseKoRequestPollFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseKoRequestPollFieldsItem = S.String;
 
 export type StreamPostsFirehoseKoRequestPollFieldsList = Array<
   StreamPostsFirehoseKoRequestPollFieldsItem | (string & {})
@@ -3978,8 +3960,7 @@ export type StreamPostsFirehoseKoRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const StreamPostsFirehoseKoRequestUserFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseKoRequestUserFieldsItem = S.String;
 
 export type StreamPostsFirehoseKoRequestUserFieldsList = Array<
   StreamPostsFirehoseKoRequestUserFieldsItem | (string & {})
@@ -3997,8 +3978,7 @@ export type StreamPostsFirehoseKoRequestPlaceFieldsItem =
   | "id"
   | "name"
   | "place_type";
-export const StreamPostsFirehoseKoRequestPlaceFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehoseKoRequestPlaceFieldsItem = S.String;
 
 export type StreamPostsFirehoseKoRequestPlaceFieldsList = Array<
   StreamPostsFirehoseKoRequestPlaceFieldsItem | (string & {})
@@ -4140,8 +4120,7 @@ export type StreamPostsFirehosePtRequestTweetFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const StreamPostsFirehosePtRequestTweetFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehosePtRequestTweetFieldsItem = S.String;
 
 export type StreamPostsFirehosePtRequestTweetFieldsList = Array<
   StreamPostsFirehosePtRequestTweetFieldsItem | (string & {})
@@ -4166,8 +4145,7 @@ export type StreamPostsFirehosePtRequestExpansionsItem =
   | "referenced_tweets.id"
   | "referenced_tweets.id.attachments.media_keys"
   | "referenced_tweets.id.author_id";
-export const StreamPostsFirehosePtRequestExpansionsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehosePtRequestExpansionsItem = S.String;
 
 export type StreamPostsFirehosePtRequestExpansionsList = Array<
   StreamPostsFirehosePtRequestExpansionsItem | (string & {})
@@ -4190,8 +4168,7 @@ export type StreamPostsFirehosePtRequestMediaFieldsItem =
   | "url"
   | "variants"
   | "width";
-export const StreamPostsFirehosePtRequestMediaFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehosePtRequestMediaFieldsItem = S.String;
 
 export type StreamPostsFirehosePtRequestMediaFieldsList = Array<
   StreamPostsFirehosePtRequestMediaFieldsItem | (string & {})
@@ -4207,8 +4184,7 @@ export type StreamPostsFirehosePtRequestPollFieldsItem =
   | "id"
   | "options"
   | "voting_status";
-export const StreamPostsFirehosePtRequestPollFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehosePtRequestPollFieldsItem = S.String;
 
 export type StreamPostsFirehosePtRequestPollFieldsList = Array<
   StreamPostsFirehosePtRequestPollFieldsItem | (string & {})
@@ -4244,8 +4220,7 @@ export type StreamPostsFirehosePtRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const StreamPostsFirehosePtRequestUserFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehosePtRequestUserFieldsItem = S.String;
 
 export type StreamPostsFirehosePtRequestUserFieldsList = Array<
   StreamPostsFirehosePtRequestUserFieldsItem | (string & {})
@@ -4263,8 +4238,7 @@ export type StreamPostsFirehosePtRequestPlaceFieldsItem =
   | "id"
   | "name"
   | "place_type";
-export const StreamPostsFirehosePtRequestPlaceFieldsItem =
-  /*@__PURE__*/ S.String;
+export const StreamPostsFirehosePtRequestPlaceFieldsItem = S.String;
 
 export type StreamPostsFirehosePtRequestPlaceFieldsList = Array<
   StreamPostsFirehosePtRequestPlaceFieldsItem | (string & {})
@@ -4406,7 +4380,7 @@ export type StreamPostsSampleRequestTweetFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const StreamPostsSampleRequestTweetFieldsItem = /*@__PURE__*/ S.String;
+export const StreamPostsSampleRequestTweetFieldsItem = S.String;
 
 export type StreamPostsSampleRequestTweetFieldsList = Array<
   StreamPostsSampleRequestTweetFieldsItem | (string & {})
@@ -4430,7 +4404,7 @@ export type StreamPostsSampleRequestExpansionsItem =
   | "referenced_tweets.id"
   | "referenced_tweets.id.attachments.media_keys"
   | "referenced_tweets.id.author_id";
-export const StreamPostsSampleRequestExpansionsItem = /*@__PURE__*/ S.String;
+export const StreamPostsSampleRequestExpansionsItem = S.String;
 
 export type StreamPostsSampleRequestExpansionsList = Array<
   StreamPostsSampleRequestExpansionsItem | (string & {})
@@ -4453,7 +4427,7 @@ export type StreamPostsSampleRequestMediaFieldsItem =
   | "url"
   | "variants"
   | "width";
-export const StreamPostsSampleRequestMediaFieldsItem = /*@__PURE__*/ S.String;
+export const StreamPostsSampleRequestMediaFieldsItem = S.String;
 
 export type StreamPostsSampleRequestMediaFieldsList = Array<
   StreamPostsSampleRequestMediaFieldsItem | (string & {})
@@ -4468,7 +4442,7 @@ export type StreamPostsSampleRequestPollFieldsItem =
   | "id"
   | "options"
   | "voting_status";
-export const StreamPostsSampleRequestPollFieldsItem = /*@__PURE__*/ S.String;
+export const StreamPostsSampleRequestPollFieldsItem = S.String;
 
 export type StreamPostsSampleRequestPollFieldsList = Array<
   StreamPostsSampleRequestPollFieldsItem | (string & {})
@@ -4504,7 +4478,7 @@ export type StreamPostsSampleRequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const StreamPostsSampleRequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const StreamPostsSampleRequestUserFieldsItem = S.String;
 
 export type StreamPostsSampleRequestUserFieldsList = Array<
   StreamPostsSampleRequestUserFieldsItem | (string & {})
@@ -4522,7 +4496,7 @@ export type StreamPostsSampleRequestPlaceFieldsItem =
   | "id"
   | "name"
   | "place_type";
-export const StreamPostsSampleRequestPlaceFieldsItem = /*@__PURE__*/ S.String;
+export const StreamPostsSampleRequestPlaceFieldsItem = S.String;
 
 export type StreamPostsSampleRequestPlaceFieldsList = Array<
   StreamPostsSampleRequestPlaceFieldsItem | (string & {})
@@ -4645,7 +4619,7 @@ export type StreamPostsSample10RequestTweetFieldsItem =
   | "suggested_source_links_with_counts"
   | "text"
   | "withheld";
-export const StreamPostsSample10RequestTweetFieldsItem = /*@__PURE__*/ S.String;
+export const StreamPostsSample10RequestTweetFieldsItem = S.String;
 
 export type StreamPostsSample10RequestTweetFieldsList = Array<
   StreamPostsSample10RequestTweetFieldsItem | (string & {})
@@ -4669,7 +4643,7 @@ export type StreamPostsSample10RequestExpansionsItem =
   | "referenced_tweets.id"
   | "referenced_tweets.id.attachments.media_keys"
   | "referenced_tweets.id.author_id";
-export const StreamPostsSample10RequestExpansionsItem = /*@__PURE__*/ S.String;
+export const StreamPostsSample10RequestExpansionsItem = S.String;
 
 export type StreamPostsSample10RequestExpansionsList = Array<
   StreamPostsSample10RequestExpansionsItem | (string & {})
@@ -4692,7 +4666,7 @@ export type StreamPostsSample10RequestMediaFieldsItem =
   | "url"
   | "variants"
   | "width";
-export const StreamPostsSample10RequestMediaFieldsItem = /*@__PURE__*/ S.String;
+export const StreamPostsSample10RequestMediaFieldsItem = S.String;
 
 export type StreamPostsSample10RequestMediaFieldsList = Array<
   StreamPostsSample10RequestMediaFieldsItem | (string & {})
@@ -4707,7 +4681,7 @@ export type StreamPostsSample10RequestPollFieldsItem =
   | "id"
   | "options"
   | "voting_status";
-export const StreamPostsSample10RequestPollFieldsItem = /*@__PURE__*/ S.String;
+export const StreamPostsSample10RequestPollFieldsItem = S.String;
 
 export type StreamPostsSample10RequestPollFieldsList = Array<
   StreamPostsSample10RequestPollFieldsItem | (string & {})
@@ -4743,7 +4717,7 @@ export type StreamPostsSample10RequestUserFieldsItem =
   | "verified_followers_count"
   | "verified_type"
   | "withheld";
-export const StreamPostsSample10RequestUserFieldsItem = /*@__PURE__*/ S.String;
+export const StreamPostsSample10RequestUserFieldsItem = S.String;
 
 export type StreamPostsSample10RequestUserFieldsList = Array<
   StreamPostsSample10RequestUserFieldsItem | (string & {})
@@ -4761,7 +4735,7 @@ export type StreamPostsSample10RequestPlaceFieldsItem =
   | "id"
   | "name"
   | "place_type";
-export const StreamPostsSample10RequestPlaceFieldsItem = /*@__PURE__*/ S.String;
+export const StreamPostsSample10RequestPlaceFieldsItem = S.String;
 
 export type StreamPostsSample10RequestPlaceFieldsList = Array<
   StreamPostsSample10RequestPlaceFieldsItem | (string & {})

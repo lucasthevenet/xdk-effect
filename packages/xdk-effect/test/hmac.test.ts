@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import * as Effect from "effect/Effect";
-import * as Encoding from "effect/Encoding";
+import { Hex } from "effect/encoding";
 import * as Hmac from "xdk-effect/Hmac";
 
 const bytes = (value: string) => new TextEncoder().encode(value);
@@ -20,7 +20,7 @@ test.each([
     const data = bytes("!Hi There!").subarray(1, 9);
     const input = { hash, key, data };
     const signature = await Effect.runPromise(hmac.sign(input));
-    expect(Encoding.encodeHex(signature)).toBe(expected);
+    expect(Hex.encode(signature)).toBe(expected);
     const padded = new Uint8Array(signature.length + 2);
     padded.set(signature, 1);
     expect(

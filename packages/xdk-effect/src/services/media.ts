@@ -47,7 +47,7 @@ export const AppendMediaUploadResponseData = /*@__PURE__*/ S.suspend(() =>
 
 export type ResourceNotFoundProblemType =
   "https://api.x.com/2/problems/resource-not-found";
-export const ResourceNotFoundProblemType = /*@__PURE__*/ S.String;
+export const ResourceNotFoundProblemType = S.String;
 
 export interface ResourceNotFoundProblem {
   detail: string;
@@ -76,7 +76,7 @@ export const ResourceNotFoundProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type InvalidRequestProblemType =
   "https://api.x.com/2/problems/invalid-request";
-export const InvalidRequestProblemType = /*@__PURE__*/ S.String;
+export const InvalidRequestProblemType = S.String;
 
 export interface InvalidRequestProblem {
   detail: string;
@@ -101,7 +101,7 @@ export const InvalidRequestProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type NotAuthorizedForResourceProblemType =
   "https://api.x.com/2/problems/not-authorized-for-resource";
-export const NotAuthorizedForResourceProblemType = /*@__PURE__*/ S.String;
+export const NotAuthorizedForResourceProblemType = S.String;
 
 export interface NotAuthorizedForResourceProblem {
   detail: string;
@@ -132,7 +132,7 @@ export const NotAuthorizedForResourceProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type NotAuthorizedForFieldProblemType =
   "https://api.x.com/2/problems/not-authorized-for-field";
-export const NotAuthorizedForFieldProblemType = /*@__PURE__*/ S.String;
+export const NotAuthorizedForFieldProblemType = S.String;
 
 export interface NotAuthorizedForFieldProblem {
   detail: string;
@@ -165,7 +165,7 @@ export const NotAuthorizedForFieldProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type FieldUnauthorizedProblemType =
   "https://api.x.com/2/problems/field-unauthorized";
-export const FieldUnauthorizedProblemType = /*@__PURE__*/ S.String;
+export const FieldUnauthorizedProblemType = S.String;
 
 export interface FieldUnauthorizedProblem {
   detail: string;
@@ -192,7 +192,7 @@ export const FieldUnauthorizedProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type FieldHydrationFailureProblemType =
   "https://api.x.com/2/problems/field-hydration-failure";
-export const FieldHydrationFailureProblemType = /*@__PURE__*/ S.String;
+export const FieldHydrationFailureProblemType = S.String;
 
 export interface FieldHydrationFailureProblem {
   detail: string;
@@ -219,7 +219,7 @@ export const FieldHydrationFailureProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type ResourceUnavailableProblemType =
   "https://api.x.com/2/problems/resource-unavailable";
-export const ResourceUnavailableProblemType = /*@__PURE__*/ S.String;
+export const ResourceUnavailableProblemType = S.String;
 
 export interface ResourceUnavailableProblem {
   detail: string;
@@ -244,7 +244,7 @@ export const ResourceUnavailableProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type DisallowedResourceProblemType =
   "https://api.x.com/2/problems/disallowed-resource";
-export const DisallowedResourceProblemType = /*@__PURE__*/ S.String;
+export const DisallowedResourceProblemType = S.String;
 
 export interface DisallowedResourceProblem {
   detail: string;
@@ -271,7 +271,7 @@ export const DisallowedResourceProblem = /*@__PURE__*/ S.suspend(() =>
 
 export type InternalErrorProblemType =
   "https://api.x.com/2/problems/internal-error";
-export const InternalErrorProblemType = /*@__PURE__*/ S.String;
+export const InternalErrorProblemType = S.String;
 
 export interface InternalErrorProblem {
   detail: string;
@@ -549,7 +549,7 @@ export const CreateMediaMetadataResponse = /*@__PURE__*/ S.suspend(() =>
 export type CreateMediaSubtitlesRequestMediaCategory =
   | "AmplifyVideo"
   | "TweetVideo";
-export const CreateMediaSubtitlesRequestMediaCategory = /*@__PURE__*/ S.String;
+export const CreateMediaSubtitlesRequestMediaCategory = S.String;
 
 export interface CreateMediaSubtitlesSubtitles {
   /** Language name in a human readable form. */
@@ -798,7 +798,7 @@ export const GetMediaAnalyticsRequestMediaKeysList = /*@__PURE__*/ S.Array(
 ) as any as S.Schema<GetMediaAnalyticsRequestMediaKeysList>;
 
 export type GetMediaAnalyticsRequestGranularity = "hourly" | "daily" | "total";
-export const GetMediaAnalyticsRequestGranularity = /*@__PURE__*/ S.String;
+export const GetMediaAnalyticsRequestGranularity = S.String;
 
 export type GetMediaAnalyticsRequestMediaAnalyticsFieldsItem =
   | "cta_url_clicks"
@@ -814,8 +814,7 @@ export type GetMediaAnalyticsRequestMediaAnalyticsFieldsItem =
   | "timestamped_metrics"
   | "video_views"
   | "watch_time_ms";
-export const GetMediaAnalyticsRequestMediaAnalyticsFieldsItem =
-  /*@__PURE__*/ S.String;
+export const GetMediaAnalyticsRequestMediaAnalyticsFieldsItem = S.String;
 
 /** The fields available for a MediaAnalytics object. */
 export type GetMediaAnalyticsRequestMediaAnalyticsFieldsList = Array<
@@ -1074,7 +1073,7 @@ export type GetMediaByMediaKeyRequestMediaFieldsItem =
   | "url"
   | "variants"
   | "width";
-export const GetMediaByMediaKeyRequestMediaFieldsItem = /*@__PURE__*/ S.String;
+export const GetMediaByMediaKeyRequestMediaFieldsItem = S.String;
 
 /** The fields available for a Media object. */
 export type GetMediaByMediaKeyRequestMediaFieldsList = Array<
@@ -1294,7 +1293,7 @@ export type GetMediaByMediaKeysRequestMediaFieldsItem =
   | "url"
   | "variants"
   | "width";
-export const GetMediaByMediaKeysRequestMediaFieldsItem = /*@__PURE__*/ S.String;
+export const GetMediaByMediaKeysRequestMediaFieldsItem = S.String;
 
 /** The fields available for a Media object. */
 export type GetMediaByMediaKeysRequestMediaFieldsList = Array<
@@ -1352,7 +1351,7 @@ export const GetMediaByMediaKeysResponse = /*@__PURE__*/ S.suspend(() =>
 }) as any as S.Schema<GetMediaByMediaKeysResponse>;
 
 export type GetMediaUploadStatusRequestCommand = "STATUS";
-export const GetMediaUploadStatusRequestCommand = /*@__PURE__*/ S.String;
+export const GetMediaUploadStatusRequestCommand = S.String;
 
 export interface GetMediaUploadStatusRequest {
   media_id: string;
@@ -1422,7 +1421,7 @@ export type InitializeMediaUploadRequestMediaCategory =
   | "dm_image"
   | "dm_video"
   | "subtitles";
-export const InitializeMediaUploadRequestMediaCategory = /*@__PURE__*/ S.String;
+export const InitializeMediaUploadRequestMediaCategory = S.String;
 
 /** The type of media. */
 export type InitializeMediaUploadRequestMediaType =
@@ -1441,7 +1440,7 @@ export type InitializeMediaUploadRequestMediaType =
   | "image/tiff"
   | "model/gltf-binary"
   | "model/vnd.usdz+zip";
-export const InitializeMediaUploadRequestMediaType = /*@__PURE__*/ S.String;
+export const InitializeMediaUploadRequestMediaType = S.String;
 
 export interface InitializeMediaUploadRequest {
   /** User ids granted access to the uploaded media. */
@@ -1519,7 +1518,7 @@ export type MediaUploadRequestMediaCategory =
   | "dm_video"
   | "dm_gif"
   | "subtitles";
-export const MediaUploadRequestMediaCategory = /*@__PURE__*/ S.String;
+export const MediaUploadRequestMediaCategory = S.String;
 
 export interface MediaUploadRequest {
   /** Comma-separated list of user IDs who can use this media. */
